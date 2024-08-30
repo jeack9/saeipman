@@ -9,5 +9,5 @@ public class Test {
 	public String testindex() {
 		return "board/index";
 	}
-	
+//	
 }
