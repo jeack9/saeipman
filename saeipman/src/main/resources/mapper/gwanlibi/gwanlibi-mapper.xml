@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saeipman.app.gwanlibi.mapper.MonthGwanlibiMapper">
+
+	<select id="selectAllMonGwanlibiList">
+			
+		SELECT   b.building_id,
+		         b.building_name,
+		         p.total_money previous_month,
+		         t.total_money this_month,
+		         t.payment_month
+		FROM     building_info b JOIN month_gwanlibi t
+		                         ON   b.building_id = t.building_id AND TO_CHAR(t.payment_month, 'yymm') = TO_CHAR(sysdate, 'yymm')
+		                         JOIN month_gwanlibi p
+		                         ON   b.building_id = p.building_id AND TO_CHAR(p.payment_month, 'yymm') = TO_CHAR(sysdate, 'yymm') -1
+		WHERE b.imdaein_id = #{imdaeinId}
+		ORDER BY b.building_name
+		
+	</select>
+
+</mapper>
