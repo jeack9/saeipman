@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saeipman.app.building.mapper.BuildingMapper">
+	<select id="buildingList" resultType="BuildingVO">
+		SELECT	building_id,
+                building_name,
+                doro_addr,
+                details_addr,
+                total_gagu
+    	FROM    building_info
+    	ORDER BY 1
+	</select>
+	<select id="buildingListInfo" resultType="BuildingVO">
+		SELECT *
+		FROM building_info
+		WHERE building_id = #{buildingId}
+	</select>
+	<insert id="buildingInsert" parameterType="BuildingVO">
+		INSERT INTO building_info ( building_id,
+									building_name,
+									doro_addr,
+									details_addr,
+									gunchook_area,
+									lift_yn,
+									total_floor,
+									floor_gagu_count,
+									total_gagu,
+									parking,
+									memo
+								  )
+		VALUES ('ZIP'||buildingSeq.nextval,
+				#{buildingName},
+				#{doroAddr},
+				#{detailsAddr},
+				#{gunchookArea},
+				#{liftYn},
+				#{totalFloor},
+				#{floorGaguCount},
+				#{totalGagu},
+				#{parking},
+				#{memo}
+				)
+	</insert>
+	<update id="buildingUpdate" parameterType="BuildingVO">
+		UPDATE building_info
+		SET delay_alert_yn = #{delayAlertYn},
+			minwon_alert_yn = #{minwonAlertYn},
+			building_id = #{buildingId},
+			building_name = #{buildingName},
+			doro_addr = #{doroAddr},
+			details_addr = #{detailsAddr},
+			gunchook_area = #{gunchookArea},
+			lift_yn = #{liftYn},
+			total_floor = #{totalFloor},
+			floor_gagu_count = #{floorGaguCount},
+			total_gagu = #{totalGagu},
+			parking = #{parking},
+			memo = #{memo}
+		WHERE building_id = #{buildingId}
+		
+	</update>
+</mapper>
