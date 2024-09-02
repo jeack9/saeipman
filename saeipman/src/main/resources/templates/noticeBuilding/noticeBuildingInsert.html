@@ -2,30 +2,28 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layouts/default_layout}"
 	layout:fragment="Main">
+	<th:block th:replace="~{common/configs/default_config :: jQueryConfig}"></th:block>
+
 	<div class="container-fluid pt-4 px-4">
 		<div class="row g-4">
 			<div class="col-sm-12 col-xl-12">
 				<div class="bg-light rounded h-100 p-4">
-					<h6 class="mb-4">공지사항</h6>
-					<table class="table">
-						<tbody>
-							<tr>
-								<th style="width:5%">제목</th>
-								<th>[[${BNotice.title}]]</th>
-							</tr>
-							<tr>
-								<th style="width:10%">첨부파일</th>
-								<td>[[${BNotice.chumbuImage}]]</td>
-							</tr>
-							<tr>
-								<td colspan="2">[[${BNotice.content}]]</td>
-							</tr>
-						</tbody>
-					</table>
+					<form th:action="@{/noticeBuildingInsert}" method="post"
+						name="insertForm">
+						<h6 class="mb-4">공지사항 작성</h6>
+						<div>
+							<label for="Nbtitle">제목</label><input type="text" id="NBtitle"
+								name="title">
+						</div>
+						<div>
+							<label for="Nbtitle">제목</label><input type="text" id="NBtitle"
+								name="title">
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
-		<div style="text-align:center">
+		<div style="text-align: center">
 			<button type="button" class="btn btn-primary rounded-pill m-2">등록</button>
 			<button type="button" class="btn btn-success rounded-pill m-2">Success</button>
 			<button type="button" class="btn btn-danger rounded-pill m-2">Danger</button>

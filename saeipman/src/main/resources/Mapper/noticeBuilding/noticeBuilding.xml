@@ -37,10 +37,6 @@
 	
 	<!-- 등록 -->
 	<insert id="insertNoticeBuilding" parameterType="NoticeBuildingVO">
-		<selectKey keyProperty="postNo" resultType="Integer" order="BEFORE">
-			SELECT NVL(MAX(postNO), 1) + 1
-			FROM building_notice
-		</selectKey>
 		INSERT INTO building_notice
 		(
 		postNO
