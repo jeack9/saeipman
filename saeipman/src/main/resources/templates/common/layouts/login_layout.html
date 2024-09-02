@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<!-- <meta name="contextPath" th:value="${contextPath}"> -->
+<!-- <meta name="_csrf" th:value="${_csrf.token}"> -->
+<title>saeipman</title>
+<th:block th:replace="~{common/configs/login_config :: BootstrapConfig}"></th:block>
+<th:block th:replace="~{common/configs/login_config :: jQueryConfig}"></th:block>
+</head>
+<body>
+	<div>
+		<th:block layout:fragment="Main"></th:block>
+	</div>
+	<th:block th:replace="~{common/configs/login_config :: JsConfig}"></th:block>
+</body>
+</html>
