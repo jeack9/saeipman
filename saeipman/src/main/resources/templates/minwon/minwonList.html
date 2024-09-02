@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{common/layouts/default_layout}"
+	  layout:fragment="Main">
+<head>
+<meta charset="UTF-8">
+
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="container">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>NO</th>
+					<th>제목</th>
+					<th>작성자</th>
+					<th>처리상태</th>
+					<th>작성일</th>
+				</tr>
+			</thead>
+			<tbody>
+				<th:block th:each="info : ${minwon}">
+					<tr>
+						<td>[[${info.postNo}]]</td>
+						<td>[[${info.title}]]</td>
+						<td>[[${info.roomNo}]]</td> <!-- 작성자 -->
+						<td>[[${info.acceptState}]]</td>
+						<td>[[ ${#dates.format(info.regDate, 'yyyy/MM/dd')} ]]</td>
+					</tr>
+			</tbody>
+		</table>
+	</div>
+	<script>
+		$('tbody > tr').on('click', function(event){
+			let trTag = event.currentTarget;
+			let postNo = $(trTag).children().first().text();
+			let url = `minwonInfo?postNo=${postNo}`;
+			location.href = url;
+		})
+	</script>
+</body>
+</html>

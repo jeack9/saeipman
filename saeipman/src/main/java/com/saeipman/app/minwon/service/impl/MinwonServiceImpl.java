@@ -2,7 +2,9 @@ package com.saeipman.app.minwon.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,13 +40,23 @@ public class MinwonServiceImpl implements MinwonService{
 	}
 
 	@Override
-	public MinwonVO minwonUpdate(MinwonVO minwonVO) {
+	public Map<String, Object> minwonUpdate(MinwonVO minwonVO) {
+		Map<String, Object> map = new HashMap<>();
+		boolean isSuccessed = false;
+		
+		int result = minwonMapper.updateMinwon(minwonVO);
+		if(result == 1) {
+			isSuccessed = true;
+		}
 		
 		Date today = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String updateDate = sdf.format(today);
 		
-		return minwonMapper.updateMinwon(minwonVO);
+		map.put("date", updateDate);
+		map.put("result", isSuccessed);
+		map.put("target", minwonVO);
+		return map;
 	}
 
 	@Override

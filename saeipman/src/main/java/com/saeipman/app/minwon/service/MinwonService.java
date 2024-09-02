@@ -1,6 +1,7 @@
 package com.saeipman.app.minwon.service;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MinwonService {
 	//전체조회
@@ -13,9 +14,9 @@ public interface MinwonService {
 	public int minwonInsert(MinwonVO minwonVO);
 	
 	//수정
-	public MinwonVO minwonUpdate(MinwonVO minwonVO);
+	public Map<String, Object> minwonUpdate(MinwonVO minwonVO);
 	
 	//삭제
-	public int minwonDelete(int postNO);
+	public int minwonDelete(int postNo);
 	
 }

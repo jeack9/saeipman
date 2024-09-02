@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saeipman.app.minwon.mapper.MinwonMapper">
+	<!-- 전체조회 -->
+	<select id="selectMinwonAll" resultType="MinwonVO">
+		select post_no,
+			   title,
+			   content,
+			   category,
+			   chumbu_image,
+			   room_no,
+			   accept_state,
+			   visits_date,
+			   reg_date,
+			   mod_date,
+			   alert_type,
+			   room_id
+		from minwon
+		order by post_no desc
+	</select>
+	
+	<!-- 단건조회 -->
+	<select id="selectMinwonInfo" resultType="MinwonVO">
+		select post_no,
+			   title,
+			   content,
+			   category,
+			   chumbu_image,
+			   room_no,
+			   accept_state,
+			   visits_date,
+			   reg_date,
+			   mod_date,
+			   alert_type,
+			   room_id
+		from minwon
+		where post_no = ${postNo}
+	</select>
+	
+	<!-- 등록 -->
+	<insert id="insertMinwon" parameterType="MinwonVO">
+		<selectKey keyProperty="postNo" resultType="int" order="BEFORE"><!-- selectKey는 자동생성된 id값을 삽입하기 위해, BEFORE는 삽입 전에 키 값을 생성하는 것을 의미(실제 삽입 작업 전에 실행됨)-->
+		select NVL(max(post_no), 0) + 1 <!-- employees 테이블에서 가장 큰 employee_id 값을 가져와서 1을 더한 값을 반환, 만약 employee_id가 존재하지 않는 경우 0이 반환되고 거기에 1을 더해 새로운 employee_id를 생성 -->
+		from minwon
+		</selectKey>
+		insert into minwon
+					(
+						post_no,
+						title,
+						content,
+						category,
+						chumbu_image,
+						room_no,
+						visits_date,
+						reg_date,
+						alert_type,
+						room_id
+					)
+				values
+					(
+						#{postNo}
+						, #{title}
+						, #{content}
+						, #{category}
+						, #{chumbuImage}
+						, #{roomNo}
+						, #{visitsDate}
+						<choose>
+							<when test="regDate != null">
+							, #{regDate}
+							</when>
+							<otherwise>
+							, sysdate
+							</otherwise>
+						</choose>
+						,#{alertType}
+						,#{roomId}
+					)
+	</insert>
+	
+	<!-- 수정 -->
+	<update id="updateMinwon">
+		update minwon
+		set 
+		where post_no = #{postNo}
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="deleteMinwon" parameterType="int">
+		delete from minwon
+		where post_no = #{postNo}
+	</delete>
+
+</mapper>

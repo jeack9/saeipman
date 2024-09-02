@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{common/layouts/default_layout}"
+	  layout:fragment="Main">
+<head>
+<meta charset="UTF-8">
+<style>
+.container{
+    
+    height: 50px;
+    float:left;
+}
+</style>
+<title>Insert title here</title>
+</head>
+<body>
+	<form  name="insertForm" th:action="@{/minwonInsert}" method="post">
+		<div class="mb-3">
+			<label for="">제목</label>
+			<input type="text" id="title" name="title">
+		</div>
+		<div class="mb-3">
+			<label for="roomNo">작성자</label>
+		</div>
+		<div class="mb-3">
+		<select class="form-select" aria-label="Default select example">
+			 <option selected>카테고리</option>
+			 <option value="1">고장/수리</option>
+			 <option value="2"></option>
+			 <option value="3">기타</option>
+		</select>
+		</div>
+		<div class="mb-3">
+			<label for="">방문날짜</label>
+			<input type="datetime-local" name="visitsDate">
+		</div>
+		<div class="mb-3">
+			 <label for="formFile" class="form-label">첨부파일</label>
+			 <input class="form-control" type="file" id="formFile">
+		</div>
+		<div class="mb-3">
+  			<label for="exampleFormControlTextarea1" class="form-label">내용</label>
+  			<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+		</div>
+		<div>
+			<button type="submit">등록</button>
+		</div>
+	</form>
+	<script>
+		$('form[name="insertForm"]').on("submit", insertHandler);
+		
+		function insertHandler(e){
+			e.preventDefault()
+			insertForm.submit();
+		}
+	</script>
+</body>
+</html>

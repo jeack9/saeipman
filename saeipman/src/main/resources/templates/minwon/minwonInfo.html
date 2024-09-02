@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{common/layouts/default_layout}"
+	  layout:fragment="Main">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div>
+		<table style="width: 500px;">
+			<tr>
+				<th>제목</th>
+				<td>[[${minwon.title}]]</td>
+				<th>작성자</th>
+				<td>[[${minwon.roomNo}]]</td>
+			</tr>
+			<tr>
+				<th>카테고리</th>
+				<td>[[${minwon.category}]]</td>
+			</tr>
+			<tr>
+				<th>방문날짜</th>
+				<td>[[${minwon.visitsDate}]]</td>
+				<th>첨부파일</th>
+				<td>[[${minwon.chumbuImage}]]</td>
+			</tr>
+			<tr>
+				<th>내용</th>
+				<td>[[${minwon.content}]]</td>
+			</tr>
+		</table>
+	</div>
+	<div>
+		<button type="button" th:onClick="|location.href = '@{/minwonUpdate(postNo=${minwon.postNo})}'|">수정</button>
+		<button type="button" th:onClick="|location.href = '@{minwonList}'|">목록</button>
+		<button type="button" th:onClick="|location.href = '@{/minwonDelete(postNo=${minwon.postNo})}'|">삭제</button>
+	</div>
+</body>
+</html>
