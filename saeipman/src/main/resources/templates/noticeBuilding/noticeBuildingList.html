@@ -1,0 +1,39 @@
+<div xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Main">
+
+	<div class="col-sm-12 col-xl-11">
+		<div class="bg-light rounded h-100 p-4">
+			<h6 class="mb-4">공지사항</h6>
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th scope="col" class="col-sm-1">번호</th>
+						<th scope="col" class="col-sm-5">제목</th>
+						<th scope="col">작성일</th>
+						<th scope="col">조회수</th>
+					</tr>
+				</thead>
+				<tbody>
+					<th:block th:each="list : ${BNotice}">
+						<tr>
+							<th scope="row">[[${list.postNo}]]</th>
+							<td>[[${list.title}]]</td>
+							<td>[[${#dates.format(list.regDate, 'yyyy-MM-dd')}]]</td>
+							<td>TEST</td>
+						</tr>
+					</th:block>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<script>
+		$('tbody > tr').on('click', function(event) {
+			let trTag = event.currentTarget;
+			let postNo = $(trTag).children().first().text();
+			let url = '/noticeBuildingInfo?postNo=' + postNo;
+			location.href = url;
+		})
+	</script>
+</div>
