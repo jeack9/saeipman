@@ -16,8 +16,8 @@ public interface MinwonMapper {
 	public int insertMinwon(MinwonVO minwonVO);
 	
 	//수정(title, content, category, chumbuImage, visitsDate)
-	public MinwonVO updateMinwon(MinwonVO minwonVO);
+	public int updateMinwon(MinwonVO minwonVO);
 	
 	//삭제
-	public int deleteMinwon(int postNO);
+	public int deleteMinwon(int postNo);
 }
