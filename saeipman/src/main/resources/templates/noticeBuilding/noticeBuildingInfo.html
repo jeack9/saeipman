@@ -1,0 +1,32 @@
+<div xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Main">
+	<div class="col-md-12 col-xl-11">
+		<div class="bg-light rounded h-100 p-4">
+			<form>
+				<table>
+					<tr>
+						<th>번호</th>
+						<td>[[${BNotice.postNo}]]</td>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td>[[${BNotice.title}]]</td>
+					</tr>
+					<tr>
+						<th>첨부파일</th>
+						<td>[[${BNotice.chumbuImage}]]</td>
+					</tr>
+					<tr>
+						<th>내용</th>
+						<td>[[${BNotice.content}]]</td>
+					</tr>
+				</table>
+			</form>
+			<button type="button" class="btn btn-primary rounded-pill m-2">등록</button>
+			<button type="button" class="btn btn-success rounded-pill m-2">Success</button>
+			<button type="button" class="btn btn-danger rounded-pill m-2">Danger</button>
+		</div>
+	</div>
+</div>

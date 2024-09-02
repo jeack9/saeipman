@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.saeipman.app.noticeBuilding.mapper.NoticeBuildingMapper">
+
+	<!-- 전체조회 -->
+	<select id="selectNoticeBuildingAll" resultType="NoticeBuildingVO">
+		SELECT bn.post_no
+	         , bn.title
+			 , bn.writer
+			 , bn.content
+			 , bn.reg_date
+			 , bn.mod_date
+			 , bn.chumbu_image
+			 , bn.views
+			 , bi.building_id
+        FROM building_notice bn join building_info bi
+           			on bn.building_id = bi.building_id
+	</select>
+	
+	<!-- 단건조회 -->
+	<select id="selectNoticeBuildingInfo" resultType="NoticeBuildingVO">
+	    SELECT bn.post_no
+	         , bn.title
+			 , bn.writer
+			 , bn.content
+			 , bn.reg_date
+			 , bn.mod_date
+			 , bn.chumbu_image
+			 , bn.views
+			 , bi.building_id
+        FROM building_notice bn join building_info bi
+           			on bn.building_id = bi.building_id
+		WHERE post_no = #{postNo}
+	</select>
+	
+	
+	<!-- 등록 -->
+	<insert id="insertNoticeBuilding" parameterType="NoticeBuildingVO">
+		<selectKey keyProperty="postNo" resultType="Integer" order="BEFORE">
+			SELECT NVL(MAX(postNO), 1) + 1
+			FROM building_notice
+		</selectKey>
+		INSERT INTO building_notice
+		(
+		postNO
+		, title
+		, con
+		)
+	</insert>
+
+
+	<!-- 수정 -->
+	<update id="updateNoticeBuilding">
+
+	</update>
+
+
+	<!-- 삭제 -->
+	<delete id="deleteNoticeBuilding" parameterType="int">
+
+	</delete>
+
+</mapper>
