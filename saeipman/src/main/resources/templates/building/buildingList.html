@@ -1,0 +1,182 @@
+
+<div xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Main" class="row">
+	<!-- start 건물리스트 -->
+	<div class="col-md-4">
+		<th:block th:each="building, index:${buildings}">
+			<ul class="list-group">
+				<li th:id="${building.buildingId}" th:data-index="${index.count}"
+					class="list-group-item" style="font-size: 25px;">[[${building.buildingName}]]
+					<ul>
+						<li style="list-style: none; font-size: 18px;">[[${building.doroAddr}]]
+							[[${building.detailsAddr}]]</li>
+						<li style="list-style: none; font-size: 18px;">[[${building.totalGagu}]]세대</li>
+					</ul>
+				</li>
+			</ul>
+		</th:block>
+		<button type="button"
+			th:onclick="|location.href='@{/buildingInsert}'|"
+			class="btn btn-outline-primary m-2">건물추가</button>
+	</div>
+	<!-- End 건물리스트 -->
+	<div class="col-md-8">
+		<form name="updateForm" class="row g-3">
+			<!-- start 건물 정보 -->
+			<h1 id="bnameTitle"></h1>
+			<div>
+				<button type="button" class="btn btn-outline-primary m-2 "
+					id="updateBtn">수정완료</button>
+				<button type="button" class="btn btn-outline-danger m-2"
+					id="deleteBtn">삭제</button>
+			</div>
+
+			<div>
+				<div class="form-check form-switch" style="display: inline-block;">
+					<label class="form-label"><span>연체 알림</span> </label><input
+						role="switch" type="checkbox" class="form-check-input text-end"
+						name="delayAlertYn" />
+				</div>
+				<div class="form-check form-switch" style="display: inline-block;">
+					<label class="form-label"><span>민원 알림</span> </label><input
+						role="switch" type="checkbox" class="form-check-input text-end"
+						name="minwonAlertYn" />
+				</div>
+			</div>
+
+			<div class="form-group col-md-7">
+				<label for="bname" class="form-label">빌딩 이름 </label> <input
+					type="text" id="bname" name="buildingName" class="form-control">
+			</div>
+			<div class="form-group col-md-7">
+				<label for="sample6_address" class="form-label"
+					th:style="${'padding-right:20px'}">주소</label> <input type="button"
+					onclick="sample6_execDaumPostcode()" value="주소 찾기"
+					class="btn btn-outline-secondary m-2"> <input type="text"
+					id="sample6_address" placeholder="주소" name="doroAddr"
+					class="form-control addr">
+			</div>
+			<div class="form-group col-md-7">
+				<label for="sample6_detailAddress" class="form-label">상세 주소</label>
+				<input type="text" id="sample6_detailAddress" placeholder="상세주소"
+					name="detailsAddr" class="form-control dAddr">
+			</div>
+
+			<div class="form-group col-md-7">
+				<label for="gunchookArea" class="form-label">건축면적 </label> <input
+					type="text" id="gunchookArea" name="gunchookArea"
+					class="form-control">
+			</div>
+			<div class="form-check form-switch">
+				<label for="liftYn">승강기 여부 </label> <input type="checkbox"
+					id="liftYn" name="liftYn" class="form-check-input text-end"
+					role="switch">
+			</div>
+			<div class="form-group col-md-5">
+				<label for="totalFloor" class="form-label">층 수 </label> <input
+					type="text" id="totalFloor" name="totalFloor" class="form-control">
+			</div>
+			<div class="form-group col-md-5">
+				<label for="floorGaguCount" class="form-label">층 별 가구수 </label> <input
+					type="text" id="floorGaguCount" name="floorGaguCount"
+					class="form-control">
+			</div>
+			<div class="form-group col-md-5">
+				<label for="totalGagu" class="form-label">총 세대수 </label> <input
+					type="text" id="totalGagu" name="totalGagu" class="form-control">
+			</div>
+			<div class="form-group col-md-5">
+				<label for="parking" class="form-label">주차 가능 대수 </label> <input
+					type="text" id="parking" name="parking" class="form-control">
+			</div>
+
+			<div class="form-group col-md-6">
+				<label for="memo" class="form-label">비고 </label> <input type="text"
+					id="memo" name="memo" class="form-control">
+			</div>
+
+		</form>
+	</div>
+	<!-- End 건물 정보 -->
+	<div>
+		<script>
+			$(document).ready(function() {
+
+				let firstBuilding = $('li[data-index="1"]').attr('id');
+				if (firstBuilding) {
+					getBuildingInfo(firstBuilding);
+				}
+				$('li').on('click', function(e) {
+					let buildingId = e.currentTarget.id;
+					getBuildingInfo(buildingId);
+				});
+				function getBuildingInfo(buildingId) {
+
+					$.ajax({
+						url : '/buildingDetails',
+						type : 'GET',
+						data : {
+							id : buildingId
+						},
+						dataType : 'json',
+
+					}).done(function(data) {
+						//console.log(data);
+						$('#bnameTitle').html(data.buildingName);
+						$("#bid").val(data.buildingId);
+						$("#bname").val(data.buildingName);
+						$(".addr").val(data.doroAddr);
+						$(".dAddr").val(data.detailsAddr);
+						$("#gunchookArea").val(data.gunchookArea);
+						$("#liftYn").val(data.liftYn);
+						$("#totalFloor").val(data.totalFloor);
+						$("#floorGaguCount").val(data.floorGaguCount);
+						$("#totalGagu").val(data.totalGagu);
+						$("#parking").val(data.parking);
+						checkFunc($("#liftYn"));
+					})
+				}
+
+			})
+			function checkFunc(liftYn) {
+				if (liftYn.val() === 'Y') {
+					liftYn.prop('checked', true);
+				} else {
+
+					liftYn.prop('checked', false);
+				}
+			}
+			$('#updateBtn').on('click', updateAjax);
+			
+			function updateAjax(){
+				let dataObj = getData();
+				
+				$.ajax('buildingUpdate',{
+					type:'post',
+					dataType : 'application/json',
+					data : JSON.stringify(dataObj),
+				})
+				.done(result=>{
+					if(result.success){
+						alert('정상 수정');
+					}else{
+						alert('수정 실패');
+					}
+				})
+			}
+			
+			function getData(){
+				let formArr = $('form[name="updateForm"]').serializeArray();
+				//console.log(formArr);
+				let formObj = {};
+				$.each(formArr, function(idx, ele){
+					formObj[ele.name] = ele.value;
+				});
+				console.log(formObj);
+				return formObj;
+			}
+		</script>
+	</div>
+</div>
