@@ -20,4 +20,7 @@ public interface MinwonMapper {
 	
 	//삭제
 	public int deleteMinwon(int postNo);
+	
+	//카테고리 전체조회
+	public List<MinwonVO> selectCategory();
 }

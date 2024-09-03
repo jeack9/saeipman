@@ -3,20 +3,22 @@
 <mapper namespace="com.saeipman.app.minwon.mapper.MinwonMapper">
 	<!-- 전체조회 -->
 	<select id="selectMinwonAll" resultType="MinwonVO">
-		select post_no,
-			   title,
-			   content,
-			   category,
-			   chumbu_image,
-			   room_no,
-			   accept_state,
-			   visits_date,
-			   reg_date,
-			   mod_date,
-			   alert_type,
-			   room_id
-		from minwon
-		order by post_no desc
+	SELECT 
+            M.POST_NO, 
+            M.TITLE, 
+            R.ROOM_NO,
+            M.ACCEPT_STATE,
+            M.REG_DATE, 
+            B.BUILDING_ID 
+      FROM 
+             MINWON M
+      JOIN 
+             ROOM_INFO R ON M.ROOM_ID = R.ROOM_ID
+      JOIN 
+             BUILDING_INFO B ON R.BUILDING_ID = B.BUILDING_ID
+      WHERE 
+             B.BUILDING_ID = #{buildingId}
+      order by post_no desc
 	</select>
 	
 	<!-- 단건조회 -->
@@ -82,6 +84,12 @@
 	<update id="updateMinwon">
 		update minwon
 		set 
+			title = #{title}
+			, content = #{content}
+			, category = #{category}
+			, chumbu_image = #{chumbuImage}
+			, visits_date = #{visitsDate}
+			
 		where post_no = #{postNo}
 	</update>
 	
@@ -90,5 +98,12 @@
 		delete from minwon
 		where post_no = #{postNo}
 	</delete>
+	
+	<!-- 카테고리 목록 -->
+	<select id="selectCategory" resultType="MinwonVO">
+		select category_no,
+		       category_type
+		from minwon_category
+	</select>
 
 </mapper>

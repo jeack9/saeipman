@@ -3,6 +3,7 @@ package com.saeipman.app.minwon.service;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
 
@@ -22,4 +23,8 @@ public class MinwonVO {
 	private Date modDate; // 수정일자
 	private Integer alertType; //알림유형
 	private String roomId; //방 아이디
+	private String buildingId;
+	
+	private int categoryNo;
+	private String categoryType;
 }
