@@ -49,11 +49,13 @@
 		$('#updateBtn').on('click', update);
 		
 		function update(e){
-			let dateObj = getFormData();
+			let dateObj = getFormData($('form[name="updateForm"]')[0]);
 			
 			$.ajax('minwonUpdate',{
 				type : 'post',
-				data : dateObj
+				data : dateObj,
+				processData: false,
+	            contentType: false
 			})
 			.done(result => {
 				console.log(result);
