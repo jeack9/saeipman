@@ -16,8 +16,7 @@
              ROOM_INFO R ON M.ROOM_ID = R.ROOM_ID
       JOIN 
              BUILDING_INFO B ON R.BUILDING_ID = B.BUILDING_ID
-      WHERE 
-             B.BUILDING_ID = #{buildingId}
+
       order by post_no desc
 	</select>
 	
@@ -81,13 +80,15 @@
 	</insert>
 	
 	<!-- 수정 -->
-	<update id="updateMinwon">
+	<update id="updateMinwon" parameterType="MinwonVO">
 		update minwon
 		set 
 			title = #{title}
 			, content = #{content}
 			, category = #{category}
+			<if test="chumbuImage != null and chumbuImage != ''">
 			, chumbu_image = #{chumbuImage}
+			</if>
 			, visits_date = #{visitsDate}
 			
 		where post_no = #{postNo}

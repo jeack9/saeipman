@@ -12,7 +12,7 @@ public class WebMvcConfig implements WebMvcConfigurer{
 	//리소스 핸들링
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/images/**") // URL
+		registry.addResourceHandler("/img/**") // URL
 			.addResourceLocations("file:///"+uploadPath, ""); //실제 경로 (,) 이용해서 경로 추가
 	}
 	
