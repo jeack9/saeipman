@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}" layout:fragment="Main">
+
+<head>
+	<meta charset="UTF-8">
+</head>
+
+<body>
+	<h1>건물명</h1>
+	<div id="grid"></div>
+
+	<script>
+	/* https://park-duck.tistory.com/entry/javascript-1-Toast-UI-Grid-%EA%B8%B0%EC%B4%88API-%EC%82%AC%EC%9A%A9%EB%B2%95 */
+function datas(){
+		$.ajax('detailsListAjax?buildingId=ZIP10', {
+				type : 'get'
+			})
+			.done(data => {
+				if (data != null) {
+					data.forEach(element => {
+						console.log(element);
+						
+					});
+					
+				} else {
+					alert("서버 문제");
+				}
+				console.log(data);
+				grid.resetData(data);
+			})
+			.fail(err => console.log(err));
+
+			
+
+		$(document).ready(async () => {
+			await gridLoad();
+			await datas();
+			
+		});
+}
+
+		const gridLoad = () => {
+			// 그리드 생성
+			const Grid = tui.Grid;
+
+			Grid.applyTheme('custom');
+			// Toast UI Grid 구성하기
+			const grid = new Grid({
+				// ================================== 공통 옵션 적용 ==============================
+				el: document.getElementById('grid'),    // [필수] Container element
+				data: [
+					{
+						buildingName: '전기세',
+						gwanlibiName: '800,000',
+						gwanlibiItemMoney: '80,000'
+
+					}
+				],
+
+				// ================================== 컬럼 옵션 적용 ================================== //
+				columns: [
+					// [Column-1] 관리비 항목 명
+					{
+						header: '관리비 항목 명',           // [필수] 컬럼 이름
+						name: 'gwanlibiName',                   // [필수] 컬럼 매핑 이름 값
+						resizable: true,                // [선택] 컬럼의 리사이즈 여부 옵션
+						align: 'center'
+					},
+					// [Column-2] 관리 비용
+					{
+						header: '관리 비용',
+						name: 'gwanlibiItemMoney',
+						resizable: true,
+						align: 'center',
+						editor: 'text'                 // [선택] 수정 옵션
+					},
+					// [Column-3] 가구별 관리비
+					{
+						header: '가구별 관리비',
+						name: '-',
+						resizable: true,
+						align: 'center'
+					}
+				]
+			});
+		};
+
+	</script>
+</body>
+
+</html>
