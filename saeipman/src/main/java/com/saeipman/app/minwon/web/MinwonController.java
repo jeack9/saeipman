@@ -9,7 +9,9 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +73,8 @@ public class MinwonController {
 		minwonVO.setRoomId("2");
 		minwonVO.setRoomNo("101");
 		
+		List<String> imgList = new ArrayList<>();
+		
 		log.info(uploadPath);
 		for(MultipartFile file : files) {
 			log.info(file.getContentType());
@@ -86,12 +90,13 @@ public class MinwonController {
 			
 			try {
 				file.transferTo(savePath);
-				minwonVO.setChumbuImage(fileName);
+				imgList.add(fileName);
 			}catch(IOException e) {
 				e.printStackTrace();
 			}
 			
 		}
+		minwonVO.setChumbuImage(String.join(",", imgList));
 		minwonService.minwonInsert(minwonVO);
 		return "redirect:minwonList";
 	}
@@ -117,7 +122,6 @@ public class MinwonController {
 	        }
 	  
 	        String fileName = uploadFile.getOriginalFilename();
-	        
 	        System.out.println("fileName : " + fileName);
 	    
 	        //날짜 폴더 생성
@@ -142,7 +146,11 @@ public class MinwonController {
 	        // DB에 해당 경로 저장
 	        // 1) 사용자가 업로드할 때 사용한 파일명
 	        // 2) 실제 서버에 업로드할 때 사용한 경로
-	        imageList.add(setImagePath(uploadFileName));
+	        // 데이터베이스에 이미지 경로 저장 (이미지 경로 수정)
+	        minwonVO.setChumbuImage(String.join(",", imageList));
+	        
+	        // 서비스에서 업데이트 처리
+	        minwonService.minwonUpdate(minwonVO);
 	     }
 	    
 	    return imageList;
