@@ -2,6 +2,8 @@ package com.saeipman.app.member.service;
 
 import java.util.Map;
 
+import org.springframework.validation.Errors;
+
 public interface LoginService {
 	// 로그인정보 단건 조회
 	public LoginInfoVO loginInfo(LoginInfoVO loginVO);
@@ -14,4 +16,5 @@ public interface LoginService {
 	
 	// 임대인정보 단건 추가
 	public void addIdaein(ImdaeinVO imdaeinVO);
+
 }
