@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
 				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 				layout:decorate="~{common/layouts/default_layout}"
-				layout:fragment="Main">
+				>
 <head>
 <meta charset="UTF-8">
 <title>월별 관리비</title>
@@ -30,7 +30,7 @@
 </head>
 
 <body>
-	<div class="buildingBox">
+	<div class="buildingBox" layout:fragment="Main">
 		<div class="container">
 			<div class="row">
 			

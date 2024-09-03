@@ -1,5 +1,10 @@
 package com.saeipman.app.gwanlibi.service;
 
-public interface GwanlibiDetailsService {
+import java.util.List;
 
+public interface GwanlibiDetailsService {
+	
+//	public List<GwanlibiDetailsVO> detailsList(String buildingId, String selectedDate);
+	public List<GwanlibiDetailsVO> detailsList(String buildingId);
+	
 }

@@ -13,7 +13,7 @@
 		                         ON   b.building_id = t.building_id AND TO_CHAR(t.payment_month, 'yymm') = TO_CHAR(sysdate, 'yymm')
 		                         JOIN month_gwanlibi p
 		                         ON   b.building_id = p.building_id AND TO_CHAR(p.payment_month, 'yymm') = TO_CHAR(sysdate, 'yymm') -1
-		WHERE b.imdaein_id = #{imdaeinId}
+		WHERE    b.imdaein_id = #{imdaeinId}
 		ORDER BY b.building_name
 		
 	</select>
