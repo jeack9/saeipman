@@ -19,4 +19,6 @@ public interface MinwonService {
 	//삭제
 	public int minwonDelete(int postNo);
 	
+	public List<MinwonVO> categoryList();
+	
 }

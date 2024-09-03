@@ -63,6 +63,11 @@ public class MinwonServiceImpl implements MinwonService{
 	public int minwonDelete(int postNO) {
 		return minwonMapper.deleteMinwon(postNO);
 	}
+
+	@Override
+	public List<MinwonVO> categoryList() {
+		return minwonMapper.selectCategory();
+	}
 	
 	
 }
