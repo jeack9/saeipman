@@ -9,6 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 public class WebControllerAdvice {
 	@ModelAttribute("contextPath")
 	public String contextPath(final HttpServletRequest request) {
-		return request.getContextPath();
+		return request.getServletContext().getContextPath();
 	}
 }

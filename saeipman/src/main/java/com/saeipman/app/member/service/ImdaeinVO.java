@@ -13,5 +13,4 @@ public class ImdaeinVO {
 	private String imaeinEmail;
 	private Date birth;
 	private String phone;
-	private String pw;
 }

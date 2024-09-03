@@ -4,11 +4,15 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="UTF-8">
-<meta name="contextPath" th:value="${contextPath}">
+<!-- <meta name="contextPath" th:value="${contextPath}"> -->
 <!-- <meta name="_csrf" th:value="${_csrf.token}"> -->
 <title>saeipman</title>
 <th:block th:replace="~{common/configs/default_config :: BootstrapConfig}"></th:block>
 <th:block th:replace="~{common/configs/default_config :: jQueryConfig}"></th:block>
+<script type="text/javascript" th:inline="javascript">
+	let ctxPath = [[${contextPath}]];
+	console.log(ctxPath, "ctxPath");
+</script>
 </head>
 <body>
 	<div class="container-xxl position-relative bg-white d-flex p-0">
