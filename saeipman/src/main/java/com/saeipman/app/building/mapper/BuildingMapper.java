@@ -9,5 +9,5 @@ public interface BuildingMapper {
 	public BuildingVO buildingListInfo(BuildingVO buildingVO);
 	public int buildingInsert(BuildingVO buildingVO);
 	public int buildingUpdate(BuildingVO buildingVo);
-	
+	public int selectBuildingDelete(String buildingId);
 }
