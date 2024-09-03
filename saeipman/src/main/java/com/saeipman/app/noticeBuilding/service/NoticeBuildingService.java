@@ -17,5 +17,5 @@ public interface NoticeBuildingService {
 		public Map<String, Object> noticeBuildingUpdate(NoticeBuildingVO noticeBuildingVO);
 		
 		//삭제
-		public int noticeBuildingDelete(int postNO);
+		public int noticeBuildingDelete(int postNo);
 }

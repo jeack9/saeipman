@@ -6,12 +6,12 @@
 	<div class="col-sm-12 col-xl-11">
 		<div class="bg-light rounded h-100 p-4">
 			<h6 class="mb-4">공지사항</h6>
-			<table class="table table-hover" style="text-align:center">
+			<table class="table table-hover" style="text-align: center">
 				<thead>
 					<tr>
 						<th scope="col" class="col-sm-1">번호</th>
 						<th scope="col" class="col-sm-5">제목</th>
-						<th scope="col">작성일</th>
+						<th scope="col">등록일</th>
 						<th scope="col">조회수</th>
 					</tr>
 				</thead>
@@ -26,13 +26,17 @@
 					</th:block>
 				</tbody>
 			</table>
+			<div style="text-align: right">
+				<button type="button" th:onclick="|location.href='@{/noticeBuildingInsert}'|"
+					class="btn btn-outline-success m-2">등록</button>
+			</div>
 		</div>
 	</div>
 	<script>
 		$('tbody > tr').on('click', function(event) {
 			let trTag = event.currentTarget;
 			let postNo = $(trTag).children().first().text();
-			let url = '/noticeBuildingInfo?postNo=' + postNo;
+			let url = ctxPath + '/noticeBuildingInfo?postNo=' + postNo;
 			location.href = url;
 		})
 	</script>

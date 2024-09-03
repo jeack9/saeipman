@@ -37,24 +37,41 @@
 	
 	<!-- 등록 -->
 	<insert id="insertNoticeBuilding" parameterType="NoticeBuildingVO">
-		INSERT INTO building_notice
-		(
-		postNO
-		, title
-		, con
-		)
+	<selectKey keyProperty="postNo" resultType="Integer" order="BEFORE">
+		SELECT NVL(MAX(POST_NO), 0) + 1 
+		FROM building_notice
+	</selectKey>
+		insert into building_notice(post_no
+                          , title
+                          , writer
+                          , content
+                          , reg_date
+                          , building_id
+                          )
+		values(building_notice_seq.NEXTVAL
+		      , #{title}
+		      , '10'
+		      , #{content}
+		      ,  SYSDATE
+		      , #{buildingId}
+		      )
 	</insert>
 
 
 	<!-- 수정 -->
 	<update id="updateNoticeBuilding">
-
+	     UPDATE building_notice
+         SET title = #{title}
+            , content = #{content}
+            , mod_date = SYSDATE
+         WHERE post_no = #{postNo}  
 	</update>
 
 
 	<!-- 삭제 -->
 	<delete id="deleteNoticeBuilding" parameterType="int">
-
+		DELETE FROM building_notice
+		WHERE post_no = #{postNo}
 	</delete>
 
 </mapper>

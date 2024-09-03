@@ -2,7 +2,6 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layouts/default_layout}"
 	layout:fragment="Main">
-	<th:block th:replace="~{common/configs/default_config :: jQueryConfig}"></th:block>
 
 	<div class="container-fluid pt-4 px-4">
 		<div class="row g-4">
@@ -11,22 +10,38 @@
 					<form th:action="@{/noticeBuildingInsert}" method="post"
 						name="insertForm">
 						<h6 class="mb-4">공지사항 작성</h6>
-						<div>
-							<label for="Nbtitle">제목</label><input type="text" id="NBtitle"
-								name="title">
+						<div class="form-floating mb-3">
+							<input type="text" class="form-control" id="floatingInput"
+								name="title" /> <label for="floatingInput">제목</label>
 						</div>
-						<div>
-							<label for="Nbtitle">제목</label><input type="text" id="NBtitle"
-								name="title">
+						<div class="form-floating mb-3">
+							<select class="form-select" id="floatingSelect" name="buildingId"
+								aria-label="Floating label select example">
+								<option selected>건물 목록</option>
+								<option value="ZIP10">한입만 원룸</option>
+								<option value="ZIP10">두입만 투룸</option>
+								<option value="ZIP10">세입만 빌딩</option>
+							</select> <label for="floatingSelect">공지사항을 등록할
+								건물을 선택하세요.</label>
+						</div>
+						<div class="form-floating">
+							<textarea class="form-control" name="content"
+								id="floatingTextarea" style="resize: none; height: 400px"></textarea>
+							<label for="floatingTextarea">내용</label>
+						</div>
+						<div class="mb-3">
+							<label for="formFileMultiple" class="form-label"></label> <input
+								class="form-control" type="file" id="formFileMultiple" multiple
+								name="chumbuImage" />
+						</div>
+						<div style="text-align: center">
+							<button type="submit" class="btn btn-outline-success m-2">등록</button>
 						</div>
 					</form>
+
 				</div>
 			</div>
 		</div>
-		<div style="text-align: center">
-			<button type="button" class="btn btn-primary rounded-pill m-2">등록</button>
-			<button type="button" class="btn btn-success rounded-pill m-2">Success</button>
-			<button type="button" class="btn btn-danger rounded-pill m-2">Danger</button>
-		</div>
 	</div>
 </div>
+
