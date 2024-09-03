@@ -84,6 +84,12 @@
 	<update id="updateMinwon">
 		update minwon
 		set 
+			title = #{title}
+			, content = #{content}
+			, category = #{category}
+			, chumbu_image = #{chumbuImage}
+			, visits_date = #{visitsDate}
+			
 		where post_no = #{postNo}
 	</update>
 	
