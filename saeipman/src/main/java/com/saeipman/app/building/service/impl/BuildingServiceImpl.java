@@ -33,14 +33,21 @@ public class BuildingServiceImpl implements BuildingService{
 	@Override
 	public Map<String, Object> updateBuilding(BuildingVO buildingVO) {
 		Map<String, Object> map = new HashMap<>();
-		boolean isSuccessed =false;
+		boolean isSuccessed = false;
 		int result = buildingMapper.buildingUpdate(buildingVO);
 		
 		if(result == 1) {
 			isSuccessed = true;
+			map.put("list", buildingMapper.buildingList());
 		}
+		
 		map.put("success", isSuccessed);
 		map.put("target", buildingVO);
+		
 		return map;
+	}
+	@Override
+	public int buildingDelete(String buildingId) {
+		return buildingMapper.selectBuildingDelete(buildingId);
 	}
 }

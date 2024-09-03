@@ -4,7 +4,7 @@
 	layout:decorate="~{common/layouts/default_layout}"
 	layout:fragment="Main" class="row">
 	<!-- start 건물리스트 -->
-	<div class="col-md-4">
+	<div class="col-md-4" id="buildList">
 		<th:block th:each="building, index:${buildings}">
 			<ul class="list-group">
 				<li th:id="${building.buildingId}" th:data-index="${index.count}"
@@ -26,11 +26,13 @@
 		<form name="updateForm" class="row g-3">
 			<!-- start 건물 정보 -->
 			<h1 id="bnameTitle"></h1>
-			<div>
+			<div style="text-align: center;">
 				<button type="button" class="btn btn-outline-primary m-2 "
 					id="updateBtn">수정완료</button>
-				<button type="button" class="btn btn-outline-danger m-2"
-					id="deleteBtn">삭제</button>
+				<button type="button" class="btn btn-outline-danger m-2 deleteBtn bid">삭제</button>
+			</div>
+			<div>
+				<input name="buildingId" type="hidden" class="bid" />
 			</div>
 
 			<div>
@@ -115,7 +117,7 @@
 				function getBuildingInfo(buildingId) {
 
 					$.ajax({
-						url : '/buildingDetails',
+						url : ctxPath+ '/buildingDetails',
 						type : 'GET',
 						data : {
 							id : buildingId
@@ -125,7 +127,6 @@
 					}).done(function(data) {
 						//console.log(data);
 						$('#bnameTitle').html(data.buildingName);
-						$("#bid").val(data.buildingId);
 						$("#bname").val(data.buildingName);
 						$(".addr").val(data.doroAddr);
 						$(".dAddr").val(data.detailsAddr);
@@ -136,10 +137,12 @@
 						$("#totalGagu").val(data.totalGagu);
 						$("#parking").val(data.parking);
 						checkFunc($("#liftYn"));
+						$(".bid").val(data.buildingId);
 					})
 				}
 
 			})
+			
 			function checkFunc(liftYn) {
 				if (liftYn.val() === 'Y') {
 					liftYn.prop('checked', true);
@@ -153,14 +156,16 @@
 			function updateAjax(){
 				let dataObj = getData();
 				
-				$.ajax('buildingUpdate',{
+				$.ajax(ctxPath + '/buildingUpdate',{
 					type:'post',
-					dataType : 'application/json',
+					contentType : 'application/json',
 					data : JSON.stringify(dataObj),
 				})
 				.done(result=>{
 					if(result.success){
+						
 						alert('정상 수정');
+						$('#bnameTitle').html(result.target.buildingName);
 					}else{
 						alert('수정 실패');
 					}
@@ -177,6 +182,53 @@
 				console.log(formObj);
 				return formObj;
 			}
+			//체크박스
+			$('input:checkbox').change(function() {
+				if (this.checked) {
+
+					$(this).attr('value', 'Y');
+				} else {
+					$(this).attr('value', 'N');
+				}
+			})
+			//삭제 버튼
+			$('.deleteBtn').on('click',function(e){
+				if(confirm('삭제 하시겠습니까?')==true){
+					location.href= ctxPath + "/buildingDelete?id=" + e.target.value;
+				}
+				else{
+					return;
+				}
+			})
+		
+			
 		</script>
+		<script
+			src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+		<script>
+		function sample6_execDaumPostcode() {
+			new daum.Postcode({
+				oncomplete : function(data) {
+					// 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+					// 각 주소의 노출 규칙에 따라 주소를 조합한다.
+					// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+					var addr = ''; // 주소 변수
+					var extraAddr = ''; // 참고항목 변수
+
+					//사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+					if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+						addr = data.roadAddress;
+					} else { // 사용자가 지번 주소를 선택했을 경우(J)
+						addr = data.jibunAddress;
+					}
+
+					document.getElementById("sample6_address").value = addr;
+					// 커서를 상세주소 필드로 이동한다.
+					document.getElementById("sample6_detailAddress").focus();
+				}
+			}).open();
+		}
+	</script>
 	</div>
 </div>
