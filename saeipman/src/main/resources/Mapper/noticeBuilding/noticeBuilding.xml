@@ -37,18 +37,30 @@
 	
 	<!-- 등록 -->
 	<insert id="insertNoticeBuilding" parameterType="NoticeBuildingVO">
-		INSERT INTO building_notice
-		(
-		postNO
-		, title
-		, con
-		)
+		insert into building_notice(post_no
+                          , title
+                          , writer
+                          , content
+                          , reg_date
+                          , building_id
+                          )
+values(building_notice_seq.NEXTVAL
+      , #{title}
+      , '10'
+      , #{content}
+      ,  SYSDATE
+      , #{buildingId}
+      )
 	</insert>
 
 
 	<!-- 수정 -->
 	<update id="updateNoticeBuilding">
-
+	     UPDATE building_notice
+         SET title = #{title}
+            , content = #{content}
+            , chumbu_image = #{chumbuImage}
+            , mod_Date = SYSDATE
 	</update>
 
 

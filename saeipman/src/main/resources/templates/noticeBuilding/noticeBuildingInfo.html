@@ -16,6 +16,7 @@
 							<tr>
 								<th style="width:10%">첨부파일</th>
 								<td>[[${BNotice.chumbuImage}]]</td>
+                            </div>
 							</tr>
 							<tr>
 								<td colspan="2">[[${BNotice.content}]]</td>
@@ -26,9 +27,9 @@
 			</div>
 		</div>
 		<div style="text-align:center">
-			<button type="button" class="btn btn-primary rounded-pill m-2">등록</button>
-			<button type="button" class="btn btn-success rounded-pill m-2">Success</button>
-			<button type="button" class="btn btn-danger rounded-pill m-2">Danger</button>
+			<button type="button" th:onclick="|location.href='@{/noticeBuildingUpdate(postNo=${BNotice.postNo})}'|" class="btn btn-outline-warning m-2">수정</button>
+			<button type="button" th:onclick="|location.href='@{/noticeBuildingList}'|" class="btn btn-outline-success m-2">목록</button>
+			<button type="button" th:onclick="|location.href='@{/noticeBuildingDelete()}'|" class="btn btn-outline-danger m-2">삭제</button>
 		</div>
 	</div>
 </div>
