@@ -9,6 +9,10 @@
 <title>saeipman</title>
 <th:block th:replace="~{common/configs/login_config :: BootstrapConfig}"></th:block>
 <th:block th:replace="~{common/configs/login_config :: jQueryConfig}"></th:block>
+<script type="text/javascript" th:inline="javascript">
+	let ctxPath = [[${contextPath}]];
+	console.log(ctxPath, "ctxPath");
+</script>
 </head>
 <body>
 	<div>
