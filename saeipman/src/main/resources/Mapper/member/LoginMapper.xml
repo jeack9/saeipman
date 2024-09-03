@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.saeipman.app.member.mapper.LoginMapper">
+	<!-- 로그인 단건조회 -->
 	<select id="selectLoginInfo">
 		SELECT login_id
 		       , pw
 		       , auth
 		FROM login_info
 		WHERE login_id = #{loginId}
+	</select>
+	<!-- 임대인 단건조회 -->
+	<select id="selectImdaeinInfo">
+		SELECT imdaein_id
+      ,imdaein_name
+      ,imdaein_email
+      ,birth
+      ,phone
+		FROM imdaein
+		WHERE imdaein_id = #{id}
 	</select>
 </mapper>
