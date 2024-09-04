@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
+import com.saeipman.app.member.dto.MemberRequestDTO;
 import com.saeipman.app.member.mapper.LoginMapper;
 import com.saeipman.app.member.service.ImdaeinVO;
 import com.saeipman.app.member.service.LoginInfoVO;
@@ -26,9 +27,9 @@ public class LoginServiceImpl implements LoginService {
 		LoginInfoVO login = lmapper.selectLoginInfo(loginVO);
 		return login;
 	}
-
+    // 임대인 단건조회
 	@Override
-	public Map<String, Object> imdaeinInfo(String id) { // 임대인 단건조회
+	public Map<String, Object> imdaeinInfo(String id) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		ImdaeinVO imdaein = lmapper.selectImdaeinInfo(id);
 		boolean hasImdaein = imdaein == null ? false : true;
@@ -37,9 +38,24 @@ public class LoginServiceImpl implements LoginService {
 		return map;
 	}
 
+	// 임대인 단건추가
+	@Transactional
 	@Override
-	public void addIdaein(ImdaeinVO imdaeinVO) { // 임대인 단건추가
-
+	public int addImdaein(MemberRequestDTO dto) { 
+		ImdaeinVO ivo = new ImdaeinVO();
+		ivo.setImdaeinId(dto.getId());
+		ivo.setImdaeinName(dto.getName());
+		ivo.setImdaeinEmail(dto.getEmail());
+		ivo.setPhone(dto.getPhone());
+		ivo.setBirth(dto.getBirth());
+		int result = lmapper.insertImdaein(ivo);
+				
+		LoginInfoVO lvo = new LoginInfoVO();
+		lvo.setLoginId(dto.getId());
+		lvo.setPw(dto.getPw());
+		lvo.setAuth(1);
+		result += lmapper.insertLogin(lvo);
+		return result;
 	}
 
 	@Override

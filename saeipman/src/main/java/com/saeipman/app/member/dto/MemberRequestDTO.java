@@ -18,26 +18,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class MemberRequestDTO {
+	@Pattern(regexp = "^[a-zA-Z][0-9a-zA-Z]{4,7}$", message = "아이디: 영문을 포함한 영문 + 숫자 조합 6~18 자리를 사용하세요.")
 	@NotBlank(message = "아이디: 필수입니다.")
-	@Length(min = 6, max = 18, message = "아이디: 6자리 이상, 18자리 이하 ")
-	@Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])", message = "아이디는 영문 대소문자, 숫자를 사용하세요.")
 	private String id; // 임대인 아이디, 로그인 아이디
 	
-	@NotBlank(message = "비밀번호: 필수입니다.")
 	@Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z]).{8,16}", message = "비밀번호: 8~16자 영문 대소문자, 숫자를 사용하세요.")
+	@NotBlank(message = "비밀번호: 필수입니다.")
 	private String pw; // 로그인 비번
 	
 	@NotBlank(message = "이름: 필수입니다.")
 	private String name; // 임대인 이름, 임차인 이름
 	
-	@NotBlank(message = "이메일: 필수입니다.")
 	@Email(message = "이메일: 올바르지 않은 형식입니다.")
+	@NotBlank(message = "이메일: 필수입니다.")
 	private String email; // 임대인 이메일
 	
 	@Past(message = "생년월일: 유효하지 않은 날짜입니다.")
 	private Date birth;  // 임대인 생년월일
 	
+	@Pattern(regexp = "[0-9]{10,11}", message = "비밀번호: 10~11자리의 숫자만 입력가능합니다")
 	@NotBlank(message = "연락처: 필수입니다.")
-	@Pattern(regexp = "[0-9]{10,11}", message = "10~11자리의 숫자만 입력가능합니다")
 	private String phone; // 임대인 전화번호
 }

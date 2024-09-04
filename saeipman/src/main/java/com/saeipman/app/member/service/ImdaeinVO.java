@@ -8,9 +8,9 @@ import lombok.Data;
 
 @Data
 public class ImdaeinVO {
-	private String imaeinId;
-	private String imaeinName;
-	private String imaeinEmail;
+	private String imdaeinId;
+	private String imdaeinName;
+	private String imdaeinEmail;
 	private Date birth;
 	private String phone;
 }
