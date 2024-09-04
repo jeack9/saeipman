@@ -96,7 +96,7 @@ public class MinwonController {
 			}
 			
 		}
-		minwonVO.setChumbuImage(String.join(",", imgList));
+		minwonVO.setChumbuImage(String.join(":", imgList));
 		minwonService.minwonInsert(minwonVO);
 		return "redirect:minwonList";
 	}
@@ -108,6 +108,8 @@ public class MinwonController {
 		List<MinwonVO> ca = minwonService.categoryList();
 		model.addAttribute("categories",ca);
 		return "minwon/minwonUpdate";
+
+		
 	}
 	// 수정(처리)
 	@PostMapping("minwonUpdate")
@@ -147,7 +149,7 @@ public class MinwonController {
 	        // 1) 사용자가 업로드할 때 사용한 파일명
 	        // 2) 실제 서버에 업로드할 때 사용한 경로
 	        // 데이터베이스에 이미지 경로 저장 (이미지 경로 수정)
-	        minwonVO.setChumbuImage(String.join(",", imageList));
+	        minwonVO.setChumbuImage(String.join(":", imageList));
 	        
 	        // 서비스에서 업데이트 처리
 	        minwonService.minwonUpdate(minwonVO);

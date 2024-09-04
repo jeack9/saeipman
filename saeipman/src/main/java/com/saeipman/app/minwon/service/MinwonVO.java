@@ -27,4 +27,9 @@ public class MinwonVO {
 	
 	private int categoryNo;
 	private String categoryType;
+	
+	public String[] getChumbuImages() {
+		if(chumbuImage == null) return null;
+		return chumbuImage.split(":");
+	}
 }
