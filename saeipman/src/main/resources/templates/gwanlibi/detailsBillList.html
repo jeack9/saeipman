@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}" layout:fragment="Main">
+
+<head>
+	<meta charset="UTF-8">
+</head>
+
+<body>
+	<br>
+	
+	<th:block th:each="ele : ${detailsList}">
+		<th:block th:if="${ele.buildingName == }">
+			<h1 th:text="${detailsList.buildingName}"></h1>
+		</th:block>		
+	</th:block>
+	
+	<br>
+	<div id="grid"></div>
+
+	<script th:inline="javascript">
+		// # reference : https://adjh54.tistory.com/95
+		// # reference : https://park-duck.tistory.com/entry/javascript-1-Toast-UI-Grid-%EA%B8%B0%EC%B4%88API-%EC%82%AC%EC%9A%A9%EB%B2%95
+
+		// JavaScript에서 Thymeleaf 변수 사용하기 //
+		/* 1. <script th:inline="javascript">
+		   2. Thymeleaf 변수 사용 */
+		let detailsList = [[${ detailsList }]];
+
+		// Toast UI //
+		// 01. async - await 설정 : Grid를 화면 제일 마지막 순서에 그려주기.
+		$(document).ready(async () => {
+			await gridLoad();
+		});
+
+		// 02. Grid 생성.
+		// return void
+		const gridLoad = () => {
+			const Grid = tui.Grid;
+
+			// 03. Grid theme 설정. (clean, stripe, default)
+			Grid.applyTheme('stripe');
+
+			// 04. Toast UI Grid 구성.
+			const grid = new Grid({
+				// ================================== 공통 옵션 적용 ================================== //
+				el: document.getElementById('grid'), // 필수 : Container element
+				data: detailsList,
+				scrollX: false,
+				scrollY: false,
+				// ================================== 컬럼 옵션 적용 ================================== //
+				columns: [
+					// [Column-1] 관리비 항목 명
+					{
+						header: '관리비 항목 명',           // [필수] 컬럼 이름
+						name: 'gwanlibiName',           // [필수] 컬럼 매핑 이름 값
+						resizable: true,                // [선택] 컬럼의 리사이즈 여부 옵션
+						align: 'center'
+					},
+					// [Column-2] 관리 비용
+					{
+						header: '관리 비용',
+						name: 'gwanlibiItemMoney',
+						resizable: true,
+						align: 'center',
+						editor: 'text'                  // [선택] 수정 옵션
+					},
+					// [Column-3] 가구별 관리비
+					{
+						header: '가구별 관리비',
+						name: '-',
+						resizable: true,
+						align: 'center'
+					}
+				]
+			});
+		}
+
+	</script>
+</body>
+
+</html>
