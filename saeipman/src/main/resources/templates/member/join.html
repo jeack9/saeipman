@@ -16,13 +16,12 @@
 							</h3>
 							<h3>회원가입</h3>
 						</div>
-						<div>dsfsd[[${memberReq}]]</div>
 						<form th:action="@{/member/vaildJoin}" method="post" name="joinfrm" th:object="${memberReq}">
 							<div>
 								<div class="form-floating mb-3">
 									<input type="text" class="form-control" th:errorclass="field-error" th:field=*{name} placeholder="이름"> <label
 										for="name">이름</label>
-									<p th:if="${#fields.hasErrors('name')}">Invalid Age</p>
+									<div class="field-error" th:errors="*{name}"></div>
 								</div>
 								<div class="mb-3">
 									<div class="form-floating d-flex">
@@ -30,10 +29,12 @@
 										<button type="button" class="btn btn-primary" id="ckIdBtn"
 											style="min-width: 90px;">중복확인</button>
 									</div>
+									<div class="field-error" th:errors="*{id}"></div>
 								</div>
 								<div class="form-floating mb-3">
 									<input type="password" class="form-control" th:field=*{pw} placeholder="비밀번호" autoComplete="off"> <label
 										for="pw">비밀번호</label>
+									<div class="field-error" th:errors="*{pw}"></div>
 								</div>
 								<div class="form-floating mb-3">
 									<input type="email" class="form-control" th:errorclass="field-error" th:field=*{email} placeholder="이메일(비밀번호 찾기용)"> 
@@ -50,6 +51,7 @@
 									<button type="button" class="btn btn-primary"
 										style="min-width: 90px;">인증요청</button>
 								</div>
+								<div class="field-error" th:errors="*{phone}"></div>
 								<div class="form-floating mb-3">
 									<input type="text" class="form-control" id="floatingValid"
 										placeholder="인증번호"> <label for="floatingValid">인증번호</label>

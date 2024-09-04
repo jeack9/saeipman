@@ -50,26 +50,30 @@ public class LoginController {
 
 	@PostMapping("join") // 회원가입처리
 	public String join(ImdaeinVO imdaeinVO, @RequestParam(name = "pw") String pw) {
-		Map<String, Object> map = lsvc.imdaeinInfo(imdaeinVO.getImaeinId());
+		Map<String, Object> map = lsvc.imdaeinInfo(imdaeinVO.getImdaeinId());
 		if ((boolean) map.get("result")) {
 
 		}
 		return "";
 	}
-
-	@PostMapping("ckId")// 아이디 중복체크
+	
+	// 아이디 중복체크
+	@PostMapping("ckId")
 	@ResponseBody
 	public boolean checkId(@RequestParam(name = "id") String id) {
 		boolean hasId = lsvc.checkImdaein(id);
 		return hasId;
 	}
 	
+	// 회원가입 폼 유효성검사
 	@PostMapping("/vaildJoin")
 	public String validJoin(@Valid @ModelAttribute("memberReq") MemberRequestDTO memberReq, BindingResult bindingResult, Model model) {
-		// 회원가입 폼 유효성검사
 		if(bindingResult.hasErrors()) {
+			System.out.println("bbbb");
 			return "member/join";
 		}
+		System.out.println("aaaa");
+		lsvc.addImdaein(memberReq);
 		return "member/login";
 	}
 	

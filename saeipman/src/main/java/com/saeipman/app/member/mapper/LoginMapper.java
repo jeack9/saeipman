@@ -13,8 +13,11 @@ public interface LoginMapper {
 	public ImdaeinVO selectImdaeinInfo(String id);
 	
 	// 임대인 단건추가
+	public int insertImdaein(ImdaeinVO vo);
 	
 	// 임대인 아이디 중복체크
 	public int ckIdDupl(String id);
 	
+	// 로그인 정보 단건추가
+	public int insertLogin(LoginInfoVO vo);
 }

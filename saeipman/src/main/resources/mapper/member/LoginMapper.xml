@@ -25,4 +25,32 @@
 		FROM imdaein
 		WHERE imdaein_id = #{id}
 	</select>
+	
+	<!-- 임대인 단건추가  -->
+	<insert id="insertImdaein">
+		INSERT INTO imdaein(
+		                imdaein_id
+                   ,imdaein_name 
+                   ,phone
+                   ,imdaein_email
+                   ,birth)
+		VALUES (#{imdaeinId}
+		       ,#{imdaeinName}
+		       ,#{phone}
+		       ,#{imdaeinEmail}
+		       ,#{birth})
+	</insert>
+	<!-- 로그인 단건추가 -->
+	<insert id="insertLogin">
+	INSERT INTO login_info (
+    login_id
+    ,pw
+    ,auth
+	) 
+	VALUES (
+	    #{loginId}
+	    ,#{pw}
+	    ,#{auth}
+	)
+	</insert>
 </mapper>
