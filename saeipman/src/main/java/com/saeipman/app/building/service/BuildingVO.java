@@ -23,4 +23,8 @@ public class BuildingVO {
 	private String fileName;
 	private String memo;
 	private String imdaeinId;
+	
+	public String[] getBuildingImages(){
+		return buildingImage.split(":");
+	}
 }

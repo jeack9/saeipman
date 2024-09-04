@@ -66,19 +66,6 @@ public class BuildingController {
 	 * return "redirect:buildingList"; }
 	 */
 
-	@PostMapping("/buildingUpdate")
-	@ResponseBody
-	public Map<String, Object> updateBuilding(@RequestBody BuildingVO buildingVO) {
-		System.out.println(buildingVO);
-		return buildingService.updateBuilding(buildingVO);
-	}
-
-	@GetMapping("/buildingDelete")
-	public String buildingDelete(@RequestParam("id") String buildingId) {
-		buildingService.buildingDelete(buildingId);
-		return "redirect:buildingList";
-	}
-
 	@PostMapping("/buildingInsert")
 	public String insertBuilding(@RequestPart MultipartFile[] files, BuildingVO buildingVO) {
 		List<String> imgList = new ArrayList<>();
@@ -105,9 +92,23 @@ public class BuildingController {
 			}
 
 		}
-		buildingVO.setBuildingImage(String.join(",", imgList));
+		buildingVO.setBuildingImage(String.join(":", imgList));
 		int success = buildingService.insertBuilding(buildingVO);
 		return "redirect:buildingList";
 	}
+	@PostMapping("/buildingUpdate")
+	@ResponseBody
+	public Map<String, Object> updateBuilding(@RequestBody BuildingVO buildingVO) {
+		System.out.println(buildingVO);
+		return buildingService.updateBuilding(buildingVO);
+	}
+
+	@GetMapping("/buildingDelete")
+	public String buildingDelete(@RequestParam("id") String buildingId) {
+		buildingService.buildingDelete(buildingId);
+		return "redirect:buildingList";
+	}
+
+	
 
 }

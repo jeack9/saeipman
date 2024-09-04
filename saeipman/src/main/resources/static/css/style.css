@@ -275,3 +275,8 @@
     background: var(--dark);
     border-color: var(--primary);
 }
+/* building img size */
+#imgFile > img{
+	width:200px;
+	height:200px;
+}
