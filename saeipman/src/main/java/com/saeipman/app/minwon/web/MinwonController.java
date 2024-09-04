@@ -73,6 +73,7 @@ public class MinwonController {
 		minwonVO.setRoomId("2");
 		minwonVO.setRoomNo("101");
 		
+		//tnejd
 		List<String> imgList = new ArrayList<>();
 		
 		log.info(uploadPath);
