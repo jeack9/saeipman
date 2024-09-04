@@ -44,13 +44,15 @@
 		insert into building_notice(post_no
                           , title
                           , writer
+                          , chumbu_image
                           , content
                           , reg_date
                           , building_id
                           )
-		values(building_notice_seq.NEXTVAL
+		values(#{postNo}
 		      , #{title}
 		      , '10'
+		      , #{chumbuImage}
 		      , #{content}
 		      ,  SYSDATE
 		      , #{buildingId}

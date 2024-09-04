@@ -16,7 +16,7 @@
 								placeholder="글번호" th:field="*{postNo}" readonly/> <label
 								for="floatingInput">글번호</label>
 						</div>
-
+						
 						<div class="form-floating mb-3">
 							<input type="text" class="form-control" id="floatingInput"
 								placeholder="제목" th:field="*{title}" /> <label
@@ -32,6 +32,13 @@
 							</select> <label for="floatingSelect">공지사항을 등록할
 								건물을 선택하세요.</label>
 						</div>
+						
+						<div class="mb-3">
+							<label for="formFileMultiple" class="form-label"></label> <input
+								class="form-control" type="file" id="formFileMultiple" multiple
+								th:field="*{chumbuImage}" />
+						</div>
+						
 						<div class="form-floating">
 							<textarea class="form-control" placeholder="Leave a comment here"
 								id="floatingTextarea" style="resize: none; height: 400px"
