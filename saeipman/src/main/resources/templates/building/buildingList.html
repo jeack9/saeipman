@@ -29,7 +29,8 @@
 			<div style="text-align: center;">
 				<button type="button" class="btn btn-outline-primary m-2 "
 					id="updateBtn">수정완료</button>
-				<button type="button" class="btn btn-outline-danger m-2 deleteBtn bid">삭제</button>
+				<button type="button"
+					class="btn btn-outline-danger m-2 deleteBtn bid">삭제</button>
 			</div>
 			<div>
 				<input name="buildingId" type="hidden" class="bid" />
@@ -47,7 +48,11 @@
 						name="minwonAlertYn" />
 				</div>
 			</div>
-
+			<div id="imgFile"></div>
+			<div class="col-md-4">
+				<label for=" file" class="form-label">빌딩 이미지</label> <input
+					type="file" id="file" multiple name="files" class="form-control">
+			</div>
 			<div class="form-group col-md-7">
 				<label for="bname" class="form-label">빌딩 이름 </label> <input
 					type="text" id="bname" name="buildingName" class="form-control">
@@ -127,6 +132,7 @@
 					}).done(function(data) {
 						//console.log(data);
 						$('#bnameTitle').html(data.buildingName);
+						
 						$("#bname").val(data.buildingName);
 						$(".addr").val(data.doroAddr);
 						$(".dAddr").val(data.detailsAddr);
@@ -136,6 +142,15 @@
 						$("#floorGaguCount").val(data.floorGaguCount);
 						$("#totalGagu").val(data.totalGagu);
 						$("#parking").val(data.parking);
+						
+						if(data.buildingImage != null) {
+							let images = data.buildingImage.split(':');
+							for(img of images){
+								let imgName = $("<img>").attr({'src':ctxPath+'/images/'+img});
+								$("#imgFile").append(imgName);
+							} 
+						}
+						
 						checkFunc($("#liftYn"));
 						$(".bid").val(data.buildingId);
 					})

@@ -23,4 +23,6 @@ public class BuildingVO {
 	private String fileName;
 	private String memo;
 	private String imdaeinId;
+	
+	
 }
