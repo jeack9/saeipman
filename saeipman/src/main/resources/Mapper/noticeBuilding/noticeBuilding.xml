@@ -42,13 +42,15 @@
 		FROM building_notice
 	</selectKey>
 		insert into building_notice(post_no
+		  				  , chumbu_image
                           , title
                           , writer
                           , content
                           , reg_date
                           , building_id
                           )
-		values(building_notice_seq.NEXTVAL
+		values(#{postNo}
+		      , #{chumbuImage}
 		      , #{title}
 		      , '10'
 		      , #{content}

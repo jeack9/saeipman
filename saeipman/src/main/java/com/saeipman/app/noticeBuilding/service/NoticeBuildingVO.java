@@ -19,4 +19,8 @@ public class NoticeBuildingVO {
 	private String chumbuImage; //첨부이미지
 	private Integer views; //조회수
 	private String buildingId; //건물아이디
+	
+	public String[] getChumbuImages() {
+		return chumbuImage.split(":");
+	}
 }
