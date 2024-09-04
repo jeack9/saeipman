@@ -14,4 +14,7 @@ public interface LoginMapper {
 	
 	// 임대인 단건추가
 	
+	// 임대인 아이디 중복체크
+	public int ckIdDupl(String id);
+	
 }

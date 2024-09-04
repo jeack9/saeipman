@@ -45,9 +45,8 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public boolean checkImdaein(String id) {
 		// 회원가입 아이디 중복체크
-		ImdaeinVO imdaein = lmapper.selectImdaeinInfo(id);
-		boolean hasId = imdaein == null ? false : true;
-		return hasId;
+		int result = lmapper.ckIdDupl(id);
+		return result == 1 ? true : false;
 	}
 
 }

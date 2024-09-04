@@ -47,7 +47,9 @@
 						name="minwonAlertYn" />
 				</div>
 			</div>
-
+			<div id="imgFile">
+		
+			</div> 
 			<div class="form-group col-md-7">
 				<label for="bname" class="form-label">빌딩 이름 </label> <input
 					type="text" id="bname" name="buildingName" class="form-control">
@@ -127,6 +129,7 @@
 					}).done(function(data) {
 						//console.log(data);
 						$('#bnameTitle').html(data.buildingName);
+						
 						$("#bname").val(data.buildingName);
 						$(".addr").val(data.doroAddr);
 						$(".dAddr").val(data.detailsAddr);
@@ -136,6 +139,14 @@
 						$("#floorGaguCount").val(data.floorGaguCount);
 						$("#totalGagu").val(data.totalGagu);
 						$("#parking").val(data.parking);
+						if(data.buildingImage != null) {
+							let images = data.buildingImage.split(':');
+							for(img of images){
+								let imgName = $("<img>").attr({'src':ctxPath+'/images/'+img});
+								$("#imgFile").append(imgName);
+							} 
+						}
+						
 						checkFunc($("#liftYn"));
 						$(".bid").val(data.buildingId);
 					})

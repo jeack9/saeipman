@@ -17,4 +17,5 @@ public interface LoginService {
 	// 임대인정보 단건 추가
 	public void addIdaein(ImdaeinVO imdaeinVO);
 
+
 }

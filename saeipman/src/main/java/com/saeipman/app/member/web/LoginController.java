@@ -57,23 +57,20 @@ public class LoginController {
 		return "";
 	}
 
-	@PostMapping("ckId")
+	@PostMapping("ckId")// 아이디 중복체크
 	@ResponseBody
 	public boolean checkId(@RequestParam(name = "id") String id) {
-		// 아이디 중복체크
 		boolean hasId = lsvc.checkImdaein(id);
 		return hasId;
 	}
 	
-	@PostMapping("/vaildJoinProc")
-	public void validJoinProc(@Valid MemberRequestDTO memberReq, BindingResult result, Model model) {
+	@PostMapping("/vaildJoin")
+	public String validJoin(@Valid @ModelAttribute("memberReq") MemberRequestDTO memberReq, BindingResult bindingResult, Model model) {
 		// 회원가입 폼 유효성검사
-		System.out.println("왔다" + memberReq.toString());
-		if(result.hasErrors()) {
-			model.addAttribute("memberReq", memberReq);
-			//return "member/join";
+		if(bindingResult.hasErrors()) {
+			return "member/join";
 		}
-		//return "";
+		return "member/login";
 	}
 	
 }

@@ -4,18 +4,24 @@
 	<!-- 로그인 단건조회 -->
 	<select id="selectLoginInfo">
 		SELECT login_id
-		       , pw
-		       , auth
+		       ,pw
+		       ,auth
 		FROM login_info
 		WHERE login_id = #{loginId}
 	</select>
 	<!-- 임대인 단건조회 -->
 	<select id="selectImdaeinInfo">
 		SELECT imdaein_id
-      ,imdaein_name
-      ,imdaein_email
-      ,birth
-      ,phone
+		      ,imdaein_name
+		      ,imdaein_email
+		      ,birth
+		      ,phone
+		FROM imdaein
+		WHERE imdaein_id = #{id}
+	</select>
+	<!-- 임대인 중복체크 -->
+	<select id="ckIdDupl">
+		SELECT COUNT(*)
 		FROM imdaein
 		WHERE imdaein_id = #{id}
 	</select>
