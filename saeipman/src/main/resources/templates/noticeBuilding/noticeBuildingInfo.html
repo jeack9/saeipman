@@ -12,11 +12,11 @@
 						
 							<tr class="col-md-12">
 								<th style="width: 5%">제목</th>
-								<th style="width: 30%">[[${BNotice.title}]]</th>
+								<td style="width: 30%">[[${BNotice.title}]]</td>
 							</tr>
 							<tr>
 								<th style="width: 10%">첨부파일</th>
-								<td><img style="width:30%" th:each=" img : ${BNotice.chumbuImages}"th:src="@{/img/{fileName}(fileName=${img})}"/></td>
+								<td><img style="width:30%" th:each=" img : ${BNotice.chumbuImages}" th:src="@{/images/{fileName}(fileName=${img})}"/></td>
 							</tr>
 							<tr>
 								<th>최초등록일</th>

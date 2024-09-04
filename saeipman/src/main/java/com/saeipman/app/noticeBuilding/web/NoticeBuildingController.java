@@ -90,10 +90,10 @@ public class NoticeBuildingController {
 				e.printStackTrace();
 			}
 		}
-		
+
 		System.out.println(fileList);
 		noticeBuildingVO.setChumbuImage(String.join(":", fileList));
-		
+
 		int no = noticeBuildingService.noticeBuildingInsert(noticeBuildingVO);
 		return "redirect:noticeBuildingInfo?postNo=" + no;
 	}
@@ -109,8 +109,7 @@ public class NoticeBuildingController {
 	// 수정(처리)
 	@PostMapping("noticeBuildingUpdate")
 	@ResponseBody
-	public List<String> noticeBuildingUpdate(@RequestPart MultipartFile[] files,
-			NoticeBuildingVO noticeBuildingVO) {
+	public List<String> noticeBuildingUpdate(@RequestPart MultipartFile[] files, NoticeBuildingVO noticeBuildingVO) {
 
 		List<String> fileList = new ArrayList<String>();
 
@@ -142,15 +141,6 @@ public class NoticeBuildingController {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
-			// FileList가 List<Map<String, Object>> 타입이라 String 타입인 setFilePath랑 타입이 안 맞아 오류가
-			// 남..ㅠ
-			// 그래서 fileMap이라는 이름으로 Map을 만들고 키(fileMap)에 setFilePath(~)를 값으로 저장해서 사용함.
-
-			// Map<String, Object> fileMap = new HashMap<String, Object>();
-			// fileMap.put("fileMap", setFilePath(uploadFileName));
-			// fileList.add(fileMap);
-
 			noticeBuildingVO.setChumbuImage(String.join(":", fileList));
 		}
 
@@ -182,4 +172,6 @@ public class NoticeBuildingController {
 		noticeBuildingService.noticeBuildingDelete(no);
 		return "redirect:noticeBuildingList";
 	}
+	
+	
 }
