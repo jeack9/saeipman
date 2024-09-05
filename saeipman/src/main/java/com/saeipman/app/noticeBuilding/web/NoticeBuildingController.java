@@ -70,7 +70,7 @@ public class NoticeBuildingController {
 	@PostMapping("noticeBuildingInsert")
 	public String noticeBuildingProc(@RequestPart MultipartFile[] files, NoticeBuildingVO noticeBuildingVO) {
 
-		List<String> fileList = new ArrayList<>();
+		List<String> fileList = new ArrayList<>(); // 파일 업로드하고 이름 확인을 위해
 
 		log.info(uploadPath);
 		for (MultipartFile file : files) {
@@ -84,10 +84,10 @@ public class NoticeBuildingController {
 
 			log.debug("saveName : " + saveName);
 
-			Path savePath = Paths.get(saveName); // Path => java내에서 경로 처리하는 객체 즉, 경로 정의하고 파일 정보를 가져오려고 썼음!
+			Path savePath = Paths.get(saveName); // Path => java내에서 경로 처리하는 객체 즉, saveName을 매개변수로 받아서 savePath라는 경로 객체를 생성!
 
 			try {
-				file.transferTo(savePath);// transferTo : 업로드 작업 진행
+				file.transferTo(savePath);// transferTo(savePath) => 지정된 경로(savePath)로 전송(저장)
 				fileList.add(fileName);
 			} catch (IOException e) {
 				e.printStackTrace();
