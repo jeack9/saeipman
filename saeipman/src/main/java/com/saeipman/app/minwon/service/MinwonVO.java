@@ -13,7 +13,7 @@ public class MinwonVO {
 	private String title;
 	private String content;
 	private String category;
-	private String chumbuImage; // 첨부이미지
+	private String groupId; // 첨부이미지
 	private String roomNo; // 방번호
 	private Integer acceptState; // 처리상태
 
@@ -29,7 +29,7 @@ public class MinwonVO {
 	private String categoryType;
 	
 	public String[] getChumbuImages() {
-		if(chumbuImage == null) return null;
-		return chumbuImage.split(":");
+		if(groupId == null) return null;
+		return groupId.split(":");
 	}
 }

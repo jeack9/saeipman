@@ -9,9 +9,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +17,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.saeipman.app.minwon.service.Criteria;
 import com.saeipman.app.minwon.service.MinwonService;
 import com.saeipman.app.minwon.service.MinwonVO;
+import com.saeipman.app.minwon.service.PageDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,17 +45,21 @@ public class MinwonController {
 		this.minwonService = minwonService;
 	}
 	
+
 	// 전체조회
 	@GetMapping("minwonList")
-	public String minwonList(Model model) {
-		List<MinwonVO> list = minwonService.minwonList();
+	public String minwonList(Criteria cri ,Model model) {
+		cri.setAmount(5);
+		List<MinwonVO> list = minwonService.minwonList(cri);
 		model.addAttribute("minwon", list);
+		int total = minwonService.pageTotal(cri);
+		model.addAttribute("pageMaker", new PageDTO(cri, total));
 		return "minwon/minwonList";
 	}
 	
 	// 단건조회
 	@GetMapping("minwonInfo")
-	public String minwonInfo(MinwonVO minwonVO, Model model) {
+	public String minwonInfo(@ModelAttribute Criteria cri, MinwonVO minwonVO, Model model) {
 		MinwonVO findVO = minwonService.minwonSelect(minwonVO);
 		model.addAttribute("minwon",findVO);
 		return "minwon/minwonInfo";
@@ -97,7 +102,7 @@ public class MinwonController {
 			}
 			
 		}
-		minwonVO.setChumbuImage(String.join(":", imgList));
+		minwonVO.setGroupId(String.join(":", imgList));
 		minwonService.minwonInsert(minwonVO);
 		return "redirect:minwonList";
 	}
@@ -150,7 +155,7 @@ public class MinwonController {
 	        // 1) 사용자가 업로드할 때 사용한 파일명
 	        // 2) 실제 서버에 업로드할 때 사용한 경로
 	        // 데이터베이스에 이미지 경로 저장 (이미지 경로 수정)
-	        minwonVO.setChumbuImage(String.join(":", imageList));
+	        minwonVO.setGroupId(String.join(":", imageList));
 	        
 	        // 서비스에서 업데이트 처리
 	        minwonService.minwonUpdate(minwonVO);
