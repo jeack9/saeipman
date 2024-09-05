@@ -7,7 +7,6 @@ public interface GwanlibiService {
 	public List<GwanlibiVO> monthGwanlibiByBuildingList(String imdaeinId);
 	
 	//
-	//public List<GwanlibiVO> detailsBillList(String buildingId, String selectedDate);
-	public List<GwanlibiVO> detailsBillList(String buildingId);
+	public List<GwanlibiVO> detailsBillList(GwanlibiVO vo);
 
 }

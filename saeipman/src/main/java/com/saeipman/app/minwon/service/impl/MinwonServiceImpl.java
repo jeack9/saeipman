@@ -10,8 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.saeipman.app.minwon.mapper.MinwonMapper;
+import com.saeipman.app.minwon.service.Criteria;
 import com.saeipman.app.minwon.service.MinwonService;
 import com.saeipman.app.minwon.service.MinwonVO;
+import com.saeipman.app.minwon.service.PageDTO;
+
+
 
 @Service
 public class MinwonServiceImpl implements MinwonService{
@@ -24,8 +28,8 @@ public class MinwonServiceImpl implements MinwonService{
 	}
 
 	@Override
-	public List<MinwonVO> minwonList() {
-		return minwonMapper.selectMinwonAll();
+	public List<MinwonVO> minwonList(Criteria cri) {
+		return minwonMapper.selectMinwonAll(cri);
 	}
 
 	@Override
@@ -67,6 +71,11 @@ public class MinwonServiceImpl implements MinwonService{
 	@Override
 	public List<MinwonVO> categoryList() {
 		return minwonMapper.selectCategory();
+	}
+
+	@Override
+	public int pageTotal(Criteria cri) {
+		return minwonMapper.getTotalCount(cri);
 	}
 	
 	

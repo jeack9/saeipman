@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.saeipman.app.minwon.mapper.MinwonMapper">
+	
+	<sql id="criteria">
+	  <trim prefix="(" suffix=") AND " prefixOverrides="OR">
+	    <foreach item='type' collection="typeArr">
+	      <trim prefix="OR">
+	       <choose>
+	         <when test="type == 'T'.toString()">
+	           title like '%'||#{keyword}||'%'
+	         </when>
+	         <when test="type == 'C'.toString()">
+	           content like '%'||#{keyword}||'%'
+	         </when>
+	         <when test="type == 'W'.toString()">
+	            room_no like '%'||#{keyword}||'%'
+	         </when>
+	       </choose>
+	      </trim>
+	    </foreach>
+	  </trim>
+	</sql>
+	
 	<!-- 전체조회 -->
 	<select id="selectMinwonAll" resultType="MinwonVO">
-		SELECT 
+	<![CDATA[
+	
+	select * from (   select rownum rn ,a.*         from (
+         
+               SELECT 
             M.POST_NO, 
             M.TITLE, 
             R.ROOM_NO,
-            M.ACCEPT_STATE,
+            M.GROUP_ID,
             M.REG_DATE, 
             B.BUILDING_ID 
       	FROM 
@@ -18,8 +43,27 @@
             BUILDING_INFO B ON R.BUILDING_ID = B.BUILDING_ID
 
       	order by post_no desc
+                
+ 	)a      where 
+ 	]]>
+ 	
+ 	<include refid="criteria"></include>
+ 	
+ 	<![CDATA[
+ 	rownum <= #{pageNum} * #{amount}  
+ 	)b      where rn > (#{pageNum} -1) * #{amount}
+ 	]]>
+ 	
 	</select>
+	<!-- 전체건수 -->
+	<select id="getTotalCount" resultType="int">
+	select count(*) from minwon 
+	where 
 	
+	<include refid="criteria"></include>
+	
+	post_no > 0 
+	</select>
 	<!-- 단건조회 -->
 	<select id="selectMinwonInfo" resultType="MinwonVO">
 		SELECT 
@@ -27,7 +71,7 @@
 		    m.title,
 		    m.content,
 		    c.category_type AS categoryType, <!-- 카테고리 이름을 가져옴 -->
-		    m.chumbu_image,
+		    m.GROUP_ID,
 		    m.room_no,
 		    m.accept_state,
 		    m.visits_date,
@@ -57,7 +101,7 @@
 						title,
 						content,
 						category,
-						chumbu_image,
+						GROUP_ID,
 						room_no,
 						visits_date,
 						reg_date,
@@ -70,7 +114,7 @@
 						, #{title}
 						, #{content}
 						, #{category}
-						, #{chumbuImage}
+						, #{groupId}
 						, #{roomNo}
 						, #{visitsDate}
 						<choose>
@@ -94,7 +138,7 @@
 			, content = #{content}
 			, category = #{category}
 			<if test="chumbuImage != null and chumbuImage != ''">
-			, chumbu_image = #{chumbuImage}
+			, GROUP_ID = #{groupId}
 			</if>
 			, visits_date = #{visitsDate}
 			

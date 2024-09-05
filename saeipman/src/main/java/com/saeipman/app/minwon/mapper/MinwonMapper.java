@@ -2,12 +2,14 @@ package com.saeipman.app.minwon.mapper;
 
 import java.util.List;
 
+import com.saeipman.app.minwon.service.Criteria;
 import com.saeipman.app.minwon.service.MinwonVO;
+import com.saeipman.app.minwon.service.PageDTO;
 
 public interface MinwonMapper {
 
 	//전체조회
-	public List<MinwonVO> selectMinwonAll();
+	public List<MinwonVO> selectMinwonAll(Criteria cri);
 	
 	//단건조회
 	public MinwonVO selectMinwonInfo(MinwonVO minwonVO);
@@ -23,4 +25,7 @@ public interface MinwonMapper {
 	
 	//카테고리 전체조회
 	public List<MinwonVO> selectCategory();
+	
+	//토탈
+	public int getTotalCount(Criteria cri);
 }

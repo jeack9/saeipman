@@ -12,8 +12,7 @@
 		                          LEFT OUTER JOIN gwanlibi_details d
 		                          ON   bgi.gwanlibi_item_no = d.gwanlibi_item_no AND d.month_gwanlibi_no = m.month_gwanlibi_no
 		WHERE    bi.building_id = #{buildingId}
-		AND      TO_CHAR(m.payment_month, 'yymm') = TO_CHAR(sysdate, 'yymm')
-		ORDER BY gwanlibi_name
-		<!-- AND    TO_CHAR(m.payment_month, 'yymm') = TO_CHAR(#{selectedDate}, 'yymm') -->
+		AND      TO_CHAR(m.payment_month, 'yyMM') = TO_CHAR(#{paymentMonth}, 'yyMM')
+		ORDER BY bi.building_id desc
 	</select>
 </mapper>

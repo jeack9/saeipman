@@ -11,13 +11,26 @@
     	ORDER BY 1
 	</select>
 	<select id="buildingListInfo" resultType="BuildingVO">
-		SELECT *
-		FROM building_info
+		SELECT building_id,
+			   building_name,
+			   doro_addr,
+			   jibun_addr,
+			   details_addr,
+			   gunchook_area,
+			   total_floor,
+			   floor_gagu_count,
+			   total_gagu,
+			   parking,
+			   lift_yn,
+			   delay_alert_yn,
+			   minwon_alert_yn,
+			   group_id
+		FROM building_info 
 		WHERE building_id = #{buildingId}
 	</select>
 	<insert id="buildingInsert" parameterType="BuildingVO">
 		INSERT INTO building_info ( building_id,
-									building_image,
+									group_id,
 									imdaein_id,
 									building_name,
 									doro_addr,
@@ -31,7 +44,7 @@
 									memo
 								  )
 		VALUES ('ZIP'||(LPAD(buildingSeq.nextval,6,'0')),
-				#{buildingImage},
+				#{groupId},
 				#{imdaeinId},
 				#{buildingName},
 				#{doroAddr},

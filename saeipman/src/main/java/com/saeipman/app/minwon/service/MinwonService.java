@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface MinwonService {
 	//전체조회
-	public List<MinwonVO> minwonList();
+	public List<MinwonVO> minwonList(Criteria cri);
 	
 	//단건조회
 	public MinwonVO minwonSelect(MinwonVO minwonVO);
@@ -19,6 +19,9 @@ public interface MinwonService {
 	//삭제
 	public int minwonDelete(int postNo);
 	
+	//카테고리
 	public List<MinwonVO> categoryList();
 	
+	public int pageTotal(Criteria cri);
+
 }
