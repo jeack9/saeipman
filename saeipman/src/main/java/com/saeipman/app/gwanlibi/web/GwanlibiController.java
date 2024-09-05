@@ -1,13 +1,12 @@
 package com.saeipman.app.gwanlibi.web;
 
+import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.saeipman.app.gwanlibi.service.GwanlibiService;
 import com.saeipman.app.gwanlibi.service.GwanlibiVO;
@@ -33,11 +32,12 @@ public class GwanlibiController {
 	
 		
 	// 건물별 관리비 상세 내역 출력 화면으로 이동
-	@GetMapping("detailsList")
-//	public String detailsList(Model model, @RequestParam(name = "buildingId") String buildingId, @RequestParam(name = "selectedDate") String selectedDate) {
-//		List<GwanlibiDetailsVO> detailsList = gwanlibiDeailsService.detailsList(buildingId, selectedDate);
-	public String detailsBillList(Model model, @RequestParam(name = "buildingId") String buildingId) {
-		List<GwanlibiVO> detailsList = gwanlibiService.detailsBillList(buildingId);
+	@GetMapping("detailsBillList")
+	public String detailsBillList(Model model, GwanlibiVO vo) {
+		Date now = new Date();
+		vo.setPaymentMonth(now);
+		List<GwanlibiVO> detailsList = gwanlibiService.detailsBillList(vo);
+		
 		
 		model.addAttribute("detailsList", detailsList);
 		
@@ -45,14 +45,9 @@ public class GwanlibiController {
 		return "gwanlibi/detailsBillList";
 	}
 
-//	@GetMapping("detailsListAjax")
-//	@ResponseBody
-////	public String detailsList(Model model, @RequestParam(name = "buildingId") String buildingId, @RequestParam(name = "selectedDate") String selectedDate) {
-////		List<GwanlibiDetailsVO> detailsList = gwanlibiDeailsService.detailsList(buildingId, selectedDate);
-//	public List<GwanlibiVO> detailsListAjax(@RequestParam(name = "buildingId") String buildingId) {
-//		List<GwanlibiVO> detailsList = gwanlibiService.detailsBillList(buildingId);
-//		
-//		return detailsList;
+//	@PostMapping("detailsBillList")
+//	public String detailsBillList() {
+//		return null;		
 //	}
 
 }
