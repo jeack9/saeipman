@@ -7,41 +7,94 @@
 </head>
 
 <body>
-	<br>
-	
-	<th:block th:each="ele : ${detailsList}">
-		<th:block th:if="${ele.buildingName == }">
-			<h1 th:text="${detailsList.buildingName}"></h1>
-		</th:block>		
-	</th:block>
-	
-	<br>
-	<div id="grid"></div>
+	<div class="container">
+		<br>
+		<br>
+
+		<!-- 건물명 -->
+		<div id="bName" style="float: left;"></div>
+
+		<!-- Toast UI - Date Picker -->
+		<div class="inputDiv" style="position: relative; z-index: 2; float: right;">
+			<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+				<input type="text" id="datepicker-input-ko" aria-label="Year-Month">
+				<span class="tui-ico-date"></span>
+			</div>
+			<div class="datepicker-cell" id="datepicker-month-ko" style="margin-top: -1px;"></div>
+		</div>
+
+		<br>
+		<br>
+
+		<!-- Toast UI - Grid -->
+		<div id="grid" style="position: relative; z-index: 1;"></div>
+	</div>
 
 	<script th:inline="javascript">
-		// # reference : https://adjh54.tistory.com/95
-		// # reference : https://park-duck.tistory.com/entry/javascript-1-Toast-UI-Grid-%EA%B8%B0%EC%B4%88API-%EC%82%AC%EC%9A%A9%EB%B2%95
 
 		// JavaScript에서 Thymeleaf 변수 사용하기 //
 		/* 1. <script th:inline="javascript">
 		   2. Thymeleaf 변수 사용 */
 		let detailsList = [[${ detailsList }]];
+		//console.log(detailsList);
 
-		// Toast UI //
-		// 01. async - await 설정 : Grid를 화면 제일 마지막 순서에 그려주기.
+		let dateYM;
+
+
+		// 건물명 출력
+		$('#bName').text(detailsList[0].buildingName);
+
+
+		// TOAST UI //
+		// async - await
 		$(document).ready(async () => {
 			await gridLoad();
+			await dateLoad();
+			// 선택된 년월의 관리비 내역 출력.
 		});
 
-		// 02. Grid 생성.
+
+		// Toast UI - Date Picker //
+		// # reference : https://nhn.github.io/tui.date-picker/latest/tutorial-example05-picking-month
+		// # reference : https://nhn.github.io/tui.date-picker/latest/DatePicker#event-change
+		let dateLoad = () => {
+			let calMonthKo = new tui.DatePicker('#datepicker-month-ko', {
+				date: new Date(),
+				language: 'ko',
+				type: 'month',
+				input: {
+					element: '#datepicker-input-ko',
+					format: 'yyyy년 M월'
+					//format: 'yyyy-MM'
+				},
+			});
+
+			// get date value
+			calMonthKo.on('change', () => {
+				console.log(calMonthKo);
+				console.log(calMonthKo.getDate().getFullYear() + "-" + `${calMonthKo.getDate().getMonth() + 1}`.padStart(2, "0"));
+				dateYM = calMonthKo.getDate().getFullYear() + "-" + `${calMonthKo.getDate().getMonth() + 1}`.padStart(2, "0");
+			});
+		}
+
+		/* $.ajax({
+			url: '//',
+			method: 'post',
+			data: dateYM,
+		}) */
+
+		// Toast UI - Grid //
+		// # reference : https://adjh54.tistory.com/95
+		// # reference : https://park-duck.tistory.com/entry/javascript-1-Toast-UI-Grid-%EA%B8%B0%EC%B4%88API-%EC%82%AC%EC%9A%A9%EB%B2%95
+		// 01. Grid 생성.
 		// return void
 		const gridLoad = () => {
 			const Grid = tui.Grid;
 
-			// 03. Grid theme 설정. (clean, stripe, default)
+			// 02. Grid theme 설정. (clean, stripe, default)
 			Grid.applyTheme('stripe');
 
-			// 04. Toast UI Grid 구성.
+			// 03. Toast UI Grid 구성.
 			const grid = new Grid({
 				// ================================== 공통 옵션 적용 ================================== //
 				el: document.getElementById('grid'), // 필수 : Container element
@@ -77,6 +130,7 @@
 		}
 
 	</script>
+
 </body>
 
 </html>
