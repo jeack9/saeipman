@@ -27,5 +27,6 @@ public interface NoticeBuildingMapper {
 		
 		//페이징
 		public int count(PagingSearchDTO pgsc);
+		
 
 }

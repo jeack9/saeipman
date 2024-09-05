@@ -67,6 +67,12 @@
 		      )
 	</insert>
 
+	<!-- 조회수 -->
+	<update id="updateViewNoticeBuilding">
+	 	UPDATE building_notice
+	 	SET views = views+1
+	 	WHERE post_no = #{postNo}
+	</update>
 
 	<!-- 수정 -->
 	<update id="updateNoticeBuilding">
@@ -77,12 +83,6 @@
          WHERE post_no = #{postNo}  
 	</update>
 
-	<!-- 조회수 -->
-	<update id="updateViewNoticeBuilding">
-	 	UPDATE building_notice
-	 	SET views = views+1
-	 	WHERE post_no = #{postNo}
-	</update>
 
 	<!-- 삭제 -->
 	<delete id="deleteNoticeBuilding" parameterType="int">
