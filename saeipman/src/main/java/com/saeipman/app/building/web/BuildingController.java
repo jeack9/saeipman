@@ -22,19 +22,19 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.saeipman.app.building.service.BuildingService;
 import com.saeipman.app.building.service.BuildingVO;
+import com.saeipman.app.file.service.FileService;
 import com.saeipman.app.upload.config.FileUtility;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Controller
 @RequiredArgsConstructor
 public class BuildingController {
 	private final BuildingService buildingService;
 	private final FileUtility fileUtill;
-
+	private final FileService fileService;
 
 	@GetMapping("/buildingList")
 	public String buildingInfo(Model model) {
@@ -48,9 +48,19 @@ public class BuildingController {
 	@ResponseBody
 	public BuildingVO buildingDetails(@RequestParam("id") String buildingId) {
 		BuildingVO buildingVO = new BuildingVO();
-
 		buildingVO.setBuildingId(buildingId);
-		return buildingService.buildingInfo(buildingVO);
+
+		BuildingVO result = buildingService.buildingInfo(buildingVO);
+
+		List<String> fileName = fileService.getFileName(buildingVO.getBuildingId());
+		System.out.println("파일" + fileName);
+		if (result == null) {
+			return result;
+		}
+
+		result.setFileName(fileName);
+
+		return result;
 	}
 
 	@GetMapping("/buildingInsert")
@@ -58,24 +68,21 @@ public class BuildingController {
 		return "building/buildingInsert";
 	}
 
-	/*
-	 * @PostMapping("/buildingInsert") public String insertBuilding(BuildingVO
-	 * buildingVO) { int success = buildingService.insertBuilding(buildingVO);
-	 * 
-	 * return "redirect:buildingList"; }
-	 */
-
 	@PostMapping("/buildingInsert")
 	public String insertBuilding(@RequestPart MultipartFile[] files, BuildingVO buildingVO) {
-		String imageNames = fileUtill.upload(files);
-		buildingVO.setBuildingImage(imageNames);
+		fileUtill.setFolder("건물");
+		String groupId = fileUtill.upload(files);
+		buildingVO.setGroupId(groupId);
+
 		int success = buildingService.insertBuilding(buildingVO);
 		return "redirect:buildingList";
 	}
+
 	@PostMapping("/buildingUpdate")
 	@ResponseBody
 	public Map<String, Object> updateBuilding(@RequestBody BuildingVO buildingVO) {
 		System.out.println(buildingVO);
+		
 		return buildingService.updateBuilding(buildingVO);
 	}
 
@@ -84,7 +91,5 @@ public class BuildingController {
 		buildingService.buildingDelete(buildingId);
 		return "redirect:buildingList";
 	}
-
-	
 
 }

@@ -8,12 +8,11 @@
 		<th:block th:each="building, index:${buildings}">
 			<ul class="list-group">
 				<li th:id="${building.buildingId}" th:data-index="${index.count}"
-					class="list-group-item" style="font-size: 25px;">[[${building.buildingName}]]
-					<ul>
-						<li style="list-style: none; font-size: 18px;">[[${building.doroAddr}]]
-							[[${building.detailsAddr}]]</li>
-						<li style="list-style: none; font-size: 18px;">[[${building.totalGagu}]]세대</li>
-					</ul>
+					class="list-group-item" style="font-size: 25px;">
+					    <div>[[${building.buildingName}]]</div>
+						<div class ="ps-4" style= "font-size: 18px;">[[${building.doroAddr}]]	[[${building.detailsAddr}]]</div>
+						<div class ="ps-4" style="font-size: 18px;">[[${building.totalGagu}]]세대</div>
+					
 				</li>
 			</ul>
 		</th:block>
@@ -23,7 +22,7 @@
 	</div>
 	<!-- End 건물리스트 -->
 	<div class="col-md-8">
-		<form name="updateForm" class="row g-3">
+		<form name="updateForm" class="row g-3 infoDetail">
 			<!-- start 건물 정보 -->
 			<h1 id="bnameTitle"></h1>
 			<div style="text-align: center;">
@@ -110,17 +109,18 @@
 	<div>
 		<script>
 			$(document).ready(function() {
-
+				
 				let firstBuilding = $('li[data-index="1"]').attr('id');
 				if (firstBuilding) {
 					getBuildingInfo(firstBuilding);
 				}
 				$('li').on('click', function(e) {
+					$('#imgFile').html('');
 					let buildingId = e.currentTarget.id;
 					getBuildingInfo(buildingId);
 				});
 				function getBuildingInfo(buildingId) {
-
+					//상세 정보
 					$.ajax({
 						url : ctxPath+ '/buildingDetails',
 						type : 'GET',
@@ -130,9 +130,8 @@
 						dataType : 'json',
 
 					}).done(function(data) {
-						//console.log(data);
+						console.log(data.fileName);
 						$('#bnameTitle').html(data.buildingName);
-						
 						$("#bname").val(data.buildingName);
 						$(".addr").val(data.doroAddr);
 						$(".dAddr").val(data.detailsAddr);
@@ -143,13 +142,13 @@
 						$("#totalGagu").val(data.totalGagu);
 						$("#parking").val(data.parking);
 						
-						if(data.buildingImage != null) {
-							let images = data.buildingImage.split(':');
+						if(data.fileName != null) {
+							let images = data.fileName;
 							for(img of images){
-								let imgName = $("<img>").attr({'src':ctxPath+'/images/'+img});
+								let imgName = $("<img>").attr({'src':ctxPath+'/images/'+'건물/'+img});
 								$("#imgFile").append(imgName);
 							} 
-						}
+						} 
 						
 						checkFunc($("#liftYn"));
 						$(".bid").val(data.buildingId);
@@ -157,6 +156,7 @@
 				}
 
 			})
+			//end of $(document).ready
 			
 			function checkFunc(liftYn) {
 				if (liftYn.val() === 'Y') {
@@ -165,7 +165,8 @@
 
 					liftYn.prop('checked', false);
 				}
-			}
+			}//end of checkFunc
+			//수정
 			$('#updateBtn').on('click', updateAjax);
 			
 			function updateAjax(){
@@ -178,14 +179,17 @@
 				})
 				.done(result=>{
 					if(result.success){
-						
 						alert('정상 수정');
-						$('#bnameTitle').html(result.target.buildingName);
+					$('#bnameTitle').html(result.target.buildingName);
+					$('#'+result.target.buildingId).find("div").eq(0).html(result.target.buildingName);
+					$('#'+result.target.buildingId).find("div").eq(1).html(result.target.doroAddr +' '+ result.target.detailsAddr);
+					$('#'+result.target.buildingId).find("div").eq(2).html(result.target.totalGagu+'세대');
+						
 					}else{
 						alert('수정 실패');
 					}
 				})
-			}
+			}//end of updateAjax
 			
 			function getData(){
 				let formArr = $('form[name="updateForm"]').serializeArray();
