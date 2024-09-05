@@ -36,6 +36,9 @@ public class LoginController {
 	public void joinForm(Model model) {
 		model.addAttribute("memberReq", new MemberRequestDTO());
 	};
+	@GetMapping("amdin")
+	public void getMethodName() {};
+	
 
 	@PostMapping("login") // 로그인처리
 	@ResponseBody
