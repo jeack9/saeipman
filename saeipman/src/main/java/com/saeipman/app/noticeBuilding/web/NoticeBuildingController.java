@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.saeipman.app.noticeBuilding.service.NoticeBuildingService;
 import com.saeipman.app.noticeBuilding.service.NoticeBuildingVO;
+import com.saeipman.app.noticeBuilding.utils.PagingSearchDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,8 +43,9 @@ public class NoticeBuildingController {
 
 	// 전체조회
 	@GetMapping("noticeBuildingList")
-	public String noticeBuildingList(Model model) {
-		List<NoticeBuildingVO> list = noticeBuildingService.noticeBuildingList();
+	public String noticeBuildingList(NoticeBuildingVO noticeBuildingVO, PagingSearchDTO pgsc, Model model) {
+		List<NoticeBuildingVO> list = noticeBuildingService.noticeBuildingList(pgsc);
+		noticeBuildingService.noticeBuildingViews(noticeBuildingVO);
 		model.addAttribute("BNotice", list);
 		return "noticeBuilding/noticeBuildingList";
 	}
@@ -52,6 +54,7 @@ public class NoticeBuildingController {
 	@GetMapping("noticeBuildingInfo")
 
 	public String noticeBuildingInfo(NoticeBuildingVO noticeBuildingVO, Model model) {
+		noticeBuildingService.noticeBuildingViews(noticeBuildingVO);
 		NoticeBuildingVO selectVO = noticeBuildingService.noticeBuildingSelect(noticeBuildingVO);
 		model.addAttribute("BNotice", selectVO);
 		return "noticeBuilding/noticeBuildingInfo";
@@ -92,7 +95,7 @@ public class NoticeBuildingController {
 		}
 
 		System.out.println(fileList);
-		noticeBuildingVO.setChumbuImage(String.join(":", fileList));
+		noticeBuildingVO.setGroupId(String.join(":", fileList));
 
 		int no = noticeBuildingService.noticeBuildingInsert(noticeBuildingVO);
 		return "redirect:noticeBuildingInfo?postNo=" + no;
@@ -141,7 +144,7 @@ public class NoticeBuildingController {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			noticeBuildingVO.setChumbuImage(String.join(":", fileList));
+			noticeBuildingVO.setGroupId(String.join(":", fileList));
 		}
 
 		return fileList;
@@ -172,6 +175,9 @@ public class NoticeBuildingController {
 		noticeBuildingService.noticeBuildingDelete(no);
 		return "redirect:noticeBuildingList";
 	}
+	
+	//조회수
+	
 	
 	
 }

@@ -11,12 +11,20 @@
 			 , bn.content
 			 , bn.reg_date
 			 , bn.mod_date
-			 , bn.chumbu_image
+			 , bn.group_id
 			 , bn.views
 			 , bi.building_id
         FROM building_notice bn join building_info bi
            			on bn.building_id = bi.building_id
+        LIMIT #{startData}, #{pageData}  			
 	</select>
+	
+	<!-- 한 페이지에 출려될 글 수 -->
+	<select id="count"  resultType="int">
+		SELECT count(*) 
+		FROM   building_notice
+	</select>
+	
 	
 	<!-- 단건조회 -->
 	<select id="selectNoticeBuildingInfo" resultType="NoticeBuildingVO">
@@ -26,7 +34,7 @@
 			 , bn.content
 			 , bn.reg_date
 			 , bn.mod_date
-			 , bn.chumbu_image
+			 , bn.group_id
 			 , bn.views
 			 , bi.building_id
         FROM building_notice bn join building_info bi
@@ -44,7 +52,7 @@
 		insert into building_notice(post_no
                           , title
                           , writer
-                          , chumbu_image
+                          , group_id
                           , content
                           , reg_date
                           , building_id
@@ -52,7 +60,7 @@
 		values(#{postNo}
 		      , #{title}
 		      , '10'
-		      , #{chumbuImage}
+		      , #{groupId}
 		      , #{content}
 		      ,  SYSDATE
 		      , #{buildingId}
@@ -69,11 +77,17 @@
          WHERE post_no = #{postNo}  
 	</update>
 
+	<!-- 조회수 -->
+	<update id="updateViewNoticeBuilding">
+	 	UPDATE building_notice
+	 	SET views = views+1
+	 	WHERE post_no = #{postNo}
+	</update>
 
 	<!-- 삭제 -->
 	<delete id="deleteNoticeBuilding" parameterType="int">
 		DELETE FROM building_notice
 		WHERE post_no = #{postNo}
 	</delete>
-
+	
 </mapper>

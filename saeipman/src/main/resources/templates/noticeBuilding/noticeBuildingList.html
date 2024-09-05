@@ -21,13 +21,14 @@
 							<th scope="row">[[${list.postNo}]]</th>
 							<td>[[${list.title}]]</td>
 							<td>[[${#dates.format(list.regDate, 'yyyy-MM-dd')}]]</td>
-							<td>TEST</td>
+							<td>[[${list.views}]]</td>
 						</tr>
 					</th:block>
 				</tbody>
 			</table>
 			<div style="text-align: right">
-				<button type="button" th:onclick="|location.href='@{/noticeBuildingInsert}'|"
+				<button type="button"
+					th:onclick="|location.href='@{/noticeBuildingInsert}'|"
 					class="btn btn-outline-success m-2">등록</button>
 			</div>
 		</div>
