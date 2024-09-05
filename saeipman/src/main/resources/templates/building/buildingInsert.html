@@ -4,9 +4,9 @@
 	layout:fragment="Main" class="container-fluid pt-4 px-4">
 	<form th:action="@{/buildingInsert}" method="POST" name="insertForm"
 		class="row g-3" enctype="multipart/form-data">
-		<div class ="col-md-4">
-		<label for =" file" class="form-label">빌딩 이미지</label>
-			<input type="file" id="file" multiple name="files" class="form-control">
+		<div class="col-md-4">
+			<label for=" file" class="form-label">빌딩 이미지</label> <input
+				type="file" id="file" multiple name="files" class="form-control">
 		</div>
 		<div class="form-check form-switch">
 			<label class="form-label"><span>자동 방생성</span> </label><input

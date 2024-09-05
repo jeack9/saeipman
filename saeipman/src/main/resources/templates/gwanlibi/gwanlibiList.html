@@ -1,60 +1,61 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
-				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-				layout:decorate="~{common/layouts/default_layout}"
-				>
-<head>
-<meta charset="UTF-8">
-<title>월별 관리비</title>
-<style>
-	.buildingBox {
-		padding: 60px 0px;
-	}
-	
-	.box-part {
-		background: #FFF;
-		border-radius: 0;
-		padding: 60px 10px;
-		margin: 30px 0px;
-	}
-	
-	.text {
-		margin: 20px 0px;
-	}
-	
-	.fa {
-		color: #4183D7;
-	}
-</style>
+			    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{common/layouts/default_layout}">
 
+<head>
+	<meta charset="UTF-8">
+	<title>월별 관리비</title>
+	<style>
+		.buildingBox {
+			padding: 60px 0px;
+		}
+
+		.box-part {
+			background: #FFF;
+			border-radius: 0;
+			padding: 60px 10px;
+			margin: 30px 0px;
+		}
+
+		.text {
+			margin: 20px 0px;
+		}
+
+		.fa {
+			color: #4183D7;
+		}
+	</style>
 </head>
 
 <body>
 	<div class="buildingBox" layout:fragment="Main">
 		<div class="container">
 			<div class="row">
-			
-			<th:block th:each="building : ${list}">			
-				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-					<div class="box-part text-center">
-						<i class="fa fa-instagram fa-3x" aria-hidden="true"></i>
-						<div class="title">
-							<h4>[[ ${ building.buildingName } ]]</h4>
-						</div>
 
-						<div class="text">
-							<p>전월 관리비 : [[ ${ building.previousMonth } ]]</p>
-							<p>금월 관리비 : [[ ${ building.thisMonth } ]]</p>
-						</div>
+				<th:block th:each="building : ${list}">
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+						<div class="box-part text-center">
+							<i class="fa fa-instagram fa-3x" aria-hidden="true"></i>
+							
+							<div class="title">
+								<h4>[[ ${ building.buildingName } ]]</h4>
+							</div>
 
-						<a href="#">관리비 상세 내역</a>
-						<a href="#">관리비 항목 설정</a>
+							<div class="text">
+								<p>전월 관리비 : [[ ${ building.previousMonth } ]]</p>
+								<p>금월 관리비 : [[ ${ building.thisMonth } ]]</p>
+							</div>
+
+							<a th:href="@{/detailsList?buildingId={id}(id=${building.buildingId})}">관리비 상세 내역</a>
+							<a href="#">관리비 항목 설정</a>
+						</div>
 					</div>
-				</div>
-			</th:block>
-			
+				</th:block>
+
 			</div>
 		</div>
 	</div>
 </body>
+
 </html>

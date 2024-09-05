@@ -63,12 +63,11 @@ public class NoticeBuildingController {
 		return "noticeBuilding/noticeBuildingInsert";
 	}
 
-	
-	
-	
 	// 등록(처리) + 파일 업로드(처리)
 	@PostMapping("noticeBuildingInsert")
 	public String noticeBuildingProc(@RequestPart MultipartFile[] files, NoticeBuildingVO noticeBuildingVO) {
+
+		List<String> fileList = new ArrayList<>();
 
 		log.info(uploadPath);
 		for (MultipartFile file : files) {
@@ -86,10 +85,15 @@ public class NoticeBuildingController {
 
 			try {
 				file.transferTo(savePath);// transferTo : 업로드 작업 진행
+				fileList.add(fileName);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+
+		System.out.println(fileList);
+		noticeBuildingVO.setChumbuImage(String.join(":", fileList));
+
 		int no = noticeBuildingService.noticeBuildingInsert(noticeBuildingVO);
 		return "redirect:noticeBuildingInfo?postNo=" + no;
 	}
@@ -105,74 +109,69 @@ public class NoticeBuildingController {
 	// 수정(처리)
 	@PostMapping("noticeBuildingUpdate")
 	@ResponseBody
-	public List<Map<String, Object>> noticeBuildingUpdate(@RequestPart MultipartFile[] Files, NoticeBuildingVO noticeBuildingVO) {
+	public List<String> noticeBuildingUpdate(@RequestPart MultipartFile[] files, NoticeBuildingVO noticeBuildingVO) {
 
-		List<Map<String, Object>> fileList = new ArrayList<Map<String,Object>>();
+		List<String> fileList = new ArrayList<String>();
 
-		for(MultipartFile uploadFile : Files) {
+		for (MultipartFile uploadFile : files) {
 
 			// 이미지 파일 말고 다른거 올릴 수도 있지 않을까 싶어서 일단 주석해놨음...
 //				if(uploadFile.getContentType().startsWith("image") == false) {
 //					System.err.println("this file is not image type");
 //		    		return null;
 //		        }
-			
-			//중복 파일 관리
+
+			// 중복 파일 관리
 			String fileName = uploadFile.getOriginalFilename();
-			
+
 			System.out.println("fileName : " + fileName);
-			
-			//날짜 폴더 생성
+
+			// 날짜 폴더 생성
 			String folderPath = makeFolder();
-			
-			//UUID(UUID는 고유 ID임. 중복 제한하려고 사용함!)
+
+			// UUID(UUID는 고유 ID임. 중복 제한하려고 사용함!)
 			String uuid = UUID.randomUUID().toString();
 			String uploadFileName = folderPath + File.separator + uuid + "_" + fileName;
 			String saveName = uploadPath + File.separator + uploadFileName;
 			Path savePath = Paths.get(saveName);
 			System.out.println("path : " + saveName);
-			
+
 			try {
 				uploadFile.transferTo(savePath);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
-			//FileList가 List<Map<String, Object>> 타입이라 String 타입인 setFilePath랑 타입이 안 맞아 오류가 남..ㅠ
-			//그래서 fileMap이라는 이름으로 Map을 만들고 키(fileMap)에 setFilePath(~)를 값으로 저장해서 사용함. 
-			Map<String, Object> fileMap = new HashMap<String, Object>();
-			fileMap.put("fileMap", setFilePath(uploadFileName));
-			fileList.add(fileMap);
+			noticeBuildingVO.setChumbuImage(String.join(":", fileList));
 		}
 
 		return fileList;
 	}
-	
-	//LocalDate~ => "yyyy/MM/dd" 형식으로 오늘날짜 변환해서 가져오려고 썼음.
-	//replace 하는 이유는 "/"를 개발자가 사용하는 운영체제 형식에 맞게(File.separator) 변경하기 위해서임.  
+
+	// LocalDate~ => "yyyy/MM/dd" 형식으로 오늘날짜 변환해서 가져오려고 썼음.
+	// replace 하는 이유는 "/"를 개발자가 사용하는 운영체제 형식에 맞게(File.separator) 변경하기 위해서임.
 	private String makeFolder() {
 		String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
 		String folderPath = str.replace("/", File.separator);
-		File uploadPathFolder = new File(uploadPath, folderPath); 
-		//uploadPath(경로)랑 folderPath(날짜)랑 합쳐서 사용하려고.. 예를들어 c:/uploads/2024/09/03
-		
+		File uploadPathFolder = new File(uploadPath, folderPath);
+		// uploadPath(경로)랑 folderPath(날짜)랑 합쳐서 사용하려고.. 예를들어 c:/uploads/2024/09/03
+
 		if (uploadPathFolder.exists() == false) {
-			uploadPathFolder.mkdirs(); 
-			//mkdirs => 상위 디렉토리 존재하지 않을 겨우 상위까지 모두 생성
+			uploadPathFolder.mkdirs();
+			// mkdirs => 상위 디렉토리 존재하지 않을 겨우 상위까지 모두 생성
 		}
 		return folderPath;
 	}
+
 	private String setFilePath(String uploadFileName) {
 		return uploadFileName.replace(File.separator, "/");
 	}
 
-	
-	
-	
 	// 삭제(처리)
 	@GetMapping("noticeBuildingDelete")
 	public String noticeBuildingDelete(Integer no) {
 		noticeBuildingService.noticeBuildingDelete(no);
 		return "redirect:noticeBuildingList";
 	}
+	
+	
 }
