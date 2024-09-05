@@ -19,10 +19,10 @@ public class BuildingVO {
 	private String liftYn;
 	private String delayAlertYn;
 	private String minwonAlertYn;
-	private String buildingImage;
-	private String fileName;
+	private String groupId;
+	private String ocrFileName;
 	private String memo;
 	private String imdaeinId;
 	
-	
+	private List<String> fileName;
 }
