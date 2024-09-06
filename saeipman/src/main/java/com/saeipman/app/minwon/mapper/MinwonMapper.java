@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.saeipman.app.minwon.service.Criteria;
 import com.saeipman.app.minwon.service.MinwonVO;
-import com.saeipman.app.minwon.service.PageDTO;
+import com.saeipman.app.minwon.service.ReplyVO;
 
 public interface MinwonMapper {
 
@@ -28,4 +28,7 @@ public interface MinwonMapper {
 	
 	//토탈
 	public int getTotalCount(Criteria cri);
+	
+
+	
 }

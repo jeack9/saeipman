@@ -22,8 +22,8 @@
 	   		<option value="TWC">제목 or 내용 or 작성자</option>
 	   </select>
 	   <input type='text' name='keyword' />
-	   <input type='hidden' name='pageNum' value='${pageMaker.cri.pageNum}'>
-	   <input type='hidden' name='amount' value='${pageMaker.cri.amount}'>
+	   <input type='hidden' name='pageNum' th:value='${pageMaker.cri.pageNum}'>
+	   
 	   <button class="btn btn-default">Search</button>
 	   </form>
 	</div>
@@ -51,67 +51,86 @@
 	
 	
 		<nav aria-label="Page navigation example ">
-		[[${pageMaker}]]
-  <ul class="pagination">
-  <li class="page-item">
-      <a class="page-link" th:href="@{/minwonList?pageNum=1}" aria-label="Previous">
-        <span aria-hidden="true">처음</span>
-      </a>
-    </li>
-    <li class="page-item" th:if="${pageMaker.startPage > 1}" ><!-- startPage가 1보다 크면 이전 버튼 보이게 -->
-      <a class="page-link" th:href="@{/minwonList?pageNum={page} (page = ${pageMaker.startPage -1})}" aria-label="Previous">
-        <span aria-hidden="true">이전</span>
-      </a>
-    </li>
-    <th:block  th:with="start = ${pageMaker.startPage}, end = ${pageMaker.endPage}">
-	    <li class="page-item" 
-	    		 th:with="start = ${pageMaker.startPage}, end = ${pageMaker.endPage}"
-	    		th:each="pageButton : ${#numbers.sequence(start, end)}">
-	    		<a class="page-link" th:href="@{/minwonList?pageNum={page} (page = ${pageButton})}" th:text=${pageButton}></a>
-	    </li>
-    </th:block>
-    <li class="page-item" th:if="${pageMaker.next}">
-      <a class="page-link" th:href="@{/minwonList?page={page} (page = ${pageMaker.endPage +1})}" aria-label="Next">
-        <span aria-hidden="true">다음</span>
-      </a>
-    </li>
-    <li class="page-item">
-      <a class="page-link" th:href="@{/minwonList?page={page} (page = ${pageMaker.realEnd})}" aria-label="Previous">
-        <span aria-hidden="true">끝</span>
-      </a>
-    </li>
-  </ul>
+    [[${pageMaker}]]
+    [[${pageMaker.cri.pageNum}]]
+    <ul class="pagination">
+        <li class="page-item"><!-- 타임리프에서는 조건이 참일 때 'selected'라는 문자열을 반환할 필요가 없음. 대신 조건이 참이면 selected 속성이 추가되고, 거짓이면 속성이 추가되지 않음 -->
+            <a class="page-link" th:href="@{/minwonList(pageNum=1, type=${param.type}, keyword=${param.keyword})}" aria-label="Previous">
+                <span aria-hidden="true">처음</span>
+            </a>
+        </li>
+       <li class="page-item" th:if="${pageMaker.startPage > 1}">
+            <a class="page-link" 
+               th:href="@{/minwonList(pageNum=${pageMaker.startPage -1}, type=${param.type}, keyword=${param.keyword})}" aria-label="Previous">
+                <span aria-hidden="true">이전</span>
+            </a> 
+        </li>
+        <th:block th:with="start = ${pageMaker.startPage}, end = ${pageMaker.endPage}">
+            <li class="page-item" 
+                th:each="pageButton : ${#numbers.sequence(start, end)}">
+                <a class="page-link" 
+                   th:href="@{/minwonList(pageNum=${pageButton}, type=${param.type}, keyword=${param.keyword})}" 
+                   th:text=${pageButton}></a>
+            </li>
+        </th:block>
+        <li class="page-item" th:if="${pageMaker.next}">
+            <a class="page-link" 
+               th:href="@{/minwonList(pageNum=${pageMaker.endPage + 1}, type=${param.type}, keyword=${param.keyword})}" 
+               aria-label="Next">
+                <span aria-hidden="true">다음</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" 
+               th:href="@{/minwonList(pageNum=${pageMaker.realEnd}, type=${param.type}, keyword=${param.keyword})}" 
+               aria-label="Last">
+                <span aria-hidden="true">끝</span>
+            </a>
+        </li>
+    </ul>
 </nav>
 
 </div>
 	<script>
+	
 		var searchFrom = $("#searchFrom");
-		
-		$("#searchFrom button").on("click", function(e){
-			
-			if(!searchForm.find("option:selected").val()){
-				alert("검색종류를 선택하세요");
-				return false;
-			}
-			
-			if(!searchForm.find("input[name='keyword']").val()){
-				alert("키워드를 입력하세요");
-				return false;
-			}
-			
-			searchFrom.find("input[name='pageNum']").val("1");
-			e.preventDefault();
-			
-			searchForm.submit();
-		})
+
+		$("#searchFrom button").on("click", function(e) {
+		    
+		    // 검색 종류가 선택되지 않았을 때 경고 메시지
+		    if(!searchFrom.find("option:selected").val()) {
+		        alert("검색종류를 선택하세요");
+		        return false;
+		    }
+		    
+		    // 키워드가 입력되지 않았을 때 경고 메시지
+		    if(!searchFrom.find("input[name='keyword']").val()) {
+		        alert("키워드를 입력하세요");
+		        return false;
+		    }
+		    
+		    // 검색 버튼 클릭 시 페이지 번호를 1로 설정
+		    searchFrom.find("input[name='pageNum']").val("1");
+		    
+		    // 폼 전송 중지 방지
+		    e.preventDefault();
+		    
+		    // 폼 전송
+		    searchFrom.submit();
+		});
+
 		
 		
 	
 		$('tbody > tr').on('click', function(event){
 			let trTag = event.currentTarget;
 			let postNo = $(trTag).children().first().text();
+			// 현재 페이지 번호 가져오기
+		    let pageNum = $("input[name='pageNum']").val();
+			//타입,키워드
 			
-			let url = `minwonInfo?postNo=${postNo}`;
+			let url = `minwonInfo?postNo=${postNo}&pageNum=${pageNum}`;
+			
 			location.href = url;
 		})
 	</script>

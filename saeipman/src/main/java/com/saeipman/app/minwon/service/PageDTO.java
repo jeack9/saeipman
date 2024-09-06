@@ -14,15 +14,16 @@ public class PageDTO {
 	
 	private int total;
 	private Criteria cri;
+	private int pagesize = 5;
 	
 	public PageDTO(Criteria cri, int total) {
 		
 		this.cri = cri;
 		this.total = total;
 		
-		this.endPage = (int)(Math.ceil(cri.getPageNum() / 10.0)) * 10;
+		this.endPage = (int)(Math.ceil(cri.getPageNum() / (double)pagesize)) * pagesize;
 		
-		this.startPage = this.endPage - 9;
+		this.startPage = this.endPage - pagesize+1;
 		
 		 realEnd = (int)(Math.ceil((total * 1.0)/cri.getAmount()));
 		

@@ -38,8 +38,12 @@
 	</div>
 	<div>
 		<button type="button" th:onClick="|location.href = '@{/minwonUpdate(postNo=${minwon.postNo})}'|">수정</button>
-		<button type="button" th:onClick="|location.href = '@{minwonList}'|">목록</button>
+		<button type="button" th:onClick="|location.href = '@{/minwonList(pageNum=${cri.pageNum}, type=${param.type}, keyword=${param.keyword})}'|">목록</button>
 		<button type="button" th:onClick="|location.href = '@{/minwonDelete(postNo=${minwon.postNo})}'|">삭제</button>
+	</div>
+	<div>
+		<button type="button" th:onClick="">접수</button>
+		<button type="button" th:onClick="">완료</button>
 	</div>
 </body>
 </html>
