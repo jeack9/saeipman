@@ -22,14 +22,18 @@ public class PagingSearchDTO {
 	private String keyword; 
 	private String scType;
 	
+	
+	
 	//페이지 번호, 총 게시물, 출력되는 게시글 개수, 하단 페이지 수
-	public PagingSearchDTO (int nowPage, int totalBoard, int pageData, int pageCnt) {
-		super();
-		this.nowPage = nowPage;
-		this.totalBoard = totalBoard;
-		this.pageData = pageData;
-		this.pageCnt = pageCnt;
+	public PagingSearchDTO () {
+		this.nowPage = 1;
+		this.pageData = 10;
 				
+	}
+	
+	public void setTotal (int totalPage) {
+		this.totalPage = totalPage;
+		pageCount();
 	}
 	
 	private void pageCount() {
@@ -41,13 +45,13 @@ public class PagingSearchDTO {
 			nowPage = 1;
 			
 		// 시작, 끝 행 번호
-			firstRow = (nowPage-1)*pageData+1; // ex) 현재 페이지 5, 10개씩 출력된다는 가정하에 => 첫 글번호 : 41 / 끝 글번호 : 50
-			lastRow = nowPage * pageData;
-			
-			
-			if(lastRow > totalBoard) { // 출력하기로 한 글의 개수보다 실제 글 개수가 모자라면 마지막 글번호를 실제 끝 글번호로 대체.
-				lastRow = totalBoard;
-			}
+//			firstRow = (nowPage-1)*pageData+1; // ex) 현재 페이지 5, 10개씩 출력된다는 가정하에 => 첫 글번호 : 41 / 끝 글번호 : 50
+//			lastRow = nowPage * pageData;
+//			
+//			
+//			if(lastRow > totalBoard) { // 출력하기로 한 글의 개수보다 실제 글 개수가 모자라면 마지막 글번호를 실제 끝 글번호로 대체.
+//				lastRow = totalBoard;
+//			}
 			
 			// 한 페이지에 출력되는 페이지 번호 개수를 기준으로 페이지 번호 계산
 			startPage = (nowPage - 1) / pageCnt * pageCnt+1; // ex) 현재 페이지 13이라면 시작페이지 11(소수점 버리고 정수부분만 생각함)
@@ -61,10 +65,8 @@ public class PagingSearchDTO {
 			prevPage = startPage - pageCnt;
 			nextPage = startPage + pageCnt;
 			
+			
 		}
 	}
-	
-	
-	
 
 }
