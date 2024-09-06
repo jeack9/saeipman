@@ -2,16 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.saeipman.app.building.mapper.BuildingMapper">
 	<select id="buildingList" resultType="BuildingVO">
-		SELECT	building_id,
-                building_name,
-                doro_addr,
-                details_addr,
-                total_gagu
-    	FROM    building_info
-    	ORDER BY 1
+		select *
+		from (   select rownum rn ,
+				 a.*        
+		         from (SELECT building_id,
+		                      building_name,
+		                      doro_addr,
+		                      details_addr,
+		                      total_gagu
+		                from  building_info
+						order by 1 desc
+		 	)a
+		<![CDATA[     
+		where rownum <= #{pageNum} * #{amount} )b   
+		
+		where rn > (#{pageNum} -1) * #{amount}
+		]]>
 	</select>
 	<select id="buildingListInfo" resultType="BuildingVO">
 		SELECT building_id,
+			   group_id,
 			   building_name,
 			   doro_addr,
 			   jibun_addr,
@@ -79,4 +89,9 @@
 		Delete FROM building_info
 		WHERE building_id =#{buildingId}
 	</delete>
+	
+	<select id="getTotalPageCount" resultType="int">
+		SELECT count(*)
+		FROM building_info
+	</select>
 </mapper>

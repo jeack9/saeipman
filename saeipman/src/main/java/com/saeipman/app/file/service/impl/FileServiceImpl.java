@@ -21,8 +21,8 @@ public class FileServiceImpl implements FileService{
 		return fileMapper.selectGroupId(fileVO);
 	}
 	@Override
-	public int fileInsert(FileVO fIleVO) {
-		return fileMapper.selectFileInsert(fIleVO);
+	public int fileInsert(FileVO fileVO) {
+		return fileMapper.selectFileInsert(fileVO);
 	}
 	@Override
 	public List<String> getFileName(String buildingId) {

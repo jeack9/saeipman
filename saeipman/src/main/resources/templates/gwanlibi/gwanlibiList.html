@@ -32,7 +32,7 @@
 	<div class="buildingBox" layout:fragment="Main">
 		<div class="container">
 			<div class="row">
-
+				<!-- Thymeleaf each -->
 				<th:block th:each="building : ${list}">
 					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
 						<div class="box-part text-center">
@@ -46,8 +46,10 @@
 								<p>전월 관리비 : [[ ${ building.previousMonth } ]]</p>
 								<p>금월 관리비 : [[ ${ building.thisMonth } ]]</p>
 							</div>
-
-							<a th:href="@{/detailsBillList?buildingId={id}&paymentMonth=2024-09(id=${building.buildingId})}">관리비 상세 내역</a>
+							
+							<!-- 스프링 부트가 매칭 시켜주기에 VO에 필드명과 파라미터명 정확히 일치하게 적어주어야 한다. -->
+							<!-- 날짜는 VO의 포맷으로 변환시켜서 보내주어야 한다. -->
+							<button type="button" class="btn btn-light" th:onclick="|location.href='@{/detailsBillList(buildingId=${building.buildingId}, paymentMonth=${#dates.format(building.paymentMonth, 'yyyy-MM')})}'|">관리비 상세 내역</button>
 							<a href="#">관리비 항목 설정</a>
 						</div>
 					</div>
@@ -57,5 +59,4 @@
 		</div>
 	</div>
 </body>
-
 </html>

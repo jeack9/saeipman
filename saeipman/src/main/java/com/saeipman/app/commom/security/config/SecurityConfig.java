@@ -12,7 +12,9 @@
  * 
  * import jakarta.servlet.DispatcherType;
  * 
- * //@EnableMethodSecurity public class SecurityConfig {
+ * @Configuration
+ * 
+ * @EnableMethodSecurity public class SecurityConfig {
  * 
  * @Bean // 비밀번호 암호화 PasswordEncoder passwordEncoder() { return new
  * BCryptPasswordEncoder(); }
