@@ -13,10 +13,12 @@
 							<tr class="col-md-12">
 								<th style="width: 5%">제목</th>
 								<td style="width: 30%">[[${BNotice.title}]]</td>
+								<th> 조회수</th>
+								<td>[[${BNotice.views}]]</td>
 							</tr>
 							<tr>
 								<th style="width: 10%">첨부파일</th>
-								<td><img style="width:30%" th:each=" img : ${BNotice.chumbuImages}" th:src="@{/images/{fileName}(fileName=${img})}"/></td>
+								<td><img style="width:30%" th:each=" img : ${BNotice.groupIds}" th:src="@{/images/{fileName}(fileName=${img})}"/></td>
 							</tr>
 							<tr>
 								<th>최초등록일</th>
@@ -45,3 +47,18 @@
 		</div>
 	</div>
 </div>
+<script>
+	function onTestChange() {
+		let key = window.event.keyCode;
+
+		// If the user has pressed enter
+		if (key === 13) {
+			document.getElementById("textarea").value = document
+					.getElementById("textarea").value
+					+ "\n";
+			return false;
+		} else {
+			return true;
+		}
+	}
+</script>

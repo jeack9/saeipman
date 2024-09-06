@@ -1,4 +1,4 @@
-package com.saeipman.app.commom.config;
+package com.saeipman.app.commom.servlet.config;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;

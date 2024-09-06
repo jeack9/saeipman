@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.saeipman.app.noticeBuilding.mapper.NoticeBuildingMapper;
 import com.saeipman.app.noticeBuilding.service.NoticeBuildingService;
 import com.saeipman.app.noticeBuilding.service.NoticeBuildingVO;
+import com.saeipman.app.noticeBuilding.utils.PagingSearchDTO;
 
 @Service
 public class NoticeBuildingServiceImpl implements NoticeBuildingService {
@@ -23,23 +24,23 @@ public class NoticeBuildingServiceImpl implements NoticeBuildingService {
 		this.noticeBuildingMapper = noticeBuildingMapper;
 	}
 
-	@Override
-	public List<NoticeBuildingVO> noticeBuildingList() {
-		return noticeBuildingMapper.selectNoticeBuildingAll();
+	@Override //전체조회
+	public List<NoticeBuildingVO> noticeBuildingList(PagingSearchDTO pgsc) {
+		return noticeBuildingMapper.selectNoticeBuildingAll(pgsc);
 	}
 
-	@Override
+	@Override //단건조회
 	public NoticeBuildingVO noticeBuildingSelect(NoticeBuildingVO noticeBuildingVO) {
 		return noticeBuildingMapper.selectNoticeBuildingInfo(noticeBuildingVO);
 	}
 
-	@Override
+	@Override //등록
 	public int noticeBuildingInsert(NoticeBuildingVO noticeBuildingVO) {
 		int result = noticeBuildingMapper.insertNoticeBuilding(noticeBuildingVO);
 		return result == 1? noticeBuildingVO.getPostNo() : -1;
 	}
 
-	@Override
+	@Override //수정
 	public Map<String, Object> noticeBuildingUpdate(NoticeBuildingVO noticeBuildingVO) {
 		Map<String, Object> map = new HashMap<>();
 		boolean isSuccessed = false;
@@ -60,9 +61,16 @@ public class NoticeBuildingServiceImpl implements NoticeBuildingService {
 		return map;
 	}
 
-	@Override
+	@Override //삭제
 	public int noticeBuildingDelete(int postNO) {
 		return noticeBuildingMapper.deleteNoticeBuilding(postNO);
 	}
+
+	@Override //조회수  
+	public int noticeBuildingViews(NoticeBuildingVO noticeBuildingVO) {
+		return noticeBuildingMapper.updateViewNoticeBuilding(noticeBuildingVO);
+	}
+
+	
 
 }

@@ -10,6 +10,23 @@
 </head>
 <body>
 	<div class="container">
+	<div class='row'>
+	  <form id="searchFrom" th:action="@{/minwonList}" th:method='get'>
+	   <select name='type'>
+	     <option value="">--</option>
+	        <option value="T">제목</option>
+	        <option value="C">내용</option>
+	   		<option value="W">작성자</option>
+	   		<option value="TC">제목 or 내용</option>
+	   		<option value="TW">제목 or 작성자</option>
+	   		<option value="TWC">제목 or 내용 or 작성자</option>
+	   </select>
+	   <input type='text' name='keyword' />
+	   <input type='hidden' name='pageNum' value='${pageMaker.cri.pageNum}'>
+	   <input type='hidden' name='amount' value='${pageMaker.cri.amount}'>
+	   <button class="btn btn-default">Search</button>
+	   </form>
+	</div>
 		<table class="table">
 			<thead>
 				<tr>
@@ -31,11 +48,69 @@
 					</tr>
 			</tbody>
 		</table>
-	</div>
+	
+	
+		<nav aria-label="Page navigation example ">
+		[[${pageMaker}]]
+  <ul class="pagination">
+  <li class="page-item">
+      <a class="page-link" th:href="@{/minwonList?pageNum=1}" aria-label="Previous">
+        <span aria-hidden="true">처음</span>
+      </a>
+    </li>
+    <li class="page-item" th:if="${pageMaker.startPage > 1}" ><!-- startPage가 1보다 크면 이전 버튼 보이게 -->
+      <a class="page-link" th:href="@{/minwonList?pageNum={page} (page = ${pageMaker.startPage -1})}" aria-label="Previous">
+        <span aria-hidden="true">이전</span>
+      </a>
+    </li>
+    <th:block  th:with="start = ${pageMaker.startPage}, end = ${pageMaker.endPage}">
+	    <li class="page-item" 
+	    		 th:with="start = ${pageMaker.startPage}, end = ${pageMaker.endPage}"
+	    		th:each="pageButton : ${#numbers.sequence(start, end)}">
+	    		<a class="page-link" th:href="@{/minwonList?pageNum={page} (page = ${pageButton})}" th:text=${pageButton}></a>
+	    </li>
+    </th:block>
+    <li class="page-item" th:if="${pageMaker.next}">
+      <a class="page-link" th:href="@{/minwonList?page={page} (page = ${pageMaker.endPage +1})}" aria-label="Next">
+        <span aria-hidden="true">다음</span>
+      </a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" th:href="@{/minwonList?page={page} (page = ${pageMaker.realEnd})}" aria-label="Previous">
+        <span aria-hidden="true">끝</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+</div>
 	<script>
+		var searchFrom = $("#searchFrom");
+		
+		$("#searchFrom button").on("click", function(e){
+			
+			if(!searchForm.find("option:selected").val()){
+				alert("검색종류를 선택하세요");
+				return false;
+			}
+			
+			if(!searchForm.find("input[name='keyword']").val()){
+				alert("키워드를 입력하세요");
+				return false;
+			}
+			
+			searchFrom.find("input[name='pageNum']").val("1");
+			e.preventDefault();
+			
+			searchForm.submit();
+		})
+		
+		
+	
 		$('tbody > tr').on('click', function(event){
 			let trTag = event.currentTarget;
 			let postNo = $(trTag).children().first().text();
+			
 			let url = `minwonInfo?postNo=${postNo}`;
 			location.href = url;
 		})

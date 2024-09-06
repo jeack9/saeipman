@@ -22,8 +22,8 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 	}
 	
 	@Override
-	public List<GwanlibiVO> detailsBillList(String buildingId) {
-		return gwanlibiMapper.selectGwanlibiDetailsBill(buildingId);
+	public List<GwanlibiVO> detailsBillList(GwanlibiVO vo) {
+		return gwanlibiMapper.selectGwanlibiDetailsBill(vo);
 	}
 
 }

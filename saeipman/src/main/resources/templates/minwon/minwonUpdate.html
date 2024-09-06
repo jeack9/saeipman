@@ -8,7 +8,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form  name="updateForm" th:object="${minwon}" enctype="multipart/form-data">
+	<form  name="updateForm" th:object="${minwon}">
 	<input name="postNo" th:value="${minwon.postNo}" type="hidden">
 		<div class="mb-3">
 			<label for="">제목</label>
@@ -33,9 +33,9 @@
 			<label for="visitsDate">방문날짜</label>
 			<input type="datetime-local" class="form-control" name="visitsDate" th:value="${#dates.format(minwon.visitsDate, 'yyyy-MM-dd HH:mm')}">
 		</div>
-		<div class="mb-3">
+		<div class="file-input">
 			 <label for="formFile" class="form-label">첨부파일</label>
-			 <input class="form-control" type="file" th:field="*{chumbuImage}">
+			 <input class="form-control" type="file" name="file" th:field="*{chumbuImage}">
 		</div>
 		<div class="mb-3">
   			<label for="content" class="form-label">내용</label>
@@ -49,34 +49,28 @@
 		$('#updateBtn').on('click', update);
 		
 		function update(e){
-			let dateObj = getFormData($('form[name="updateForm"]')[0]);
+			let fromData = new FormData();
+			let inputFile = $("input[name='file']");
+			let files = inputFile[0].files;
+			console.log(files)
 			
-			$.ajax('minwonUpdate',{
-				type : 'post',
-				data : dateObj,
+			for(let i=0; i<files.length; i++){
+				formData.append("file", files[i]);
+			}
+			
+			
+			$.ajax({
+				url : '/minwonUpdate',
+				type : 'POST',
+				data : fromData,
 				processData: false,
-	            contentType: false
-			})
-			.done(result => {
-				console.log(result);
-			})
-			.fail(err => console.log(err))
+	            contentType: false,
+	            success : function(result){
+	            	alert("Uploaded")
+	            }
+			});
 		}
 		
-		function getFormData(){ //폼 데이터를 객체 형태로 변환
-			let formAry = $('form[name="updateForm"]').serializeArray();
-			
-			let formObj = {};
-			$.each(formAry, function(idx, tag){
-				console.log(idx, tag);
-				console.log(tag.name + ' : ' + tag.value);
-				
-				formObj[tag.name] = tag.value;
-			})
-			console.clear();
-			console.log(formObj)
-			return formObj;
-		}
 	</script>
 </body>
 </html>
