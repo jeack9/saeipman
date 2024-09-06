@@ -14,6 +14,4 @@ public interface GwanlibiMapper {
 	//public List<GwanlibiVO> selectGwanlibiList(String buildingId, String selectedDate);
 	public List<GwanlibiVO> selectGwanlibiDetailsBill(GwanlibiVO vo);
 	
-	// 
-
 }

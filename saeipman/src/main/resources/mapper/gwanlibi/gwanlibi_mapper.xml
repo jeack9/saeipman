@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saeipman.app.gwanlibi.mapper.GwanlibiMapper">
+	
+	<!-- 임대인의 건물별 전원, 금월 관리비 목록 -->
+	<select id="selectMonthGwanlibiByBuildingList">
+			
+		SELECT   b.building_id,
+		         b.building_name,
+		         p.total_money previous_month,
+		         t.total_money this_month,
+		         t.payment_month
+		FROM     building_info b JOIN month_gwanlibi t
+		                         ON   b.building_id = t.building_id AND TO_CHAR(t.payment_month, 'yymm') = TO_CHAR(sysdate, 'yymm')
+		                         JOIN month_gwanlibi p
+		                         ON   b.building_id = p.building_id AND TO_CHAR(p.payment_month, 'yymm') = TO_CHAR(sysdate, 'yymm') -1
+		WHERE    b.imdaein_id = #{imdaeinId}
+		ORDER BY b.building_name
+		
+	</select>
+	
+	<!-- 각 건물의 관리비 상세 내역 and 각 건물의 관리비 상세 내역 for 등록/수정 페이지 -->
+	<select id="selectGwanlibiDetailsBill">
+	
+		SELECT   bi.building_name,
+				 (d.gwanlibi_item_money/bi.total_gagu) gwanlibi_by_gagu,
+		         bgi.gwanlibi_name,
+		         d.gwanlibi_item_money
+		FROM     building_info bi JOIN building_gwanlibi_item bgi
+		                          ON   bi.building_id = bgi.building_id
+		                          LEFT OUTER JOIN month_gwanlibi m
+		                          ON   m.building_id = bi.building_id
+		                          LEFT OUTER JOIN gwanlibi_details d
+		                          ON   bgi.gwanlibi_item_no = d.gwanlibi_item_no AND d.month_gwanlibi_no = m.month_gwanlibi_no
+		WHERE    bi.building_id = #{buildingId}
+		AND      TO_CHAR(m.payment_month, 'yyMM') = TO_CHAR(#{paymentMonth}, 'yyMM')
+		ORDER BY bgi.gwanlibi_name
+		
+	</select>
+
+</mapper>
