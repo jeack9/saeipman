@@ -18,8 +18,12 @@ public class GwanlibiVO {
 	private String buildingName;
 	private int previousMonth;
 	private int thisMonth;
+	private double gwanlibiByGagu;
+	private String strGwanlibiByGagu;
+	
 	
 	private String gwanlibiName;
-	private Integer gwanlibiItemMoney;
-
+	
+	private int gwanlibiItemMoney;
+	private String strGwanlibiItemMoney;
 }

@@ -11,7 +11,7 @@ public class Criteria {
 	private String type;
 	private String keyword;
 	
-	public Criteria() {
+	public Criteria() {//mapper에서 조회할떄 (페이지번호,amount,검색 키워드,
 		this(1, 10);
 	}
 	

@@ -7,9 +7,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +41,12 @@ public class NoticeBuildingController {
 
 	// 전체조회
 	@GetMapping("noticeBuildingList")
-	public String noticeBuildingList(NoticeBuildingVO noticeBuildingVO, PagingSearchDTO pgsc, Model model) {
+	public String noticeBuildingList(PagingSearchDTO pgsc, Model model) {
+		int totalPage = noticeBuildingService.totalPage(pgsc);
+		pgsc.setTotalPage(totalPage);
+		
 		List<NoticeBuildingVO> list = noticeBuildingService.noticeBuildingList(pgsc);
-		noticeBuildingService.noticeBuildingViews(noticeBuildingVO);
+		model.addAttribute("Paging", pgsc);
 		model.addAttribute("BNotice", list);
 		return "noticeBuilding/noticeBuildingList";
 	}

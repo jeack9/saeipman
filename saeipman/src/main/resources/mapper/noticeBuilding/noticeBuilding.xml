@@ -2,10 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="com.saeipman.app.noticeBuilding.mapper.NoticeBuildingMapper">
+	
+	<!-- <sql id="searchPaging">
+	         <if test="searchKeyword != null and searchKeyword != ''">
+			 title like concat('%', #{searchKeyword}, '%')
+			  or content like concat('%', #{searchKeyword}, '%')
+		    </if>
+	</sql> -->
 
 	<!-- 전체조회 -->
 	<select id="selectNoticeBuildingAll" resultType="NoticeBuildingVO">
-		SELECT bn.post_no
+		
+		SELECT * FROM ( SELECT rownum rn, a.* from (
+        SELECT bn.post_no
 	         , bn.title
 			 , bn.writer
 			 , bn.content
@@ -16,13 +25,29 @@
 			 , bi.building_id
         FROM building_notice bn join building_info bi
            			on bn.building_id = bi.building_id
-        LIMIT #{startData}, #{pageData}  			
+		) a     where
+		
+		<!-- <include refid="searchPaging"></include> -->
+		
+		rownum <![CDATA[ <= ]]> #{nowPage} * #{pageData}) p 
+		where rn > (#{nowPage}-1) * #{pageData}
 	</select>
 	
-	<!-- 한 페이지에 출려될 글 수 -->
-	<select id="count"  resultType="int">
+	<!-- 글 총 개수, 검색어 조건 -->
+	<select id="totalBoardNoticeBuilding"  resultType="int">
 		SELECT count(*) 
 		FROM   building_notice
+		<!--WHERE
+		
+		 <include refid="searchPaging"></include>
+		
+		<choose>
+		<when test="searchKeyword != null and searchKeyword != ''">
+			 title like concat('%', #{searchKeyword}, '%')
+			or content like concat('%', #{searchKeyword}, '%')
+		</when>
+		</choose>--> 
+		ORDER BY reg_date DESC
 	</select>
 	
 	

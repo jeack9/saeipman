@@ -32,6 +32,7 @@
             M.POST_NO, 
             M.TITLE, 
             R.ROOM_NO,
+            M.accept_state,
             M.GROUP_ID,
             M.REG_DATE, 
             B.BUILDING_ID 

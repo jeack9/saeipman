@@ -1,36 +1,37 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}" layout:fragment="Main">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{common/layouts/default_layout}"
+	  layout:fragment="Main">
 
 <head>
 	<meta charset="UTF-8">
 
 	<style>
+		#bName {
+			float: left;
+			color: #323f5d;
+			font-size: 20px;
+			font-weight: bold;
+		}
+		
 		.table {
 			margin-left: auto;
 			margin-right: auto;
 		}
 
-		.table td,
-		.table th {
+		.table td, .table th {
 			text-align: center;
 			border-collapse: collapse;
 			border: 0px solid black;
 			color: black;
 		}
 
-		.insertUpdateBtn {
+		.insertBtn, .updateBtn {
 			margin: auto;
 			display: block;
 			background: #6CBEC7;
 			color: rgb(56, 53, 53);
-		}
-
-		#bName {
-			float: left;
-			color: #323f5d;
-			font-size: 20px;
-			font-weight: bold;
 		}
 	</style>
 
@@ -43,15 +44,6 @@
 
 		<!-- 건물명 -->
 		<p id="bName"></p>
-
-		<!-- Toast UI - Date Picker -->
-		<div class="inputDiv" style="position: relative; z-index: 2; float: right;">
-			<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-				<input type="text" id="datepicker-input-ko" aria-label="Year-Month">
-				<span class="tui-ico-date"></span>
-			</div>
-			<div class="datepicker-cell" id="datepicker-month-ko" style="margin-top: -1px;"></div>
-		</div>
 
 		<br>
 		<br>
@@ -70,10 +62,8 @@
 			</tbody>
 		</table>
 		<hr style="color: black">
-		
-		<!-- todo 관리비아이디 구하기. script에서 클릭 이벤트 하던지 -->
-		<button class="btn btn-light insertUpdateBtn" th:onclick="|location.href='@{/gwanlibiChargeInsertUpdatePage(buildingId=${buildingId}, paymentMonth=${#dates.format(#calendars.createNow(), 'yyyy-MM')})}">이번 달 관리비 등록 / 수정</button>
-		
+		<button class="btn btn-light insertBtn" th:onclick="|location.href='#'|">등록</button>
+		<button class="btn btn-light updateBtn" th:onclick="|location.href='#'|">수정</button>
 		<br>
 	</div>
 
@@ -83,8 +73,6 @@
 		/* 1. <script th:inline="javascript">
 		   2. Thymeleaf 변수 사용 */
 		let detailsList = [[${ detailsList }]];
-		let payDate = detailsList[0].paymentMonth;
-		//console.log(detailsList);
 
 		// 해당 건물의 관리 비용 총합계
 		function total() {
@@ -108,75 +96,15 @@
 
 		// 건물명 출력
 		$('#bName').text(detailsList[0].buildingName);
-		
-		
-		//
-		$('.insertUpdateBtn').click(function(){
-			location.href('');
-		})
-		
 
 		// TOAST UI //
 		// async - await
 		$(document).ready(() => {
 			gridLoad();
-			dateLoad();
 			total();
 		});
 
-
-		// Toast UI - Date Picker //
-		// # reference : https://nhn.github.io/tui.date-picker/latest/tutorial-example05-picking-month
-		// # reference : https://nhn.github.io/tui.date-picker/latest/DatePicker#event-change
-		let dateLoad = () => {
-			let calMonthKo = new tui.DatePicker('#datepicker-month-ko', {
-				date: new Date(),
-				language: 'ko',
-				type: 'month',
-				input: {
-					element: '#datepicker-input-ko',
-					format: 'yyyy년 M월'
-					//format: 'yyyy-MM'
-				},
-			});
-
-			// get date value
-			calMonthKo.on('change', () => {
-				//console.log(calMonthKo);
-				let paymentMonth = calMonthKo.getDate().getFullYear() + '-' + `${calMonthKo.getDate().getMonth() + 1}`.padStart(2, '0');
-				let buildingId = [[${ buildingId }]];
-				//
-				$.ajax({
-					url: '/detailsBillList',
-					method: 'post',
-					data: { paymentMonth, buildingId },
-					success: function (result) {
-						$('#grid').html('');
-						detailsList = result.list;
-						console.log('성공');
-						gridLoad();
-						total();
-					},
-					fail: function (err) {
-						console.log(err);
-					}
-				});
-
-				// 등록/수정 버튼 출력 여부 설정
-				let now = new Date();
-				let yearMonth = now.getFullYear() + '-' + (now.getMonth() + 1).toString().padStart(2, 0);
-				if (paymentMonth == yearMonth) {
-					$('.insertUpdateBtn').css('display', 'block');
-				} else {
-					$('.insertUpdateBtn').css('display', 'none');
-				}
-				//console.log(paymentMonth);
-				//console.log(yearMonth);
-			});
-		}
-
-
-
+		
 		// Toast UI - Grid //
 		// # reference : https://adjh54.tistory.com/95
 		// # reference : https://park-duck.tistory.com/entry/javascript-1-Toast-UI-Grid-%EA%B8%B0%EC%B4%88API-%EC%82%AC%EC%9A%A9%EB%B2%95
@@ -208,7 +136,8 @@
 						header: '관리 비용',
 						name: 'strGwanlibiItemMoney',
 						resizable: true,
-						align: 'center'						
+						align: 'center',
+						editor: 'text'						
 					},
 					// [Column-3] 가구별 관리비
 					{

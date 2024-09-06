@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saeipman.app.minwon.mapper.ReplyMapper">
+
+	<!-- 댓글 등록 -->
+	<insert id="insertCmt">
+	
+	
+	</insert>
+	
+	<!-- 댓글 리스트 -->
+	<select id="listCmt">
+		select * from minwon_cmt where post_no = #{postNo}
+	</select>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="deleteCmt">
+		delete from minwon_cmt where minwon_cmt_no = #{minwonCmtNo}
+	</delete>
+	
+	<select id="listWithPaging">
+		select *
+		from minwon_cmt
+		where post_no = #{postNo}
+		order by minwon_cmt_no
+	</select>
+</mapper>

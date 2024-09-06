@@ -1,3 +1,4 @@
+
 package com.saeipman.app.commom.security.service.impl;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,20 +13,21 @@ import com.saeipman.app.member.service.LoginService;
 import lombok.RequiredArgsConstructor;
 
 @Service
+
 @RequiredArgsConstructor
-public class MemberDetailsService implements UserDetailsService{
+public class MemberDetailsService implements UserDetailsService {
 	private final LoginService loginService;
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String insertUserId) throws UsernameNotFoundException {
 		LoginInfoVO loginVO = new LoginInfoVO();
 		loginVO.setLoginId(insertUserId);
 		LoginInfoVO findVO = loginService.loginInfo(loginVO);
-		if(findVO == null) {
+		if (findVO == null) {
 			System.out.println("로그인 널입니다.");
 			throw new UsernameNotFoundException("아이디 혹은 비밀번호가 올바르지 않습니다.");
 		}
-	
+
 		return new MemberDetails(findVO);
 	}
 }
