@@ -62,6 +62,7 @@ public class MinwonController {
 	public String minwonInfo(@ModelAttribute Criteria cri, MinwonVO minwonVO, Model model) {
 		MinwonVO findVO = minwonService.minwonSelect(minwonVO);
 		model.addAttribute("minwon",findVO);
+		model.addAttribute("cri", cri);
 		return "minwon/minwonInfo";
 	}
 	
