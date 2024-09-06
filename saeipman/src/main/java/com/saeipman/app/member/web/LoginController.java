@@ -2,6 +2,8 @@ package com.saeipman.app.member.web;
 
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.saeipman.app.member.dto.MemberRequestDTO;
+import com.saeipman.app.member.service.AuthService;
 import com.saeipman.app.member.service.ImdaeinVO;
 import com.saeipman.app.member.service.LoginInfoVO;
+import com.saeipman.app.member.service.LoginRequest;
 import com.saeipman.app.member.service.LoginService;
 
 import jakarta.validation.Valid;
@@ -27,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("member")
 public class LoginController {
 	private LoginService lsvc;
+	private final AuthService authService;
 
 	@GetMapping("login") // 로그인폼 이동
 	public void loginForm() {
@@ -78,6 +83,12 @@ public class LoginController {
 		System.out.println("aaaa");
 		lsvc.addImdaein(memberReq);
 		return "member/login";
+	}
+	
+	@PostMapping("authLogin")
+	public ResponseEntity<String> getMember(@Valid @RequestBody LoginRequest request) {
+		String token = this.authService.login(request);
+		return ResponseEntity.status(HttpStatus.OK).body(token);
 	}
 	
 }

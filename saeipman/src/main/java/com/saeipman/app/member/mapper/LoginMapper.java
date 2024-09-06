@@ -20,4 +20,6 @@ public interface LoginMapper {
 	
 	// 로그인 정보 단건추가
 	public int insertLogin(LoginInfoVO vo);
+	
+	//
 }
