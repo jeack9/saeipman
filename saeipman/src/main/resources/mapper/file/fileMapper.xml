@@ -30,6 +30,6 @@
 		select 	fi.file_name as file_name
 		FROM building_info bi JOIN file_info fi
 		                    ON bi.group_id = fi.group_id  
-		WHERE building_id = #{buildingId}
+		WHERE bi.building_id = #{buildingId}
 	</select>
 </mapper>

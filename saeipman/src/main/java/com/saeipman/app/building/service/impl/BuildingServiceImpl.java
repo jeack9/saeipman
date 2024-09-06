@@ -9,18 +9,20 @@ import org.springframework.stereotype.Service;
 import com.saeipman.app.building.mapper.BuildingMapper;
 import com.saeipman.app.building.service.BuildingService;
 import com.saeipman.app.building.service.BuildingVO;
-import com.saeipman.app.file.service.FileVO;
+import com.saeipman.app.building.service.BuildingPageDTO;
+
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class BuildingServiceImpl implements BuildingService{
-	private BuildingMapper buildingMapper;
+	private final BuildingMapper buildingMapper;
 	
-	public BuildingServiceImpl(BuildingMapper buildingMapper) {
-		this.buildingMapper = buildingMapper;
-	}
+
 	@Override
-	public List<BuildingVO> buildingDetail() {
+	public List<BuildingVO> buildingDetail(BuildingPageDTO pageDTO) {
 		
-		return buildingMapper.buildingList();
+		return buildingMapper.buildingList(pageDTO);
 	}
 	@Override
 	public BuildingVO buildingInfo(BuildingVO buildingVO) {
@@ -39,7 +41,7 @@ public class BuildingServiceImpl implements BuildingService{
 		
 		if(result == 1) {
 			isSuccessed = true;
-			map.put("list", buildingMapper.buildingList());
+			//map.put("list", buildingMapper.buildingList());
 		}
 		
 		map.put("success", isSuccessed);
@@ -47,9 +49,14 @@ public class BuildingServiceImpl implements BuildingService{
 		
 		return map;
 	}
+	
 	@Override
 	public int buildingDelete(String buildingId) {
 		return buildingMapper.selectBuildingDelete(buildingId);
+	}
+	@Override
+	public int totalPage(BuildingPageDTO pageDTO) {
+		return buildingMapper.getTotalPageCount(pageDTO);
 	}
 	
 }

@@ -76,7 +76,7 @@
 	<script>
 		$('form[name=insertForm]').on('submit', function(e) {
 			e.preventDefault();
-
+			
 			let buildingName = $('input[name="buildingName"]');
 			if (buildingName.val() == '') {
 				alert('빌딩 이름을 입력해주세요.');
