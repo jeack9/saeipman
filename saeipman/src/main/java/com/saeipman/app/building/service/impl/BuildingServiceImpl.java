@@ -52,5 +52,4 @@ public class BuildingServiceImpl implements BuildingService{
 		return buildingMapper.selectBuildingDelete(buildingId);
 	}
 	
-	
 }
