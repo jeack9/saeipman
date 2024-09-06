@@ -1,15 +1,8 @@
 package com.saeipman.app.building.web;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,12 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.saeipman.app.building.service.BuildingService;
 import com.saeipman.app.building.service.BuildingVO;
+import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.file.service.FileService;
 import com.saeipman.app.upload.config.FileUtility;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
@@ -37,10 +29,18 @@ public class BuildingController {
 	private final FileService fileService;
 
 	@GetMapping("/buildingList")
-	public String buildingInfo(Model model) {
-		List<BuildingVO> list = buildingService.buildingDetail();
+	public String buildingInfo(BuildingPageDTO buildingPageDTO,Model model) {
+		
+		//리스트 총 수
+		int total = buildingService.totalPage(buildingPageDTO);
+		buildingPageDTO.setTotal(total);
+		
+		//리스트 출력
+		List<BuildingVO> list = buildingService.buildingDetail(buildingPageDTO);
 		model.addAttribute("buildings", list);
-
+		
+		model.addAttribute("page",buildingPageDTO);
+		
 		return "building/buildingList";
 	}
 
@@ -72,6 +72,7 @@ public class BuildingController {
 	public String insertBuilding(@RequestPart MultipartFile[] files, BuildingVO buildingVO) {
 		fileUtill.setFolder("건물");
 		String groupId = fileUtill.upload(files);
+
 		buildingVO.setGroupId(groupId);
 
 		int success = buildingService.insertBuilding(buildingVO);
@@ -82,7 +83,7 @@ public class BuildingController {
 	@ResponseBody
 	public Map<String, Object> updateBuilding(@RequestBody BuildingVO buildingVO) {
 		System.out.println(buildingVO);
-		
+
 		return buildingService.updateBuilding(buildingVO);
 	}
 

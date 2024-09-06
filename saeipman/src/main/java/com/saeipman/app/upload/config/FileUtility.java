@@ -44,41 +44,40 @@ public class FileUtility {
 		fileVO.setGroupId(group);
 		
 		for (MultipartFile file : files) {
-			log.info(file.getContentType());
-			log.info(file.getOriginalFilename());
-			log.info(String.valueOf(file.getSize()));
-			
-			
-			String fileName = file.getOriginalFilename();
-			String uuid = UUID.randomUUID().toString();
-			
-			String uploadFolder = folderPath + "/" + uuid + "_" + fileName;
-			String saveName = uploadPath + uploadFolder; // separator = 자바가 인식하는 경로
-			
-			fileVO.setFileName(uuid+"_"+fileName);
-			fileVO.setFileSize(String.valueOf(file.getSize()));
-			fileVO.setFilePath(uploadPath+folderPath);
-			fileVO.setTableName(folderPath);
-			int index = file.getOriginalFilename().indexOf(".");
-			if(index > 1) {
-				String fileType = file.getOriginalFilename().substring(index + 1);
-				fileVO.setFileType(fileType);
-			}
-			
-			log.debug("saveName : " + saveName);
-
-			Path savePath = Paths.get(saveName);
-
-			try {
-				file.transferTo(savePath);
+				log.info(file.getContentType());
+				log.info(file.getOriginalFilename());
+				log.info(String.valueOf(file.getSize()));
+				if(file.getOriginalFilename() == "") {
+					return "-1";
+				}
 				
-				//imgList.add(fileName);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			imgList.add(setImgPath(uploadFolder));
-			fileService.fileInsert(fileVO);
-		}
+				String fileName = file.getOriginalFilename();
+				String uuid = UUID.randomUUID().toString();
+				String uploadFolder = folderPath + "/" + uuid + "_" + fileName;
+				String saveName = uploadPath + uploadFolder; // separator = 자바가 인식하는 경로
+				
+				fileVO.setFileName(uuid+"_"+fileName);
+				fileVO.setFileSize(String.valueOf(file.getSize()));
+				fileVO.setFilePath(uploadPath+folderPath);
+				fileVO.setTableName(folderPath);
+				int index = file.getOriginalFilename().indexOf(".");
+				if(index > 1) {
+					String fileType = file.getOriginalFilename().substring(index + 1);
+					fileVO.setFileType(fileType);
+				}
+				
+				log.debug("saveName : " + saveName);
+				
+				Path savePath = Paths.get(saveName);
+				
+				try {
+					file.transferTo(savePath);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				fileService.fileInsert(fileVO);
+				imgList.add(setImgPath(uploadFolder));
+			} // for END
 		return group;
 	}
 	public String makeFolder(String folder) {
