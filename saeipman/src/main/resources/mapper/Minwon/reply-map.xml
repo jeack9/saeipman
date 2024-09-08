@@ -2,26 +2,70 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.saeipman.app.minwon.mapper.ReplyMapper">
 
-	<!-- 댓글 등록 -->
-	<insert id="insertCmt">
-	
-	
-	</insert>
-	
-	<!-- 댓글 리스트 -->
-	<select id="listCmt">
-		select * from minwon_cmt where post_no = #{postNo}
-	</select>
-	
-	<!-- 댓글 삭제 -->
-	<delete id="deleteCmt">
-		delete from minwon_cmt where minwon_cmt_no = #{minwonCmtNo}
-	</delete>
-	
-	<select id="listWithPaging">
-		select *
-		from minwon_cmt
-		where post_no = #{postNo}
-		order by minwon_cmt_no
-	</select>
+	<!-- 새로운 댓글 등록 -->
+   <insert id="insertCmt">
+      insert into minwon_cmt (
+        minwon_cmt_no,
+        post_no,
+        content,
+        writer_auth,
+        cmt_rep,        <!-- 댓글 계층 (0 = 댓글) -->
+        cmt_group,      <!-- 새로운 댓글 그룹 -->
+        cmt_order,      <!-- 댓글 순서 (항상 0) -->
+        reg_date
+        )
+        values (
+           #{minwonCmtNo},         
+           #{postNo},             
+           #{content},            
+           #{writerAuth},         
+           0,                     <!-- 댓글이므로 계층은 0 -->
+           #{newCmtGroup},        <!-- 시퀀스로 생성한 새로운 그룹 ID -->
+           0,                     <!-- 댓글 순서 0 -->
+           sysdate                
+       )
+   </insert>
+   
+   <!-- 대댓글 등록 -->
+   <insert id="insertReplyCmt">
+       insert into minwon_cmt (
+           minwon_cmt_no,
+           post_no,
+           content,
+           writer_auth,
+           cmt_rep,         -- 대댓글 계층 (1 = 대댓글)
+           cmt_group,       -- 부모 댓글과 동일한 그룹
+           cmt_order,       -- 부모 댓글의 순서 + 1
+           reg_date
+       ) 
+       values (
+           #{minwonCmtNo},        -- 시퀀스로 생성한 댓글 번호
+           #{postNo},             -- 게시물 번호
+           #{content},            -- 대댓글 내용
+           #{writerAuth},         -- 작성자 권한
+           1,                     -- 대댓글이므로 계층은 1
+           #{parentCmtGroup},     -- 부모 댓글의 그룹
+           #{parentCmtOrder} + 1, -- 부모 댓글 순서 다음
+           sysdate                -- 작성 날짜
+       )
+   </insert>
+   
+   <!-- 댓글 리스트 -->
+   <select id="listCmt">
+       select * 
+       from minwon_cmt 
+       where post_no = #{postNo}
+       ORDER by
+         CASE 
+           WHEN cmt_rep = 0 THEN reg_date end desc,  <!-- 부모 댓글은 최신순(내림차순) -->
+         CASE 
+           WHEN cmt_rep > 0 THEN reg_date end asc    <!-- 대댓글은 시간순(오름차순) -->
+
+   </select>
+   
+   <!-- 댓글 삭제 -->
+   <delete id="deleteCmt">
+      delete from minwon_cmt where minwon_cmt_no = #{minwonCmtNo}
+   </delete>
+
 </mapper>
