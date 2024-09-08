@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,6 +66,20 @@ public class MinwonController {
 		model.addAttribute("cri", cri);
 		return "minwon/minwonInfo";
 	}
+	
+	//민원 상태 업로드
+	@PostMapping("/updateMinwonState")
+	public String updateMinwonState(@ModelAttribute Criteria cri, MinwonVO minwonVO, @RequestParam("state") String state) {
+	     // VO 객체에 상태값 세팅
+	     minwonVO.setAcceptState(state);
+
+	     // 서비스 계층을 통해 상태 업데이트
+	     minwonService.acceptStateUpdate(minwonVO);
+
+	     // 처리 후 민원 상세 페이지로 리다이렉트
+	     return "redirect:/minwonInfo?postNo=" + minwonVO.getPostNo() + "&pageNum=" + cri.getPageNum();
+	}
+	
 	
 	// 등록(페이지)
 	@GetMapping("minwonInsert")

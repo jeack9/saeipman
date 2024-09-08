@@ -42,8 +42,34 @@
 		<button type="button" th:onClick="|location.href = '@{/minwonDelete(postNo=${minwon.postNo})}'|">삭제</button>
 	</div>
 	<div>
-		<button type="button" th:onClick="">접수</button>
-		<button type="button" th:onClick="">완료</button>
+	  <!-- 접수 버튼 -->
+      <form th:action="@{/updateMinwonState}" method="post">
+          <input type="hidden" name="postNo" th:value="${minwon.postNo}" />
+          <input type="hidden" name="state" value="1" /> <!-- 접수중은 숫자 1로 전송 -->
+          <button type="submit">접수</button>
+      </form>
+
+      <!-- 완료 버튼 -->
+      <form th:action="@{/updateMinwonState}" method="post">
+          <input type="hidden" name="postNo" th:value="${minwon.postNo}" />
+          <input type="hidden" name="state" value="2" /> <!-- 처리 완료는 숫자 2로 전송 -->
+          <button type="submit">완료</button>
+      </form>
 	</div>
+	
+	<script>
+	// 특정 게시물의 댓글 리스트 불러오는 함수
+	function loadComments(postNo) {
+	    $.getJSON("/comments/comment-list/" + postNo, function(data) {
+	        if (data.status === "success") {
+	            displayComments(data.comments); // 성공적으로 데이터를 가져오면 댓글을 화면에 출력
+	        } else {
+	            alert("댓글을 불러오는데 실패했습니다.");
+	        }
+	    });
+	}
+	    
+	    
+	</script>
 </body>
 </html>

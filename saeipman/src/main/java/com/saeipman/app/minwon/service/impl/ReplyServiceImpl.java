@@ -18,24 +18,34 @@ public class ReplyServiceImpl implements ReplyService{
 	
 	private ReplyMapper replyMapper;
 
+
 	@Override
-	public int cmtInsert(ReplyVO vo) {
-		return replyMapper.insertCmt(vo);
+	public void insertCmt(ReplyVO vo) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public ReplyVO cmtList(Long minwonCmtNo) {
-		return replyMapper.listCmt(minwonCmtNo);
+	public void insertReplyCmt(ReplyVO vo) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public int cmtDelete(Long minwonCmtNo) {
-		return cmtDelete(minwonCmtNo);
+	public List<ReplyVO> listCmt(Long postNo) {
+		return replyMapper.listCmt(postNo);
 	}
 
 	@Override
-	public List<ReplyVO> withPagingList(Long postNo) {
-		return replyMapper.listWithPaging(postNo);
+	public void deleteCmt(Long minwonCmtNo) {
+		replyMapper.deleteCmt(minwonCmtNo);
+		
+	}
+
+	@Override
+	public List<ReplyVO> getReplyList(Long parentCmtNo) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

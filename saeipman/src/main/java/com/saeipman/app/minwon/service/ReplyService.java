@@ -14,5 +14,7 @@ public interface ReplyService {
 
     // 댓글 삭제
     void deleteCmt(Long minwonCmtNo);
+
+	List<ReplyVO> getReplyList(Long parentCmtNo);
 	
 }
