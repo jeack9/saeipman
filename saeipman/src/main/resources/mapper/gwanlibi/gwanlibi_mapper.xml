@@ -23,6 +23,8 @@
 	<select id="selectGwanlibiDetailsBill">
 	
 		SELECT   bi.building_name,
+				 bi.building_id,
+				 m.payment_month,
 				 (d.gwanlibi_item_money/bi.total_gagu) gwanlibi_by_gagu,
 		         bgi.gwanlibi_name,
 		         d.gwanlibi_item_money

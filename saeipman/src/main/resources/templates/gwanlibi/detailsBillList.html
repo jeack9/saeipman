@@ -64,57 +64,67 @@
 			<tbody>
 				<tr>
 					<th style="width: 33.33%; color: #385d61;">TOTAL</th>
-					<td id="tatalGwanlibi" style="width: 33.33%;"></td>
-					<td id="tatalGwanlibiByGabu" style="width: 33.33%;"></td>
+					<td id="totalGwanlibi" style="width: 33.33%;"></td>
+					<td id="totalGwanlibiByGagu" style="width: 33.33%;"></td>
 				</tr>
 			</tbody>
 		</table>
 		<hr style="color: black">
-		
+
 		<!-- todo 관리비아이디 구하기. script에서 클릭 이벤트 하던지 -->
-		<button class="btn btn-light insertUpdateBtn" th:onclick="|location.href='@{/gwanlibiChargeInsertUpdatePage(buildingId=${buildingId}, paymentMonth=${#dates.format(#calendars.createNow(), 'yyyy-MM')})}">이번 달 관리비 등록 / 수정</button>
-		
+		<button class="btn btn-light insertUpdateBtn">관리비 등록 / 수정</button>
+
 		<br>
 	</div>
 
 	<script th:inline="javascript">
+		// 관리비 등록/수정 버튼 숨기기 - jQuery
+		$('.insertUpdateBtn').hide();
 
 		// JavaScript에서 Thymeleaf 변수 사용하기 //
 		/* 1. <script th:inline="javascript">
 		   2. Thymeleaf 변수 사용 */
 		let detailsList = [[${ detailsList }]];
 		let payDate = detailsList[0].paymentMonth;
-		//console.log(detailsList);
+		console.log(detailsList);
 
-		// 해당 건물의 관리 비용 총합계
+		// 해당 건물의 관리 비용 총합계 - number format (, 원)
 		function total() {
-			let tatalGwanlibi = 0;
+			let totalGwanlibi = 0;
 			for (i in detailsList) {
-				tatalGwanlibi += detailsList[i].gwanlibiItemMoney;
+				totalGwanlibi += detailsList[i].gwanlibiItemMoney;
 			}
 			//console.log(tatalGwanlibi);
-			$('#tatalGwanlibi').text(tatalGwanlibi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
+			$('#totalGwanlibi').text(totalGwanlibi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
 
 
 			// 가구별 관리비 총합계
-			let tatalGwanlibiByGabu = 0;
+			let totalGwanlibiByGagu = 0;
 			for (i in detailsList) {
-				tatalGwanlibiByGabu += Math.floor(detailsList[i].gwanlibiByGagu);
+				totalGwanlibiByGagu += Math.floor(detailsList[i].gwanlibiByGagu);
 			}
 			//console.log(tatalGwanlibiByGabu);
-			$('#tatalGwanlibiByGabu').text(tatalGwanlibiByGabu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
+			$('#totalGwanlibiByGagu').text(totalGwanlibiByGagu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
 		}
 
 
 		// 건물명 출력
 		$('#bName').text(detailsList[0].buildingName);
-		
-		
-		//
-		$('.insertUpdateBtn').click(function(){
-			location.href('');
+
+
+		// todo
+		$('.insertUpdateBtn').click(function() {
+			const offset = 1000 * 60 * 60 * 9;
+			const koreaNow = new Date(new Date(detailsList[0].paymentMonth).getTime() + offset);
+			const splitDate = koreaNow.toISOString().split('T')[0].split('-');
+			let resultDate = splitDate[0] + '-' + splitDate[1];
+			console.log('===========================================');
+			console.log(resultDate);
+			console.log('===========================================');
+			//location.href(`/gwanlibiChargeInsertUpdatePage?buildingId=${detailsList[0].buildingId}&paymentMonth=${detailsList[0].paymentMonth}`);
+			$(location).attr('href', `/gwanlibiChargeInsertUpdatePage?buildingId=${detailsList[0].buildingId}&paymentMonth=${resultDate}`);
 		})
-		
+
 
 		// TOAST UI //
 		// async - await
@@ -153,7 +163,9 @@
 					success: function (result) {
 						$('#grid').html('');
 						detailsList = result.list;
-						console.log('성공');
+						for (i in detailsList) {
+							console.log(detailsList[i])
+						}
 						gridLoad();
 						total();
 					},
@@ -162,16 +174,14 @@
 					}
 				});
 
-				// 등록/수정 버튼 출력 여부 설정
+				// 등록/수정 버튼 출력 여부 설정 : 전월에만 보이기
 				let now = new Date();
-				let yearMonth = now.getFullYear() + '-' + (now.getMonth() + 1).toString().padStart(2, 0);
-				if (paymentMonth == yearMonth) {
+				let previousYearMonth = now.getFullYear() + '-' + (now.getMonth()).toString().padStart(2, 0);
+				if (paymentMonth == previousYearMonth) {
 					$('.insertUpdateBtn').css('display', 'block');
 				} else {
 					$('.insertUpdateBtn').css('display', 'none');
 				}
-				//console.log(paymentMonth);
-				//console.log(yearMonth);
 			});
 		}
 
@@ -208,7 +218,7 @@
 						header: '관리 비용',
 						name: 'strGwanlibiItemMoney',
 						resizable: true,
-						align: 'center'						
+						align: 'center'
 					},
 					// [Column-3] 가구별 관리비
 					{

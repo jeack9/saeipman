@@ -20,7 +20,7 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 	public List<GwanlibiVO> monthGwanlibiByBuildingList(String imdaeinId) {
 		return gwanlibiMapper.selectMonthGwanlibiByBuildingList(imdaeinId);
 	}
-	
+
 	@Override
 	public List<GwanlibiVO> detailsBillList(GwanlibiVO vo) {
 		return gwanlibiMapper.selectGwanlibiDetailsBill(vo);

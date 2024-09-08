@@ -26,13 +26,18 @@
 			border: 0px solid black;
 			color: black;
 		}
-
+		
+		.btnDiv {
+			text-align: center;
+		}
+				
 		.insertBtn, .updateBtn {
-			margin: auto;
-			display: block;
+			display: inline-block;
 			background: #6CBEC7;
 			color: rgb(56, 53, 53);
 		}
+
+		
 	</style>
 
 </head>
@@ -62,8 +67,10 @@
 			</tbody>
 		</table>
 		<hr style="color: black">
-		<button class="btn btn-light insertBtn" th:onclick="|location.href='#'|">등록</button>
-		<button class="btn btn-light updateBtn" th:onclick="|location.href='#'|">수정</button>
+		<div class="btnDiv">
+			<button class="btn btn-light insertBtn" th:onclick="|location.href='#'|">등록</button>
+			<button class="btn btn-light updateBtn" th:onclick="|location.href='#'|">수정</button>
+		</div>
 		<br>
 	</div>
 
@@ -72,13 +79,14 @@
 		// JavaScript에서 Thymeleaf 변수 사용하기 //
 		/* 1. <script th:inline="javascript">
 		   2. Thymeleaf 변수 사용 */
-		let detailsList = [[${ detailsList }]];
+		let list = [[${ list }]];
+		console.log(list)
 
 		// 해당 건물의 관리 비용 총합계
 		function total() {
 			let tatalGwanlibi = 0;
-			for (i in detailsList) {
-				tatalGwanlibi += detailsList[i].gwanlibiItemMoney;
+			for (i in list) {
+				tatalGwanlibi += list[i].gwanlibiItemMoney;
 			}
 			//console.log(tatalGwanlibi);
 			$('#tatalGwanlibi').text(tatalGwanlibi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
@@ -86,8 +94,8 @@
 
 			// 가구별 관리비 총합계
 			let tatalGwanlibiByGabu = 0;
-			for (i in detailsList) {
-				tatalGwanlibiByGabu += Math.floor(detailsList[i].gwanlibiByGagu);
+			for (i in list) {
+				tatalGwanlibiByGabu += Math.floor(list[i].gwanlibiByGagu);
 			}
 			//console.log(tatalGwanlibiByGabu);
 			$('#tatalGwanlibiByGabu').text(tatalGwanlibiByGabu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
@@ -95,7 +103,7 @@
 
 
 		// 건물명 출력
-		$('#bName').text(detailsList[0].buildingName);
+		$('#bName').text(list[0].buildingName);
 
 		// TOAST UI //
 		// async - await
@@ -119,7 +127,7 @@
 			const grid = new Grid({
 				// ================================== 공통 옵션 적용 ================================== //
 				el: document.getElementById('grid'), // 필수 : Container element
-				data: detailsList,
+				data: list,
 				scrollX: false,
 				scrollY: false,
 				// ================================== 컬럼 옵션 적용 ================================== //
