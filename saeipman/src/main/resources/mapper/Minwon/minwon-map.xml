@@ -16,6 +16,16 @@
 	         <when test="type == 'W'.toString()">
 	            room_no like '%'||#{keyword}||'%'
 	         </when>
+	       	 <!-- 복합 조건 추가 -->
+	         <when test="type == 'TC'.toString()">
+	           title like '%'||#{keyword}||'%' OR content like '%'||#{keyword}||'%'
+	         </when>
+	         <when test="type == 'TW'.toString()">
+	           title like '%'||#{keyword}||'%' OR room_no like '%'||#{keyword}||'%'
+	         </when>
+	         <when test="type == 'TWC'.toString()">
+	           title like '%'||#{keyword}||'%' OR content like '%'||#{keyword}||'%' OR room_no like '%'||#{keyword}||'%'
+	         </when>
 	       </choose>
 	      </trim>
 	    </foreach>
@@ -28,14 +38,19 @@
 	
 	select * from (   select rownum rn ,a.*         from (
          
-               SELECT 
+                SELECT 
             M.POST_NO, 
             M.TITLE, 
             R.ROOM_NO,
-            M.accept_state,
+            M.CONTENT,
+            CASE 
+		WHEN M.ACCEPT_STATE = 0 THEN '접수전'
+		WHEN M.ACCEPT_STATE = 1 THEN '접수중'
+		WHEN M.ACCEPT_STATE = 2 THEN '처리 완료'
+    	    END AS ACCEPT_STATE,
             M.GROUP_ID,
             M.REG_DATE, 
-            B.BUILDING_ID 
+            B.BUILDING_ID  
       	FROM 
             MINWON M
       	JOIN 
@@ -89,6 +104,13 @@
 		WHERE 
 		    m.post_no = #{postNo}
 	</select>
+
+	<!-- 민원처리 업로드 -->
+	<update id="updateAcceptState">
+	    UPDATE MINWON
+	    SET ACCEPT_STATE = #{acceptState}
+	    WHERE POST_NO = #{postNo}
+	</update>
 	
 	<!-- 등록 -->
 	<insert id="insertMinwon" parameterType="MinwonVO">
@@ -116,7 +138,7 @@
 						, #{content}
 						, #{category}
 						, #{groupId}
-						, #{roomNo}
+						, 0
 						, #{visitsDate}
 						<choose>
 							<when test="regDate != null">
