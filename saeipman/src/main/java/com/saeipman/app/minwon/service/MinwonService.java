@@ -22,7 +22,10 @@ public interface MinwonService {
 	//카테고리
 	public List<MinwonVO> categoryList();
 	
-	
+	//페이지 토탈
 	public int pageTotal(Criteria cri);
+
+	//민원상태처리 업로드
+	public int acceptStateUpdate(MinwonVO minwonVO);
 
 }
