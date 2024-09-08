@@ -29,6 +29,7 @@ public interface MinwonMapper {
 	//토탈
 	public int getTotalCount(Criteria cri);
 	
-
+	//민원상태처리 업로드
+	public int updateAcceptState(MinwonVO minwonVO);
 	
 }
