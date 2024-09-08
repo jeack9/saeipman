@@ -77,6 +77,10 @@ public class MinwonServiceImpl implements MinwonService{
 	public int pageTotal(Criteria cri) {
 		return minwonMapper.getTotalCount(cri);
 	}
-	
+
+	@Override
+	public int acceptStateUpdate(MinwonVO minwonVO) {
+		return minwonMapper.updateAcceptState(minwonVO);
+	}
 	
 }
