@@ -15,23 +15,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.saeipman.app.member.dto.MemberRequestDTO;
-import com.saeipman.app.member.service.AuthService;
 import com.saeipman.app.member.service.ImdaeinVO;
 import com.saeipman.app.member.service.LoginInfoVO;
-import com.saeipman.app.member.service.LoginRequest;
 import com.saeipman.app.member.service.LoginService;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.RequestBody;
+import lombok.RequiredArgsConstructor;
 
 
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("member")
 public class LoginController {
-	private LoginService lsvc;
-	private final AuthService authService;
+	private final LoginService lsvc;
 
 	@GetMapping("login") // 로그인폼 이동
 	public void loginForm() {
@@ -42,7 +38,7 @@ public class LoginController {
 		model.addAttribute("memberReq", new MemberRequestDTO());
 	};
 	@GetMapping("amdin")
-	public void getMethodName() {};
+	public void adminP() {};
 	
 
 	@PostMapping("login") // 로그인처리
@@ -85,10 +81,10 @@ public class LoginController {
 		return "member/login";
 	}
 	
-	@PostMapping("authLogin")
-	public ResponseEntity<String> getMember(@Valid @RequestBody LoginRequest request) {
-		String token = this.authService.login(request);
-		return ResponseEntity.status(HttpStatus.OK).body(token);
+	// jwt 테스트
+	@GetMapping("/test")
+	public String testP() {
+		return "test";
 	}
 	
 }

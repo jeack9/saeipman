@@ -19,5 +19,9 @@ public interface LoginService {
 	// 임대인 로그인정보 단건 추가
 	public int addImdaein(MemberRequestDTO dto);
 
-
+	// 로그인정보 추가
+	public void addLogin(MemberRequestDTO dto);
+	
+	// 로그인정보 중복체크
+	public boolean existsByLogin(String loginId);
 }

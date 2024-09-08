@@ -25,4 +25,42 @@
 		FROM imdaein
 		WHERE imdaein_id = #{id}
 	</select>
+	
+	<!-- 로그인정보 중복체크 -->
+	<select id="existsByLogin">
+		SELECT COUNT(*)
+		FROM LOGIN_INFO
+		WHERE login_id = #{loginId}
+	</select>
+	
+	<!-- 임대인 단건추가 -->
+	<insert id="insertImdaein">
+		INSERT INTO imdaein (
+		    imdaein_id,
+		    imdaein_name,
+		    imdaein_email,
+		    birth,
+		    phone
+		) 
+		VALUES (
+		    #{imdaeinId},
+		    #{imdaeinName},
+		    #{imdaeinEmail},
+		    #{birth},
+		    #{phone}
+		)
+	</insert>
+	<!-- 로그인정보 단건추가 -->
+	<insert id="insertLogin">
+		INSERT INTO login_info(
+			login_id,
+			pw,
+			auth
+		)
+		VALUES(
+			 #{loginId}
+			,#{pw}
+			,#{auth}
+		)
+	</insert>
 </mapper>
