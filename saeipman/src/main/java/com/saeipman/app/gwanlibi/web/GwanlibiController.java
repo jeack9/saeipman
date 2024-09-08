@@ -26,7 +26,7 @@ public class GwanlibiController {
 
 	// 로그인한 사용자(임대인)의 건물들을 목록으로 출력하고, 해당 건물의 전월, 금월 관리비 출력 화면으로 이동
 	@GetMapping("gwanlibiList")
-	public String gwanlibiList(Model model, @RequestParam(defaultValue = "test01") String imdaeinId) {
+	public String gwanlibiList(Model model, @RequestParam(name = "imdaeinId", defaultValue = "test01") String imdaeinId) {
 		List<GwanlibiVO> gwanlibiList = gwanlibiService.monthGwanlibiByBuildingList(imdaeinId);
 
 		model.addAttribute("list", gwanlibiList);

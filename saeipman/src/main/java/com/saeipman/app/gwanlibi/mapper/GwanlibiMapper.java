@@ -11,7 +11,6 @@ public interface GwanlibiMapper {
 	
 	
 	// 사용자의 건물별 관리비 상세 내역
-	//public List<GwanlibiVO> selectGwanlibiList(String buildingId, String selectedDate);
 	public List<GwanlibiVO> selectGwanlibiDetailsBill(GwanlibiVO vo);
 	
 }
