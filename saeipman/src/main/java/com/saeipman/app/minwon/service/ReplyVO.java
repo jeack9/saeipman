@@ -7,8 +7,8 @@ import lombok.Data;
 @Data
 public class ReplyVO {
 
-	private Integer postNo; //게시글 번호
-	private Integer minwonCmtNo; //댓글 인덱스
+	private Long postNo; //게시글 번호
+	private Long minwonCmtNo; //댓글 인덱스
 	
 	private String content; //작성자
 	private int writerAuth; //작성자 권한
