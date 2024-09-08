@@ -25,8 +25,9 @@ public interface NoticeBuildingMapper {
 		//조회수
 		public int updateViewNoticeBuilding(NoticeBuildingVO noticeBuildingVO);
 		
-		//페이징
-		public int count(PagingSearchDTO pgsc);
+		//페이징 - 글 총 개수
+		public int totalBoardNoticeBuilding(PagingSearchDTO pgsc);
 		
-
+		
+		
 }

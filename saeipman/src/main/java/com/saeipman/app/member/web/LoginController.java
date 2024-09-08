@@ -2,6 +2,8 @@ package com.saeipman.app.member.web;
 
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,15 +20,14 @@ import com.saeipman.app.member.service.LoginInfoVO;
 import com.saeipman.app.member.service.LoginService;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.RequestBody;
+import lombok.RequiredArgsConstructor;
 
 
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("member")
 public class LoginController {
-	private LoginService lsvc;
+	private final LoginService lsvc;
 
 	@GetMapping("login") // 로그인폼 이동
 	public void loginForm() {
@@ -37,7 +38,7 @@ public class LoginController {
 		model.addAttribute("memberReq", new MemberRequestDTO());
 	};
 	@GetMapping("amdin")
-	public void getMethodName() {};
+	public void adminP() {};
 	
 
 	@PostMapping("login") // 로그인처리
@@ -78,6 +79,12 @@ public class LoginController {
 		System.out.println("aaaa");
 		lsvc.addImdaein(memberReq);
 		return "member/login";
+	}
+	
+	// jwt 테스트
+	@GetMapping("/test")
+	public String testP() {
+		return "test";
 	}
 	
 }
