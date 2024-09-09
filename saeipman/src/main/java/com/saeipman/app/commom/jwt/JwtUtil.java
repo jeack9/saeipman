@@ -1,3 +1,4 @@
+
 package com.saeipman.app.commom.jwt;
 
 import java.nio.charset.StandardCharsets;
@@ -12,10 +13,10 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Jwts;
 
 // 토큰 발행, 검증
+
 @Component
-public class JwtUtil {
-	// username, role, 생성일, 만료일
-	private SecretKey secretKey;
+public class JwtUtil { // username, role, 생성일, 만료일 private
+	SecretKey secretKey;
 
 	public JwtUtil(@Value("${spring.jwt.secret}") String secret) {
 		secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8),
@@ -41,11 +42,8 @@ public class JwtUtil {
 
 	public String createJwt(String username, String role, Long expiredMs) {
 
-		return Jwts.builder()
-				.claim("username", username)
-				.claim("role", role)
+		return Jwts.builder().claim("username", username).claim("role", role)
 				.issuedAt(new Date(System.currentTimeMillis()))
-				.expiration(new Date(System.currentTimeMillis() + expiredMs))
-				.signWith(secretKey).compact();
+				.expiration(new Date(System.currentTimeMillis() + expiredMs)).signWith(secretKey).compact();
 	}
 }

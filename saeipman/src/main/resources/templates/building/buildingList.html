@@ -51,7 +51,8 @@
 				</a></li>
 			</ul>
 		</nav>
-	</div><!-- end 페이징 -->
+	</div>
+	<!-- end 페이징 -->
 
 
 	<!-- End 건물리스트 -->
@@ -106,11 +107,24 @@
 				<input type="text" id="sample6_detailAddress" placeholder="상세주소"
 					name="detailsAddr" class="form-control dAddr">
 			</div>
-
-			<div class="form-group col-md-7">
+			<div class="form-group col-md-5"></div>
+			<div class="form-group col-md-5">
+				<label for="floorArea" class="form-label">연면적 </label> <input
+					type="text" id="floorArea" name="floorArea" class="form-control">
+			</div>
+			<div class="form-group col-md-5">
+				<label for="floorAreaRatio" class="form-label">용적률 산정용 연면적 </label>
+				<input type="text" id="floorAreaRatio" name="floorAreaRatio"
+					class="form-control">
+			</div>
+			<div class="form-group col-md-5">
 				<label for="gunchookArea" class="form-label">건축면적 </label> <input
 					type="text" id="gunchookArea" name="gunchookArea"
 					class="form-control">
+			</div>
+			<div class="form-group col-md-5">
+				<label for="buildingHeigh" class="form-label">건물 높이 </label> <input
+					type="text" id="buildingHeigh" name="buildingHeigh" class="form-control">
 			</div>
 			<div class="form-check form-switch">
 				<label for="liftYn">승강기 여부 </label> <input type="checkbox"
@@ -134,7 +148,6 @@
 				<label for="parking" class="form-label">주차 가능 대수 </label> <input
 					type="text" id="parking" name="parking" class="form-control">
 			</div>
-
 			<div class="form-group col-md-6">
 				<label for="memo" class="form-label">비고 </label> <input type="text"
 					id="memo" name="memo" class="form-control">
@@ -177,6 +190,9 @@
 						$("#floorGaguCount").val(data.floorGaguCount);
 						$("#totalGagu").val(data.totalGagu);
 						$("#parking").val(data.parking);
+						$("#floorArea").val(data.floorArea);
+						$("#buildingHeigh").val(data.buildingHeigh);
+						$("#floorAreaRatio").val(data.floorAreaRatio);
 						
 						if(data.fileName != null) {
 							//$('#groupId').val(data.groupId);

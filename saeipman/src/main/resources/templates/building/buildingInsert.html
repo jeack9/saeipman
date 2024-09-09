@@ -2,10 +2,16 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layouts/default_layout}"
 	layout:fragment="Main" class="container-fluid pt-4 px-4">
+
 	<form th:action="@{/buildingInsert}" method="POST" name="insertForm"
 		class="row g-3" enctype="multipart/form-data">
 		<div class="col-md-4">
-			<label for=" file" class="form-label">빌딩 이미지</label> <input
+			<label for="ocrFileName" class="form-label">일반 건축물 대장(갑) 이미지</label> 
+			<input type="file" id="ocrFileName" class="form-control" name="ocrFileName" accept=".jpg, .jpeg, .png">
+		</div>
+		
+		<div class="col-md-4">
+			<label for="file" class="form-label">빌딩 이미지</label> <input
 				type="file" id="file" multiple name="files" class="form-control">
 		</div>
 		<div class="form-check form-switch">
@@ -33,10 +39,24 @@
 				type="text" id="sample6_detailAddress" placeholder="상세주소"
 				name="detailsAddr" class="form-control">
 		</div>
-
-		<div class="form-group col-md-7">
+		<div class="form-group col-md-5"></div>
+		<div class="form-group col-md-5">
+			<label for="floorArea" class="form-label">연면적 </label> <input
+				type="text" id="floorArea" name="floorArea" class="form-control">
+		</div>
+		<div class="form-group col-md-5">
+			<label for="floorAreaRatio" class="form-label">용적률 산정용 연면적 </label> <input
+				type="text" id="floorAreaRatio" name="floorAreaRatio"
+				class="form-control">
+		</div>
+		<div class="form-group col-md-5">
 			<label for="gunchookArea" class="form-label">건축면적 </label> <input
 				type="text" id="gunchookArea" name="gunchookArea"
+				class="form-control">
+		</div>
+		<div class="form-group col-md-5">
+			<label for="buildingHeigh" class="form-label">건물 높이 </label> <input
+				type="text" id="buildingHeigh" name="buildingHeigh"
 				class="form-control">
 		</div>
 		<div class="form-check form-switch">
@@ -76,7 +96,7 @@
 	<script>
 		$('form[name=insertForm]').on('submit', function(e) {
 			e.preventDefault();
-			
+
 			let buildingName = $('input[name="buildingName"]');
 			if (buildingName.val() == '') {
 				alert('빌딩 이름을 입력해주세요.');

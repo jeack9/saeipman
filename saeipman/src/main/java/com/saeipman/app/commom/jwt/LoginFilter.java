@@ -1,3 +1,4 @@
+
 package com.saeipman.app.commom.jwt;
 
 import java.util.Collection;
@@ -8,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.saeipman.app.commom.security.service.CustomUserDetails;
@@ -18,6 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 //시큐리티 커스텀 로그인 검증 필터
+
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -30,8 +33,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 		// 클라이언트 요청에서 username, password 추출
 		String username = obtainUsername(request);
-		String password = obtainPassword(request);
-		// 스프링 시큐리티에서 username과 password를 검증하기 위해서는 token에 담아야 함
+		String password = obtainPassword(request); // 스프링 시큐리티에서 username과 password를 검증하기 위해서는 token에 담아야 함
+
 		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password,
 				null);
 
@@ -40,11 +43,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 	}
 
 	// 로그인 성공시 실행하는 메소드 (여기서 JWT를 발급하면 됨)
+
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authentication) {
-		// UserDetailsS
-		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+		UserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
 		String username = customUserDetails.getUsername();
 
@@ -60,6 +63,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 	}
 
 	// 로그인 실패시 실행하는 메소드
+
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException failed) {
