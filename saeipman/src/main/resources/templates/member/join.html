@@ -38,16 +38,16 @@
 								</div>
 								<div class="form-floating mb-3">
 									<input type="email" class="form-control" th:errorclass="field-error" th:field=*{email} placeholder="이메일(비밀번호 찾기용)"> 
-									<label for="floatingEmail">이메일(비밀번호 찾기용)</label>
+									<label for="email">이메일(비밀번호 찾기용)</label>
 									<div class="field-error" th:errors="*{email}"></div>
 								</div>
 								<div class="form-floating mb-3">
 									<input type="text" class="form-control" th:field=*{birth} placeholder="생년월일 8자리" maxlength="10"> <label
-										for="floatingBirth">생년월일 8자리</label>
+										for="birth">생년월일 8자리</label>
 									<div class="error_text" id="birthMsg" style="display: none"></div>
 								</div>
 								<div class="form-floating mb-3 d-flex">
-									<input type="text" class="form-control" th:field=*{phone} placeholder="전화번호"> <label for="floatingPhone">전화번호</label>
+									<input type="text" class="form-control" th:field=*{phone} placeholder="전화번호"> <label for="phone">전화번호</label>
 									<button type="button" class="btn btn-primary"
 										style="min-width: 90px;">인증요청</button>
 								</div>

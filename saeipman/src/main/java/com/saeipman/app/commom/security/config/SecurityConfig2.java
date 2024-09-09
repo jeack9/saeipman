@@ -78,34 +78,50 @@ public class SecurityConfig2 {
 					}));
 		
 		// csrf disable
-		http
-			.csrf(auth -> auth.disable());
+//		http
+//			.csrf(auth -> auth.disable());
 		
-		// From 로그인 방식 disable
-		http.formLogin((auth) -> auth.disable());
+		// Form 로그인 방식 disable
+//		http.formLogin((auth) -> auth.disable());
+		http
+			.formLogin(login -> login
+			    .loginPage("/member/login")
+			    .loginProcessingUrl("/loginProc") // 로그인 submit url 설정
+			    .usernameParameter("loginId") // 파라미터 name 설정
+			    .passwordParameter("pw")
+			    //.successHandler(null)
+			    .defaultSuccessUrl("/member/home", true)
+			    .permitAll() // 로그인 성공시 이동하는 페이지 허용
+			)
+			.logout(logout -> logout
+					.logoutUrl("logoutProc")
+					.logoutSuccessUrl("/member/login")
+			);
 
 		// http basic 인증 방식 disable
-		http.httpBasic((auth) -> auth.disable());
+//		http.httpBasic((auth) -> auth.disable());
 
 		// 경로별 인가 작업
 		http
 			.authorizeHttpRequests((auth) -> auth.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
 			// 정적 리소스 허용
 			.requestMatchers("/css/**", "/img/**", "/js/**", "/lib/**", "/scss/**", "/dashmin-1.0.0/**").permitAll()
-			.requestMatchers("/member/login", "/", "/member/join", "/join", "/login").permitAll()
+			.requestMatchers("/member/login", "/member/join", "/join", "/login").permitAll()
 			.requestMatchers("/member/**").hasAnyAuthority("ROLE_1")
 			.requestMatchers("/admin/**").hasRole("0")
-			.anyRequest().authenticated());
+			.anyRequest().permitAll() // 일단 임시로 전부 허용 나중에 권한별 분리
+			);
+//			.anyRequest().authenticated());
 
 		//필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
-		http
-	    	.addFilterBefore(new JwtFilter(jwtUtill), LoginFilter.class);
-		http
-		    .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtill), UsernamePasswordAuthenticationFilter.class);
-
+		// 리액트(관리자 페이지) 요청만 Token 필터 적용할거임
+//		http
+//	    	.addFilterBefore(new JwtFilter(jwtUtill), LoginFilter.class);
+//		http
+//		    .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtill), UsernamePasswordAuthenticationFilter.class);
 		// 세션 설정
-		http
-			.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//		http
+//			.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		return http.build();
 	}

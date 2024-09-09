@@ -30,15 +30,14 @@ public class LoginController {
 	private final LoginService lsvc;
 
 	@GetMapping("login") // 로그인폼 이동
-	public void loginForm() {
-	};
+	public void loginForm() {};
 
 	@GetMapping("join") // 회원가입폼 이동
 	public void joinForm(Model model) {
 		model.addAttribute("memberReq", new MemberRequestDTO());
 	};
-	@GetMapping("amdin")
-	public void adminP() {};
+	@GetMapping("home")
+	public void homeP() {}
 	
 
 	@PostMapping("login") // 로그인처리
