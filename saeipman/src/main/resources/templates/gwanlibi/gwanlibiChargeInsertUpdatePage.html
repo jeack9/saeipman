@@ -10,10 +10,17 @@
 	<style>
 		#bName {
 			float: left;
-			color: #323f5d;
+			color: #000000;
 			font-size: 20px;
 			font-weight: bold;
 		}
+		
+		#paymentMonth {
+			float: right;
+			color: #000000;
+			font-size: 20px;
+			font-weight: bold;
+		}	
 		
 		.table {
 			margin-left: auto;
@@ -48,7 +55,9 @@
 		<br>
 
 		<!-- 건물명 -->
-		<p id="bName"></p>
+<!-- 		<p id="bName"></p>
+		
+		<p id="paymentMonth"></p> -->
 
 		<br>
 		<br>
@@ -56,21 +65,13 @@
 		<!-- Toast UI - Grid -->
 		<div id="grid" style="position: relative; z-index: 1;"></div>
 
-		<hr style="color: black">
-		<table class="table" style="width: 100%;">
-			<tbody>
-				<tr>
-					<th style="width: 33.33%; color: #385d61;">TOTAL</th>
-					<td id="tatalGwanlibi" style="width: 33.33%;"></td>
-					<td id="tatalGwanlibiByGabu" style="width: 33.33%;"></td>
-				</tr>
-			</tbody>
-		</table>
-		<hr style="color: black">
+		<br>
+		
 		<div class="btnDiv">
-			<button class="btn btn-light insertBtn" th:onclick="|location.href='#'|">등록</button>
+			<button class="btn btn-light insertBtn">등록</button>
 			<button class="btn btn-light updateBtn" th:onclick="|location.href='#'|">수정</button>
 		</div>
+		
 		<br>
 	</div>
 
@@ -80,37 +81,41 @@
 		/* 1. <script th:inline="javascript">
 		   2. Thymeleaf 변수 사용 */
 		let list = [[${ list }]];
-		console.log(list)
-
-		// 해당 건물의 관리 비용 총합계
-		function total() {
-			let tatalGwanlibi = 0;
-			for (i in list) {
-				tatalGwanlibi += list[i].gwanlibiItemMoney;
-			}
-			//console.log(tatalGwanlibi);
-			$('#tatalGwanlibi').text(tatalGwanlibi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
-
-
-			// 가구별 관리비 총합계
-			let tatalGwanlibiByGabu = 0;
-			for (i in list) {
-				tatalGwanlibiByGabu += Math.floor(list[i].gwanlibiByGagu);
-			}
-			//console.log(tatalGwanlibiByGabu);
-			$('#tatalGwanlibiByGabu').text(tatalGwanlibiByGabu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
-		}
-
+		console.log(list);
 
 		// 건물명 출력
-		$('#bName').text(list[0].buildingName);
-
+		//$('#bName').text(list[0].buildingName);
+		
+		// 등록/수정할 월 출력.
+/* 		console.log(list[0].paymentMonth);
+		let date = new Date(new Date(list[0].paymentMonth));
+		let splitDate = date.toISOString().split('T')[0].split('-');		
+		let resultDate = splitDate[0] + '년 ' + splitDate[1] + '월';
+		$('#paymentMonth').text(resultDate); */
+		
 		// TOAST UI //
 		// async - await
+		let grid;
 		$(document).ready(() => {
-			gridLoad();
-			total();
+			grid = gridLoad();
 		});
+
+		// 등록 버튼 클릭 이벤트
+		$('.insertBtn').on('click', function() {
+			$.ajax({
+				type: 'post',
+				url:  `/insertMaintenceCost`,
+				contentType: 'application/json',				
+				data: JSON.stringify(grid.getData()),
+				success: function(data){
+					console.log("suceess");
+					
+				},
+				error: function(err){
+					console.log(err);
+				}
+			})
+		})
 
 		
 		// Toast UI - Grid //
@@ -142,20 +147,19 @@
 					// [Column-2] 관리 비용
 					{
 						header: '관리 비용',
-						name: 'strGwanlibiItemMoney',
+						name: 'gwanlibiItemMoney',
 						resizable: true,
 						align: 'center',
-						editor: 'text'						
-					},
-					// [Column-3] 가구별 관리비
-					{
-						header: '가구별 관리비',
-						name: 'strGwanlibiByGagu',
-						resizable: true,
-						align: 'center'
+						editor: 'text',
+						validation: {
+							dataType: 'number'
+						}
 					}
 				]
-			});
+			})
+			grid.validate();
+			return grid;
+
 		}
 
 	</script>
