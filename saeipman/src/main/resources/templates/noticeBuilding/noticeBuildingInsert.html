@@ -20,7 +20,7 @@
 								aria-label="Floating label select example">
 								<option selected>건물 목록</option>
 								<option value="ZIP10">한입만 원룸</option>
-								<option value="ZIP000175">두입만 투룸</option>
+								<option value="ZIP10">두입만 투룸</option>
 								<option value="ZIP10">세입만 빌딩</option>
 							</select> <label for="floatingSelect">공지사항을 등록할 건물을 선택하세요.</label>
 						</div>
@@ -32,7 +32,7 @@
 						</div>
 						<div class="form-floating">
 							<textarea class="form-control" name="content" id="textarea"
-								style="resize: none; height: 400px"></textarea>
+								style="resize: none; height: 400px" onkeypress="onTestChange();"></textarea>
 							<label for="floatingTextarea">내용</label>
 						</div>
 
@@ -45,4 +45,18 @@
 		</div>
 	</div>
 </div>
+<script>
+	function onTestChange() {
+		let key = window.event.keyCode;
 
+		// If the user has pressed enter
+		if (key === 13) {
+			document.getElementById("textarea").value = document
+					.getElementById("textarea").value
+					+ "\n";
+			return false;
+		} else {
+			return true;
+		}
+	}
+</script>

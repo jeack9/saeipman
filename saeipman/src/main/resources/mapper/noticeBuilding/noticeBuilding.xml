@@ -2,122 +2,117 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="com.saeipman.app.noticeBuilding.mapper.NoticeBuildingMapper">
-
-	<!-- concat 함수 이용해서 검색어 앞뒤에 %를 추가하고 부분 검색 기능 가능하게함. -->
-	<sql id="searchPaging">
-		<if test="scKeyword != null and scKeyword != ''">
-				AND (UPPER(title) like '%'|| UPPER(#{scKeyword}) || '%'	or content like '%' || #{scKeyword} || '%')
-		</if>
-	</sql>
+	
+	<!-- <sql id="searchPaging">
+	         <if test="searchKeyword != null and searchKeyword != ''">
+			 title like concat('%', #{searchKeyword}, '%')
+			  or content like concat('%', #{searchKeyword}, '%')
+		    </if>
+	</sql> -->
 
 	<!-- 전체조회 -->
-	<select id="selectNoticeBuildingAll"
-		resultType="NoticeBuildingVO">
-
-		SELECT * 
-		FROM ( SELECT rownum rn, 
-					  a.* 
-			   from (
-					SELECT  bn.post_no
-							, bn.title
-							, bn.writer
-							, bn.content
-							, bn.reg_date
-							, bn.mod_date
-							, bn.group_id
-							, bn.views
-							, bi.building_id
-					FROM building_notice bn join building_info bi
-											on bn.building_id = bi.building_id
-					WHERE bi.building_id = 'ZIP10'
-					ORDER BY post_no desc
-					) a
-
-		where rownum <![CDATA[ <= ]]>
-		#{nowPage} * #{pageData}
-		<include refid="searchPaging"></include>
-		<!-- rownum <= (페이지에 가져올 가장 큰 게시글 번호) rn > (페이지에 가져올 가장 작은 게시물 번호) -->
-
-		) p
+	<select id="selectNoticeBuildingAll" resultType="NoticeBuildingVO">
+		
+		SELECT * FROM ( SELECT rownum rn, a.* from (
+        SELECT bn.post_no
+	         , bn.title
+			 , bn.writer
+			 , bn.content
+			 , bn.reg_date
+			 , bn.mod_date
+			 , bn.group_id
+			 , bn.views
+			 , bi.building_id
+        FROM building_notice bn join building_info bi
+           			on bn.building_id = bi.building_id
+		) a     where
+		
+		<!-- <include refid="searchPaging"></include> -->
+		
+		rownum <![CDATA[ <= ]]> #{nowPage} * #{pageData}) p 
 		where rn > (#{nowPage}-1) * #{pageData}
 	</select>
-
-	<!-- 검색 결과 -->
-	<select id="totalBoardNoticeBuilding" resultType="int">
-		SELECT count(*)
-		FROM building_notice
-		where post_no > 0
-		AND building_id = 'ZIP10'
-		<include refid="searchPaging"></include>
+	
+	<!-- 글 총 개수, 검색어 조건 -->
+	<select id="totalBoardNoticeBuilding"  resultType="int">
+		SELECT count(*) 
+		FROM   building_notice
+		<!--WHERE
+		
+		 <include refid="searchPaging"></include>
+		
+		<choose>
+		<when test="searchKeyword != null and searchKeyword != ''">
+			 title like concat('%', #{searchKeyword}, '%')
+			or content like concat('%', #{searchKeyword}, '%')
+		</when>
+		</choose>--> 
+		ORDER BY reg_date DESC
 	</select>
-
-
+	
+	
 	<!-- 단건조회 -->
-	<select id="selectNoticeBuildingInfo"
-		resultType="NoticeBuildingVO">
-		SELECT bn.post_no
-		, bn.title
-		, bn.writer
-		, bn.content
-		, bn.reg_date
-		, bn.mod_date
-		, bn.group_id
-		, bn.views
-		, bi.building_id
-		FROM building_notice bn join building_info bi
-		on bn.building_id = bi.building_id
+	<select id="selectNoticeBuildingInfo" resultType="NoticeBuildingVO">
+	    SELECT bn.post_no
+	         , bn.title
+			 , bn.writer
+			 , bn.content
+			 , bn.reg_date
+			 , bn.mod_date
+			 , bn.group_id
+			 , bn.views
+			 , bi.building_id
+        FROM building_notice bn join building_info bi
+           			on bn.building_id = bi.building_id
 		WHERE post_no = #{postNo}
 	</select>
-
-
+	
+	
 	<!-- 등록 -->
-	<insert id="insertNoticeBuilding"
-		parameterType="NoticeBuildingVO">
-		<selectKey keyProperty="postNo" resultType="Integer"
-			order="BEFORE">
-			SELECT NVL(MAX(POST_NO), 0) + 1
-			FROM building_notice
-		</selectKey>
+	<insert id="insertNoticeBuilding" parameterType="NoticeBuildingVO">
+	<selectKey keyProperty="postNo" resultType="Integer" order="BEFORE">
+		SELECT NVL(MAX(POST_NO), 0) + 1 
+		FROM building_notice
+	</selectKey>
 		insert into building_notice(post_no
-		, title
-		, writer
-		, group_id
-		, content
-		, reg_date
-		, building_id
-		)
+                          , title
+                          , writer
+                          , group_id
+                          , content
+                          , reg_date
+                          , building_id
+                          )
 		values(#{postNo}
-		, #{title}
-		, '10'
-		, #{groupId}
-		, #{content}
-		, SYSDATE
-		, #{buildingId}
-		)
+		      , #{title}
+		      , '10'
+		      , #{groupId}
+		      , #{content}
+		      ,  SYSDATE
+		      , #{buildingId}
+		      )
 	</insert>
 
 	<!-- 조회수 -->
 	<update id="updateViewNoticeBuilding">
-		UPDATE building_notice
-		SET views = views+1
-		WHERE post_no = #{postNo}
+	 	UPDATE building_notice
+	 	SET views = views+1
+	 	WHERE post_no = #{postNo}
 	</update>
 
 	<!-- 수정 -->
 	<update id="updateNoticeBuilding">
-		UPDATE building_notice
-		SET title = #{title}
-		, content = #{content}
-		, mod_date = SYSDATE
-		WHERE post_no = #{postNo}
+	     UPDATE building_notice
+         SET title = #{title}
+            , content = #{content}
+            , mod_date = SYSDATE
+         WHERE post_no = #{postNo}  
 	</update>
 
 
 	<!-- 삭제 -->
 	<delete id="deleteNoticeBuilding" parameterType="int">
-		DELETE FROM
-		building_notice
+		DELETE FROM building_notice
 		WHERE post_no = #{postNo}
 	</delete>
-
+	
 </mapper>

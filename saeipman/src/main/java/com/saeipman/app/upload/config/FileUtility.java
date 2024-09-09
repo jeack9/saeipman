@@ -28,7 +28,7 @@ public class FileUtility {
 	}
 	@Value("${file.upload.path}")
 	private String uploadPath;
-	//@Value("${naver.service.url}")
+//	@Value("${naver.service.url}")
 	@Setter
 	private String folder; 
 	

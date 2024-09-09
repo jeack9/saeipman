@@ -2,36 +2,34 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layouts/default_layout}"
 	layout:fragment="Main">
-
+	 
 	<div class="container-fluid pt-4 px-4">
 		<div class="row g-4">
 			<div class="col-md-12">
 				<div class="bg-light rounded h-100 p-4">
 					<h6 class="mb-4">공지사항</h6>
 					<table class="table">
-
-						<tr class="col-md-12">
-							<th style="width: 5%">제목</th>
-							<td style="width: 30%">[[${BNotice.title}]]</td>
-							<th>조회수</th>
-							<td>[[${BNotice.views}]]</td>
-						</tr>
-						<tr>
-							<th style="width: 10%">첨부파일</th>
-							<td><img style="width: 30%"
-								th:each=" img : ${BNotice.groupIds}"
-								th:src="@{/images/{fileName}(fileName=${img})}" /></td>
-						</tr>
-						<tr>
-							<th>최초등록일</th>
-							<td>[[${#dates.format(BNotice.regDate,'yyyy/MM/dd')}]]</td>
-							<th style="width: 10%">수정일</th>
-							<td>[[${#dates.format(BNotice.modDate,'yyyy/MM/dd')}]]</td>
-						</tr>
-						<tr>
-							<td colspan="12" id="textarea">[[${BNotice.content}]]</td>
-						</tr>
-
+						
+							<tr class="col-md-12">
+								<th style="width: 5%">제목</th>
+								<td style="width: 30%">[[${BNotice.title}]]</td>
+								<th> 조회수</th>
+								<td>[[${BNotice.views}]]</td>
+							</tr>
+							<tr>
+								<th style="width: 10%">첨부파일</th>
+								<td><img style="width:30%" th:each=" img : ${BNotice.groupIds}" th:src="@{/images/{fileName}(fileName=${img})}"/></td>
+							</tr>
+							<tr>
+								<th>최초등록일</th>
+								<td>[[${#dates.format(BNotice.regDate,'yyyy/MM/dd')}]]</td>
+								<th style="width: 10%">수정일</th>
+								<td>[[${#dates.format(BNotice.modDate,'yyyy/MM/dd')}]]</td>
+							</tr>
+							<tr>
+								<td colspan="12">[[${BNotice.content}]]</td>
+							</tr>
+						
 					</table>
 				</div>
 			</div>
@@ -50,9 +48,17 @@
 	</div>
 </div>
 <script>
-	var str = $('#textarea').html();
+	function onTestChange() {
+		let key = window.event.keyCode;
 
-	str = str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-
-	$('#textarea').html(str);
+		// If the user has pressed enter
+		if (key === 13) {
+			document.getElementById("textarea").value = document
+					.getElementById("textarea").value
+					+ "\n";
+			return false;
+		} else {
+			return true;
+		}
+	}
 </script>

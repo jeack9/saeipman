@@ -24,7 +24,6 @@ public interface NoticeBuildingService {
 	// 조회수 증가
 	public int noticeBuildingViews(NoticeBuildingVO noticeBuildingVO);
 	
-	
 	public int totalPage(PagingSearchDTO pgsc);
 
 }

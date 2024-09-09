@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -43,26 +42,22 @@ public class NoticeBuildingController {
 	// 전체조회
 	@GetMapping("noticeBuildingList")
 	public String noticeBuildingList(PagingSearchDTO pgsc, Model model) {
-		
-		//전체 페이지 수 계산해서 setTotalPage에 전체 페이지 수 할당 
 		int totalPage = noticeBuildingService.totalPage(pgsc);
-		pgsc.setTotal(totalPage);
-		//System.out.println(totalPage);
-		
-		model.addAttribute("Paging", pgsc);
+		pgsc.setTotalPage(totalPage);
 		
 		List<NoticeBuildingVO> list = noticeBuildingService.noticeBuildingList(pgsc);
+		model.addAttribute("Paging", pgsc);
 		model.addAttribute("BNotice", list);
-		
-		return "noticeBuilding/noticeBuildingList"; 
+		return "noticeBuilding/noticeBuildingList";
 	}
 
 	// 단건조회
 	@GetMapping("noticeBuildingInfo")
-	public String noticeBuildingInfo(NoticeBuildingVO noticeBuildingVO, PagingSearchDTO pgsc, Model model) {
+
+	public String noticeBuildingInfo(NoticeBuildingVO noticeBuildingVO, Model model) {
+		noticeBuildingService.noticeBuildingViews(noticeBuildingVO);
 		NoticeBuildingVO selectVO = noticeBuildingService.noticeBuildingSelect(noticeBuildingVO);
 		model.addAttribute("BNotice", selectVO);
-		model.addAttribute("pgsc", pgsc);
 		return "noticeBuilding/noticeBuildingInfo";
 	}
 
