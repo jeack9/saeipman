@@ -21,18 +21,18 @@ public class ReplyServiceImpl implements ReplyService{
 
 	@Override
 	public void insertCmt(ReplyVO vo) {
-		// TODO Auto-generated method stub
+		replyMapper.insertCmt(vo);
 		
 	}
 
 	@Override
 	public void insertReplyCmt(ReplyVO vo) {
-		// TODO Auto-generated method stub
+		replyMapper.insertCmt(vo);
 		
 	}
 
 	@Override
-	public List<ReplyVO> listCmt(Long postNo) {
+	public List<ReplyVO> listCmt(int postNo) {
 		return replyMapper.listCmt(postNo);
 	}
 
@@ -43,9 +43,8 @@ public class ReplyServiceImpl implements ReplyService{
 	}
 
 	@Override
-	public List<ReplyVO> getReplyList(Long parentCmtNo) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ReplyVO> getReplyList(int parentCmtNo) {
+		return replyMapper.listCmt(parentCmtNo);
 	}
 
 	

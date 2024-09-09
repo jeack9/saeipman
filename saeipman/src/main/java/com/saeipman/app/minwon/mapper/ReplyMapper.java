@@ -14,7 +14,7 @@ public interface ReplyMapper {
 	public int insertReplyCmt(ReplyVO vo);
 	   
 	//댓글 및 대댓글 리스트 조회
-	List<ReplyVO> listCmt(Long postNo);
+	List<ReplyVO> listCmt(int postNo);
 	   
 	//특정 댓글 삭제
 	public int deleteCmt(Long minwonCmtNo);

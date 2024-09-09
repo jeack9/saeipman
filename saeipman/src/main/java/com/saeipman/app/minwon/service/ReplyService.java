@@ -10,11 +10,11 @@ public interface ReplyService {
     void insertReplyCmt(ReplyVO vo);
 
     // 댓글 및 대댓글 리스트 조회
-    List<ReplyVO> listCmt(Long postNo);
+    List<ReplyVO> listCmt(int postNo);
 
     // 댓글 삭제
     void deleteCmt(Long minwonCmtNo);
-
-	List<ReplyVO> getReplyList(Long parentCmtNo);
+    
+	List<ReplyVO> getReplyList(int parentCmtNo);
 	
 }
