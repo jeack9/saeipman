@@ -7,11 +7,17 @@
 </head>
 <body>
 <h1>OCR Result</h1>
-<!-- <ul>
-  Loop through the OCR result and display each item
+<ul>
   <li th:each="result : ${ocrResult}" th:text="${result}"></li>
-</ul> -->
-주소:<input th:value="${ocrResult}">
+  
+ <li>[[${merged}]]</li>
+ <li>주소:<input th:value="${fullAddress}"></li>
+ <li>건축:<input th:value="${gunchook}"></li>
+ <li>용적률 산정용 연면적:<input th:value="${floorAreaRatio}"></li>
+ <li>층 수:<input th:value="${floor}"></li>
+ <li>세대:<input th:value="${saedae}"></li>
+ <li>높이:<input th:value="${heigh}"></li>
+</ul>
 
 </body>
 </html>

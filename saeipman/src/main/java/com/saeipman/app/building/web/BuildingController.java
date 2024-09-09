@@ -37,6 +37,7 @@ public class BuildingController {
 		
 		//리스트 출력
 		List<BuildingVO> list = buildingService.buildingDetail(buildingPageDTO);
+		
 		model.addAttribute("buildings", list);
 		
 		model.addAttribute("page",buildingPageDTO);
@@ -69,11 +70,12 @@ public class BuildingController {
 	}
 
 	@PostMapping("/buildingInsert")
-	public String insertBuilding(@RequestPart MultipartFile[] files, BuildingVO buildingVO) {
+	public String insertBuilding(@RequestParam("file") MultipartFile file, @RequestPart MultipartFile[] files, BuildingVO buildingVO) {
 		fileUtill.setFolder("건물");
 		String groupId = fileUtill.upload(files);
 
 		buildingVO.setGroupId(groupId);
+		
 
 		int success = buildingService.insertBuilding(buildingVO);
 		return "redirect:buildingList";

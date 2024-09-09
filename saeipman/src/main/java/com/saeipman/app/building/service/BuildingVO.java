@@ -23,6 +23,9 @@ public class BuildingVO {
 	private String ocrFileName;
 	private String memo;
 	private String imdaeinId;
+	private String floorArea;
+	private String floorAreaRatio;
+	private String buildingHeigh;
 	
 	private List<String> fileName;
 }
