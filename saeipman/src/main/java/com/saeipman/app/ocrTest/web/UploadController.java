@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class UploadController {
-    @Value("${naver.service.secretKey}")
+   // @Value("${naver.service.secretKey}")
     private String secretKey;
     private final OcrApi naverApi;
     private final OcrUtil ocrUtil;

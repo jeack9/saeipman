@@ -7,7 +7,7 @@ public class PagingSearchDTO {
 
 	private int startPage; // 페이징 -> 시작 페이지
 	private int endPage;
-	private int realEnd; // 데이터의 총 수에 따라 계산된 실제 마지막 페이지
+	private int realEnd; // 게시물 총 수에 따라 계산된 실제 마지막 페이지
 	private boolean prePage, nextPage;
 	private int nowPage; // 현재 페이지
 	private int pageData; // 한 페이지에 나오는 게시물 수
@@ -15,7 +15,7 @@ public class PagingSearchDTO {
 	
 	private String scKeyword;
 
-	// 기본생성자 => 현재 페이지, 1페이지 게시물 수 1과 10으로 초기설정
+	// 기본생성자 => 현재 페이지, 1페이지 게시물 수(pageData)1과 10으로 초기설정
 	public PagingSearchDTO() {
 		this.nowPage = 1;
 		this.pageData = 10;
