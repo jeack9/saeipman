@@ -157,10 +157,10 @@
 				let buildingId = [[${ buildingId }]];
 				//
 				$.ajax({
-					url: '/detailsBillList',
+					url: `/${ctxPath}/detailsBillList`,
 					method: 'post',
-					data: { paymentMonth, buildingId },
-					success: function (result) {
+					data: { buildingId, paymentMonth },
+					success: function(result) {
 						$('#grid').html('');
 						detailsList = result.list;
 						for (i in detailsList) {
