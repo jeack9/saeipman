@@ -3,12 +3,19 @@
 <mapper
 	namespace="com.saeipman.app.noticeBuilding.mapper.NoticeBuildingMapper">
 	
-	<!-- <sql id="searchPaging">
-	         <if test="searchKeyword != null and searchKeyword != ''">
-			 title like concat('%', #{searchKeyword}, '%')
-			  or content like concat('%', #{searchKeyword}, '%')
-		    </if>
-	</sql> -->
+	<!-- concat 함수 이용해서 검색어 앞뒤에 %를 추가하고 부분 검색 기능 가능하게함. -->
+	<sql id="searchPaging">
+    <where>
+        <trim prefix="(" suffix=") " prefixOverrides="OR">
+            <if test="scKeyword != null and scKeyword != ''">
+                <trim prefix="OR">
+                    (title like concat('%', #{scKeyword}, '%')
+                    or content like concat('%', #{scKeyword}, '%'))
+                </trim>
+            </if>
+        </trim>
+    </where>
+</sql>
 
 	<!-- 전체조회 -->
 	<select id="selectNoticeBuildingAll" resultType="NoticeBuildingVO">
@@ -25,29 +32,25 @@
 			 , bi.building_id
         FROM building_notice bn join building_info bi
            			on bn.building_id = bi.building_id
+        ORDER BY post_no desc
 		) a     where
 		
-		<!-- <include refid="searchPaging"></include> -->
+		<include refid="searchPaging"></include>
+		
+		<!-- rownum <= (페이지에 가져올 가장 큰 게시글 번호)
+		     rn > (페이지에 가져올 가장 작은 게시물 번호) -->
 		
 		rownum <![CDATA[ <= ]]> #{nowPage} * #{pageData}) p 
 		where rn > (#{nowPage}-1) * #{pageData}
 	</select>
 	
-	<!-- 글 총 개수, 검색어 조건 -->
+	<!-- 검색 결과 -->
 	<select id="totalBoardNoticeBuilding"  resultType="int">
 		SELECT count(*) 
 		FROM   building_notice
-		<!--WHERE
-		
-		 <include refid="searchPaging"></include>
-		
-		<choose>
-		<when test="searchKeyword != null and searchKeyword != ''">
-			 title like concat('%', #{searchKeyword}, '%')
-			or content like concat('%', #{searchKeyword}, '%')
-		</when>
-		</choose>--> 
-		ORDER BY reg_date DESC
+		where
+		<include refid="searchPaging"></include>
+		post_no >0
 	</select>
 	
 	
