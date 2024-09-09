@@ -1,3 +1,4 @@
+
 package com.saeipman.app.ocrTest.config;
 
 import java.util.ArrayList;
@@ -14,12 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class JsonUtil {
-	/**
-	 * jsonObject --> map 으로 변경 JSONObject 에 JSONArray 없어야 햠.
-	 * 
-	 * @param obj
-	 * @return
-	 */
+
+//	  jsonObject --> map 으로 변경 JSONObject 에 JSONArray 없어야 햠.
+//	  
+//	  @param obj
+//	  @return
+
 	public static Map<String, Object> getMapFromJSONObject(JSONObject obj) {
 		if (ObjectUtils.isEmpty(obj)) {
 			log.error("BAD REQUEST obj : {}", obj);
@@ -34,12 +35,10 @@ public class JsonUtil {
 		}
 	}
 
-	/**
-	 * json array 를 list map 으로 변경.
-	 *
-	 * @param jsonArray
-	 * @return 값이 있으면 list map, 없으면 list 빈 값 return
-	 */
+//	  json array 를 list map 으로 변경.
+//	 
+//	  @param jsonArray
+//	  @return 값이 있으면 list map, 없으면 list 빈 값 return
 
 	public static List<Map<String, Object>> getListMapFromJsonArray(JSONArray jsonArray) {
 		if (ObjectUtils.isEmpty(jsonArray)) {

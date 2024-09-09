@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{common/layouts/default_layout}"
-	  layout:fragment="Main">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Main">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
+	<div>
+		<input type="hidden" id="article-id" th:value="${minwon.postNo}">
+	</div>
 	<div>
 		<table>
 			<tr>
@@ -26,50 +29,126 @@
 			</tr>
 			<tr>
 				<th>내용</th>
-				<td>[[${minwon.content}]]</td>
+				<td id="textarea">[[${minwon.content}]]</td>
 			</tr>
 			<tr>
 				<th>첨부</th>
-				<td>
-				  <img th:each=" img : ${minwon.chumbuImages}" th:src="@{/images/{f}(f=${img})}">
-				</td>
+				<td><img th:each=" img : ${minwon.chumbuImages}"
+					th:src="@{/images/{f}(f=${img})}"></td>
 			</tr>
 		</table>
 	</div>
 	<div>
-		<button type="button" th:onClick="|location.href = '@{/minwonUpdate(postNo=${minwon.postNo})}'|">수정</button>
-		<button type="button" th:onClick="|location.href = '@{/minwonList(pageNum=${cri.pageNum}, type=${param.type}, keyword=${param.keyword})}'|">목록</button>
-		<button type="button" th:onClick="|location.href = '@{/minwonDelete(postNo=${minwon.postNo})}'|">삭제</button>
+		<button type="button"
+			th:onClick="|location.href = '@{/minwonUpdate(postNo=${minwon.postNo})}'|">수정</button>
+		<button type="button"
+			th:onClick="|location.href = '@{/minwonList(pageNum=${cri.pageNum}, type=${param.type}, keyword=${param.keyword})}'|">목록</button>
+		<button type="button"
+			th:onClick="|location.href = '@{/minwonDelete(postNo=${minwon.postNo})}'|">삭제</button>
 	</div>
 	<div>
-	  <!-- 접수 버튼 -->
-      <form th:action="@{/updateMinwonState}" method="post">
-          <input type="hidden" name="postNo" th:value="${minwon.postNo}" />
-          <input type="hidden" name="state" value="1" /> <!-- 접수중은 숫자 1로 전송 -->
-          <button type="submit">접수</button>
-      </form>
+		<!-- 접수 버튼 -->
+		<form th:action="@{/updateMinwonState}" method="post">
+			<input type="hidden" name="postNo" th:value="${minwon.postNo}" /> <input
+				type="hidden" name="state" th:value="1" />
+			<!-- 접수중은 숫자 1로 전송 -->
+			<button type="submit">접수</button>
+		</form>
 
-      <!-- 완료 버튼 -->
-      <form th:action="@{/updateMinwonState}" method="post">
-          <input type="hidden" name="postNo" th:value="${minwon.postNo}" />
-          <input type="hidden" name="state" value="2" /> <!-- 처리 완료는 숫자 2로 전송 -->
-          <button type="submit">완료</button>
-      </form>
+		<!-- 완료 버튼 -->
+		<form th:action="@{/updateMinwonState}" method="post">
+			<input type="hidden" name="postNo" th:value="${minwon.postNo}" /> <input
+				type="hidden" name="state" th:value="2" />
+			<!-- 처리 완료는 숫자 2로 전송 -->
+			<button type="submit">완료</button>
+		</form>
 	</div>
-	
+
+	<div>
+		<section id="comments-section" th:style="'margin-top: 20px;'">
+			<div id="comments-container">
+				<!-- 댓글 목록이 여기에 동적으로 추가될 것입니다. -->
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Comments</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- 각 댓글을 표 형식으로 표시 -->
+						<tr th:each="item : ${comments}">
+							<td th:text="${item.comment}"></td>
+							<!-- 댓글 내용 -->
+							<td th:text="${item.nickname}"></td>
+							<!-- 댓글 작성자 -->
+							<td
+								th:text="${#temporals.format(item.modifiedAt, 'yyyy-MM-dd HH:mm')}"></td>
+							<!-- 댓글 작성자 -->
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- 댓글 작성 폼 -->
+			<form id="comment-form">
+				<div class="form-group">
+					<label for="comment">댓글 추가:</label>
+					<textarea class="form-control" id="comment" rows="3"></textarea>
+				</div>
+				<button type="button" class="btn btn-primary"
+					id="create-comment-btn">댓글 작성</button>
+			</form>
+		</section>
+
+	</div>
+
 	<script>
-	// 특정 게시물의 댓글 리스트 불러오는 함수
-	function loadComments(postNo) {
-	    $.getJSON("/comments/comment-list/" + postNo, function(data) {
-	        if (data.status === "success") {
-	            displayComments(data.comments); // 성공적으로 데이터를 가져오면 댓글을 화면에 출력
-	        } else {
-	            alert("댓글을 불러오는데 실패했습니다.");
-	        }
-	    });
-	}
-	    
-	    
+		var str = $('#textarea').html();
+		let postNo = $("#article-id").val();
+		
+		str = str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+		
+		$('#textarea').html(str);
+		
+		$.ajax({
+			url: ctxPath + "/comments/" + postNo,
+			method: "GET",
+			data: {test: "1"},
+		    success: function(response) {
+		        console.log(response.comments, "성공");
+		       
+		    },
+		    error: function(err) {
+		        console.log(err);
+		    }
+		});
+		
+		 for(let i=0; i<response.length; i++){
+			 var commentList = response[i];
+			 var commentElement = 
+				 $(`<th>commentList.content<th>`)
+		 }
+		
+		// 댓글등록 버튼 클릭 이벤트
+		let cmtBtn = document.getElementById('create-comment-btn');
+		cmtBtn.addEventListener("click", function(e){
+			let content = $("#comment").val();
+			let writer = "user01";
+			let data = {content, writer}
+			$.ajax({
+			    url: ctxPath + "/comments/" + postNo,
+			    method: 'POST',
+			    contentType: "application/json",
+			    data: JSON.stringify(data),
+			    success: function(response) {
+			        console.log(response, "성공");
+			    },
+			    error: function(err) {
+			        alert("댓글 등록 실패");
+			    }
+			});
+		});
+		
+		
 	</script>
 </body>
 </html>

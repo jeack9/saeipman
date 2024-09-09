@@ -5,13 +5,20 @@
 <head>
 <meta charset="UTF-8">
 <!-- <meta name="contextPath" th:value="${contextPath}"> -->
-<!-- <meta name="_csrf" th:value="${_csrf.token}"> -->
+<meta name="_csrf" th:value="${_csrf.token}">
 <title>saeipman</title>
 <th:block th:replace="~{common/configs/login_config :: BootstrapConfig}"></th:block>
 <th:block th:replace="~{common/configs/login_config :: jQueryConfig}"></th:block>
 <script type="text/javascript" th:inline="javascript">
 	let ctxPath = [[${contextPath}]];
-	console.log(ctxPath, "ctxPath");
+	let csrf = $("meta[name='_csrf']").attr("value");
+	$.ajaxSetup({
+	    headers: {
+	        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	    }
+	});
+</script>
+<script type="text/javascript">
 </script>
 </head>
 <body>

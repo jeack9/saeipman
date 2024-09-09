@@ -125,6 +125,7 @@
 						content,
 						category,
 						GROUP_ID,
+						ACCEPT_STATE,
 						room_no,
 						visits_date,
 						reg_date,
@@ -139,6 +140,7 @@
 						, #{category}
 						, #{groupId}
 						, 0
+						, #{acceptState}
 						, #{visitsDate}
 						<choose>
 							<when test="regDate != null">
