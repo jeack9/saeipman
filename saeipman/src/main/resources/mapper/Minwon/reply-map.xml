@@ -4,49 +4,57 @@
 
 	<!-- 새로운 댓글 등록 -->
    <insert id="insertCmt">
+	<selectKey keyProperty="minwonCmtNo"  resultType="map" order="BEFORE">
+   		select cmt_seq.nextval from dual
+   </selectKey>
       insert into minwon_cmt (
         minwon_cmt_no,
         post_no,
         content,
+        writer,
         writer_auth,
-        cmt_rep,        <!-- 댓글 계층 (0 = 댓글) -->
-        cmt_group,      <!-- 새로운 댓글 그룹 -->
-        cmt_order,      <!-- 댓글 순서 (항상 0) -->
-        reg_date
+        cmt_rep,        
+        cmt_group,      
+        cmt_order,      
+        regdate
         )
         values (
            #{minwonCmtNo},         
            #{postNo},             
-           #{content},            
-           #{writerAuth},         
-           0,                     <!-- 댓글이므로 계층은 0 -->
-           #{newCmtGroup},        <!-- 시퀀스로 생성한 새로운 그룹 ID -->
-           0,                     <!-- 댓글 순서 0 -->
+           #{content},
+           ,#{writer}            
+           1,         <!-- 사라질 컬럼 auth -->
+           0,                     <!-- 댓글 계층 (0 = 댓글) -->
+           #{minwonCmtNo},        	  <!-- 새로운 댓글 그룹 -->
+           0,                     <!-- 댓글 순서 (항상 0) -->
            sysdate                
        )
    </insert>
    
    <!-- 대댓글 등록 -->
    <insert id="insertReplyCmt">
+   <selectKey keyProperty="minwonCmtNo" resultType="int" order="BEFORE">
+   		select cmt_seq.nextval from dual
+   </selectKey>
        insert into minwon_cmt (
            minwon_cmt_no,
            post_no,
            content,
            writer_auth,
-           cmt_rep,         -- 대댓글 계층 (1 = 대댓글)
-           cmt_group,       -- 부모 댓글과 동일한 그룹
-           cmt_order,       -- 부모 댓글의 순서 + 1
-           reg_date
+           cmt_rep,         
+           cmt_group,       
+           cmt_order,       
+           regdate
        ) 
        values (
-           #{minwonCmtNo},        -- 시퀀스로 생성한 댓글 번호
-           #{postNo},             -- 게시물 번호
-           #{content},            -- 대댓글 내용
-           #{writerAuth},         -- 작성자 권한
-           1,                     -- 대댓글이므로 계층은 1
-           #{parentCmtGroup},     -- 부모 댓글의 그룹
-           #{parentCmtOrder} + 1, -- 부모 댓글 순서 다음
-           sysdate                -- 작성 날짜
+           #{minwonCmtNo}       
+          ,#{postNo}             
+          ,#{content}            
+          ,1         <!-- 사라질 컬럼 -->       
+          ,1                     <!-- 대댓글 계층 (1 = 대댓글) -->
+          ,#{cmtGroup}    <!-- 부모 댓글과 동일한 그룹 -->
+          ,(select count(*) + 1 from minwon_cmt WHERE cmt_group = #{cmtGroup}) <!-- 부모 댓글의 순서 + 1 -->
+          ,sysdate                
        )
    </insert>
    
@@ -57,9 +65,9 @@
        where post_no = #{postNo}
        ORDER by
          CASE 
-           WHEN cmt_rep = 0 THEN reg_date end desc,  <!-- 부모 댓글은 최신순(내림차순) -->
+           WHEN cmt_rep = 0 THEN regdate end desc,  <!-- 부모 댓글은 최신순(내림차순) -->
          CASE 
-           WHEN cmt_rep > 0 THEN reg_date end asc    <!-- 대댓글은 시간순(오름차순) -->
+           WHEN cmt_rep > 0 THEN regdate end asc    <!-- 대댓글은 시간순(오름차순) -->
 
    </select>
    

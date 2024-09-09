@@ -3,7 +3,7 @@ package com.saeipman.app.member.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class LoginServiceImpl implements LoginService {
 
 	private final LoginMapper lmapper;
-	private final BCryptPasswordEncoder passwordEncoder;
+	//private final BCryptPasswordEncoder passwordEncoder;
 
 	@Override
 	public LoginInfoVO loginInfo(LoginInfoVO loginVO) {
@@ -90,7 +90,7 @@ public class LoginServiceImpl implements LoginService {
 		//로그인정보 추가
 		LoginInfoVO joinVO = new LoginInfoVO();
 		joinVO.setLoginId(loginId);
-		joinVO.setPw(passwordEncoder.encode(pw));
+		//joinVO.setPw(passwordEncoder.encode(pw));
 		joinVO.setAuth(1);
 		
 		lmapper.insertLogin(joinVO);
