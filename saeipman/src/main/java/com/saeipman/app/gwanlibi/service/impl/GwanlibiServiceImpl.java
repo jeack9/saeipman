@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import com.saeipman.app.building.service.BuildingPageDTO;
@@ -22,7 +23,7 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 	
 	// 건물 리스트 출력 - 전월, 금월 관리비, 페이징 처리
 	@Override
-	public List<GwanlibiVO> monthGwanlibiByBuildingList(String imdaeinId, BuildingPageDTO dto) {
+	public List<GwanlibiVO> monthGwanlibiByBuildingList(@Param("imdaeinId") String imdaeinId, @Param("dto") BuildingPageDTO dto) {
 		return gwanlibiMapper.selectMonthGwanlibiByBuildingList(imdaeinId, dto);
 	}
 	

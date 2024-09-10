@@ -47,7 +47,7 @@ public class GwanlibiController {
 	
 	// 관리비 항목 리스트
 	@GetMapping("itemList")
-	public String itemList(Model model, String buildingId) {
+	public String itemList(@RequestParam("buildingId") String buildingId, Model model) {
 		
 		List<GwanlibiVO> list = gwanlibiService.itemList(buildingId);
 		
