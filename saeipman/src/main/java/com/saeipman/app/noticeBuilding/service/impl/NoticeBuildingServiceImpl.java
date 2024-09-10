@@ -71,7 +71,7 @@ public class NoticeBuildingServiceImpl implements NoticeBuildingService {
 		return noticeBuildingMapper.updateViewNoticeBuilding(noticeBuildingVO);
 	}
 
-	@Override
+	@Override //페이징
 	public int totalPage(PagingSearchDTO pgsc) {
 		return noticeBuildingMapper.totalBoardNoticeBuilding(pgsc);
 	}
