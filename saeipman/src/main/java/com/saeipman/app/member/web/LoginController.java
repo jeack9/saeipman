@@ -22,7 +22,6 @@ import com.saeipman.app.member.service.LoginService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("member")
@@ -30,15 +29,17 @@ public class LoginController {
 	private final LoginService lsvc;
 
 	@GetMapping("login") // 로그인폼 이동
-	public void loginForm() {};
+	public void loginForm() {
+	};
 
 	@GetMapping("join") // 회원가입폼 이동
 	public void joinForm(Model model) {
 		model.addAttribute("memberReq", new MemberRequestDTO());
 	};
+
 	@GetMapping("home")
-	public void homeP() {}
-	
+	public void homeP() {
+	}
 
 	@PostMapping("login") // 로그인처리
 	@ResponseBody
@@ -59,7 +60,7 @@ public class LoginController {
 		}
 		return "";
 	}
-	
+
 	// 아이디 중복체크
 	@PostMapping("ckId")
 	@ResponseBody
@@ -67,11 +68,12 @@ public class LoginController {
 		boolean hasId = lsvc.checkImdaein(id);
 		return hasId;
 	}
-	
+
 	// 회원가입 폼 유효성검사
 	@PostMapping("/vaildJoin")
-	public String validJoin(@Valid @ModelAttribute("memberReq") MemberRequestDTO memberReq, BindingResult bindingResult, Model model) {
-		if(bindingResult.hasErrors()) {
+	public String validJoin(@Valid @ModelAttribute("memberReq") MemberRequestDTO memberReq, BindingResult bindingResult,
+			Model model) {
+		if (bindingResult.hasErrors()) {
 			System.out.println("bbbb");
 			return "member/join";
 		}
@@ -79,11 +81,11 @@ public class LoginController {
 		lsvc.addImdaein(memberReq);
 		return "member/login";
 	}
-	
+
 	// jwt 테스트
 	@GetMapping("/test")
 	public String testP() {
 		return "test";
 	}
-	
+
 }
