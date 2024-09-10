@@ -27,7 +27,7 @@ public class ReplyServiceImpl implements ReplyService{
 
 	@Override
 	public void insertReplyCmt(ReplyVO vo) {
-		replyMapper.insertCmt(vo);
+		replyMapper.insertReplyCmt(vo);
 		
 	}
 

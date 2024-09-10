@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class OcrApi {
-	//@Value("${naver.service.url}")
+	@Value("${naver.service.url}")
 	public String url;
 	
 	 public  List<String> callApi(String type, String filePath, String naver_secretKey, String ext) {

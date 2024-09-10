@@ -81,6 +81,14 @@ public class ReplyServiceController {
 	    return "ok";
     }
     
+    //대댓글 등록(post)
+    @PostMapping("/replycomment/{postNo}")
+    public String replyComment(@PathVariable int postNo, @RequestBody ReplyVO reply) {
+    	reply.setPostNo(postNo);
+    	replyService.insertReplyCmt(reply);
+    	return "ok";
+    }
+    
     // 댓글 삭제 (DELETE 요청 처리)
     @DeleteMapping("/comments/{parentCmtNo}")
     public ResponseEntity<String> deleteComment(@PathVariable("parentCmtNo") Long parentCmtNo) {
