@@ -13,9 +13,14 @@
 	font-weight: bold;
 }
 
-.btnDiv {
+.btnDiv, .btnDiv2 {
 	text-align: center;
 }
+
+.btnDiv2 {
+	margin-top: 10px
+}
+
 
 #appendBtn, #deleteBtn {
 	display: inline-block;
@@ -45,7 +50,10 @@
 				<button class="btn btn-light" id="appendBtn">추가</button>
 				<button class="btn btn-light" id="deleteBtn">삭제</button>
 			</div>
-
+			
+			<div class="btnDiv2">
+				<button class="btn btn-light saveBtn">저장하기</button>
+			</div>
 			<br>
 		</div>
 
@@ -148,7 +156,7 @@
 		    
 		    deleteBtn.addEventListener('click', () => {
 			      grid.removeCheckedRows();
-			    });
+			});
 
 		</script>
 	</div>
