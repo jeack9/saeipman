@@ -60,9 +60,12 @@ public class NoticeBuildingController {
 	// 단건조회
 	@GetMapping("noticeBuildingInfo")
 	public String noticeBuildingInfo(NoticeBuildingVO noticeBuildingVO, PagingSearchDTO pgsc, Model model) {
+		
+		noticeBuildingService.noticeBuildingViews(noticeBuildingVO);
 		NoticeBuildingVO selectVO = noticeBuildingService.noticeBuildingSelect(noticeBuildingVO);
 		model.addAttribute("BNotice", selectVO);
 		model.addAttribute("pgsc", pgsc);
+		
 		return "noticeBuilding/noticeBuildingInfo";
 	}
 

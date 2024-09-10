@@ -4,8 +4,9 @@
 
 	<!-- 관리비 기간조회 -->
 	<select id="selectMonth" resultType="PaymentVO">
-		SELECT 
-		FROM
+		SELECT *
+		FROM month_gwanlibi
+		WHERE TO_CHAR(payment_month,'yyyymm') = #{payMonth}
 	</select>
 	<!-- 관리비 납부내역 조회 -->
 
