@@ -52,8 +52,7 @@
 	
 	
 		<nav aria-label="Page navigation example ">
-    [[${pageMaker}]]
-    [[${pageMaker.cri.pageNum}]]
+   
     <ul class="pagination">
         <li class="page-item"><!-- 타임리프에서는 조건이 참일 때 'selected'라는 문자열을 반환할 필요가 없음. 대신 조건이 참이면 selected 속성이 추가되고, 거짓이면 속성이 추가되지 않음 -->
             <a class="page-link" th:href="@{/minwonList(pageNum=1, type=${param.type}, keyword=${param.keyword})}" aria-label="Previous">

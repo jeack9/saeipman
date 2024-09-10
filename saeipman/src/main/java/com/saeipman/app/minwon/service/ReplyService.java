@@ -13,7 +13,7 @@ public interface ReplyService {
     List<ReplyVO> listCmt(int postNo);
 
     // 댓글 삭제
-    void deleteCmt(Long minwonCmtNo);
+    void deleteCmt(int minwonCmtNo);
     
 	List<ReplyVO> getReplyList(int parentCmtNo);
 	
