@@ -18,6 +18,7 @@ public class BuildingPageDTO {
 	public BuildingPageDTO() {
 		this.pageNum = 1;
 		this.amount = 5;
+		//this.amount = amount;
 	}
 
 	public void setTotal(int total) {

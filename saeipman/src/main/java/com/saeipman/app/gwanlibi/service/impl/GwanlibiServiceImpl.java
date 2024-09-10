@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.gwanlibi.mapper.GwanlibiMapper;
 import com.saeipman.app.gwanlibi.service.GwanlibiService;
 import com.saeipman.app.gwanlibi.service.GwanlibiVO;
@@ -18,12 +19,26 @@ import lombok.AllArgsConstructor;
 public class GwanlibiServiceImpl implements GwanlibiService {
 
 	private GwanlibiMapper gwanlibiMapper;
-
+	
+	// 건물 리스트 출력 - 전월, 금월 관리비, 페이징 처리
 	@Override
-	public List<GwanlibiVO> monthGwanlibiByBuildingList(String imdaeinId) {
-		return gwanlibiMapper.selectMonthGwanlibiByBuildingList(imdaeinId);
+	public List<GwanlibiVO> monthGwanlibiByBuildingList(String imdaeinId, BuildingPageDTO dto) {
+		return gwanlibiMapper.selectMonthGwanlibiByBuildingList(imdaeinId, dto);
 	}
-
+	
+	// 건물 총 개수
+	@Override
+	public int buildingTotalCount(String imdaeinId) {
+		return gwanlibiMapper.getBuildingTotalCount(imdaeinId);
+	}
+	
+	// 관리비 항목 리스트
+	@Override
+	public List<GwanlibiVO> itemList(String buildingId) {
+		return gwanlibiMapper.selectItemList(buildingId);
+	}
+	
+	// 관리비 상세 내역
 	@Override
 	public List<GwanlibiVO> detailsBillList(GwanlibiVO vo) {
 		
@@ -39,7 +54,8 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		
 		return gwanlibiMapper.selectGwanlibiDetailsBill(vo);
 	}
-
+	
+	// 관리비 등록
 	@Override
 	public Map<String, Object> addMaintenanceCoast(List<GwanlibiVO> list) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -54,5 +70,6 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		
 		return map;
 	}
+
 	
 }

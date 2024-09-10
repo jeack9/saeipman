@@ -3,7 +3,7 @@
 <mapper namespace="com.saeipman.app.gwanlibi.mapper.GwanlibiMapper">
 	
 	<!-- 임대인의 건물별 전원, 금월 관리비 목록 -->
-	<select id="selectMonthGwanlibiByBuildingList" resultType="GwanlibiVO">
+	<!-- <select id="selectMonthGwanlibiByBuildingList" resultType="GwanlibiVO">
 			
 		SELECT   b.building_id,
 		         b.building_name,
@@ -17,6 +17,35 @@
 		WHERE    b.imdaein_id = #{imdaeinId}
 		ORDER BY b.building_name
 		
+	</select>-->
+	<!-- 임대인의 건물별 전원, 금월 관리비 목록, 페이징 처리-->
+	<select id="selectMonthGwanlibiByBuildingList">
+		SELECT b.*
+		FROM   ( SELECT ROWNUM rn,
+		                a.*
+		         FROM  ( SELECT   b.building_id,
+		                          b.building_name,
+		                          p.total_money previous_month,
+		                          t.total_money this_month,
+		                          t.payment_month
+		                 FROM     building_info b LEFT OUTER JOIN month_gwanlibi t
+		                                          ON   b.building_id = t.building_id AND TO_CHAR(t.payment_month, 'yymm') = TO_CHAR(sysdate, 'yymm')
+		                                          LEFT OUTER JOIN month_gwanlibi p
+		                                          ON   b.building_id = p.building_id AND TO_CHAR(p.payment_month, 'yymm') = TO_CHAR(sysdate, 'yymm') -1
+		                 WHERE    b.imdaein_id = #{imdaeinId}
+		                 ORDER BY b.building_name ) a
+		         WHERE   ROWNUM <![CDATA[<=]]> #{dto.pageNum} * #{dto.amount} ) b
+		WHERE    rn > (#{dto.pageNum} - 1) * #{dto.amount}
+	
+	</select>
+	
+	<!-- 페이징 -->
+	<select id="getBuildingTotalCount">
+
+		SELECT COUNT(*)
+		FROM   building_info
+		WHERE  imdaein_id = #{imdaeinId}
+
 	</select>
 	
 	<!-- 각 건물의 관리비 상세 내역 and 각 건물의 관리비 상세 내역 for 등록/수정 페이지 -->
@@ -38,6 +67,17 @@
 		ORDER BY bgi.gwanlibi_name
 		
 	</select>
+	
+	<!-- 관리비 항목 설정 화면 : 건물 관리비 항목 출력 -->	
+	<select id="selectItemList" >		
+		SELECT gwanlibi_item_no,
+		       building_id,
+		       gwanlibi_name,
+		       variable_yn
+		FROM   building_gwanlibi_item
+		WHERE  building_id = #{buildingId}
+	</select>
+	
 	
 	<!-- 관리비 등록 -->
 	<insert id="insertMaintenanceCost">
@@ -62,5 +102,7 @@
 		   , #{gaguGwanlibi})
 		   
 	</insert>
+	
+	
 
 </mapper>

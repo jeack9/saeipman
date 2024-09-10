@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:decorate="~{common/layouts/default_layout}"
-	  layout:fragment="Main">
+	  >
 
 <head>
 	<meta charset="UTF-8">
@@ -50,6 +50,8 @@
 </head>
 
 <body>
+<div layout:fragment="Main">
+
 	<div>
 		<br>
 		<br>
@@ -163,7 +165,7 @@
 		}
 
 	</script>
-
+</div>
 </body>
 
 </html>
