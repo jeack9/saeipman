@@ -40,19 +40,19 @@ public class OcrUtil {
 
 	}
 
-	public String extractValue(String text, String keyword) {
-		int startIndex = text.indexOf(keyword);
-
-		if (startIndex != -1) {
-			int endIndex = text.indexOf("\n", startIndex);
-
-			if (endIndex == -1) {
-				endIndex = text.length();
-			}
-
-			String value = text.substring(startIndex + keyword.length(), endIndex).trim();
-			return value.split(" ")[0];
-		}
-		return "";
-	}
+//	public String extractValue(String text, String keyword) {
+//		int startIndex = text.indexOf(keyword);
+//
+//		if (startIndex != -1) {
+//			int endIndex = text.indexOf("\n", startIndex);
+//
+//			if (endIndex == -1) {
+//				endIndex = text.length();
+//			}
+//
+//			String value = text.substring(startIndex + keyword.length(), endIndex).trim();
+//			return value.split(" ")[0];
+//		}
+//		return "";
+//	}
 }

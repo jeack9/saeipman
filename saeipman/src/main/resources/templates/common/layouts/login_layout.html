@@ -14,7 +14,7 @@
 	let csrf = $("meta[name='_csrf']").attr("value");
 	$.ajaxSetup({
 	    headers: {
-	        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	        'X-CSRF-TOKEN': csrf
 	    }
 	});
 </script>
