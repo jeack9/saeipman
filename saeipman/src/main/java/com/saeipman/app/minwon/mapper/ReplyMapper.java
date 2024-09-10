@@ -17,5 +17,5 @@ public interface ReplyMapper {
 	List<ReplyVO> listCmt(int postNo);
 	   
 	//특정 댓글 삭제
-	public int deleteCmt(Long minwonCmtNo);
+	public int deleteCmt(int minwonCmtNo);
 }

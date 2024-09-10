@@ -91,16 +91,16 @@ public class ReplyServiceController {
     
     // 댓글 삭제 (DELETE 요청 처리)
     @DeleteMapping("/comments/{parentCmtNo}")
-    public ResponseEntity<String> deleteComment(@PathVariable("parentCmtNo") Long parentCmtNo) {
-       // try {
+    public ResponseEntity<String> deleteComment(@PathVariable("parentCmtNo") int parentCmtNo) {
+        try {
             // 서비스 레이어를 통해 댓글 삭제
             replyService.deleteCmt(parentCmtNo);
 
             // 성공 시 "success" 메시지 반환
             return new ResponseEntity<>("success", HttpStatus.OK);
-     //   } catch (Exception e) {
+        } catch (Exception e) {
             // 예외 발생 시 "error" 메시지 반환
-     //       return new ResponseEntity<>("error", HttpStatus.BAD_REQUEST);
-     //   }
+            return new ResponseEntity<>("error", HttpStatus.BAD_REQUEST);
+        }
     }
 }
