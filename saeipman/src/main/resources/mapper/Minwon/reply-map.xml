@@ -4,7 +4,7 @@
 
 	<!-- 새로운 댓글 등록 -->
    <insert id="insertCmt">
-	<selectKey keyProperty="minwonCmtNo"  resultType="map" order="BEFORE">
+	<selectKey keyProperty="minwonCmtNo"  resultType="int" order="BEFORE">
    		select cmt_seq.nextval from dual
    </selectKey>
       insert into minwon_cmt (
@@ -22,7 +22,7 @@
            #{minwonCmtNo},         
            #{postNo},             
            #{content},
-           ,#{writer}            
+           #{writer},           
            1,         <!-- 사라질 컬럼 auth -->
            0,                     <!-- 댓글 계층 (0 = 댓글) -->
            #{minwonCmtNo},        	  <!-- 새로운 댓글 그룹 -->
@@ -40,6 +40,7 @@
            minwon_cmt_no,
            post_no,
            content,
+           writer,
            writer_auth,
            cmt_rep,         
            cmt_group,       
@@ -49,7 +50,8 @@
        values (
            #{minwonCmtNo}       
           ,#{postNo}             
-          ,#{content}            
+          ,#{content} 
+          ,#{writer}           
           ,1         <!-- 사라질 컬럼 -->       
           ,1                     <!-- 대댓글 계층 (1 = 대댓글) -->
           ,#{cmtGroup}    <!-- 부모 댓글과 동일한 그룹 -->
@@ -60,15 +62,9 @@
    
    <!-- 댓글 리스트 -->
    <select id="listCmt">
-       select * 
-       from minwon_cmt 
-       where post_no = #{postNo}
-       ORDER by
-         CASE 
-           WHEN cmt_rep = 0 THEN regdate end desc,  <!-- 부모 댓글은 최신순(내림차순) -->
-         CASE 
-           WHEN cmt_rep > 0 THEN regdate end asc    <!-- 대댓글은 시간순(오름차순) -->
-
+       select * from minwon_cmt
+	   where post_no = #{postNo} 
+	   order by cmt_group, cmt_rep, cmt_order
    </select>
    
    <!-- 댓글 삭제 -->
