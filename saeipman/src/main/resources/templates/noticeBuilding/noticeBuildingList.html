@@ -5,7 +5,14 @@
 
 	<div class="col-sm-12 col-xl-11">
 		<div class="bg-light rounded h-100 p-4">
-			<h6 class="mb-4">공지사항</h6>
+			<h4 class="mb-4">공지사항</h4>
+
+			<form id="scForm" th:action="@{/noticeBuildingList}" th:method='get'
+				class="d-flex">
+				<input class="form-control me-2" type="search" name="scKeyword" aria-label="Search"
+					placeholder="Search" style="width: 180px;">
+				<button class="btn btn-outline-success" >Search</button>
+			</form>
 			<table class="table table-hover" style="text-align: center">
 				<thead>
 					<tr>
@@ -32,31 +39,40 @@
 					class="btn btn-outline-success m-2">등록</button>
 			</div>
 			<nav aria-label="Page navigation example">
-				 <ul class="pagination justify-content-center"> 
-					<li class="page-item" th:if="${Paging.startPage > 1}">
-					<a class="page-link" th:href="@{noticeBuildingList?nowPage={page} (page = ${Paging.startPage -1})}"
+				<ul class="pagination justify-content-center">
+					<li class="page-item" th:if="${Paging.startPage > 1}"><a
+						class="page-link"
+						th:href="@{/noticeBuildingList?nowPage={page} (page = ${Paging.startPage -1})}"
 						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 					</a></li>
-					
-					<li class="page-item"><a class="page-link" href="#">1</a></li>
-					<li class="page-item"><a class="page-link" href="#">2</a></li>
-					<li class="page-item"><a class="page-link" href="#">3</a></li>
-					
-					<li class="page-item" th:if="${Paging.nextPage}">
-					<a class="page-link" th:href="@{noticeBuildingList?nowPage={page} (page=${Paging.endPage+1})}"
+
+					<th:block
+						th:with="start = ${Paging.startPage}, end = ${Paging.endPage}">
+						<li class="page-item"
+							th:with="start = ${Paging.startPage}, end = ${Paging.endPage}"
+							th:each="pageButton : ${#numbers.sequence(start, end)}"><a
+							class="page-link"
+							th:href="@{/noticeBuildingList?nowPage={page} (page = ${pageButton})}"
+							th:text=${pageButton}></a></li>
+					</th:block>
+
+					<li class="page-item" th:if="${Paging.nextPage}"><a
+						class="page-link"
+						th:href="@{/noticeBuildingList?nowPage={page} (page=${Paging.endPage+1})}"
 						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 					</a></li>
 				</ul>
 			</nav>
 		</div>
 	</div>
+</div>
 
-	<script>
-		$('tbody > tr').on('click', function(event) {
-			let trTag = event.currentTarget;
-			let postNo = $(trTag).children().first().text();
-			let url = ctxPath + '/noticeBuildingInfo?postNo=' + postNo;
-			location.href = url;
-		})
-	</script>
+<script>
+	$('tbody > tr').on('click', function(event) {
+		let trTag = event.currentTarget;
+		let postNo = $(trTag).children().first().text();
+		let url = ctxPath + '/noticeBuildingInfo?postNo=' + postNo;
+		location.href = url;
+	})
+</script>
 </div>

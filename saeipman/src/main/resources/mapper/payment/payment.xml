@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saeipman.app.payment.mapper.PaymentMapper">
+
+	<!-- 관리비 기간조회 -->
+	<select id="selectMonth" resultType="PaymentVO">
+		SELECT 
+		FROM
+	</select>
+	<!-- 관리비 납부내역 조회 -->
+
+	<!-- 납부해야할 관리비 조회 -->
+
+</mapper>
