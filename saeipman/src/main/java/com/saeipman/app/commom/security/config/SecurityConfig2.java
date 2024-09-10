@@ -94,7 +94,7 @@ public class SecurityConfig2 {
 			    .permitAll() // 로그인 성공시 이동하는 페이지 허용
 			)
 			.logout(logout -> logout
-					.logoutUrl("logoutProc")
+					.logoutUrl("/member/logoutProc")
 					.logoutSuccessUrl("/member/login")
 			);
 

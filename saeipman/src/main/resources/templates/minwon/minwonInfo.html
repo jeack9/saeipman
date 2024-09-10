@@ -13,7 +13,10 @@
     .ply {
       padding-left: 50px;
     }
+    
   </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <body>
     <div>
       <input type="hidden" id="postNo" th:value="${minwon.postNo}" />
@@ -157,6 +160,7 @@
 		                           <div class="fw-bold">${comment.writer}</div> <!-- 작성자 -->
 		                           <div>${comment.content}</div> <!-- 댓글 내용 -->
 		                           <div>${dateString}</div> <!-- 작성일 -->
+		                           
 		                           <input type="hidden" value=${comment.cmtGroup}>
 		                           ${deleteButton}
 	                       	   </div>
@@ -170,6 +174,7 @@
 	                               <div>${comment.content}</div> <!-- 댓글 내용 -->
 	                               <div>${dateString}</div> <!-- 작성일 -->
 	                               <input type="hidden" value=${comment.cmtGroup}>
+	                               ${deleteButton}
 	                           </div>
 	                       `;
                   $groupDiv.append(commentElement);
@@ -180,18 +185,86 @@
               let $groupDivs = $(".group");
               $groupDivs.each((idx, div) => {
                 let replyForm = `
-                			<form id="cmtfrm${div.dataset.group}" style="display:none;">
-                				<input type="hidden" name="cmtGroup" value="${div.dataset.group}">
-	                			<div class="form-group">
-	                				<label for="reply">대댓글 추가:</label>
-	                				<textarea class="form-control" id="reply" rows="3"></textarea>
-	                			</div>
-	                			<button type="button" class="btn btn-primary" id="reply-comment-btn">댓글
-	                				작성</button>
-                			</form>
+                	<form id="cmtfrm${div.dataset.group}" style="display:none;">
+                    <input type="hidden" name="cmtGroup" value="${div.dataset.group}">
+                    <div class="form-group">
+                      <label for="reply${div.dataset.group}">대댓글 추가:</label>
+                      <textarea class="form-control" id="reply${div.dataset.group}" rows="3"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-primary reply-comment-btn" data-group="${div.dataset.group}">댓글 작성</button>
+                  </form>
                 		`;
                 $(div).append(replyForm);
               });
+              
+              
+              
+           // 대댓글 FORM 보이기 그룹이벤트
+              $("div#cmtContainer").on("click", "div.group > div#onkey", function(e) {
+                  if (!$(e.target).hasClass('delete-comment-btn')) { //siblings('form')은 현재 요소와 같은 부모를 가진 form 요소를 찾음
+                      let replyForm = $(this).parent().children().last();
+                      replyForm.toggle();
+                  }
+              });
+           	  
+           	  
+           // 댓글 삭제 이벤트 핸들러
+              $(document).on('click', '.delete-comment-btn', function (e) {
+                  e.stopPropagation();  // 이벤트 전파 방지
+
+                  let parentCmtNo = $(this).data('id'); //data-id 속성 값을 가져오기
+                  let isReply = $(this).closest('.ply').length > 0; //현재 요소에서 가장 가까운 .ply 클래스를 가진걸 찾고 그런 요소가 있는지 확인
+                  let message = isReply ? "이 대댓글을 삭제하시겠습니까?" : "이 댓글과 관련된 대댓글도 모두 삭제됩니다. 삭제하시겠습니까?";
+                  
+                  if (confirm(message)) {
+                      $.ajax({
+                          url: `${ctxPath}/comments/${parentCmtNo}`,
+                          method: "DELETE",
+                          success: function(response) {
+                              if (response === "success") {
+                                  console.log("댓글 삭제 성공");
+                                  loadComment(); // 댓글 목록 새로고침
+                              } else {
+                                  alert("댓글 삭제에 실패했습니다.");
+                              }
+                          },
+                          error: function(xhr, status, error) {
+                              alert("댓글 삭제 실패. 오류: " + xhr.responseText);
+                          }
+                      });
+                  }
+              });
+           
+           
+           
+           	  
+           // 대댓글 등록 이벤트 핸들러 (이벤트 위임 사용)
+              $(document).off('click', '.reply-comment-btn').on('click', '.reply-comment-btn', function (e) {
+                e.preventDefault(); // 기본 동작 방지
+                e.stopPropagation(); // 이벤트 버블링 방지
+                
+                let group = $(this).data('group');
+                let content = $(`#reply${group}`).val();
+                let writer = "user01"; // 실제 로그인된 사용자 정보로 변경
+                let postNo = $("#postNo").val();
+
+                let data = { content, writer, postNo, cmtGroup: group, cmtRep: "1" }; // 대댓글은 cmtRep가 "1"
+                $.ajax({
+                  url: ctxPath + "/replycomment/" + postNo,
+                  method: "POST",
+                  contentType: "application/json",
+                  data: JSON.stringify(data),
+                  success: function (response) {
+                    console.log(response, "대댓글 등록 성공");
+                    $(`#reply${group}`).val(''); // 입력 필드 초기화
+                    loadComment(); // 대댓글 등록 후 댓글 다시 불러오기
+                  },
+                  error: function (err) {
+                    alert("대댓글 등록 실패");
+                  },
+                });
+              });
+           	  
             } else {
               console.log("댓글이 없습니다.");
             }
@@ -202,6 +275,7 @@
         });
       }
 
+      
       // 댓글등록 버튼 클릭 이벤트
       let cmtBtn = document.getElementById("create-comment-btn");
       cmtBtn.addEventListener("click", function (e) {
@@ -224,42 +298,40 @@
           },
         });
       });
-
-      // 대댓글 FORM 보이기 그룹이벤트
-      $("div#cmtContainer").on("click", "div.group", (e) => {
-       // console.log(e.currentTarget, "target");
-        let target = $(e.currentTarget);
-        console.log(target.children().last());
-        
-        target.children().last().show()
       
-    
-        
-      });
 
-      //대댓글 등록 버튼
-      let replyBtn = document.getElementById("reply-comment-btn");
-      replyBtn.addEventListener("click", function (e) {
-        let content = $("#reply").val();
-        let writer = "user01";
-        let postNo = $("#postNo").val();
-        let data = { content, writer, postNo };
-        $.ajax({
-          url: ctxPath + "/replycomment/" + postNo,
-          method: "POST",
-          contentType: "application/json",
-          data: JSON.stringify(data),
-          success: function (response) {
-            console.log(response, "성공");
-            loadComment();
-          },
-          error: function (err) {
-            alert("댓글 등록 실패");
-          },
-        });
-      });
+      
+	   // 대댓글 등록 이벤트 핸들러 (이벤트 위임 사용)
+	   
+	   $(document).on('click', '.reply-comment-btn', function (e) {
+		   
+	       let group = $(this).data('group');
+	       let content = $(`#reply${group}`).val();
+	       let writer = "user01"; // 실제 로그인된 사용자 정보로 변경
+	       let postNo = $("#postNo").val();
+	
+	       let data = { content, writer, postNo, cmtGroup: group, cmtRep: "1" }; // 대댓글은 cmtRep가 "1"
+	       $.ajax({
+	         url: ctxPath + "/replycomment/" + postNo,
+	         method: "POST",
+	         contentType: "application/json",
+	         data: JSON.stringify(data),
+	         success: function (response) {
+	           console.log(response, "대댓글 등록 성공");
+	           loadComment(); // 대댓글 등록 후 댓글 다시 불러오기
+	         },
+	         error: function (err) {
+	           alert("대댓글 등록 실패");
+	         },
+	       });
+	     });
+      
 
-      //댓글 삭제
+	  
+	   
+	   
+	   
+      
     </script>
   </body>
 </html>

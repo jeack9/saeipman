@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}">
+
+<head>
+<meta charset="UTF-8">
+<style>
+#bName {
+	float: left;
+	color: #000000;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.btnDiv, .btnDiv2 {
+	text-align: center;
+}
+
+.btnDiv2 {
+	margin-top: 10px
+}
+
+
+#appendBtn, #deleteBtn {
+	display: inline-block;
+	background: #6CBEC7;
+	color: rgb(56, 53, 53);
+}
+</style>
+
+</head>
+
+<body>
+	<div layout:fragment="Main">
+
+		<div>
+			<br> <br>
+
+			<h1>관리비 항목 설정</h1>
+
+			<br> <br>
+
+			<!-- Toast UI - Grid -->
+			<div id="grid" style="position: relative; z-index: 1;"></div>
+
+			<br>
+
+			<div class="btnDiv">
+				<button class="btn btn-light" id="appendBtn">추가</button>
+				<button class="btn btn-light" id="deleteBtn">삭제</button>
+			</div>
+			
+			<div class="btnDiv2">
+				<button class="btn btn-light saveBtn">저장하기</button>
+			</div>
+			<br>
+		</div>
+
+		<script th:inline="javascript">
+
+			// JavaScript에서 Thymeleaf 변수 사용하기 //
+			/* 1. <script th:inline="javascript">
+			   2. Thymeleaf 변수 사용 */
+			let list = [[${ list }]];
+			console.log(list);
+
+			// TOAST UI //
+			// async - await
+			let grid;
+			$(document).ready(() => {
+				grid = gridLoad();
+			});
+
+			// 등록 버튼 클릭 이벤트
+			// $('.insertBtn').on('click', function () {
+			// 	$.ajax({
+			// 		type: 'post',
+			// 		url: `/insertMaintenceCost`,
+			// 		contentType: 'application/json',
+			// 		data: JSON.stringify(grid.getData()),
+			// 		success: function (data) {
+			// 			console.log("suceess");
+			// 		},
+			// 		error: function (err) {
+			// 			console.log(err);
+			// 		}
+			// 	})
+			// })
+
+
+			// Toast UI - Grid //
+			// # reference : https://adjh54.tistory.com/95
+			// # reference : https://park-duck.tistory.com/entry/javascript-1-Toast-UI-Grid-%EA%B8%B0%EC%B4%88API-%EC%82%AC%EC%9A%A9%EB%B2%95
+			// 01. Grid 생성.
+			// return void
+			const gridLoad = () => {
+				const Grid = tui.Grid;
+				// 02. Grid theme 설정. (clean, stripe, default)
+				Grid.applyTheme('stripe');
+
+				// 03. Toast UI Grid 구성.
+				const grid = new Grid({
+					// ================================== 공통 옵션 적용 ================================== //
+					el: document.getElementById('grid'), // 필수 : Container element
+					data: list,
+					scrollX: false,
+					scrollY: false,
+					rowHeaders: ['checkbox'],
+					// ================================== 컬럼 옵션 적용 ================================== //
+					columns: [
+						{
+			                header: '번호',
+			                name: 'gwanlibiItemNo',
+			                hidden: true
+			            },
+						// [Column-1] 관리비 항목
+						{
+							header: '관리비 항목',
+							name: 'gwanlibiName',
+							resizable: true,
+							align: 'center',
+							sortable: true,
+							editor: 'text'
+						},
+						// [Column-1] 관리비 변동 여부
+						{
+							header: '관리비 변동 여부',
+							name: 'variableYn',
+							resizable: true,
+							align: 'center',
+							editor: {
+								type: 'select',
+								options: {
+									listItems: [
+										{ text: '변동', value: '변동' },
+										{ text: '고정', value: '고정' }
+									]
+								}
+							}
+						}
+					]
+				})
+				grid.validate();
+				
+
+				return grid;
+			}
+			
+			const appendBtn = document.getElementById('appendBtn');
+			const deleteBtn = document.getElementById('deleteBtn');
+			
+		    appendBtn.addEventListener('click', () => {
+		      grid.appendRow({ gwanlibiName: '관리비 항목 입력해주세요.'});
+		    });
+		    
+		    deleteBtn.addEventListener('click', () => {
+			      grid.removeCheckedRows();
+			});
+
+		</script>
+	</div>
+</body>
+
+</html>

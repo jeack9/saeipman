@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}">
+
+<head>
+	<meta charset="UTF-8">
+</head>
+
+<body>
+	<div layout:fragment="Main">
+		<form>
+			<table>
+				<thead>
+					<tr>
+						<th>✓</th>
+						<th>관리비 항목 명</th>
+						<th>관리비 변동 여부</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><input type="checkbox" aria-label="Checkbox for following text input"></td>
+						<td><input type="text" class="form-control" aria-label="Text input with checkbox"></td>
+						<td><select class="dropdown-item" name="varialbleValue">
+							  <option value="1">변동</option>
+							  <option value="0">고정</option>
+							</select>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		
+		</form>
+
+
+
+
+
+
+		<script>
+		</script>
+	</div>
+</body>
+
+</html>

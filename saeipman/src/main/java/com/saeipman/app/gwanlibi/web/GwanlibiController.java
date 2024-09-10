@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.gwanlibi.service.GwanlibiService;
 import com.saeipman.app.gwanlibi.service.GwanlibiVO;
 
@@ -28,12 +29,32 @@ public class GwanlibiController {
 
 	// 로그인한 사용자(임대인)의 건물들을 목록으로 출력하고, 해당 건물의 전월, 금월 관리비 출력 화면으로 이동
 	@GetMapping("gwanlibiList")
-	public String gwanlibiList(Model model, @RequestParam(name = "imdaeinId", defaultValue = "test01") String imdaeinId) {
-		List<GwanlibiVO> list = gwanlibiService.monthGwanlibiByBuildingList(imdaeinId);
+	public String gwanlibiList(Model model, @RequestParam(name = "imdaeinId", defaultValue = "test01") String imdaeinId, BuildingPageDTO dto) {
+		// 한 페이지당 출력할 건물 개수
+		dto.setAmount(6);
+		
+		// 출력할 건물의 총 개수
+		int total = gwanlibiService.buildingTotalCount(imdaeinId);
+		dto.setTotal(total);
+		
+		List<GwanlibiVO> list = gwanlibiService.monthGwanlibiByBuildingList(imdaeinId, dto);
 
 		model.addAttribute("list", list);
+		model.addAttribute("page", dto);
 
 		return "gwanlibi/gwanlibiList";
+	}
+	
+	// 관리비 항목 리스트
+	@GetMapping("itemList")
+	public String itemList(@RequestParam("buildingId") String buildingId, Model model) {
+		
+		List<GwanlibiVO> list = gwanlibiService.itemList(buildingId);
+		
+		model.addAttribute("list", list);
+		
+		
+		return "gwanlibi/itemList";
 	}
 
 	// 건물별 관리비 상세 내역 출력 화면으로 이동
@@ -60,6 +81,7 @@ public class GwanlibiController {
 		model.addAttribute("buildingId", vo.getBuildingId());
 		return "gwanlibi/detailsBillList";
 	}
+	
 	
 	// 월별 건물별 관리비 상세 내역 출력 화면으로 이동- ajax
 	@PostMapping("detailsBillList")

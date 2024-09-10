@@ -12,22 +12,24 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.saeipman.app.building.service.BuildingService;
+import com.saeipman.app.building.service.BuildingVO;
 import com.saeipman.app.file.service.FileService;
 import com.saeipman.app.file.service.FileVO;
 
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class FileUtility {
 
-	private FileService fileService;
+	private final FileService fileService;
+	private final BuildingService buildingService ;
 
-	public FileUtility(FileService fileService) {
-		this.fileService = fileService;
-	}
-
+	
 	@Value("${file.upload.path}")
 	private String uploadPath;
 
@@ -35,7 +37,7 @@ public class FileUtility {
 
 	@Setter
 	private String folder;
-
+	
 	public String upload(MultipartFile[] files) {
 		List<String> imgList = new ArrayList<>();
 		FileVO fileVO = new FileVO();
@@ -84,6 +86,33 @@ public class FileUtility {
 			imgList.add(setImgPath(uploadFolder));
 		} // for END
 		return group;
+	}
+	public String ocrUpload(MultipartFile ocrFile) {
+		List<String> imgFile = new ArrayList<>();
+		BuildingVO buildingVO = new BuildingVO(); 
+		String folderPath = makeFolder(this.folder);
+		log.info(uploadPath);
+
+		String fileName = ocrFile.getOriginalFilename();
+		String uuid = UUID.randomUUID().toString();
+		String uploadFolder = folderPath + "/" + uuid + "_" + fileName;
+		String saveName = uploadPath + uploadFolder; // separator = 자바가 인식하는 경로
+		
+		buildingVO.setOcrFileName(uuid + "_" + fileName);
+		
+		log.debug("saveName : " + saveName);
+
+		Path savePath = Paths.get(saveName);
+
+		try {
+			ocrFile.transferTo(savePath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
+		imgFile.add(setImgPath(uploadFolder));
+		return null;
+		
 	}
 
 	public String makeFolder(String folder) {

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}" layout:fragment="Main">
+	layout:decorate="~{common/layouts/default_layout}" >
 
 <head>
 	<meta charset="UTF-8">
@@ -37,6 +37,7 @@
 </head>
 
 <body>
+<div layout:fragment="Main">
 	<div>
 		<br>
 		<br>
@@ -232,7 +233,7 @@
 		}
 
 	</script>
-
+</div>
 </body>
 
 </html>

@@ -37,7 +37,7 @@ public class ReplyServiceImpl implements ReplyService{
 	}
 
 	@Override
-	public void deleteCmt(Long minwonCmtNo) {
+	public void deleteCmt(int minwonCmtNo) {
 		replyMapper.deleteCmt(minwonCmtNo);
 		
 	}
