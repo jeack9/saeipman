@@ -20,15 +20,17 @@
 		<button type="button"
 			th:onclick="|location.href='@{/buildingInsert}'|"
 			class="btn btn-outline-primary m-2">건물추가</button>
+			
 		<!-- 페이징  -->
-		<nav aria-label="Page navigation example ">
+		<!-- <nav aria-label="Page navigation example ">
 			<ul class="pagination">
+			
 				<li class="page-item"><a class="page-link"
 					th:href="@{/buildingList?pageNum=1}" aria-label="Previous"> <span
 						aria-hidden="true">처음</span>
 				</a></li>
 				<li class="page-item" th:if="${page.startPage > 1}">
-					<!-- startPage가 1보다 크면 이전 버튼 보이게 --> <a class="page-link"
+					startPage가 1보다 크면 이전 버튼 보이게 <a class="page-link"
 					th:href="@{/buildingList?pageNum={page} (page = ${page.startPage -1})}"
 					aria-label="Previous"> <span aria-hidden="true">이전</span>
 				</a>
@@ -42,7 +44,7 @@
 						th:text=${pageButton}></a></li>
 				</th:block>
 				<li class="page-item" th:if="${page.next}"><a class="page-link"
-					th:href="@{/buildingList?pageNum{page} (page = ${page.endPage +1})}"
+					th:href="@{/buildingList?pageNum={page} (page = ${page.endPage +1})}"
 					aria-label="Next"> <span aria-hidden="true">다음</span>
 				</a></li>
 				<li class="page-item"><a class="page-link"
@@ -50,7 +52,31 @@
 					aria-label="Previous"> <span aria-hidden="true">끝</span>
 				</a></li>
 			</ul>
-		</nav>
+		</nav> -->
+		<nav aria-label="Page navigation example">
+				 <ul class="pagination justify-content-center"> 
+					<li class="page-item" th:if="${page.startPage > 1}">
+					<a class="page-link" th:href="@{/buildingList?pageNum={page}(page = ${page.startPage -1})}"
+						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+					</a></li>
+					
+					<th:block
+						th:with="start = ${page.startPage}, end = ${page.endPage}">
+						<li class="page-item"
+							th:with="start = ${page.startPage}, end = ${page.endPage}"
+							th:each="pageButton : ${#numbers.sequence(start, end)}"><a
+							class="page-link"
+							th:href="@{/buildingList?pageNum={page} (page = ${pageButton})}"
+							th:text=${pageButton}></a></li>
+					</th:block>
+
+					
+					<li class="page-item" th:if="${page.next}">
+					<a class="page-link" th:href="@{/buildingList?pageNum={page}(page = ${page.endPage +1})}"
+						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+					</a></li>
+				</ul>
+			</nav>
 	</div>
 	<!-- end 페이징 -->
 
@@ -233,10 +259,10 @@
 				.done(result=>{
 					if(result.success){
 						alert('정상 수정');
-					$('#bnameTitle').html(result.target.buildingName);
-					$('#'+result.target.buildingId).find("div").eq(0).html(result.target.buildingName);
-					$('#'+result.target.buildingId).find("div").eq(1).html(result.target.doroAddr +' '+ result.target.detailsAddr);
-					$('#'+result.target.buildingId).find("div").eq(2).html(result.target.totalGagu+'세대');
+						$('#bnameTitle').html(result.target.buildingName);
+						$('#'+result.target.buildingId).find("div").eq(0).html(result.target.buildingName);
+						$('#'+result.target.buildingId).find("div").eq(1).html(result.target.doroAddr +' '+ result.target.detailsAddr);
+						$('#'+result.target.buildingId).find("div").eq(2).html(result.target.totalGagu+'세대');
 						
 					}else{
 						alert('수정 실패');
