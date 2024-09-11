@@ -56,7 +56,25 @@ public class GwanlibiController {
 		
 		return "gwanlibi/itemList";
 	}
-
+	
+	// 관리비 항목 등록 - 아작스
+	@PostMapping("insertItems")
+	@ResponseBody
+	public String insertItems(@RequestBody List<GwanlibiVO> vo, String buildingId) {
+		// 관리비 항목 최대 버전 + 1 가져오기.
+		int version = gwanlibiService.getUpdateVesion(buildingId);
+		
+		// 버전 값 넣어주기
+		for(GwanlibiVO item : vo) {
+			item.setVersion(version);
+		}
+		
+		// 관리비 항목
+		gwanlibiService.addtItems(vo);
+		
+		return "redirect:itemList";
+	}
+	
 	// 건물별 관리비 상세 내역 출력 화면으로 이동
 	@GetMapping("detailsBillList")
 	public String detailsBillList(Model model, GwanlibiVO vo) {
