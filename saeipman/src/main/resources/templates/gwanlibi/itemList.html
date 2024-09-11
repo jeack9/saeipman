@@ -114,6 +114,16 @@
 			                name: 'gwanlibiItemNo',
 			                hidden: true
 			            },
+			            {
+			                header: '버전',
+			                name: 'version',
+			                hidden: true
+			            },
+			            {
+			                header: '건물 번호',
+			                name: 'buildingId',
+			                hidden: true
+			            },
 						// [Column-1] 관리비 항목
 						{
 							header: '관리비 항목',
@@ -142,8 +152,6 @@
 					]
 				})
 				grid.validate();
-				
-
 				return grid;
 			}
 			
@@ -151,12 +159,27 @@
 			const deleteBtn = document.getElementById('deleteBtn');
 			
 		    appendBtn.addEventListener('click', () => {
-		      grid.appendRow({ gwanlibiName: '관리비 항목 입력해주세요.'});
+		        grid.appendRow({ gwanlibiName: '관리비 항목 입력해주세요.'});
 		    });
 		    
 		    deleteBtn.addEventListener('click', () => {
-			      grid.removeCheckedRows();
+		    	grid.removeCheckedRows();
 			});
+		    
+
+		    $('.saveBtn').on('click', function() {
+				$.ajax({
+					url: `/${ctxPath}/insertItems`,
+					method: 'post',
+					contentType: 'application/json',
+					data: JSON.stringify(grid.getData())
+				}).done(function(data) {
+
+				}).fail(function(err){
+					console.log(err);
+				})
+
+			})
 
 		</script>
 	</div>

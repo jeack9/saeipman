@@ -39,6 +39,18 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		return gwanlibiMapper.selectItemList(buildingId);
 	}
 	
+	// 관리비 항목 버전
+	@Override
+	public int getUpdateVesion(String buildingId) {
+		return gwanlibiMapper.selectUpdateVesion(buildingId);
+	}
+	
+	// 관리비 항목 등록
+	@Override
+	public int addtItems(List<GwanlibiVO> vo) {
+		return gwanlibiMapper.insertItems(vo);
+	}
+	
 	// 관리비 상세 내역
 	@Override
 	public List<GwanlibiVO> detailsBillList(GwanlibiVO vo) {

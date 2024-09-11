@@ -18,6 +18,12 @@ public interface GwanlibiMapper {
 	// 관리비 항목 리스트
 	public List<GwanlibiVO> selectItemList(String buildingId);
 	
+	// 관리비 항목 버전
+	public int selectUpdateVesion(String buildingId);
+	
+	// 관리비 항목 등록
+	public int insertItems(List<GwanlibiVO> vo);
+	
 	// 사용자의 건물별 관리비 상세 내역
 	public List<GwanlibiVO> selectGwanlibiDetailsBill(GwanlibiVO vo);
 	
