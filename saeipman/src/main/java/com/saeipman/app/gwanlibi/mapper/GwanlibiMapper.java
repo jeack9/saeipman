@@ -22,11 +22,10 @@ public interface GwanlibiMapper {
 	public int selectUpdateVesion(String buildingId);
 	
 	// 관리비 항목 등록
-	public int insertItems(List<GwanlibiVO> vo);
+	public int insertItems(GwanlibiVO vo);
 	
 	// 사용자의 건물별 관리비 상세 내역
-	public List<GwanlibiVO> selectGwanlibiDetailsBill(GwanlibiVO vo);
-	
+	public List<GwanlibiVO> selectGwanlibiDetailsBill(GwanlibiVO vo);	
 	
 	// 관리비 등록
 	public int insertMaintenanceCost(GwanlibiVO vo);

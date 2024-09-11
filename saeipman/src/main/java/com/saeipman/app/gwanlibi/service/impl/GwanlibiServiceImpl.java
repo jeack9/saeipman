@@ -47,8 +47,10 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 	
 	// 관리비 항목 등록
 	@Override
-	public int addtItems(List<GwanlibiVO> vo) {
-		return gwanlibiMapper.insertItems(vo);
+	public void addtItems(List<GwanlibiVO> list) {
+		for(GwanlibiVO item : list) {
+			gwanlibiMapper.insertItems(item);
+		}
 	}
 	
 	// 관리비 상세 내역
@@ -59,12 +61,11 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		
 		if (vo.getPaymentMonth() == null) {
 			// 현재 날짜를 VO에 담아주기.
-			Date now = new Date();
-			System.err.println(now);
+			Date now = new Date();			
+			//System.err.println(now);
 			vo.setPaymentMonth(now);
 			System.err.println(vo.getPaymentMonth());
-		}
-		
+		}		
 		return gwanlibiMapper.selectGwanlibiDetailsBill(vo);
 	}
 	

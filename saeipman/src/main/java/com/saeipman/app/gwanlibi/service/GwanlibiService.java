@@ -19,7 +19,7 @@ public interface GwanlibiService {
 	public int getUpdateVesion(String buildingId);
 	
 	// 관리비 항목 등록
-	public int addtItems(List<GwanlibiVO> vo);
+	public void addtItems(List<GwanlibiVO> vo);
 	
 	// 사용자의 건물별 관리비 상세 내역
 	public List<GwanlibiVO> detailsBillList(GwanlibiVO vo);
