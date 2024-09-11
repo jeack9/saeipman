@@ -15,7 +15,7 @@
                          ON  c.room_id = g.room_id 
                JOIN MONTH_GWANLIBI m
                          ON g.month_gwanlibi_no =  m.month_gwanlibi_no
-        WHERE TO_CHAR(payment_month,'yyyymm') = #{paymentMonth}
+        WHERE TO_CHAR(payment_month,'yyyy-MM') = #{paymentMonth}
 	</select>
 	<!-- 관리비 납부내역 조회 -->
 
