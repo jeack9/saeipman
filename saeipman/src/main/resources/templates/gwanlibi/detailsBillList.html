@@ -154,8 +154,10 @@
 			// get date value
 			calMonthKo.on('change', () => {
 				//console.log(calMonthKo);
-				let paymentMonth = calMonthKo.getDate().getFullYear() + '-' + `${calMonthKo.getDate().getMonth() + 1}`.padStart(2, '0');
+				let paymentMonth = dateToYM(calMonthKo.getDate()); //.getFullYear() + '-' + `${calMonthKo.getDate().getMonth() + 1}`.padStart(2, '0');
 				let buildingId = [[${ buildingId }]];
+				console.log(calMonthKo.getDate());
+				console.log(paymentMonth);
 				//
 				$.ajax({
 					url: `/${ctxPath}/detailsBillList`,
@@ -170,7 +172,7 @@
 						gridLoad();
 						total();
 					},
-					fail: function (err) {
+					error: function(err) {
 						console.log(err);
 					}
 				});
