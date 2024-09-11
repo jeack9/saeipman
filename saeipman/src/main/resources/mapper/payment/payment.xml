@@ -16,6 +16,7 @@
                JOIN MONTH_GWANLIBI m
                          ON g.month_gwanlibi_no =  m.month_gwanlibi_no
         WHERE TO_CHAR(payment_month,'yyyy-MM') = #{paymentMonth}
+        AND g.payment_yn = 1
 	</select>
 	<!-- 관리비 납부내역 조회 -->
 
