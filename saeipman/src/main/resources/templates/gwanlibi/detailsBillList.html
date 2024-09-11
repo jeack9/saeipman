@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}" >
+	layout:decorate="~{common/layouts/default_layout}">
 
 <head>
 	<meta charset="UTF-8">
@@ -37,145 +37,185 @@
 </head>
 
 <body>
-<div layout:fragment="Main">
-	<div>
-		<br>
-		<br>
+	<div layout:fragment="Main">
+		<div>
+			<br> <br>
 
-		<!-- 건물명 -->
-		<p id="bName"></p>
+			<!-- 건물명 -->
+			<p id="bName"></p>
 
-		<!-- Toast UI - Date Picker -->
-		<div class="inputDiv" style="position: relative; z-index: 2; float: right;">
-			<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-				<input type="text" id="datepicker-input-ko" aria-label="Year-Month">
-				<span class="tui-ico-date"></span>
+			<!-- Toast UI - Date Picker -->
+			<div class="inputDiv" style="position: relative; z-index: 2; float: right;">
+				<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+					<input type="text" id="datepicker-input-ko" aria-label="Year-Month">
+					<span class="tui-ico-date"></span>
+				</div>
+				<div class="datepicker-cell" id="datepicker-month-ko" style="margin-top: -1px;"></div>
 			</div>
-			<div class="datepicker-cell" id="datepicker-month-ko" style="margin-top: -1px;"></div>
+
+			<br> <br>
+
+			<!-- Toast UI - Grid -->
+			<div id="grid" style="position: relative; z-index: 1;"></div>
+
+			<hr style="color: black">
+			<table class="table" style="width: 100%;">
+				<tbody>
+					<tr>
+						<th style="width: 33.33%; color: #385d61;">TOTAL</th>
+						<td id="totalGwanlibi" style="width: 33.33%;"></td>
+						<td id="totalGwanlibiByGagu" style="width: 33.33%;"></td>
+					</tr>
+				</tbody>
+			</table>
+			<hr style="color: black">
+
+			<!-- todo 관리비아이디 구하기. script에서 클릭 이벤트 하던지 -->
+			<button class="btn btn-light insertUpdateBtn">관리비 등록 / 수정</button>
+
+			<br>
 		</div>
 
-		<br>
-		<br>
+		<script th:inline="javascript">
+			// 관리비 등록/수정 버튼 숨기기 - jQuery
+			$('.insertUpdateBtn').hide();
 
-		<!-- Toast UI - Grid -->
-		<div id="grid" style="position: relative; z-index: 1;"></div>
+			// JavaScript에서 Thymeleaf 변수 사용하기 //
+			/* 1. <script th:inline="javascript">
+			   2. Thymeleaf 변수 사용 */
+			let detailsList = [[${ detailsList }]];
+			let payDate = detailsList[0].paymentMonth;
+			console.log(detailsList);
 
-		<hr style="color: black">
-		<table class="table" style="width: 100%;">
-			<tbody>
-				<tr>
-					<th style="width: 33.33%; color: #385d61;">TOTAL</th>
-					<td id="totalGwanlibi" style="width: 33.33%;"></td>
-					<td id="totalGwanlibiByGagu" style="width: 33.33%;"></td>
-				</tr>
-			</tbody>
-		</table>
-		<hr style="color: black">
+			// 해당 건물의 관리 비용 총합계 - number format (, 원)
+			function total() {
+				let totalGwanlibi = 0;
+				for (i in detailsList) {
+					totalGwanlibi += detailsList[i].gwanlibiItemMoney;
+				}
+				//console.log(tatalGwanlibi);
+				$('#totalGwanlibi').text(totalGwanlibi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
 
-		<!-- todo 관리비아이디 구하기. script에서 클릭 이벤트 하던지 -->
-		<button class="btn btn-light insertUpdateBtn">관리비 등록 / 수정</button>
 
-		<br>
-	</div>
-
-	<script th:inline="javascript">
-		// 관리비 등록/수정 버튼 숨기기 - jQuery
-		$('.insertUpdateBtn').hide();
-
-		// JavaScript에서 Thymeleaf 변수 사용하기 //
-		/* 1. <script th:inline="javascript">
-		   2. Thymeleaf 변수 사용 */
-		let detailsList = [[${ detailsList }]];
-		let payDate = detailsList[0].paymentMonth;
-		console.log(detailsList);
-
-		// 해당 건물의 관리 비용 총합계 - number format (, 원)
-		function total() {
-			let totalGwanlibi = 0;
-			for (i in detailsList) {
-				totalGwanlibi += detailsList[i].gwanlibiItemMoney;
+				// 가구별 관리비 총합계
+				let totalGwanlibiByGagu = 0;
+				for (i in detailsList) {
+					totalGwanlibiByGagu += Math.floor(detailsList[i].gwanlibiByGagu);
+				}
+				//console.log(tatalGwanlibiByGabu);
+				$('#totalGwanlibiByGagu').text(totalGwanlibiByGagu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
 			}
-			//console.log(tatalGwanlibi);
-			$('#totalGwanlibi').text(totalGwanlibi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
 
 
-			// 가구별 관리비 총합계
-			let totalGwanlibiByGagu = 0;
-			for (i in detailsList) {
-				totalGwanlibiByGagu += Math.floor(detailsList[i].gwanlibiByGagu);
-			}
-			//console.log(tatalGwanlibiByGabu);
-			$('#totalGwanlibiByGagu').text(totalGwanlibiByGagu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
-		}
+			// 건물명 출력
+			$('#bName').text(detailsList[0].buildingName);
 
 
-		// 건물명 출력
-		$('#bName').text(detailsList[0].buildingName);
+			// todo
+			$('.insertUpdateBtn').click(function () {
+				const offset = 1000 * 60 * 60 * 9;
+				const koreaNow = new Date(new Date(detailsList[0].paymentMonth).getTime() + offset);
+				const splitDate = koreaNow.toISOString().split('T')[0].split('-');
+				let resultDate = splitDate[0] + '-' + splitDate[1];
+				console.log('===========================================');
+				console.log(resultDate);
+				console.log('===========================================');
+				//location.href(`/gwanlibiChargeInsertUpdatePage?buildingId=${detailsList[0].buildingId}&paymentMonth=${detailsList[0].paymentMonth}`);
+				$(location).attr('href', `${ctxPath}/gwanlibiChargeInsertUpdatePage?buildingId=${detailsList[0].buildingId}&paymentMonth=${resultDate}`);
+			})
 
 
-		// todo
-		$('.insertUpdateBtn').click(function() {
-			const offset = 1000 * 60 * 60 * 9;
-			const koreaNow = new Date(new Date(detailsList[0].paymentMonth).getTime() + offset);
-			const splitDate = koreaNow.toISOString().split('T')[0].split('-');
-			let resultDate = splitDate[0] + '-' + splitDate[1];
-			console.log('===========================================');
-			console.log(resultDate);
-			console.log('===========================================');
-			//location.href(`/gwanlibiChargeInsertUpdatePage?buildingId=${detailsList[0].buildingId}&paymentMonth=${detailsList[0].paymentMonth}`);
-			$(location).attr('href', `/gwanlibiChargeInsertUpdatePage?buildingId=${detailsList[0].buildingId}&paymentMonth=${resultDate}`);
-		})
-
-
-		// TOAST UI //
-		// async - await
-		$(document).ready(() => {
-			gridLoad();
-			dateLoad();
-			total();
-		});
-
-
-		// Toast UI - Date Picker //
-		// # reference : https://nhn.github.io/tui.date-picker/latest/tutorial-example05-picking-month
-		// # reference : https://nhn.github.io/tui.date-picker/latest/DatePicker#event-change
-		let dateLoad = () => {
-			let calMonthKo = new tui.DatePicker('#datepicker-month-ko', {
-				date: new Date(),
-				language: 'ko',
-				type: 'month',
-				input: {
-					element: '#datepicker-input-ko',
-					format: 'yyyy년 M월'
-					//format: 'yyyy-MM'
-				},
+			// TOAST UI //
+			// async - await
+			$(document).ready(async() => {
+				await gridLoad();
+				await dateLoad();
+				await total();
 			});
 
-			// get date value
-			calMonthKo.on('change', () => {
-				//console.log(calMonthKo);
-				let paymentMonth = dateToYM(calMonthKo.getDate()); //.getFullYear() + '-' + `${calMonthKo.getDate().getMonth() + 1}`.padStart(2, '0');
-				let buildingId = [[${ buildingId }]];
-				console.log(calMonthKo.getDate());
-				console.log(paymentMonth);
-				//
-				$.ajax({
-					url: `/${ctxPath}/detailsBillList`,
-					method: 'post',
-					data: { buildingId, paymentMonth },
-					success: function(result) {
-						$('#grid').html('');
-						detailsList = result.list;
-						for (i in detailsList) {
-							console.log(detailsList[i])
+
+			// Toast UI - Grid //
+			// # reference : https://adjh54.tistory.com/95
+			// # reference : https://park-duck.tistory.com/entry/javascript-1-Toast-UI-Grid-%EA%B8%B0%EC%B4%88API-%EC%82%AC%EC%9A%A9%EB%B2%95
+			// 01. Grid 생성.
+			// return void
+			function gridLoad() {
+				const Grid = tui.Grid;
+				// 02. Grid theme 설정. (clean, stripe, default)
+				Grid.applyTheme('stripe');
+
+				// 03. Toast UI Grid 구성.
+				const grid = new Grid({
+					// ================================== 공통 옵션 적용 ================================== //
+					el: document.getElementById('grid'), // 필수 : Container element
+					data: detailsList,
+					scrollX: false,
+					scrollY: false,
+					// ================================== 컬럼 옵션 적용 ================================== //
+					columns: [
+						// [Column-1] 관리비 항목 명
+						{
+							header: '관리비 항목 명',           // [필수] 컬럼 이름
+							name: 'gwanlibiName',           // [필수] 컬럼 매핑 이름 값
+							resizable: true,                // [선택] 컬럼의 리사이즈 여부 옵션
+							align: 'center'
+						},
+						// [Column-2] 관리 비용
+						{
+							header: '관리 비용',
+							name: 'strGwanlibiItemMoney',
+							resizable: true,
+							align: 'center'
+						},
+						// [Column-3] 가구별 관리비
+						{
+							header: '가구별 관리비',
+							name: 'strGwanlibiByGagu',
+							resizable: true,
+							align: 'center'
 						}
+					]
+				});
+			}
+			
+			
+			// Toast UI - Date Picker //
+			// # reference : https://nhn.github.io/tui.date-picker/latest/tutorial-example05-picking-month
+			// # reference : https://nhn.github.io/tui.date-picker/latest/DatePicker#event-change
+			function dateLoad() {
+				let calMonthKo = new tui.DatePicker('#datepicker-month-ko', {
+					date: new Date(),
+					language: 'ko',
+					type: 'month',
+					input: {
+						element: '#datepicker-input-ko',
+						format: 'yyyy년 M월'
+						//format: 'yyyy-MM'
+					},
+				});
+
+				// get date value
+				calMonthKo.on('change', () => {
+					//console.log(calMonthKo);
+					let paymentMonth = dateToYM(calMonthKo.getDate());
+					let buildingId = [[${ buildingId }]];
+					//console.log(calMonthKo.getDate());
+					//console.log(paymentMonth);
+					
+					$.ajax({
+						url: `${ctxPath}/detailsBillList?buildingId=${buildingId}&paymentMonth=${paymentMonth}`,
+						method: 'post'
+					}).done(function(result) {
+						console.log(result)
+						$('#grid').html('');
+						detailsList = result.detailsList;
 						gridLoad();
 						total();
-					},
-					error: function(err) {
+						console.log('성공');
+					}).fail(function(err) {
 						console.log(err);
-					}
-				});
+					})
+
 
 				// 등록/수정 버튼 출력 여부 설정 : 전월에만 보이기
 				let now = new Date();
@@ -188,54 +228,8 @@
 			});
 		}
 
-
-
-		// Toast UI - Grid //
-		// # reference : https://adjh54.tistory.com/95
-		// # reference : https://park-duck.tistory.com/entry/javascript-1-Toast-UI-Grid-%EA%B8%B0%EC%B4%88API-%EC%82%AC%EC%9A%A9%EB%B2%95
-		// 01. Grid 생성.
-		// return void
-		const gridLoad = () => {
-			const Grid = tui.Grid;
-			// 02. Grid theme 설정. (clean, stripe, default)
-			Grid.applyTheme('stripe');
-
-			// 03. Toast UI Grid 구성.
-			const grid = new Grid({
-				// ================================== 공통 옵션 적용 ================================== //
-				el: document.getElementById('grid'), // 필수 : Container element
-				data: detailsList,
-				scrollX: false,
-				scrollY: false,
-				// ================================== 컬럼 옵션 적용 ================================== //
-				columns: [
-					// [Column-1] 관리비 항목 명
-					{
-						header: '관리비 항목 명',           // [필수] 컬럼 이름
-						name: 'gwanlibiName',           // [필수] 컬럼 매핑 이름 값
-						resizable: true,                // [선택] 컬럼의 리사이즈 여부 옵션
-						align: 'center'
-					},
-					// [Column-2] 관리 비용
-					{
-						header: '관리 비용',
-						name: 'strGwanlibiItemMoney',
-						resizable: true,
-						align: 'center'
-					},
-					// [Column-3] 가구별 관리비
-					{
-						header: '가구별 관리비',
-						name: 'strGwanlibiByGagu',
-						resizable: true,
-						align: 'center'
-					}
-				]
-			});
-		}
-
-	</script>
-</div>
+		</script>
+	</div>
 </body>
 
 </html>

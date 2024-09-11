@@ -165,21 +165,25 @@
 		    deleteBtn.addEventListener('click', () => {
 		    	grid.removeCheckedRows();
 			});
-		    
-
+			let buildingId = [[${buildingId}]];
 		    $('.saveBtn').on('click', function() {
+		    	console.log('클릭');
+		    	if(!buildingId) return;
 				$.ajax({
-					url: `/${ctxPath}/insertItems`,
+					url: `${ctxPath}/insertItems?buildingId=${buildingId}`,
 					method: 'post',
 					contentType: 'application/json',
 					data: JSON.stringify(grid.getData())
-				}).done(function(data) {
-
+				}).done(function(result) {
+					console.log('success');
+					console.log(result);
+					alert(result + '건이 정상적으로 업데이트 되었습니다')
 				}).fail(function(err){
+					console.log('fail');
 					console.log(err);
-				})
+				});
 
-			})
+			});
 
 		</script>
 	</div>

@@ -29,7 +29,7 @@ public class GwanlibiController {
 
 	// 로그인한 사용자(임대인)의 건물들을 목록으로 출력하고, 해당 건물의 전월, 금월 관리비 출력 화면으로 이동
 	@GetMapping("gwanlibiList")
-	public String gwanlibiList(Model model, @RequestParam(name = "imdaeinId", defaultValue = "test01") String imdaeinId, BuildingPageDTO dto) {
+	public String gwanlibiList(Model model, @RequestParam(name = "imdaeinId", defaultValue = "user02") String imdaeinId, BuildingPageDTO dto) {
 		// 한 페이지당 출력할 건물 개수
 		dto.setAmount(6);
 		
@@ -47,12 +47,11 @@ public class GwanlibiController {
 	
 	// 관리비 항목 리스트
 	@GetMapping("itemList")
-	public String itemList(@RequestParam("buildingId") String buildingId, Model model) {
-		
+	public String itemList(@RequestParam(name = "buildingId") String buildingId, Model model) {
 		List<GwanlibiVO> list = gwanlibiService.itemList(buildingId);
 		
 		model.addAttribute("list", list);
-		
+		model.addAttribute("buildingId", buildingId);
 		
 		return "gwanlibi/itemList";
 	}
@@ -60,19 +59,23 @@ public class GwanlibiController {
 	// 관리비 항목 등록 - 아작스
 	@PostMapping("insertItems")
 	@ResponseBody
-	public String insertItems(@RequestBody List<GwanlibiVO> vo, String buildingId) {
+	public int insertItems(@RequestBody List<GwanlibiVO> list, @RequestParam(name = "buildingId") String buildingId) {
+		int cnt = 0;
+		System.err.println(buildingId + "건물번호");
 		// 관리비 항목 최대 버전 + 1 가져오기.
 		int version = gwanlibiService.getUpdateVesion(buildingId);
 		
 		// 버전 값 넣어주기
-		for(GwanlibiVO item : vo) {
+		for(GwanlibiVO item : list) {
 			item.setVersion(version);
+			item.setBuildingId(buildingId);
+			cnt++;
 		}
 		
 		// 관리비 항목
-		gwanlibiService.addtItems(vo);
+		gwanlibiService.addtItems(list);
 		
-		return "redirect:itemList";
+		return cnt;
 	}
 	
 	// 건물별 관리비 상세 내역 출력 화면으로 이동
@@ -121,7 +124,7 @@ public class GwanlibiController {
 			list.setStrGwanlibiItemMoney(result);
 		}
 
-		map.put("list", detailsList);
+		map.put("detailsList", detailsList);
 		return map;
 	}
 	
