@@ -90,7 +90,7 @@
 		    m.GROUP_ID,
 		    m.room_no,
 		    m.accept_state,
-		    m.visits_date,
+		    m.visits_date1,
 		    m.reg_date,
 		    m.mod_date,
 		    m.alert_type,
@@ -127,7 +127,7 @@
 						GROUP_ID,
 						ACCEPT_STATE,
 						room_no,
-						visits_date,
+						visits_date1,
 						reg_date,
 						alert_type,
 						room_id

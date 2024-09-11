@@ -1,5 +1,6 @@
 package com.saeipman.app.minwon.service;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,8 +18,9 @@ public class MinwonVO {
 	private String roomNo; // 방번호
 	private String acceptState; // 처리상태
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date visitsDate; // 방문일자
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	private Timestamp visitsDate; // 방문일자
+	
 	private Date regDate; // 작성일자
 	private Date modDate; // 수정일자
 	private Integer alertType; //알림유형
