@@ -9,59 +9,79 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>방 목록</title>
-    <style></style>
+    <style>
+      .offVisible {
+        visibility: hidden;
+      }
+    </style>
   </head>
   <body>
     <div layout:fragment="Main">
       <div class="container">
         <div class="row">
           <div class="col-md-6">
-            <button>건물선택</button>
-            <button>초기화</button>
+            <button type="button" class="btn btn-outline-primary"><i class="fa fa-home me-2"></i>건물 선택</button>
+            <button type="button" class="btn btn-outline-primary">선택 초기화</button>
           </div>
           <div class="col-md-6">
             <div>
               납부상태:
-              <input class="form-check-input" type="radio" name="gridRadios"
-								id="gridRadios1" value="option1" checked> <label
-								class="form-check-label" for="gridRadios1"> 전체
-							</label>
-							<input class="form-check-input" type="radio" name="gridRadios"
-								id="con2" value="option1"> <label
-								class="form-check-label" for="con2"> 연체
-							</label>
-							<input class="form-check-input" type="radio" name="gridRadios"
-								id="con2" value="option1"> <label
-								class="form-check-label" for="con2"> 완납
-							</label>
+              <input class="form-check-input" type="radio" name="paymentState" id="pay1" value="option1" checked />
+              <label class="form-check-label" for="pay1"> 전체 </label>
+              <input class="form-check-input" type="radio" name="paymentState" id="pay2" value="option1" />
+              <label class="form-check-label" for="pay2"> 연체 </label>
+              <input class="form-check-input" type="radio" name="paymentState" id="pay3" value="option1" />
+              <label class="form-check-label" for="pay3"> 완납 </label>
             </div>
-            <div>입주상태:</div>
+            <div>
+              입주상태:
+              <input class="form-check-input" type="radio" name="ipjuState" id="ipju1" value="option1" checked />
+              <label class="form-check-label" for="ipju1"> 전체 </label>
+              <input class="form-check-input" type="radio" name="ipjuState" id="ipju2" value="option1" />
+              <label class="form-check-label" for="ipju2"> 공실 </label>
+              <input class="form-check-input" type="radio" name="ipjuState" id="ipju3" value="option1" />
+              <label class="form-check-label" for="ipju3"> 입주 </label>
+              <!-- <input class="form-check-input" type="radio" name="ipjuState" id="ipju4" value="option1" />
+              <label class="form-check-label" for="ipju4"> 입주 예정 </label> -->
+            </div>
           </div>
         </div>
-        <div class="row">
+        <!-- div.roomWrap -->
+        <div class="row roomWrap gx-4">
           <p>총 호수: 3(거주:1/공실2)</p>
-          <div class="col-md-4 col-sm-6">
-            <h1>건물명</h1>
+          <!-- Room Card -->
+          <div class="col-md-5 col-sm-6 border border-dark me-3">
+            <div class="row mb-1 mt-1">
+              <div class="col">
+                <div class="d-flex justify-content-between">
+                  <h4>건물명</h4>
+                  <div><button type="button" class="btn btn-secondary offVisible">입주 예정</button></div>
+                  <h5>월세</h5>
+                  <div><button type="button" class="btn btn-success">입주</button></div>
+                </div>
+              </div>
+            </div>
+            <div class="row gx-0">
+              <h4 class="col">101호 &nbsp 홍길동</h4>
+              <div class="col text-end">
+                <button type="button" class="btn btn-danger rounded-pill">연체</button>
+              </div>
+            </div>
+            <h4 class="row gx-0">(보)300만원 (월) 30만원 (관)15만원</h4>
+            <div class="row gx-0">계약기간: 2017.01.01 ~ 2020.01.01 (12개월)</div>
+            <div class="row gx-0">
+              <div class="col-8 text-truncate">
+                <b>비고: qlrhhhhhhhhhhhhhhhhhhhhhhhhhh비고ㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗ비고</b>
+              </div>
+            </div>
+            <div class="row gx-0">
+              <button type="button" class="btn btn-info">계약정보</button>
+              <button type="button" class="btn btn-secondary">입주예약</button>
+            </div>
           </div>
-          <div class="col-md-4 col-sm-6">
-            <h1>2</h1>
-          </div>
-          <div class="col-md-4 col-sm-6">
-            <h1>3</h1>
-          </div>
-          <div class="col-md-4 col-sm-6">
-            <h1>4</h1>
-          </div>
-          <div class="col-md-4 col-sm-6">
-            <h1>5</h1>
-          </div>
-          <div class="col-md-4 col-sm-6">
-            <h1>6</h1>
-          </div>
-          <div class="col-md-4 col-sm-6">
-            <h1>7</h1>
-          </div>
+          <!-- Room Card End -->
         </div>
+        <!-- div.roomWrap END -->
       </div>
       <!-- div.container END -->
     </div>
