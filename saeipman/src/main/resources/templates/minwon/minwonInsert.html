@@ -36,7 +36,8 @@
 		
 		<div class="mb-3">
 			<label for="visitsDate">방문날짜</label>
-			<input type="datetime-local" name="visitsDate">
+			<input type="datetime-local" id="visitsDate">
+			<input type="hidden" name="visitsDate">
 		</div>
 		<div class="mb-3">
 			 <label for="formFile" class="form-label">첨부파일</label>
@@ -55,6 +56,7 @@
 		
 		function insertHandler(e){
 			e.preventDefault()
+			$('[name="visitsDate"]').val(  $("#visitsDate").val().replace("T", " "))
 			insertForm.submit();
 		}
 	</script>

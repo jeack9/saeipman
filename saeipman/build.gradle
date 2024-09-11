@@ -53,7 +53,8 @@ dependencies {
 	//ocr
 	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 	
-	
+	//sms
+	implementation 'net.nurigo:sdk:4.3.0'
 }
 
 
