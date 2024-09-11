@@ -67,7 +67,7 @@ public class BuildingController {
 		List<String> fileName = fileService.getFileName(buildingVO.getBuildingId());
 		System.out.println("파일" + fileName);
 		if (result == null) {
-			return result;
+			return null;
 		}
 
 		result.setFileName(fileName);
@@ -79,13 +79,17 @@ public class BuildingController {
 	public String insertBuildingForm() {
 		return "building/buildingInsert";
 	}
-
+	@GetMapping("/roomInsertTest")
+	public String roomTest() {
+		return "building/roomTest";
+	}
+	
 	@PostMapping("/buildingInsert")
 	public String insertBuilding( @RequestPart MultipartFile[] files, MultipartFile ocrFile,
 								 BuildingVO buildingVO) throws IOException {
 		fileUtill.setFolder("건물");
-		String groupId = fileUtill.upload(files);
-		String ocr = fileUtill.ocrUpload(ocrFile);
+		String groupId = fileUtill.multiUpload(files);
+		String ocr = fileUtill.singleUpload(ocrFile);
 		buildingVO.setGroupId(groupId);
 		buildingVO.setOcrFileName(ocr);
 		int success = buildingService.insertBuilding(buildingVO);

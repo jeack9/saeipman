@@ -13,28 +13,21 @@
 					<div class="ps-4" style="font-size: 18px;">[[${building.doroAddr}]]
 						[[${building.detailsAddr}]]</div>
 					<div class="ps-4" style="font-size: 18px;">[[${building.totalGagu}]]세대</div>
-
 				</li>
 			</ul>
 		</th:block>
 		<button type="button"
 			th:onclick="|location.href='@{/buildingInsert}'|"
 			class="btn btn-outline-primary m-2">건물추가</button>
-			
-		<!-- 페이징  -->
-		<!-- <nav aria-label="Page navigation example ">
-			<ul class="pagination">
-			
-				<li class="page-item"><a class="page-link"
-					th:href="@{/buildingList?pageNum=1}" aria-label="Previous"> <span
-						aria-hidden="true">처음</span>
+		<!-- 페이징 -->
+		<nav aria-label="Page navigation example">
+			<ul class="pagination justify-content-center">
+				<li class="page-item" th:if="${page.startPage > 1}"><a
+					class="page-link"
+					th:href="@{/buildingList?pageNum={page}(page = ${page.startPage -1})}"
+					aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 				</a></li>
-				<li class="page-item" th:if="${page.startPage > 1}">
-					startPage가 1보다 크면 이전 버튼 보이게 <a class="page-link"
-					th:href="@{/buildingList?pageNum={page} (page = ${page.startPage -1})}"
-					aria-label="Previous"> <span aria-hidden="true">이전</span>
-				</a>
-				</li>
+
 				<th:block th:with="start = ${page.startPage}, end = ${page.endPage}">
 					<li class="page-item"
 						th:with="start = ${page.startPage}, end = ${page.endPage}"
@@ -43,40 +36,14 @@
 						th:href="@{/buildingList?pageNum={page} (page = ${pageButton})}"
 						th:text=${pageButton}></a></li>
 				</th:block>
+
+
 				<li class="page-item" th:if="${page.next}"><a class="page-link"
-					th:href="@{/buildingList?pageNum={page} (page = ${page.endPage +1})}"
-					aria-label="Next"> <span aria-hidden="true">다음</span>
-				</a></li>
-				<li class="page-item"><a class="page-link"
-					th:href="@{/buildingList?pageNum={page} (page = ${page.realEnd})}"
-					aria-label="Previous"> <span aria-hidden="true">끝</span>
+					th:href="@{/buildingList?pageNum={page}(page = ${page.endPage +1})}"
+					aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 				</a></li>
 			</ul>
-		</nav> -->
-		<nav aria-label="Page navigation example">
-				 <ul class="pagination justify-content-center"> 
-					<li class="page-item" th:if="${page.startPage > 1}">
-					<a class="page-link" th:href="@{/buildingList?pageNum={page}(page = ${page.startPage -1})}"
-						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-					</a></li>
-					
-					<th:block
-						th:with="start = ${page.startPage}, end = ${page.endPage}">
-						<li class="page-item"
-							th:with="start = ${page.startPage}, end = ${page.endPage}"
-							th:each="pageButton : ${#numbers.sequence(start, end)}"><a
-							class="page-link"
-							th:href="@{/buildingList?pageNum={page} (page = ${pageButton})}"
-							th:text=${pageButton}></a></li>
-					</th:block>
-
-					
-					<li class="page-item" th:if="${page.next}">
-					<a class="page-link" th:href="@{/buildingList?pageNum={page}(page = ${page.endPage +1})}"
-						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-					</a></li>
-				</ul>
-			</nav>
+		</nav>
 	</div>
 	<!-- end 페이징 -->
 
@@ -150,7 +117,8 @@
 			</div>
 			<div class="form-group col-md-5">
 				<label for="buildingHeigh" class="form-label">건물 높이 </label> <input
-					type="text" id="buildingHeigh" name="buildingHeigh" class="form-control">
+					type="text" id="buildingHeigh" name="buildingHeigh"
+					class="form-control">
 			</div>
 			<div class="form-check form-switch">
 				<label for="liftYn">승강기 여부 </label> <input type="checkbox"
