@@ -29,5 +29,6 @@ public class GwanlibiVO {
 	
 	private Integer gwanlibiItemNo;
 	private String variableYn; // 관리비 변동 여부
+	private Integer version;
 	
 }

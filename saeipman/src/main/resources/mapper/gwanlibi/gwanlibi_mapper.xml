@@ -69,16 +69,59 @@
 	</select>
 	
 	<!-- 관리비 항목 설정 화면 : 건물 관리비 항목 출력 -->	
-	<select id="selectItemList" >		
+<!-- 	<select id="selectItemList" >		
 		SELECT gwanlibi_item_no,
 		       building_id,
 		       gwanlibi_name,
 		       variable_yn
 		FROM   building_gwanlibi_item
 		WHERE  building_id = #{buildingId}
+	</select> -->
+	<!-- 최대값 버전만 셀렉트 -->
+	<select id="selectItemList" >
+	
+		SELECT   gwanlibi_item_no,
+		         building_id,
+		         gwanlibi_name,
+		         variable_yn,
+					        (SELECT NVL(MAX(version), 0)
+					         FROM   building_gwanlibi_item) version
+		FROM     building_gwanlibi_item
+		WHERE    building_id = #{buildingId}
+		GROUP BY gwanlibi_item_no, building_id, gwanlibi_name, variable_yn
+		
 	</select>
 	
+	<!-- 관리비 항목 버전 -->
+	<select id="selectUpdateVesion">
+		SELECT (NVL(MAX(version), 0)) + 1
+		FROM   building_gwanlibi_item
+		WHERE  building_id = #{buildingId}
+	</select>	
+	<!-- 관리비 항목 등록 -->
+	<insert id="insertItems">
 	
+		<selectKey keyProperty="gwanlibiItemNo" order="BEFORE" resultType="int">
+			SELECT (NVL(MAX(gwanlibi_item_no), 0)) + 1
+			FROM   building_gwanlibi_item
+		</selectKey>		
+		
+		INSERT INTO
+			building_gwanlibi_item ( gwanlibi_item_no
+								   , building_id
+								   , gwanlibi_name
+								   , variable_yn
+								   , version )
+		VALUES ( #{gwanlibiItemNo}
+			   , #{buildingId}
+			   , #{gwanlibiName}
+			   , #{variableYn}
+			   , #{version} )		
+			   	   
+	</insert>
+	
+	
+
 	<!-- 관리비 등록 -->
 	<insert id="insertMaintenanceCost">
 	

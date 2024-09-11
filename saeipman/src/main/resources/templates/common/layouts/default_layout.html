@@ -9,6 +9,7 @@
 <title>saeipman</title>
 <th:block th:replace="~{common/configs/default_config :: BootstrapConfig}"></th:block>
 <th:block th:replace="~{common/configs/default_config :: jQueryConfig}"></th:block>
+<script th:src="@{/js/common.js}"></script>
 <script type="text/javascript" th:inline="javascript">
 	let ctxPath = [[${contextPath}]];
 	let csrf = $("meta[name='_csrf']").attr("value");
