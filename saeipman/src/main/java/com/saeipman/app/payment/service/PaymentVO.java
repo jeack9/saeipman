@@ -9,10 +9,10 @@ import lombok.Data;
 @Data
 public class PaymentVO {
 
-	private String payMonth;
+	private String paymentMonth;
 	private int totalMoney;
 	private int gaguGwanlibi;
-	private String GwanlibiNo;
+	private String monthGwanlibiNo;
 	private String buildingId;
 	//private String roomId;
 	private String paymentHistory;
