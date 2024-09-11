@@ -5,6 +5,11 @@ function dateToYear(date){
 	return date.getFullYear();	
 }
 
+// 월
+function dateToM(date){
+	return date.getMonth() + 1;
+}
+
 // 년월 ex) 2024-09
 function dateToYM(date){
 	return date.getFullYear() + '-' + ((date.getMonth() + 1)+'').padStart(2, '0');

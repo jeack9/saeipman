@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}">
+<head>
+<meta charset="UTF-8">
+</head>
+<style>
+</style>
+<body>
+	<div layout:fragment="Main">
+		<select class="form-select mb-6" aria-label="Default select example"
+			id="option">
+			<option selected>조회할 기간 선택(최근 3개월)</option>
+		</select>
+
+
+		<div class="col-sm-12 col-xl-6">
+			<div class="bg-light rounded h-100 p-4">
+				<h6 class="mb-4">납부내역</h6>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th scope="col">월세</th>
+							<th scope="col">관리비</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td scope="row">1</td>
+							<td scope="row" id="monthGwanlibi"></td>
+							<!-- append 활용해서 데이터 출력하는 부분 넣기 -->
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<script>
+			let date = new Date();
+			let nowMonth = dateToM(date);
+			let startMonth = nowMonth - 4;
+			let year = dateToYear(date)
+			let yearM;
+			for (let i = startMonth; i < nowMonth - 1; i++) {
+				let optionDate = dateToM(new Date(year, i, 1));
+				yearM = dateToYM(new Date(year, i, 1))
+				//console.log(dateToM(new Date(year, i, 1)));
+				$('#option').append(
+						`<option value="${yearM}">` + optionDate
+								+ '월 </option>');
+			}
+
+			$('#option').on('click', payMonth)
+
+			function payMonth() {
+				let paymentMonth = event.target.value;
+				$.ajax(ctxPath + "/paymentAjax", {
+					type : "GET",
+					//contentType : "application/json",
+					data : {pay : paymentMonth},
+				})
+				.done(function(pay){
+					$('#monthGwanlibi').val(pay.gaguGwanlibi)
+				})
+			}
+			
+			$('#monthGwanlibi').append()
+		</script>
+	</div>
+</body>
+</html>

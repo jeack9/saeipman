@@ -21,14 +21,14 @@ public class PaymentServiceImpl implements PaymentService {
 		return paymentMapper.selectMonthPay(payVO);
 	}
 
-	@Override
-	public PaymentVO selectPaymentHistory(PaymentVO payVO) {
-		return paymentMapper.PayHistory(payVO);
-	}
-
-	@Override
-	public PaymentVO payAmountInfo(PaymentVO payVO) {
-		return paymentMapper.PayAmount(payVO);
-	}
+//	@Override
+//	public PaymentVO selectPaymentHistory(PaymentVO payVO) {
+//		return paymentMapper.PayHistory(payVO);
+//	}
+//
+//	@Override
+//	public PaymentVO payAmountInfo(PaymentVO payVO) {
+//		return paymentMapper.PayAmount(payVO);
+//	}
 
 }

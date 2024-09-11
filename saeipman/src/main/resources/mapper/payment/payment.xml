@@ -2,11 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.saeipman.app.payment.mapper.PaymentMapper">
 
-	<!-- 관리비 기간조회 -->
-	<select id="selectMonth" resultType="PaymentVO">
-		SELECT *
-		FROM month_gwanlibi
-		WHERE TO_CHAR(payment_month,'yyyymm') = #{payMonth}
+	<!-- 관리비 조회 -->
+	<select id="selectMonthPay" resultType="PaymentVO">
+		SELECT c.room_id
+		     , g.payment_yn
+		     , m.month_gwanlibi_no
+		     , m.payment_month  
+		     , m.gagu_gwanlibi
+        FROM IMCHAIN i join constract_info c
+                         ON i.imchain_id = c.imchain_phone
+               join gagu_gwanlibi_history g
+                         ON  c.room_id = g.room_id 
+               JOIN MONTH_GWANLIBI m
+                         ON g.month_gwanlibi_no =  m.month_gwanlibi_no
+        WHERE TO_CHAR(payment_month,'yyyy-MM') = #{paymentMonth}
 	</select>
 	<!-- 관리비 납부내역 조회 -->
 
