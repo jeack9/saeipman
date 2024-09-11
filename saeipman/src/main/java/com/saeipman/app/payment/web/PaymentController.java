@@ -19,8 +19,7 @@ public class PaymentController {
 		this.paymentService = paymentService;
 	}
 	
-	//기간에 따른 납부 조회
-	
+	//납부 페이지
 	@GetMapping("paymentInfo")
 	public String paymentInfo(PaymentVO payVO, Model model) {
 		
@@ -30,8 +29,7 @@ public class PaymentController {
 		return "Payment/paymentInfo";
 	}
 	
-	//
-	
+	//기간에 따른 납부 조회
 	@GetMapping("paymentAjax")
 	@ResponseBody
 	public PaymentVO paymentInfo(@RequestParam("pay") String paymentMonth) {
