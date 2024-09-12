@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saeipman.app.message.mapper.MsgMapper">
+	<select id="selectMinwonMsg" resultType="String">
+		select alert_msg from alert where alert_type = #{alertType}
+	</select>
+
+
+	<!-- 임대인 연락처 (민원) -->
+	<select id="selectPhone" resultType="String">
+		select fIND_IMDAEIN_PHONE(#{roomId}) phone from dual
+	</select>
+
+
+
+</mapper>

@@ -57,7 +57,8 @@
             ROOM_INFO R ON M.ROOM_ID = R.ROOM_ID
       	JOIN 
             BUILDING_INFO B ON R.BUILDING_ID = B.BUILDING_ID
-
+            
+		where R.BUILDING_ID = #{buildingId}
       	order by post_no desc
                 
  	)a      where 
