@@ -10,8 +10,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.saeipman.app.member.service.LoginInfoVO;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+@Data
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 	private final LoginInfoVO member;

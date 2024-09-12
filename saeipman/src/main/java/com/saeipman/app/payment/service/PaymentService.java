@@ -1,9 +1,11 @@
 package com.saeipman.app.payment.service;
 
+import java.util.List;
+
 public interface PaymentService {
 	
 	//기간 단건조회
-	public PaymentVO selectMonthInfo(PaymentVO payVO);
+	public List<PaymentVO> selectMonthInfo(PaymentVO payVO);
 	
 //	//관리비 납부내역
 //	public PaymentVO selectPaymentHistory(PaymentVO payVO);
