@@ -40,9 +40,7 @@ public class LoginController {
 	};
 
 	@GetMapping("home")
-	public void homeP(Model model) {
-		LoginInfoVO login = SecurityUtil.getLoginInfo();
-		model.addAttribute("login", login);
+	public void homeP() {
 	}
 
 	@PostMapping("login") // 로그인처리
