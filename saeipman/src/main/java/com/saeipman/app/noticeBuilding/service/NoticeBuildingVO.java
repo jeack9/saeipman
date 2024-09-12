@@ -19,7 +19,7 @@ public class NoticeBuildingVO {
 	private String groupId; // 첨부이미지
 	private Integer views; // 조회수
 	private String buildingId; // 건물아이디
-	private String buildingName;// 
+	private String buildingName;// 건물 이름
 	private String imdaeinId; // 임대인 아이디
 
 	public String[] getGroupIds() {

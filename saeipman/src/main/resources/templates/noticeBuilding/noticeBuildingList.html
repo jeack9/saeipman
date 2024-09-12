@@ -9,9 +9,12 @@
 
 			<form id="scForm" th:action="@{/noticeBuildingList}" th:method='get'
 				class="d-flex">
+				
 				<select class="form-select mb-6" aria-label="Default select example"
 					id="option">
 					<option selected>건물 목록</option>
+					<option th:each="list : ${Bname}">[[${list.buildingName}]]</option>
+					
 				</select> <input class="form-control me-2" type="search" name="scKeyword"
 					aria-label="Search" placeholder="Search" style="width: 180px;">
 				<button class="btn btn-outline-success">Search</button>
@@ -79,5 +82,7 @@
 		let url = ctxPath + '/noticeBuildingInfo?postNo=' + postNo;
 		location.href = url;
 	})
+	
+	$('#option').on('change', )
+	
 </script>
-</div>

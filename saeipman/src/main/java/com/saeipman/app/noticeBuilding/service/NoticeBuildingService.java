@@ -3,6 +3,7 @@ package com.saeipman.app.noticeBuilding.service;
 import java.util.List;
 import java.util.Map;
 
+import com.saeipman.app.building.service.BuildingVO;
 import com.saeipman.app.noticeBuilding.utils.PagingSearchDTO;
 
 public interface NoticeBuildingService {
@@ -24,7 +25,12 @@ public interface NoticeBuildingService {
 	// 조회수 증가
 	public int noticeBuildingViews(NoticeBuildingVO noticeBuildingVO);
 	
-	
+	// 페이징
 	public int totalPage(PagingSearchDTO pgsc);
 
+	// 임대인 소유 건물 조회
+	public List<BuildingVO> imdaeinBuilding(BuildingVO buildingVO);
+
+	
+	
 }
