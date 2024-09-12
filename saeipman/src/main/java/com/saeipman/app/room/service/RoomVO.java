@@ -1,10 +1,8 @@
 package com.saeipman.app.room.service;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Setter
-@Getter
+@Data
 public class RoomVO {
 	private String roomId; // 방 아이디 프라이머리
 	private Integer roomNo; // 방 호실

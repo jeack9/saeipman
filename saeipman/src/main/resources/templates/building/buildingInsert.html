@@ -1,112 +1,169 @@
-<div xmlns:th="http://www.thymeleaf.org"
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}"
-	layout:fragment="Main" class="container-fluid pt-4 px-4">
+	layout:decorate="~{common/layouts/default_layout}">
+<head>
+<meta charset="UTF-8">
+<title>title</title>
+<style>
+input {
+	border-width: 0 0 1px;
+}
 
-	<form th:action="@{/buildingInsert}" method="POST" name="insertForm"
-		class="row g-3" enctype="multipart/form-data">
-		<div class="col-md-4">
-			<label for="ocrFileName" class="form-label">일반 건축물 대장(갑) 이미지</label>
-			<input type="file" id="ocrFileName" class="form-control"
-				name="ocrFile" accept=".jpg, .jpeg, .png">
-
-		</div>
-		<div class="col-md-1">
-			<img th:src="@{/img/업로드.png}"
-				th:style="${'width:30px; cursor:pointer; margin-top:32px'}"
-				id="fileImg">
-		</div>
-
-		<div class="col-md-4">
-			<label for="file" class="form-label">빌딩 이미지</label> <input
-				type="file" id="file" multiple name="files" class="form-control">
-		</div>
+#hoSel {
+	width: 60px;
+}
+</style>
+</head>
+<body>
+	<div layout:fragment="Main" class="row">
 		<div>
-			<div class="form-check form-switch" style="display: inline-block;">
-				<label class="form-label"><span>자동 방생성</span> </label><input
-					role="switch" type="checkbox" class="form-check-input text-end" />
-			</div>
-			<div class="form-check form-switch" style="display: inline-block;">
-				<label for="liftYn">승강기 여부 </label> <input type="checkbox"
-					id="liftYn" name="liftYn" class="form-check-input text-end"
-					role="switch">
-			</div>
-		</div>
-		<div>
-			<input name="imdaeinId" type="hidden" value="10" id="imdaeinId"
-				readonly />
-		</div>
-		<div class="form-group col-md-7">
-			<label for="bname" class="form-label">빌딩 이름 </label> <input
-				type="text" id="bname" name="buildingName" class="form-control">
-		</div>
-		<div class="form-group col-md-7">
-			<label for="sample6_address" class="form-label"
-				th:style="${'padding-right:30px'}">주소</label> <input type="button"
-				onclick="sample6_execDaumPostcode()" value="주소 찾기"
-				class="btn btn-outline-primary m-2"> <input type="text"
-				id="sample6_address" placeholder="주소" name="doroAddr"
-				class="form-control">
-		</div>
-		<div class="form-group col-md-7">
-			<label for="sample6_detailAddress" class="form-label">상세 주소</label> <input
-				type="text" id="sample6_detailAddress" placeholder="상세주소"
-				name="detailsAddr" class="form-control">
-		</div>
-		<div class="form-group col-md-5"></div>
-		<div class="form-group col-md-5">
-			<label for="floorArea" class="form-label">연면적 </label> <input
-				type="text" id="floorArea" name="floorArea" class="form-control">
-		</div>
-		<div class="form-group col-md-5">
-			<label for="floorAreaRatio" class="form-label">용적률 산정용 연면적 </label> <input
-				type="text" id="floorAreaRatio" name="floorAreaRatio"
-				class="form-control">
-		</div>
-		<div class="form-group col-md-5">
-			<label for="gunchookArea" class="form-label">건축면적 </label> <input
-				type="text" id="gunchookArea" name="gunchookArea"
-				class="form-control">
-		</div>
-		<div class="form-group col-md-5">
-			<label for="buildingHeigh" class="form-label">건물 높이 </label> <input
-				type="text" id="buildingHeigh" name="buildingHeigh"
-				class="form-control">
+			<form th:action="@{/buildingInsert}" method="POST" name="insertForm"
+				class="row g-3" enctype="multipart/form-data">
+				<div class="col-md-6">
+					<label for="ocrFileName" class="form-label">일반 건축물 대장(갑)
+						이미지</label> <input type="file" id="ocrFileName" class="form-control"
+						name="ocrFile" accept=".jpg, .jpeg, .png">
+
+				</div>
+				<div class="col-md-1">
+					<img th:src="@{/img/업로드.png}"
+						th:style="${'width:30px; cursor:pointer; margin-top:32px'}"
+						id="fileImg">
+				</div>
+
+				<div class="col-md-6">
+					<label for="file" class="form-label">빌딩 이미지</label> <input
+						type="file" id="file" multiple name="files" class="form-control">
+				</div>
+				<div>
+					<div class="form-check form-switch" style="display: inline-block;">
+						<label class="form-label"><span>자동 방생성</span> </label><input
+							role="switch" type="checkbox" class="form-check-input text-end" />
+					</div>
+					<div class="form-check form-switch" style="display: inline-block;">
+						<label for="liftYn">승강기 여부 </label> <input type="checkbox"
+							id="liftYn" name="liftYn" class="form-check-input text-end"
+							role="switch">
+					</div>
+				</div>
+
+				<div class="form-group col-md-7">
+					<label for="bname" class="form-label">빌딩 이름 </label> <input
+						type="text" id="bname" name="buildingName" class="form-control">
+				</div>
+				<div class="form-group col-md-7">
+					<label for="sample6_address" class="form-label"
+						th:style="${'padding-right:30px'}">주소</label> <input type="button"
+						onclick="sample6_execDaumPostcode()" value="주소 찾기"
+						class="btn btn-outline-primary m-2"> <input type="text"
+						id="sample6_address" placeholder="주소" name="doroAddr"
+						class="form-control">
+				</div>
+				<div class="form-group col-md-7">
+					<label for="sample6_detailAddress" class="form-label">상세 주소</label>
+					<input type="text" id="sample6_detailAddress" placeholder="상세주소"
+						name="detailsAddr" class="form-control">
+				</div>
+				<div class="form-group col-md-5"></div>
+				<div class="form-group col-md-5">
+					<label for="floorArea" class="form-label">연면적 </label> <input
+						type="text" id="floorArea" name="floorArea" class="form-control">
+				</div>
+				<div class="form-group col-md-5">
+					<label for="floorAreaRatio" class="form-label">용적률 산정용 연면적
+					</label> <input type="text" id="floorAreaRatio" name="floorAreaRatio"
+						class="form-control">
+				</div>
+				<div class="form-group col-md-5">
+					<label for="gunchookArea" class="form-label">건축면적 </label> <input
+						type="text" id="gunchookArea" name="gunchookArea"
+						class="form-control">
+				</div>
+				<div class="form-group col-md-5">
+					<label for="buildingHeigh" class="form-label">건물 높이 </label> <input
+						type="text" id="buildingHeigh" name="buildingHeigh"
+						class="form-control">
+				</div>
+
+				<div class="form-group col-md-5">
+					<label for="totalFloor" class="form-label">층 수 </label> <input
+						type="text" id="totalFloor" name="totalFloor" class="form-control">
+				</div>
+				<div class="form-group col-md-5">
+					<label for="floorGaguCount" class="form-label">층 별 가구수 </label> <input
+						type="text" id="floorGaguCount" name="floorGaguCount"
+						class="form-control">
+				</div>
+				<div class="form-group col-md-5">
+					<label for="totalGagu" class="form-label">총 세대수 </label> <input
+						type="text" id="totalGagu" name="totalGagu" class="form-control">
+				</div>
+				<div class="form-group col-md-5">
+					<label for="parking" class="form-label">주차 가능 대수 </label> <input
+						type="text" id="parking" name="parking" class="form-control">
+				</div>
+
+				<div class="form-group col-md-6">
+					<label for="memo" class="form-label">비고 </label> <input type="text"
+						id="memo" name="memo" class="form-control">
+				</div>
+				<div>
+					<button type="button" class="btn btn-outline-primary m-2"
+						id="buildingInsertBtn">저장</button>
+					<button type="button"
+						th:onclick="|location.href='@{buildingList}'|"
+						class="btn btn-outline-secondary m-2">취소</button>
+
+				</div>
+
+			</form>
+			<!-- Modal -->
+			<form name="roomForm">
+				<div class="modal fade" id="staticBackdrop"
+					data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+					aria-labelledby="staticBackdropLabel" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<input type="text" name="buildingId" id="bid">
+								<h5 class="modal-title" id="staticBackdropLabel">자동 방생성</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								층수 : <input type="text" id="floorCnt" style="width: 40px;">
+								층별 가구수 : <input type="text" id="gaguCnt" style="width: 40px;">
+								<button type="button" id="insertBtn">생성 버튼</button>
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th>층 수</th>
+											<th colspan="4">호실</th>
+										</tr>
+									</thead>
+									<tbody id="tb">
+									</tbody>
+								</table>
+							</div>
+							<div class="modal-footer">
+								<button type="button" id="roomInsertBtn" class="btn btn-primary">저장</button>
+								<button type="button" class="btn btn-secondary"
+									data-bs-dismiss="modal">취소</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
 		</div>
 
-		<div class="form-group col-md-5">
-			<label for="totalFloor" class="form-label">층 수 </label> <input
-				type="text" id="totalFloor" name="totalFloor" class="form-control">
-		</div>
-		<div class="form-group col-md-5">
-			<label for="floorGaguCount" class="form-label">층 별 가구수 </label> <input
-				type="text" id="floorGaguCount" name="floorGaguCount"
-				class="form-control">
-		</div>
-		<div class="form-group col-md-5">
-			<label for="totalGagu" class="form-label">총 세대수 </label> <input
-				type="text" id="totalGagu" name="totalGagu" class="form-control">
-		</div>
-		<div class="form-group col-md-5">
-			<label for="parking" class="form-label">주차 가능 대수 </label> <input
-				type="text" id="parking" name="parking" class="form-control">
-		</div>
-
-		<div class="form-group col-md-6">
-			<label for="memo" class="form-label">비고 </label> <input type="text"
-				id="memo" name="memo" class="form-control">
-		</div>
-		<div>
-			<button type="submit" class="btn btn-outline-primary m-2">저장</button>
-			<button type="button" th:onclick="|location.href='@{buildingList}'|"
-				class="btn btn-outline-secondary m-2">취소</button>
-		</div>
-	</form>
-
-	<script>
-		$('form[name=insertForm]').on('submit', function(e) {
-			e.preventDefault();
-
+		<script>
+		 
+	
+	//건물 추가
+		$('#buildingInsertBtn').on('click', insertBuilding);
+		
+		function insertBuilding(){
 			let buildingName = $('input[name="buildingName"]');
 			if (buildingName.val() == '') {
 				alert('빌딩 이름을 입력해주세요.');
@@ -155,8 +212,37 @@
 				parking.focus();
 				return;
 			}
-			insertForm.submit();
-		})
+			
+			
+			let formData = new FormData(document.insertForm);
+		
+			$.ajax(ctxPath + "/buildingInsert",{
+				type:'post',
+				data: formData,
+				contentType: false,
+			    processData: false,
+			}).done(result => {
+				console.log(result, "result");
+				 if (!confirm("건물이 추가되었습니다.\n자동 방생성을 하시겠습니까?")) {
+					location.href=ctxPath+"/buildingList";
+				 } else {
+					$('#bid').val(result);
+				    $('#staticBackdrop').modal('show');
+			    } 
+				
+			});
+		}	
+		//insertFrom input data
+		function getData(){
+			let formArr = $('form[name=insertForm]').serializeArray();
+			let formList = {};
+			
+			$.each(formArr, function(idx, ele){
+				formList[ele.name]= ele.value;
+			})
+			console.log(formList);
+			return formList;
+		}
 
 		//체크박스
 		$('input:checkbox').change(function() {
@@ -167,6 +253,40 @@
 				$(this).attr('value', 'N');
 			}
 		})
+		
+		//방 생성
+		 $('#roomInsertBtn').on('click', function(e) {
+			let list = [];
+			let chks = $('input[name=chk]:checked').next();
+			
+			for(chk of chks){
+				console.log(chk.value);
+				let data= chk.value;
+				list.push(data);
+			}
+			
+			$.ajax(ctxPath+"/selectRoomInsert",{
+				type:'post',
+				contentType : 'application/json',
+				data:JSON.stringify(list),
+				
+			}).done(result=>{
+				console.log(result.list);
+			});
+		}); 
+			
+		
+			
+	/* 	function getList(){
+			let formArr = $('form[name="updateForm"]').serializeArray();
+			//console.log(formArr);
+			let formObj = {};
+			$.each(formArr, function(idx, ele){
+				formObj[ele.name] = ele.value;
+			});
+			console.log(formObj);
+			return formObj;
+		}; */
 		
 		//ocr 업로드
 		$('#fileImg').on('click', function(){
@@ -193,9 +313,9 @@
 		})
 	</script>
 
-	<script
-		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-	<script>
+		<script
+			src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+		<script>
 		function sample6_execDaumPostcode() {
 			new daum.Postcode({
 				oncomplete : function(data) {
@@ -220,4 +340,86 @@
 			}).open();
 		}
 	</script>
-</div>
+		<script>
+			$('#insertBtn').on('click', roomCreate);
+
+			function roomCreate() {
+				let floor = Number($('#floorCnt').val());
+				let gagu = Number($('#gaguCnt').val());
+				
+				let tbody;
+				//console.log(floors);
+				for (let i = 1; i <= floor; i++) {
+					tbody += `<tr>`;
+					tbody += `<td><input type="checkbox" id="checkbox${i}" class="selectRoom">${i}층</td>`;
+					for (let j = 1; j <= gagu; j++) {
+						if (j < 10) {
+							j = '0' + j;
+						} else {
+							j = String(j);
+						}
+						tbody += `<td><input type="checkbox" name="chk"><input type = "text" name="roomNo" id = "hoSel" value=${i+j}></td>`;
+					}
+					tbody += `<td><button type ="button" id="addBtn${i}" class="addRoom">추가</button>`;
+					tbody += `<button type ="button" id="delBtn${i}" class="delRoom">삭제</button></td>`;
+					tbody += `</tr>`;
+
+				}
+				$("#tb").html("");
+				$('#tb').append(tbody);
+				
+				//호실 추가 버튼
+				$('.addRoom').on('click', insertRoom);
+				function insertRoom(event) {
+					
+				}
+					
+				//행 선택 checkbox
+				$('.selectRoom').click(function(e){
+				
+					let parent = $(e.target).closest('tr')
+					if($(e.target).is(":checked")){
+						parent.find('input[name="chk"]').prop("checked",true);
+										
+					}else{
+						parent.find('input[name="chk"]').prop("checked",false);
+					
+					}
+				})
+				$("input[name=chk]").click(function(e) {
+					let tr = $(e.target).closest('tr');
+					let total = tr.find("input[name=chk]").length;
+					let checked = tr.find("input[name=chk]:checked").length;
+					
+					if(total != checked) {
+						tr.find(".selectRoom").prop("checked", false);
+					}
+					else {
+						tr.find(".selectRoom").prop("checked", true); 
+					}
+				});//end 행선택
+				
+				//호실 삭제
+				$('.delRoom').on('click',function(e){
+					let delSel = $(e.target).closest('tr');
+					if(delSel.find('.selectRoom').is(':checked')){
+						delSel.find('input[name=chk]').closest('tr').remove();
+					}
+					else {
+						delSel.find("input[name=chk]:checked").parent().remove();
+					}
+				
+				});
+				//호실 추가
+				$('.addRoom').on('click',function(e){
+					let addSel = $(e.target).closest('tr');
+					addSel.find('.addRoom').parent().before(`<td><input type="checkbox" name="chk"><input type="text" id = "hoSel"></td>`);
+					
+				})
+			}
+		</script>
+	</div>
+
+
+</body>
+</html>
