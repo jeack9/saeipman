@@ -15,12 +15,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.saeipman.app.commom.security.SecurityUtil;
+import com.saeipman.app.member.service.LoginInfoVO;
 import com.saeipman.app.noticeBuilding.service.NoticeBuildingService;
 import com.saeipman.app.noticeBuilding.service.NoticeBuildingVO;
 import com.saeipman.app.noticeBuilding.utils.PagingSearchDTO;
@@ -43,6 +44,12 @@ public class NoticeBuildingController {
 	// 전체조회
 	@GetMapping("noticeBuildingList")
 	public String noticeBuildingList(PagingSearchDTO pgsc, Model model) {
+		
+		//LoginInfoVO login = SecurityUtil.getLoginInfo();
+		String imdaeinId = SecurityUtil.getLoginId();
+		pgsc.setImdaeinId(imdaeinId);
+	      //model.addAttribute("login", login);
+		
 		
 		//전체 페이지 수 계산해서 setTotalPage에 전체 페이지 수 할당 
 		int totalPage = noticeBuildingService.totalPage(pgsc);
@@ -71,7 +78,11 @@ public class NoticeBuildingController {
 
 	// 등록(페이지)
 	@GetMapping("noticeBuildingInsert")
-	public String noticeBuildingInsertForm() {
+	public String noticeBuildingInsertForm(Model model) {
+		
+		LoginInfoVO login = SecurityUtil.getLoginInfo();
+	      model.addAttribute("login", login);
+		
 		return "noticeBuilding/noticeBuildingInsert";
 	}
 
