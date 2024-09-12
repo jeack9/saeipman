@@ -53,7 +53,7 @@ public class MinwonServiceImpl implements MinwonService{
 			//전화번호 조회
 			String phone = msgMapper.selectPhone(minwonVO.getRoomId());
 			//문자전송
-			msgService.sendOne(phone, msg);
+			//msgService.sendOne(phone, msg);
 					
 		}
 		

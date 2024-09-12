@@ -142,7 +142,7 @@
 						, #{groupId}
 						, 0
 						, #{acceptState}
-						, #{visitsDate}
+						, #{visitsDate1}
 						<choose>
 							<when test="regDate != null">
 							, #{regDate}
@@ -166,7 +166,7 @@
 			<if test="chumbuImage != null and chumbuImage != ''">
 			, GROUP_ID = #{groupId}
 			</if>
-			, visits_date = #{visitsDate}
+			, visits_date = #{visitsDate1}
 			
 		where post_no = #{postNo}
 	</update>
