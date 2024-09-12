@@ -65,6 +65,13 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		
 		return gwanlibiMapper.selectGwanlibiDetailsBill(vo);
 	}
+
+	//todo
+	@Override
+	public Map<String, Object> addGwanlibi(List<GwanlibiVO> vo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	// 정산한 관리비 등록 todo
 //	@Override
