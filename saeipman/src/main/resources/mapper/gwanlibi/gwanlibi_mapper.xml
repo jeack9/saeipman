@@ -4,6 +4,7 @@
 
 	<!-- 임대인의 건물별 전원, 금월 관리비 목록, 페이징 처리-->
 	<select id="selectMonthGwanlibiByBuildingList">
+	
 		SELECT b.*
 		FROM   ( SELECT ROWNUM rn,
 		                a.*
@@ -25,7 +26,7 @@
 	
 	
 	
-	<!-- 페이징 -->
+	<!-- 페이징 -->	
 	<select id="getBuildingTotalCount">
 
 		SELECT COUNT(*)
@@ -50,7 +51,8 @@
 		FROM     gwanlibi_details gd JOIN building_gwanlibi_item bgi
 		                             ON   (gd.building_id = bgi.building_id AND gd.gwanlibi_item_no = bgi.gwanlibi_item_no)
 		                             JOIN month_gwanlibi mg
-		                             ON   (gd.building_id = mg.building_id AND mg.month_gwanlibi_no = gd.month_gwanlibi_no AND TO_CHAR(mg.payment_month, 'yyMM') = TO_CHAR(#{paymentMonth}, 'yyMM'))
+		                             ON   (gd.building_id = mg.building_id AND mg.month_gwanlibi_no = gd.month_gwanlibi_no AND TO_CHAR(mg.payment_month, 'yyMM')
+		                             = TO_CHAR(#{paymentMonth}, 'yyMM'))
 		                             JOIN building_info bi
 		                             ON   gd.building_id = bi.building_id
 		WHERE    gd.building_id = #{buildingId}
@@ -58,20 +60,28 @@
 		
 	</select>
 
-
-
+	
+	<!-- 기본 관리비 목록 -->
+	<select id="selectBasicGwanlibiList">
+	
+		SELECT gwanlibi_name
+		FROM   basic_gwanlibi_item
+		
+	</select>
+	
+	<!-- 건물 관리비 항목 리스트 설정 -->
 	<select id="selectItemList" >
 	
 		SELECT   gwanlibi_item_no,
 		         building_id,
 		         gwanlibi_name,
 		         variable_yn,
+		         fixed_price,
 		         version
 		FROM     building_gwanlibi_item
 		WHERE    building_id = #{buildingId}
 		AND      version = (SELECT NVL(MAX(version), 0)
 		                    FROM   building_gwanlibi_item)
-		GROUP BY gwanlibi_item_no, building_id, gwanlibi_name, variable_yn, version
 		ORDER BY gwanlibi_item_no
 		
 	</select>
@@ -84,52 +94,60 @@
 		FROM   building_gwanlibi_item
 		WHERE  building_id = #{buildingId}
 	</select>
+	
 	<!-- 관리비 항목 등록 -->
 	<insert id="insertItems">
-	
+
 		<selectKey keyProperty="gwanlibiItemNo" order="BEFORE" resultType="int">
 			SELECT (NVL(MAX(gwanlibi_item_no), 0)) + 1
 			FROM   building_gwanlibi_item
 		</selectKey>		
-		
+
 		INSERT INTO
 			building_gwanlibi_item ( gwanlibi_item_no
 								   , building_id
 								   , gwanlibi_name
 								   , variable_yn
-								   , version )
+								   , version
+								   , fixed_price )
 		VALUES ( #{gwanlibiItemNo}
 			   , #{buildingId}
 			   , #{gwanlibiName}
 			   , #{variableYn}
-			   , #{version} )
-			   	   
-	</insert>
-	
-	
+			   , #{version}
+			   , #{fixedPrice} )
 
-	<!-- 관리비 등록 -->
-	<insert id="insertMaintenanceCost">
-	
-		<selectKey keyProperty="monthGwanlibiNo"
-				   resultType="string"
-				   order="BEFORE">
-				   SELECT 'MF' || TO_CHAR(#{paymentMonth}, 'yyMM') || LPAD(COUNT(*), 4, 0) FROM month_gwanlibi
-		</selectKey>
-		
-		INSERT INTO month_gwanlibi
-		    (month_gwanlibi_no
-		   , building_id
-		   , payment_month
-		   , total_money
-		   , gagu_gwanlibi)
-		VALUES
-		    (#{monthGwanlibiNo}
-		   , #{buildingId}
-		   , #{paymentMonth}
-		   , #{totalMoney}
-		   , #{gaguGwanlibi})
-		   
 	</insert>
+	
+	<!-- 정산한 관리비 등록 -->
+	<insert id="insertGwanlibi">		
+		
+		INSERT ALL
+		    INTO month_gwanlibi ( month_gwanlibi_no
+		    				    , building_id, total_money
+		    				    , payment_month
+		    				    , gagu_gwanlibi )
+		    VALUES ( (SELECT 'MF' || TO_CHAR(#{paymentMonth}, 'yyMM') || LPAD(COUNT(*), 4, 0) FROM month_gwanlibi)
+				   , #{buildingId}
+				   , #{paymentMonth}
+				   , #{totalMoney}
+				   , #{gaguGwanlibi} )
+		    <foreach collection="">
+			    INTO gwanlibi_details ( gwanlibi_details_no
+			    					  , building_id
+			    					  , month_gwanlibi_no
+			    					  , gwanlibi_item_no
+			    					  , gwanlibi_item_money )
+			    VALUES ( (SELECT 'BMF' || LPAD(NVL(MAX(SUBSTR(gwanlibi_details_no, 4, 4)),0), 4, 0) FROM gwanlibi_details)
+			    	   , #{buildingId}
+			    	   , #{gwanlibiItemNo}
+			    	   , #{gwanlibiItemNo}
+			    	   , #{gwanlibiItemMoney} )
+    	   </foreach>
+		SELECT *
+		FROM   dual
+		
+	</insert>
+	
 
 </mapper>

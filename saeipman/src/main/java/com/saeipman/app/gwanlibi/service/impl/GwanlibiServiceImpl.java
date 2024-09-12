@@ -33,6 +33,12 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		return gwanlibiMapper.getBuildingTotalCount(imdaeinId);
 	}
 	
+	// 기본 관리비 항목 리스트
+	@Override
+	public List<GwanlibiVO> basicGwanlibiList() {
+		return gwanlibiMapper.selectBasicGwanlibiList();
+	}
+	
 	// 관리비 항목 리스트
 	@Override
 	public List<GwanlibiVO> itemList(String buildingId) {
@@ -57,33 +63,26 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 	@Override
 	public List<GwanlibiVO> detailsBillList(GwanlibiVO vo) {
 		
-		System.err.println(vo.getPaymentMonth());
-		
-		if (vo.getPaymentMonth() == null) {
-			// 현재 날짜를 VO에 담아주기.
-			Date now = new Date();			
-			//System.err.println(now);
-			vo.setPaymentMonth(now);
-			System.err.println(vo.getPaymentMonth());
-		}		
 		return gwanlibiMapper.selectGwanlibiDetailsBill(vo);
 	}
 	
-	// 관리비 등록
-	@Override
-	public Map<String, Object> addMaintenanceCoast(List<GwanlibiVO> list) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		// 등록 관리비 한 건씩 넣어주기.
-		for(GwanlibiVO vo : list) {
-			gwanlibiMapper.insertMaintenanceCost(vo);
-		}
-		
-		map.put("result", true);
-		map.put("vo", list);
-		
-		return map;
-	}
+	// 정산한 관리비 등록 todo
+//	@Override
+//	public Map<String, Object> addGwanlibi(List<GwanlibiVO> list) {
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		
+//		
+//		// 등록 관리비 한 건씩 넣어주기.
+//		for(GwanlibiVO vo : list) {
+//			gwanlibiMapper.insertGwanlibi(vo);
+//		}
+//		
+//		map.put("result", true);
+//		map.put("list", list);
+//		
+//		return map;
+//	}
+
 
 	
 }
