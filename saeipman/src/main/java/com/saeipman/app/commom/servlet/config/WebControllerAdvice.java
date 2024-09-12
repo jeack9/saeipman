@@ -17,6 +17,12 @@ public class WebControllerAdvice {
 	}
 	@ModelAttribute("login")
 	public LoginInfoVO loginSession() {
-		return SecurityUtil.getLoginInfo();
+		LoginInfoVO login = new LoginInfoVO();
+		try {
+			login = SecurityUtil.getLoginInfo();
+		} catch (Exception e) {
+			return login;
+		}
+		return login;
 	}
 }
