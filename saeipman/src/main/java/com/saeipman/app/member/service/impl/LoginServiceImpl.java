@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.saeipman.app.member.dto.MemberRequestDTO;
-import com.saeipman.app.member.mapper.LoginMapper;
+import com.saeipman.app.member.mapper.MemberMapper;
 import com.saeipman.app.member.service.ImdaeinVO;
 import com.saeipman.app.member.service.LoginInfoVO;
 import com.saeipman.app.member.service.LoginService;
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LoginServiceImpl implements LoginService {
 
-	private final LoginMapper lmapper;
+	private final MemberMapper lmapper;
 	//private final BCryptPasswordEncoder passwordEncoder;
 
 	@Override

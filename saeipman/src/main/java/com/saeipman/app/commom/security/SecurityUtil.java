@@ -3,7 +3,6 @@ package com.saeipman.app.commom.security;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.saeipman.app.commom.security.service.CustomUserDetails;
@@ -20,9 +19,22 @@ public class SecurityUtil {
 		CustomUserDetails customUser = (CustomUserDetails)authentication.getPrincipal();
 		return customUser.getUsername();
 	}
-	public static List<GrantedAuthority> getLoginAuth() {
+	public static int getLoginAuth() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomUserDetails customUser = (CustomUserDetails)authentication.getPrincipal();
-		return (List<GrantedAuthority>) customUser.getAuthorities();
+		LoginInfoVO loginSession = customUser.getMember();
+		return loginSession.getAuth();
+	}
+	public static String getRoomId() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUser = (CustomUserDetails)authentication.getPrincipal();
+		LoginInfoVO loginSession = customUser.getMember();
+		return loginSession.getRoomId();
+	}
+	public static String getBuildingId() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUser = (CustomUserDetails)authentication.getPrincipal();
+		LoginInfoVO loginSession = customUser.getMember();
+		return loginSession.getBuildingId();
 	}
 }

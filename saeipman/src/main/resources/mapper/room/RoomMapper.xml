@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saeipman.app.room.mapper.RoomMapper">
+	<resultMap id="RoomResultMap" type="com.saeipman.app.room.service.RoomVO">
+		<id column="room_id" property="roomId"/>
+		<result column="room_no" property="roomNo"/>
+		<result column="floor" property="floor"/>
+		<result column="ipju_state" property="ipjuState"/>
+		<result column="building_id" property="buildingId"/>
+		<result column="deposit" property="deposit"/>
+		<result column="m_rent" property="mRent"/>
+		<collection property="constractList" ofType="com.saeipman.app.room.service.ConstractVO">
+		    <id column="constract_no" property="constractNo"/>
+		    <result column="constract_type" property="constractType"/>
+		    <result column="deposit" property="deposit"/>
+		    <result column="m_rent" property="mRent"/>
+		    <result column="pay_type" property="payType"/>
+		    <result column="imchain_name" property="imchainName"/>
+		    <result column="imchain_phone" property="imchainPhone"/>
+		    <result column="imchain_account" property="imchainAccount"/>
+		    <result column="imdaein_account" property="imdaeinAccount"/>
+		    <result column="constract_date" property="constractDate"/>
+		    <result column="exp_date" property="expDate"/>
+		    <result column="constract_state" property="constractState"/>
+		    <result column="constract_file" property="constractFile"/>
+		    <result column="m_rent_date" property="mRentDate"/>
+		    <result column="memo" property="memo"/>
+		    <result column="room_id" property="roomId"/>
+		</collection>
+	</resultMap>
+	<!-- 로그인한 임차인 -> 방,계약 단건조회 -->
+	<select id="selectImchainRoom" resultMap="RoomResultMap">
+	SELECT
+	    c.constract_no
+	    ,c.constract_type
+	    ,c.deposit
+	    ,c.m_rent
+	    ,c.pay_type
+	    ,c.imchain_name
+	    ,c.imchain_phone
+	    ,c.imchain_account
+	    ,c.imdaein_account
+	    ,c.constract_date
+	    ,c.exp_date
+	    ,c.constract_state
+	    ,c.m_rent_date
+	    ,c.memo
+	    ,c.room_id
+	    ,r.room_no
+	    ,r.ipju_state
+	    ,r.building_id
+	FROM
+	    constract_info c JOIN room_info r
+	        ON c.room_id = r.room_id
+	WHERE
+	    imchain_phone = #{imchainId}
+	ORDER BY c.constract_date desc
+	</select>
+	<select id="selectConstractImchain">
+		SELECT
+			constract_no,
+			constract_type,
+			deposit,
+			m_rent,
+			pay_type,
+			imchain_name,
+			imchain_phone,
+			imchain_account,
+			imdaein_account,
+			constract_date,
+			exp_date,
+			constract_state,
+			m_rent_date,
+			memo,
+			room_id
+		FROM
+			constract_info
+		WHERE
+			imchain_phone = #{imchainId}
+	</select>
+</mapper>

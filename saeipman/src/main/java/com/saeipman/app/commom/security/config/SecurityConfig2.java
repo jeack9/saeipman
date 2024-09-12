@@ -85,17 +85,17 @@ public class SecurityConfig2 {
 //		http.formLogin((auth) -> auth.disable());
 		http
 			.formLogin(login -> login
-			    .loginPage("/member/login")
+			    .loginPage("/all/login")
 			    .loginProcessingUrl("/loginProc") // 로그인 submit url 설정
 			    .usernameParameter("loginId") // 파라미터 name 설정
 			    .passwordParameter("pw")
 			    //.successHandler(null)
-			    .defaultSuccessUrl("/member/home", true)
+			    .defaultSuccessUrl("/all/home", true)
 			    .permitAll() // 로그인 성공시 이동하는 페이지 허용
 			)
 			.logout(logout -> logout
-					.logoutUrl("/member/logoutProc")
-					.logoutSuccessUrl("/member/login")
+					.logoutUrl("/all/logoutProc")
+					.logoutSuccessUrl("/all/login")
 			);
 
 		// http basic 인증 방식 disable
@@ -106,7 +106,7 @@ public class SecurityConfig2 {
 			.authorizeHttpRequests((auth) -> auth.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
 			// 정적 리소스 허용
 			.requestMatchers("/css/**", "/img/**", "/js/**", "/lib/**", "/scss/**", "/dashmin-1.0.0/**").permitAll()
-			.requestMatchers("/member/login", "/member/join", "/join", "/login").permitAll()
+			.requestMatchers("/all/**").permitAll()
 			.requestMatchers("/member/**").hasAnyAuthority("ROLE_1", "ROLE_2")
 			.requestMatchers("/admin/**").hasRole("0")
 			.anyRequest().permitAll() // 일단 임시로 전부 허용 나중에 권한별 분리

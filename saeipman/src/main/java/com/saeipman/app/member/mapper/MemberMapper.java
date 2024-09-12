@@ -5,7 +5,7 @@ import com.saeipman.app.member.service.ImdaeinVO;
 import com.saeipman.app.member.service.LoginInfoVO;
 
 
-public interface LoginMapper {
+public interface MemberMapper {
 	// 로그인 단건조회
 	public LoginInfoVO selectLoginInfo(LoginInfoVO loginVO);
 	
