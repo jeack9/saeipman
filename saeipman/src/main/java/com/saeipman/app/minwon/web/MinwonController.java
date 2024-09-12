@@ -127,7 +127,7 @@ public class MinwonController {
 
 	// 수정(페이지)
 	@GetMapping("minwonUpdate")
-	public String boardUpdateForm(MinwonVO minwonVO, Model model) {
+	public String minwonUpdateForm(MinwonVO minwonVO, Model model) {
 		MinwonVO findVO = minwonService.minwonSelect(minwonVO);
 		model.addAttribute("minwon", findVO);
 		List<MinwonVO> ca = minwonService.categoryList();
