@@ -89,7 +89,7 @@ public class SecurityConfig2 {
 			    .loginProcessingUrl("/loginProc") // 로그인 submit url 설정
 			    .usernameParameter("loginId") // 파라미터 name 설정
 			    .passwordParameter("pw")
-			    //.successHandler(null)
+			    //.successHandler()
 			    .defaultSuccessUrl("/all/home", true)
 			    .permitAll() // 로그인 성공시 이동하는 페이지 허용
 			)
@@ -97,6 +97,10 @@ public class SecurityConfig2 {
 					.logoutUrl("/all/logoutProc")
 					.logoutSuccessUrl("/all/login")
 			);
+		
+		// 세션설정
+		http.sessionManagement(session -> session
+				.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
 		// http basic 인증 방식 disable
 //		http.httpBasic((auth) -> auth.disable());

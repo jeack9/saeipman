@@ -3,6 +3,7 @@ package com.saeipman.app.member.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class LoginServiceImpl implements LoginService {
 
 	private final MemberMapper lmapper;
-	//private final BCryptPasswordEncoder passwordEncoder;
+	private final BCryptPasswordEncoder passwordEncoder;
 
 	@Override
 	public LoginInfoVO loginInfo(LoginInfoVO loginVO) {
@@ -51,9 +52,11 @@ public class LoginServiceImpl implements LoginService {
 		ivo.setBirth(dto.getBirth());
 		int result = lmapper.insertImdaein(ivo);
 				
+		
 		LoginInfoVO lvo = new LoginInfoVO();
 		lvo.setLoginId(dto.getId());
-		lvo.setPw(dto.getPw());
+		
+		lvo.setPw(passwordEncoder.encode(dto.getPw()));
 		lvo.setAuth(1);
 		result += lmapper.insertLogin(lvo);
 		return result;

@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("all")
 public class LoginController {
 	private final LoginService lsvc;
-
+	
 	// 로그인폼 이동
 	@GetMapping("login") 
 	public void loginForm() {};
