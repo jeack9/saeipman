@@ -7,4 +7,6 @@ public class LoginInfoVO {
 	private String loginId;
 	private String pw;
 	private int auth;
+	private String buildingId;
+	private String roomId;
 }

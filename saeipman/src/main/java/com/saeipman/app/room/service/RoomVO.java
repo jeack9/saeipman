@@ -1,5 +1,7 @@
 package com.saeipman.app.room.service;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -11,4 +13,6 @@ public class RoomVO {
 	private String buildingId; // 건물 아이디 fk
 	private int deposit; // 기본 보증금
 	private int mRent; // 기본 월세 
+	
+	private List<ConstractVO> constractList;
 }

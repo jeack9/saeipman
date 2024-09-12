@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class constractVO {
+public class ConstractVO {
 	private String constractNo; //유니크키
 	private String constractType; // 계약 유형 월세/전세
 	private int deposit; // 계약된 보증금
