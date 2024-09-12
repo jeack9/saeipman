@@ -7,7 +7,7 @@ import com.saeipman.app.room.service.RoomVO;
 
 public interface RoomMapper {
 	// 목록조회
-	public List<RoomVO> roomInfoList(BuildingVO vo); // 임대인 특정건물의 방 목록 조회
+	public List<RoomVO> roomInfoList(BuildingVO vo); // 임대인 특정건물의 방 목록 조회: buildingId, imdaeinId 필요
 	// 단건조회
 	
 	// 단건등록
