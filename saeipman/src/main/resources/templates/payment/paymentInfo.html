@@ -32,9 +32,9 @@ th, td {
 		</select>
 
 
-		<div class="col-sm-12 col-xl-6">
+		<div>
 			<div class="bg-light rounded h-100 p-4">
-				<h6 class="mb-4">납부내역</h6>
+				<h6 class="mb-4" style="text-align: center;">납부내역</h6>
 				<div class="container text-center">
 					<div class="row">
 						<div class="col-12 col-sm-6">월세</div>
@@ -53,36 +53,55 @@ th, td {
 			<table class="table table-bordered">
 				<thead>
 					<tr>
-						<th colspan="6">납부 예정</th>
+						<th colspan="2">납부 예정</th>
 					</tr>
 					<tr>
-						<th colspan="3">월세</th>
-						<th colspan="3">관리비</th>
+						<th>월세</th>
+						<th>관리비</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<!-- th:each 돌려야함 -->
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value=""
-									id="flexCheckDefault"><label class="form-check-label"
-									for="flexCheckDefault"></label>
-							</div>
-						<th:block th:each="payInF : ${payInfo}">
-							<td>월</td>
-							<td>금액</td>
-						</th:block>
-					</tr>
-					<tr>
-						<div class="form-check">
-							<input class="form-check-input" type="checkbox" value=""
-								id="flexCheckDefault"><label class="form-check-label"
-								for="flexCheckDefault"></label>
-						</div>
-						<th:block th:each="payInF : ${payInfo}">
-							<td>[[${payInF.paymentMonth}]]</td>
-							<td>[[${payInF.gaguGwanlibi}]]</td>
-						</th:block>
+						<!-- 월세 출력 -->
+						<td>
+							<table>
+								<tbody>
+									<th:block th:each="payInF : ${payInfo}">
+										<tr>
+
+											<td>
+												<div class="form-check">
+													<input class="form-check-input" type="checkbox" value=""
+														id="flexCheckDefault"><label
+														class="form-check-label" for="flexCheckDefault"></label>
+												</div>
+											</td>
+											<td>월</td>
+											<td>금액</td>
+										</tr>
+									</th:block>
+								</tbody>
+							</table>
+						</td>
+						<!-- 관리비 출력 -->
+						<td>
+							<table class="table table-bordered">
+								<tbody>
+									<th:block th:each="payInF : ${payInfo}">
+										<tr>
+											<td><div class="form-check">
+
+													<input class="form-check-input" type="checkbox" value=""
+														id="flexCheckDefault"><label
+														class="form-check-label" for="flexCheckDefault"></label>
+												</div></td>
+											<td>[[${payInF.paymentMonth}]]</td>
+											<td>[[${payInF.gaguGwanlibi}]]</td>
+										</tr>
+									</th:block>
+								</tbody>
+							</table>
+						</td>
 					</tr>
 				</tbody>
 			</table>
