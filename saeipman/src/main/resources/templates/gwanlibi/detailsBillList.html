@@ -19,9 +19,9 @@
 			color: black;
 		}
 
-		.insertUpdateBtn {
+		.settlingBtn {
 			margin: auto;
-			display: block;
+			display: none;
 			background: #6CBEC7;
 			color: rgb(56, 53, 53);
 		}
@@ -70,21 +70,17 @@
 			</table>
 			<hr style="color: black">
 
-			<!-- todo 관리비아이디 구하기. script에서 클릭 이벤트 하던지 -->
-			<button class="btn btn-light insertUpdateBtn">관리비 등록 / 수정</button>
+			<button class="btn btn-light settlingBtn">관리비 정산</button>
 
 			<br>
 		</div>
 
 		<script th:inline="javascript">
-			// 관리비 등록/수정 버튼 숨기기 - jQuery
-			$('.insertUpdateBtn').hide();
-
 			// JavaScript에서 Thymeleaf 변수 사용하기 //
 			/* 1. <script th:inline="javascript">
 			   2. Thymeleaf 변수 사용 */
-			let detailsList = [[${ detailsList }]];			
-			
+			let detailsList = [[${ detailsList }]];
+
 
 			// 해당 건물의 관리 비용 총합계 - number format (, 원)
 			function total() {
@@ -113,22 +109,23 @@
 
 
 			// todo
-			$('.insertUpdateBtn').click(function () {
-				const offset = 1000 * 60 * 60 * 9;
-				const koreaNow = new Date(new Date(detailsList[0].paymentMonth).getTime() + offset);
-				const splitDate = koreaNow.toISOString().split('T')[0].split('-');
-				let resultDate = splitDate[0] + '-' + splitDate[1];
-				console.log('===========================================');
-				console.log(resultDate);
-				console.log('===========================================');
-				//location.href(`/gwanlibiChargeInsertUpdatePage?buildingId=${detailsList[0].buildingId}&paymentMonth=${detailsList[0].paymentMonth}`);
-				$(location).attr('href', `${ctxPath}/gwanlibiChargeInsertUpdatePage?buildingId=${detailsList[0].buildingId}&paymentMonth=${resultDate}`);
+			$('.settlingBtn').click(function() {
+				console.log('클릭');
+				//const offset = 1000 * 60 * 60 * 9;
+				//const koreaNow = new Date(new Date(detailsList[0].paymentMonth).getTime() + offset);
+				//const splitDate = koreaNow.toISOString().split('T')[0].split('-');
+				//let resultDate = splitDate[0] + '-' + splitDate[1];
+				//console.log('===========================================');
+				//console.log(resultDate);
+				//console.log('===========================================');
+				//$(location).attr('href', `${ctxPath}/gwanlibiSettling?buildingId=${detailsList[0].buildingId}&paymentMonth=${resultDate}`);
+				$(location).attr('href', `${ctxPath}/gwanlibiSettling?buildingId=${building.buildingId}`);
 			})
 
 
 			// TOAST UI //
 			// async - await
-			$(document).ready(async() => {
+			$(document).ready(async () => {
 				await gridLoad();
 				await dateLoad();
 				await total();
@@ -140,7 +137,7 @@
 			// # reference : https://park-duck.tistory.com/entry/javascript-1-Toast-UI-Grid-%EA%B8%B0%EC%B4%88API-%EC%82%AC%EC%9A%A9%EB%B2%95
 			// 01. Grid 생성.
 			// return void
-			function gridLoad() {
+			function gridLoad() {				
 				const Grid = tui.Grid;
 				// 02. Grid theme 설정. (clean, stripe, default)
 				Grid.applyTheme('stripe');
@@ -178,8 +175,8 @@
 					]
 				})
 			}
-			
-			
+
+
 			// Toast UI - Date Picker //
 			// # reference : https://nhn.github.io/tui.date-picker/latest/tutorial-example05-picking-month
 			// # reference : https://nhn.github.io/tui.date-picker/latest/DatePicker#event-change
@@ -202,33 +199,38 @@
 					let buildingId = building.buildingId;
 					//console.log(calMonthKo.getDate());
 					//console.log(paymentMonth);
-					console.log(buildingId);
-					
+					console.log(buildingId);					
+
 					$.ajax({
 						url: `${ctxPath}/detailsBillList?buildingId=${buildingId}&paymentMonth=${paymentMonth}`,
 						method: 'post'
-					}).done(function(result) {
+					}).done(function (result) {
 						console.log(result)
 						$('#grid').html('');
 						detailsList = result.detailsList;
 						gridLoad();
 						total();
 						console.log('성공');
-					}).fail(function(err) {
+					}).fail(function (err) {
 						console.log(err);
 					})
 
+					// 등록/수정 버튼 출력 여부 설정 : 전월에만 보이기
+					let now = new Date();
+					let previousYearMonth = now.getFullYear() + '-' + (now.getMonth()).toString().padStart(2, 0);
+					console.log('===============');
+					console.log(paymentMonth);
+					console.log(previousYearMonth);
+					console.log('===============');
+					if (paymentMonth == previousYearMonth) {
+						$('.settlingBtn').css('display', 'block');
+					} else {
+						$('.settlingBtn').css('display', 'none');
+					}
+					
+				});
 
-				// 등록/수정 버튼 출력 여부 설정 : 전월에만 보이기
-				let now = new Date();
-				let previousYearMonth = now.getFullYear() + '-' + (now.getMonth()).toString().padStart(2, 0);
-				if (paymentMonth == previousYearMonth) {
-					$('.insertUpdateBtn').css('display', 'block');
-				} else {
-					$('.insertUpdateBtn').css('display', 'none');
-				}
-			});
-		}
+			}
 
 		</script>
 	</div>

@@ -26,9 +26,11 @@ public class GwanlibiVO {
 	private int gwanlibiItemMoney;		  // 항목별 관리비
 	private String strGwanlibiItemMoney;  // 항목별 관리비 (,)
 	
-	
 	private Integer gwanlibiItemNo;
 	private String variableYn; // 관리비 변동 여부
 	private Integer version;
+	private int fixedPrice;
+	
+	private String gwanlibiDetailsNo;
 	
 }

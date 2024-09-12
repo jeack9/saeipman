@@ -30,8 +30,8 @@ public interface GwanlibiMapper {
 	// 사용자의 건물별 관리비 상세 내역
 	public List<GwanlibiVO> selectGwanlibiDetailsBill(GwanlibiVO vo);	
 	
-	// 관리비 등록
-	public int insertMaintenanceCost(GwanlibiVO vo);
+	// 정산한 관리비 등록
+	public int insertGwanlibi(GwanlibiVO vo);
 	
 	
 	

@@ -13,16 +13,11 @@
 	font-weight: bold;
 }
 
-.btnDiv, .btnDiv2 {
+.btnDiv {
 	text-align: center;
 }
 
-.btnDiv2 {
-	margin-top: 10px
-}
-
-
-#appendBtn, #deleteBtn {
+.saveBtn {
 	display: inline-block;
 	background: #6CBEC7;
 	color: rgb(56, 53, 53);
@@ -37,7 +32,7 @@
 		<div>
 			<br> <br>
 
-			<h1>관리비 항목 설정</h1>
+			<h1>관리비 업데이트</h1>
 
 			<br> <br>
 
@@ -45,14 +40,9 @@
 			<div id="grid" style="position: relative; z-index: 1;"></div>
 
 			<br>
-
-			<div class="btnDiv">
-				<button class="btn btn-light" id="appendBtn">추가</button>
-				<button class="btn btn-light" id="deleteBtn">삭제</button>
-			</div>
 			
-			<div class="btnDiv2">
-				<button class="btn btn-light saveBtn">저장하기</button>
+			<div class="btnDiv">
+				<button class="btn btn-light saveBtn">저장</button>
 			</div>
 			<br>
 		</div>
@@ -63,7 +53,7 @@
 			/* 1. <script th:inline="javascript">
 			   2. Thymeleaf 변수 사용 */
 			let list = [[${ list }]];
-			console.log(list);
+			//console.log(list);
 			
 
 			// TOAST UI //
@@ -91,7 +81,7 @@
 					data: list,
 					scrollX: false,
 					scrollY: false,
-					rowHeaders: ['checkbox'],
+					rowHeaders: ['rowNum'],
 					// ================================== 컬럼 옵션 적용 ================================== //
 					columns: [
 						{
@@ -109,34 +99,22 @@
 			                name: 'buildingId',
 			                hidden: true
 			            },
+						{
+							header: '관리비 변동 여부',
+							name: 'variableYn',
+							hidden: true
+						},
 						// [Column-1] 관리비 항목
 						{
 							header: '관리비 항목',
 							name: 'gwanlibiName',
 							resizable: true,
-							align: 'center',
 							sortable: true,
-							editor: 'text'
+							align: 'center'
 						},
-						// [Column-2] 관리비 변동 여부
+						// [Column-2] 관리비
 						{
-							header: '관리비 변동 여부',
-							name: 'variableYn',
-							resizable: true,
-							align: 'center',
-							editor: {
-								type: 'select',
-								options: {
-									listItems: [
-										{ text: '변동', value: '변동' },
-										{ text: '고정', value: '고정' }
-									]
-								}
-							}
-						},
-						// [Column-3] 고정 관리비
-						{
-							header: '고정 관리비 입력',
+							header: '관리비 금액',
 							name: 'fixedPrice',
 							resizable: true,
 							align: 'center',
@@ -145,20 +123,18 @@
 					]
 				})
 				grid.validate();
+				//console.log(grid.getData());
+				grid.getData().forEach(ele => {
+					console.log(ele.rowKey);
+					if(ele.variableYn == '고정') {
+						grid.disableCell(ele.rowKey, 'fixedPrice');
+					}
+				})
 				return grid;
 			}
 			
-			const appendBtn = document.getElementById('appendBtn');
-			const deleteBtn = document.getElementById('deleteBtn');
 			
-		    appendBtn.addEventListener('click', () => {
-		        grid.appendRow({ gwanlibiName: '관리비 항목 입력해주세요.'});
-		    });
-		    
-		    deleteBtn.addEventListener('click', () => {
-		    	grid.removeCheckedRows();
-			});
-			let buildingId = [[${buildingId}]];
+			/* let buildingId = [[${buildingId}]];
 		    $('.saveBtn').on('click', function() {
 		    	console.log('클릭');
 		    	if(!buildingId) return;
@@ -176,7 +152,7 @@
 					console.log(err);
 				});
 
-			});
+			}); */
 
 		</script>
 	</div>
