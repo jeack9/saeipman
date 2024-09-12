@@ -112,6 +112,8 @@ public class SecurityConfig2 {
 			.anyRequest().permitAll() // 일단 임시로 전부 허용 나중에 권한별 분리
 			);
 //			.anyRequest().authenticated());
+		
+				
 
 		//필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
 		// 리액트(관리자 페이지) 요청만 Token 필터 적용할거임
