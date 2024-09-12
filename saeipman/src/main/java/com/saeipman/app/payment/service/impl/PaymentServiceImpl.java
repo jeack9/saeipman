@@ -1,5 +1,7 @@
 package com.saeipman.app.payment.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +19,18 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
-	public PaymentVO selectMonthInfo(PaymentVO payVO) {
+	public List<PaymentVO> selectMonthInfo(PaymentVO payVO) {
 		return paymentMapper.selectMonthPay(payVO);
 	}
 
-	@Override
-	public PaymentVO selectPaymentHistory(PaymentVO payVO) {
-		return paymentMapper.PayHistory(payVO);
-	}
-
-	@Override
-	public PaymentVO payAmountInfo(PaymentVO payVO) {
-		return paymentMapper.PayAmount(payVO);
-	}
+//	@Override
+//	public PaymentVO selectPaymentHistory(PaymentVO payVO) {
+//		return paymentMapper.PayHistory(payVO);
+//	}
+//
+//	@Override
+//	public PaymentVO payAmountInfo(PaymentVO payVO) {
+//		return paymentMapper.PayAmount(payVO);
+//	}
 
 }

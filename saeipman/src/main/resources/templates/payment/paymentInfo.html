@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}">
+<head>
+<meta charset="UTF-8">
+<style>
+/* .row {
+	border: 1px solid white;
+} */
+#container {
+	justify-content: center;
+}
+
+/* thead {
+	background-color: lightgrey;
+} */
+th, td {
+	text-align: center;
+}
+
+.form-check {
+	justify-content: center;
+}
+</style>
+</head>
+<body>
+	<div layout:fragment="Main" id="container">
+		<select class="form-select mb-6" aria-label="Default select example"
+			id="option">
+			<option selected>조회할 기간 선택(최근 3개월)</option>
+		</select>
+
+
+		<div class="col-sm-12 col-xl-6">
+			<div class="bg-light rounded h-100 p-4">
+				<h6 class="mb-4">납부내역</h6>
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-12 col-sm-6">월세</div>
+						<div class="col-12 col-sm-6">관리비</div>
+						<!-- Ajax에서 받아온 내용을 append 활용해서 데이터 출력하는 부분 -->
+						<div class="col-12 col-sm-3 delete" id="rentMonth"></div>
+						<div class="col-12 col-sm-3 delete" id="Rentpay"></div>
+						<div class="col-12 col-sm-3 delete" id="gwanlibiMonth"></div>
+						<div class="col-12 col-sm-3 delete" id="Gwanlibi"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th colspan="6">납부 예정</th>
+					</tr>
+					<tr>
+						<th colspan="3">월세</th>
+						<th colspan="3">관리비</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<!-- th:each 돌려야함 -->
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" value=""
+									id="flexCheckDefault"><label class="form-check-label"
+									for="flexCheckDefault"></label>
+							</div>
+						<th:block th:each="payInF : ${payInfo}">
+							<td>월</td>
+							<td>금액</td>
+						</th:block>
+					</tr>
+					<tr>
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" value=""
+								id="flexCheckDefault"><label class="form-check-label"
+								for="flexCheckDefault"></label>
+						</div>
+						<th:block th:each="payInF : ${payInfo}">
+							<td>[[${payInF.paymentMonth}]]</td>
+							<td>[[${payInF.gaguGwanlibi}]]</td>
+						</th:block>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<script>
+			let date = new Date();
+			let nowMonth = dateToM(date);
+			let startMonth = nowMonth - 4;
+			let year = dateToYear(date)
+			let yearM;
+			for (let i = startMonth; i < nowMonth - 1; i++) {
+				let optionDate = dateToM(new Date(year, i, 1));
+				yearM = dateToYM(new Date(year, i, 1))
+				//console.log(dateToM(new Date(year, i, 1)));
+				$('#option').append(
+						`<option value="${yearM}">` + optionDate
+								+ '월 </option>');
+			}
+
+			//납부조회 날짜를 클릭했을 때 해당 월의 납부 조회기록을 받아오기 위해 Ajax 사용
+
+			$('#option').on('change', payMonth)
+
+			function payMonth(event) {
+				let paymentMonth = event.target.value;
+
+				$.ajax(ctxPath + "/paymentAjax", {
+					type : "GET",
+					//contentType : "application/json",
+					data : {
+						pay : paymentMonth
+					},
+				}).done(function(pay) {
+
+					//현재 다른 결제월의 test데이터는 없는데, 다른 결제월을 선택해도 기존의 결제일에 출력된 데이터가 계속 남아있어서 작성함.
+					if (pay == null || pay == '') {
+						$('.delete').html('');
+					} else {
+						//.html로 한 이유는 기존의 값을 지우고 새로 선택한 값만 출력하기 위해서임.
+						let paymentMonth = pay[0].paymentMonth; //2024-07-07 00:00:00()
+						let year = paymentMonth.substring(0, 4); //2024
+						let month = paymentMonth.substring(5, 7); //07
+						let day = paymentMonth.substring(8, 10)//07
+						let payM = `${year}/${month}/${day}`;
+
+						$('#gwanlibiMonth').html(payM);
+						$('#Gwanlibi').html(pay[0].gaguGwanlibi);
+					}
+				})
+			}
+		</script>
+	</div>
+</body>
+</html>

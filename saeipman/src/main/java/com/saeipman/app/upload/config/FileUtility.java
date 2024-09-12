@@ -27,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 public class FileUtility {
 
 	private final FileService fileService;
-	private final BuildingService buildingService ;
 
 	
 	@Value("${file.upload.path}")
@@ -38,7 +37,7 @@ public class FileUtility {
 	@Setter
 	private String folder;
 	
-	public String upload(MultipartFile[] files) {
+	public String multiUpload(MultipartFile[] files) {
 		List<String> imgList = new ArrayList<>();
 		FileVO fileVO = new FileVO();
 
@@ -87,18 +86,19 @@ public class FileUtility {
 		} // for END
 		return group;
 	}
-	public String ocrUpload(MultipartFile ocrFile) {
+	
+	public String singleUpload(MultipartFile ocrFile) {
 		List<String> imgFile = new ArrayList<>();
-		BuildingVO buildingVO = new BuildingVO(); 
+	 
 		String folderPath = makeFolder(this.folder);
 		log.info(uploadPath);
 
-		String fileName = ocrFile.getOriginalFilename();
 		String uuid = UUID.randomUUID().toString();
+		String fileName = uuid + ocrFile.getOriginalFilename();
 		String uploadFolder = folderPath + "/" + uuid + "_" + fileName;
 		String saveName = uploadPath + uploadFolder; // separator = 자바가 인식하는 경로
 		
-		buildingVO.setOcrFileName(uuid + "_" + fileName);
+
 		
 		log.debug("saveName : " + saveName);
 
@@ -111,7 +111,7 @@ public class FileUtility {
 		}
 	
 		imgFile.add(setImgPath(uploadFolder));
-		return null;
+		return fileName;
 		
 	}
 
