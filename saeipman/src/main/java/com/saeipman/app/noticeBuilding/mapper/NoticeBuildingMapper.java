@@ -2,6 +2,7 @@ package com.saeipman.app.noticeBuilding.mapper;
 
 import java.util.List;
 
+import com.saeipman.app.building.service.BuildingVO;
 import com.saeipman.app.noticeBuilding.service.NoticeBuildingVO;
 import com.saeipman.app.noticeBuilding.utils.PagingSearchDTO;
 
@@ -27,6 +28,9 @@ public interface NoticeBuildingMapper {
 		
 		//페이징 - 글 총 개수
 		public int totalBoardNoticeBuilding(PagingSearchDTO pgsc);
+		
+		//임대인 건물 목록
+		public List<BuildingVO> imdaeinBuildingInfo(BuildingVO buildingVO);
 		
 		
 		

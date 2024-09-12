@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.saeipman.app.commom.security.SecurityUtil;
+import com.saeipman.app.member.service.LoginInfoVO;
 import com.saeipman.app.minwon.service.Criteria;
 import com.saeipman.app.minwon.service.MinwonService;
 import com.saeipman.app.minwon.service.MinwonVO;
@@ -28,7 +30,6 @@ import com.saeipman.app.minwon.service.PageDTO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.nurigo.sdk.message.service.DefaultMessageService;
 
 @Slf4j
 @Controller
@@ -40,26 +41,14 @@ public class MinwonController {
 
 	@Value("${file.upload.path}")
 	private String uploadPath;
+
 	
-	/*@Value("${coolsms.api.key}")
-	private String apiKey;
 
-	@Value("${coolsms.api.secret}")
-	private String apiSecret;
-
-	@Value("${coolsms.api.number}")
-	private String fromPhoneNumber;
-*/
-	private DefaultMessageService messageService;
-/*
-	@PostConstruct
-	private void init() {
-		this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
-	}
-*/
 	// 전체조회
 	@GetMapping("minwonList")
 	public String minwonList(Criteria cri, Model model) {
+		LoginInfoVO login = SecurityUtil.getLoginInfo();
+		cri.setBuildingId("ZIP10");//로그인한 임차인의 아이디(연락처)로 계약서의 방, 건물 아이디가 필요하다.
 		cri.setAmount(5);
 		List<MinwonVO> list = minwonService.minwonList(cri);
 		model.addAttribute("minwon", list);
@@ -102,8 +91,9 @@ public class MinwonController {
 	// 등록(처리)
 	@PostMapping("minwonInsert")
 	public String minwonInsert(@RequestPart MultipartFile[] files, MinwonVO minwonVO) {
-		minwonVO.setRoomId("2");
-		minwonVO.setRoomNo("101");
+		
+		minwonVO.setRoomId("ZIP201");
+		minwonVO.setRoomNo("201");
 
 		List<String> imgList = new ArrayList<>();
 
@@ -145,27 +135,7 @@ public class MinwonController {
 		return "minwon/minwonUpdate";
 
 	}
-	/*
-	// 보내는 메시지 내용
-	@PostMapping("/send-one")
-	@ResponseBody
-	public String sendOne() {
-		Message message = new Message();
-
-		message.setFrom(fromPhoneNumber); // 발신 번호
-		message.setTo("01092086643");
-		message.setText("인증코드는 안준모 입니다");
-
-		SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-		System.out.println(response);
-		if (response.getStatusCode().equals("2000")) { // 2000은 정상으로 발송된 statusCode 번호임
-			return "성공";
-
-		} else {
-			return "bad"; // 발송 오류 모달창
-		}
-	}
-*/
+	
 	// 수정(처리)
 	@PostMapping("minwonUpdate")
 	@ResponseBody

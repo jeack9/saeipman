@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.saeipman.app.building.service.BuildingVO;
 import com.saeipman.app.noticeBuilding.mapper.NoticeBuildingMapper;
 import com.saeipman.app.noticeBuilding.service.NoticeBuildingService;
 import com.saeipman.app.noticeBuilding.service.NoticeBuildingVO;
@@ -74,6 +75,11 @@ public class NoticeBuildingServiceImpl implements NoticeBuildingService {
 	@Override //페이징
 	public int totalPage(PagingSearchDTO pgsc) {
 		return noticeBuildingMapper.totalBoardNoticeBuilding(pgsc);
+	}
+
+	@Override //임대인 건물 목록 출력
+	public List<BuildingVO> imdaeinBuilding(BuildingVO buildingVO) {
+		return noticeBuildingMapper.imdaeinBuildingInfo(buildingVO);
 	}
 
 }

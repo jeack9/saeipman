@@ -9,24 +9,30 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.saeipman.app.message.MessageVO;
+import com.saeipman.app.message.MsgService;
+import com.saeipman.app.message.mapper.MsgMapper;
 import com.saeipman.app.minwon.mapper.MinwonMapper;
 import com.saeipman.app.minwon.service.Criteria;
 import com.saeipman.app.minwon.service.MinwonService;
 import com.saeipman.app.minwon.service.MinwonVO;
-import com.saeipman.app.minwon.service.PageDTO;
 
 
 
 @Service
 public class MinwonServiceImpl implements MinwonService{
-
+	@Autowired
 	private MinwonMapper minwonMapper;
 	
 	@Autowired
-	public MinwonServiceImpl(MinwonMapper minwonMapper) {
-		this.minwonMapper = minwonMapper;
-	}
+	private MsgMapper msgMapper;
 
+	@Autowired
+	private MsgService msgService;
+	
+
+	
+	
 	@Override
 	public List<MinwonVO> minwonList(Criteria cri) {
 		return minwonMapper.selectMinwonAll(cri);
@@ -40,6 +46,17 @@ public class MinwonServiceImpl implements MinwonService{
 	@Override
 	public int minwonInsert(MinwonVO minwonVO) {
 		int result = minwonMapper.insertMinwon(minwonVO);
+		if(result == 1) {
+			//메세지
+			String msg = msgMapper.selectMinwonMsg(0);
+			//String msg = "새로운 민원이 등록되었습니다.";
+			//전화번호 조회
+			String phone = msgMapper.selectPhone(minwonVO.getRoomId());
+			//문자전송
+			msgService.sendOne(phone, msg);
+					
+		}
+		
 		return result == 1? minwonVO.getPostNo() : -1;
 	}
 
@@ -82,5 +99,10 @@ public class MinwonServiceImpl implements MinwonService{
 	public int acceptStateUpdate(MinwonVO minwonVO) {
 		return minwonMapper.updateAcceptState(minwonVO);
 	}
+
+
+
+	
+
 	
 }

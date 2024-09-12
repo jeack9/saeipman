@@ -30,29 +30,19 @@ import lombok.RequiredArgsConstructor;
 public class LoginController {
 	private final LoginService lsvc;
 
-	@GetMapping("login") // 로그인폼 이동
-	public void loginForm() {
-	};
+	// 로그인폼 이동
+	@GetMapping("login") 
+	public void loginForm() {};
 
-	@GetMapping("join") // 회원가입폼 이동
+	// 회원가입폼 이동
+	@GetMapping("join") 
 	public void joinForm(Model model) {
 		model.addAttribute("memberReq", new MemberRequestDTO());
 	};
-
-	@GetMapping("home")
-	public void homeP() {
-	}
-
-	@PostMapping("login") // 로그인처리
-	@ResponseBody
-	public String login(LoginInfoVO loginVO) {
-		LoginInfoVO login = lsvc.loginInfo(loginVO);
-		boolean isLogin = login == null ? false : true;
-		if (isLogin)
-			return "성공";
-		else
-			return "실패";
-	}
+	
+	// 메인페이지
+	@GetMapping("home") 
+	public void homeP() {}
 
 	@PostMapping("join") // 회원가입처리
 	public String join(ImdaeinVO imdaeinVO, @RequestParam(name = "pw") String pw) {
@@ -73,21 +63,11 @@ public class LoginController {
 
 	// 회원가입 폼 유효성검사
 	@PostMapping("/vaildJoin")
-	public String validJoin(@Valid @ModelAttribute("memberReq") MemberRequestDTO memberReq, BindingResult bindingResult,
-			Model model) {
+	public String validJoin(@Valid @ModelAttribute("memberReq") MemberRequestDTO memberReq, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
-			System.out.println("bbbb");
 			return "member/join";
 		}
-		System.out.println("aaaa");
 		lsvc.addImdaein(memberReq);
 		return "member/login";
 	}
-
-	// jwt 테스트
-	@GetMapping("/test")
-	public String testP() {
-		return "test";
-	}
-
 }

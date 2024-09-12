@@ -1,5 +1,6 @@
 package com.saeipman.app.building.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,9 +8,10 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.saeipman.app.building.mapper.BuildingMapper;
+import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.building.service.BuildingService;
 import com.saeipman.app.building.service.BuildingVO;
-import com.saeipman.app.building.service.BuildingPageDTO;
+import com.saeipman.app.room.service.RoomVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,21 +22,21 @@ public class BuildingServiceImpl implements BuildingService{
 	
 
 	@Override
-	public List<BuildingVO> buildingDetail(BuildingPageDTO pageDTO) {
+	public List<BuildingVO> buildingDetail(BuildingPageDTO pageDTO, String id) {
 		
-		return buildingMapper.buildingList(pageDTO);
+		return buildingMapper.buildingList(pageDTO, id);
 	}
 	@Override
 	public BuildingVO buildingInfo(BuildingVO buildingVO) {
 		return buildingMapper.buildingListInfo(buildingVO);
 	}
 	@Override
-	public int insertBuilding(BuildingVO buildingVO) {
+	public int buildingInsert(BuildingVO buildingVO) {
 		int result = buildingMapper.buildingInsert(buildingVO);
 		return result;
 	}
 	@Override
-	public Map<String, Object> updateBuilding(BuildingVO buildingVO) {
+	public Map<String, Object> buildingUpdate(BuildingVO buildingVO) {
 		Map<String, Object> map = new HashMap<>();
 		boolean isSuccessed = false;
 		int result = buildingMapper.buildingUpdate(buildingVO);
@@ -55,8 +57,23 @@ public class BuildingServiceImpl implements BuildingService{
 		return buildingMapper.selectBuildingDelete(buildingId);
 	}
 	@Override
-	public int totalPage(BuildingPageDTO pageDTO) {
-		return buildingMapper.getTotalPageCount(pageDTO);
+	public int totalPage(String id) {
+		return buildingMapper.getTotalPageCount(id);
+	}
+	
+	@Override
+	public Map<String, Object> roomSelectInsert(List<RoomVO> list) {
+		System.out.println();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for(RoomVO vo : list) {
+			System.out.println("가나다" + vo);
+			buildingMapper.selectRoomInsert(vo);
+		}
+		map.put("list", list);
+		
+		return map;
 	}
 	
 }

@@ -15,12 +15,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.saeipman.app.building.service.BuildingVO;
+import com.saeipman.app.commom.security.SecurityUtil;
+import com.saeipman.app.member.service.LoginInfoVO;
 import com.saeipman.app.noticeBuilding.service.NoticeBuildingService;
 import com.saeipman.app.noticeBuilding.service.NoticeBuildingVO;
 import com.saeipman.app.noticeBuilding.utils.PagingSearchDTO;
@@ -43,16 +45,25 @@ public class NoticeBuildingController {
 	// 전체조회
 	@GetMapping("noticeBuildingList")
 	public String noticeBuildingList(PagingSearchDTO pgsc, Model model) {
+		BuildingVO buildingVO = new BuildingVO();
+		
+		//securityutil에서 임대인id를 받아와서 변수에 할당
+		String imdaeinId = SecurityUtil.getLoginId();
+		
+		//pgsc의 임대인id에 받아온 속성값 부여 => 그래야 해당 임대인이 가진 건물들의 공지사항을 확인할 수 있음.
+		pgsc.setImdaeinId(imdaeinId);
+		List<NoticeBuildingVO> list = noticeBuildingService.noticeBuildingList(pgsc);
+		model.addAttribute("BNotice", list);
+		
+		//임대인이 소유한 건물의 이름을 확인하기 위해 buildingVO에도 속성값 부여
+		buildingVO.setImdaeinId(imdaeinId);
+		List<BuildingVO> name = noticeBuildingService.imdaeinBuilding(buildingVO);
+		model.addAttribute("Bname", name);
 		
 		//전체 페이지 수 계산해서 setTotalPage에 전체 페이지 수 할당 
 		int totalPage = noticeBuildingService.totalPage(pgsc);
 		pgsc.setTotal(totalPage);
-		//System.out.println(totalPage);
-		
 		model.addAttribute("Paging", pgsc);
-		
-		List<NoticeBuildingVO> list = noticeBuildingService.noticeBuildingList(pgsc);
-		model.addAttribute("BNotice", list);
 		
 		return "noticeBuilding/noticeBuildingList"; 
 	}
@@ -71,7 +82,11 @@ public class NoticeBuildingController {
 
 	// 등록(페이지)
 	@GetMapping("noticeBuildingInsert")
-	public String noticeBuildingInsertForm() {
+	public String noticeBuildingInsertForm(Model model) {
+		
+		LoginInfoVO login = SecurityUtil.getLoginInfo();
+	      model.addAttribute("login", login);
+		
 		return "noticeBuilding/noticeBuildingInsert";
 	}
 
