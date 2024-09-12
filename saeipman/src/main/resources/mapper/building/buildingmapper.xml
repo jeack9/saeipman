@@ -11,13 +11,13 @@
 		                      details_addr,
 		                      total_gagu
 		                from  building_info
-		                where IMDAEIN_ID = '10'
+		                where IMDAEIN_ID = #{imdaeinId}
 						order by 1
 		 	)a
 		<![CDATA[     
-		where rownum <= #{pageNum} * #{amount} )b   
+		where rownum <= #{pageDTO.pageNum} * #{pageDTO.amount} )b   
 		
-		where rn > (#{pageNum} -1) * #{amount}
+		where rn > (#{pageDTO.pageNum} -1) * #{pageDTO.amount}
 		]]>
 	</select>
 	<select id="buildingListInfo" resultType="BuildingVO">
@@ -35,11 +35,17 @@
 			   lift_yn,
 			   delay_alert_yn,
 			   minwon_alert_yn,
-			   group_id
+			   group_id,
+			   floor_area,
+			   building_heigh,
+			   floor_area_ratio
 		FROM building_info 
 		WHERE building_id = #{buildingId}
 	</select>
 	<insert id="buildingInsert" parameterType="BuildingVO">
+	<selectKey keyProperty="buildingId" order="BEFORE" resultType="string">
+	SELECT 'ZIP'||(LPAD(buildingSeq.nextval,6,'0')) FROM dual
+	</selectKey>
 		INSERT INTO building_info ( building_id,
 									ocr_file_name,
 									group_id,
@@ -58,7 +64,7 @@
 									parking,
 									memo
 								  )
-		VALUES ('ZIP'||(LPAD(buildingSeq.nextval,6,'0')),
+		VALUES (#{buildingId},
 				#{ocrFileName},
 				#{groupId},
 				#{imdaeinId},
@@ -102,7 +108,7 @@
 	<select id="getTotalPageCount" resultType="int">
 		SELECT count(*)
 		FROM building_info
-		WHERE imdaein_id = '10'
+		WHERE imdaein_id = #{imdaeinId}
 	</select>
 	
 	<insert id = "selectRoomInsert" parameterType="RoomVO">

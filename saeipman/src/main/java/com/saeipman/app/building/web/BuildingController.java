@@ -19,8 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.saeipman.app.building.service.BuildingService;
 import com.saeipman.app.building.service.BuildingVO;
+import com.saeipman.app.commom.security.SecurityUtil;
 import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.file.service.FileService;
+import com.saeipman.app.member.service.LoginInfoVO;
 import com.saeipman.app.ocrTest.config.OcrApi;
 import com.saeipman.app.ocrTest.config.OcrUtil;
 import com.saeipman.app.room.service.RoomVO;
@@ -35,20 +37,22 @@ public class BuildingController {
 	private String secretKey;
 	private final OcrApi naverApi;
 	private final OcrUtil ocrUtil;
-
+	
 	private final BuildingService buildingService;
 	private final FileUtility fileUtill;
 	private final FileService fileService;
-
+	
 	@GetMapping("/buildingList")
 	public String buildingInfo(BuildingPageDTO buildingPageDTO,Model model) {
+		LoginInfoVO login = SecurityUtil.getLoginInfo();
+		model.addAttribute("imdaeinId", login);
 		
 		//리스트 총 수
-		int total = buildingService.totalPage(buildingPageDTO);
+		int total = buildingService.totalPage(login.getLoginId());
 		buildingPageDTO.setTotal(total);
 		
 		//리스트 출력
-		List<BuildingVO> list = buildingService.buildingDetail(buildingPageDTO);
+		List<BuildingVO> list = buildingService.buildingDetail(buildingPageDTO, login.getLoginId());
 		
 		model.addAttribute("buildings", list);
 		
@@ -60,6 +64,7 @@ public class BuildingController {
 	@GetMapping("/buildingDetails")
 	@ResponseBody
 	public BuildingVO buildingDetails(@RequestParam("id") String buildingId) {
+		
 		BuildingVO buildingVO = new BuildingVO();
 		buildingVO.setBuildingId(buildingId);
 
@@ -82,25 +87,33 @@ public class BuildingController {
 	}
 	@GetMapping("/roomInsertTest")
 	public String roomTest() {
+		
 		return "building/roomTest";
 	}
 	
 	@PostMapping("/buildingInsert")
 	@ResponseBody
-	public int insertBuilding(@RequestPart MultipartFile[] files, MultipartFile ocrFile,
+	public String insertBuilding(@RequestPart MultipartFile[] files, MultipartFile ocrFile,
 								 BuildingVO buildingVO, RoomVO roomVO) throws IOException {
 		fileUtill.setFolder("건물");
+		LoginInfoVO login = SecurityUtil.getLoginInfo();
+		
 		String groupId = fileUtill.multiUpload(files);
 		String ocr = fileUtill.singleUpload(ocrFile);
+		buildingVO.setImdaeinId(login.getLoginId());
 		buildingVO.setGroupId(groupId);
 		buildingVO.setOcrFileName(ocr);
-		int success = buildingService.insertBuilding(buildingVO);
+		int success = buildingService.buildingInsert(buildingVO);
 		
-
-		
-		return success;
+		return buildingVO.getBuildingId();
 	}
-	
+	@PostMapping("/selectRoomInsert")
+	@ResponseBody
+	public Map<String, Object> selectRoomInsert(@RequestBody List<RoomVO> list) {
+
+		Map<String, Object> result = buildingService.roomSelectInsert(list);
+		return result;
+	}
 	
 	@PostMapping("/ocrUpload")
 	@ResponseBody
@@ -177,7 +190,7 @@ public class BuildingController {
 	public Map<String, Object> updateBuilding(@RequestBody BuildingVO buildingVO) {
 		System.out.println(buildingVO);
 
-		return buildingService.updateBuilding(buildingVO);
+		return buildingService.buildingUpdate(buildingVO);
 	}
 
 	@GetMapping("/buildingDelete")

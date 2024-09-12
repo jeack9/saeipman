@@ -47,10 +47,7 @@ input {
 							role="switch">
 					</div>
 				</div>
-				<div>
-					<input name="imdaeinId" type="hidden" value="10" id="imdaeinId"
-						readonly />
-				</div>
+
 				<div class="form-group col-md-7">
 					<label for="bname" class="form-label">빌딩 이름 </label> <input
 						type="text" id="bname" name="buildingName" class="form-control">
@@ -117,15 +114,19 @@ input {
 					<button type="button"
 						th:onclick="|location.href='@{buildingList}'|"
 						class="btn btn-outline-secondary m-2">취소</button>
+
 				</div>
-				<!-- Modal -->
+
+			</form>
+			<!-- Modal -->
+			<form name="roomForm">
 				<div class="modal fade" id="staticBackdrop"
 					data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
 					aria-labelledby="staticBackdropLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content">
 							<div class="modal-header">
-								<input type="hidden" name="buildingId" id="bid">
+								<input type="text" name="buildingId" id="bid">
 								<h5 class="modal-title" id="staticBackdropLabel">자동 방생성</h5>
 								<button type="button" class="btn-close" data-bs-dismiss="modal"
 									aria-label="Close"></button>
@@ -146,7 +147,7 @@ input {
 								</table>
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn btn-primary">저장</button>
+								<button type="button" id="roomInsertBtn" class="btn btn-primary">저장</button>
 								<button type="button" class="btn btn-secondary"
 									data-bs-dismiss="modal">취소</button>
 							</div>
@@ -155,7 +156,6 @@ input {
 				</div>
 			</form>
 		</div>
-	
 
 		<script>
 		 
@@ -222,14 +222,13 @@ input {
 				contentType: false,
 			    processData: false,
 			}).done(result => {
-				
-				$('#bid').val(result.buildingId);
+				console.log(result, "result");
 				 if (!confirm("건물이 추가되었습니다.\n자동 방생성을 하시겠습니까?")) {
 					location.href=ctxPath+"/buildingList";
 				 } else {
-				    
-					 $('#staticBackdrop').modal('show');
-				    } 
+					$('#bid').val(result);
+				    $('#staticBackdrop').modal('show');
+			    } 
 				
 			});
 		}	
@@ -254,6 +253,40 @@ input {
 				$(this).attr('value', 'N');
 			}
 		})
+		
+		//방 생성
+		 $('#roomInsertBtn').on('click', function(e) {
+			let list = [];
+			let chks = $('input[name=chk]:checked').next();
+			
+			for(chk of chks){
+				console.log(chk.value);
+				let data= chk.value;
+				list.push(data);
+			}
+			
+			$.ajax(ctxPath+"/selectRoomInsert",{
+				type:'post',
+				contentType : 'application/json',
+				data:JSON.stringify(list),
+				
+			}).done(result=>{
+				console.log(result.list);
+			});
+		}); 
+			
+		
+			
+	/* 	function getList(){
+			let formArr = $('form[name="updateForm"]').serializeArray();
+			//console.log(formArr);
+			let formObj = {};
+			$.each(formArr, function(idx, ele){
+				formObj[ele.name] = ele.value;
+			});
+			console.log(formObj);
+			return formObj;
+		}; */
 		
 		//ocr 업로드
 		$('#fileImg').on('click', function(){

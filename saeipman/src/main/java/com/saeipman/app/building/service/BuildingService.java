@@ -9,15 +9,15 @@ import com.saeipman.app.room.service.RoomVO;
 
 
 public interface BuildingService {
-	public List<BuildingVO> buildingDetail(BuildingPageDTO pageDTO);
+	public List<BuildingVO> buildingDetail(BuildingPageDTO pageDTO, String id);
 	public BuildingVO buildingInfo(BuildingVO buildingVO);
-	public int insertBuilding(BuildingVO buildingVO);
-	public Map<String, Object> updateBuilding(BuildingVO buildingVO);
+	public int buildingInsert(BuildingVO buildingVO);
+	public Map<String, Object> buildingUpdate(BuildingVO buildingVO);
 	public int buildingDelete(String buildingId);
 	
 	//페이징
-	public int totalPage(BuildingPageDTO pageDTO);
+	public int totalPage(String id);
 	
 	//방 추가
-	public int roomSelectInsert(List<RoomVO> list);
+	public Map<String, Object> roomSelectInsert(List<RoomVO> list);
 }
