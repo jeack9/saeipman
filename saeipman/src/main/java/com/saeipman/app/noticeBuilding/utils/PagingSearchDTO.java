@@ -12,6 +12,7 @@ public class PagingSearchDTO {
 	private int nowPage; // 현재 페이지
 	private int pageData; // 한 페이지에 나오는 게시물 수
 	private int total; //전체 게시물 수
+	private String imdaeinId;// 임대인 아이디
 	
 	private String scKeyword;
 

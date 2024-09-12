@@ -27,9 +27,11 @@
 							, bn.group_id
 							, bn.views
 							, bi.building_id
+							, bi.building_name
+							, bi.imdaein_id
 					FROM building_notice bn join building_info bi
 											on bn.building_id = bi.building_id
-					WHERE bi.building_id = 'ZIP10'
+					WHERE bi.imdaein_id = #{imdaeinId}
 					ORDER BY post_no desc
 					) a
 
@@ -45,11 +47,17 @@
 	<!-- 검색 결과 -->
 	<select id="totalBoardNoticeBuilding" resultType="int">
 		SELECT count(*)
-		FROM building_notice
-		where post_no > 0
-		AND building_id = 'ZIP10'
+		FROM building_notice bn join building_info bi
+											on bn.building_id = bi.building_id
+		where bn.post_no > 0
+		AND bi.imdaein_id = #{imdaeinId}
 		<include refid="searchPaging"></include>
 	</select>
+	
+	
+	
+	<!-- 임대인 건물 리스트 -->
+	
 
 
 	<!-- 단건조회 -->

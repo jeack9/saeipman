@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.saeipman.app.commom.security.SecurityUtil;
+import com.saeipman.app.member.service.LoginInfoVO;
 import com.saeipman.app.payment.service.PaymentService;
 import com.saeipman.app.payment.service.PaymentVO;
 
@@ -24,6 +26,10 @@ public class PaymentController {
 	//납부 페이지
 	@GetMapping("paymentInfo")
 	public String paymentInfo(PaymentVO payVO, Model model) {
+		
+		LoginInfoVO login = SecurityUtil.getLoginInfo();
+	      model.addAttribute("login", login);
+		
 		payVO.setPaymentYN(-1); 
 		List<PaymentVO> payInfo = paymentService.selectMonthInfo(payVO);
 		model.addAttribute("payInfo", payInfo);
