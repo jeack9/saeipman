@@ -35,6 +35,7 @@ public class GwanlibiController {
 	@GetMapping("gwanlibiList")
 	public String gwanlibiList(Model model, @RequestParam(name = "imdaeinId", defaultValue = "user02") String imdaeinId, BuildingPageDTO dto) {
 		//LoginInfoVO login = SecurityUtil.getLoginInfo();
+		//String imdaeinId = login.getLoginId();
 		//System.err.println(login);
 		// 한 페이지당 출력할 건물 개수
 		dto.setAmount(6);
