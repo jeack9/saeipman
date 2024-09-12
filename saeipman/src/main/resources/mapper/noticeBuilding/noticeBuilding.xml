@@ -42,6 +42,7 @@
 
 		) p
 		where rn > (#{nowPage}-1) * #{pageData}
+		
 	</select>
 
 	<!-- 검색 결과 -->
@@ -57,7 +58,12 @@
 	
 	
 	<!-- 임대인 건물 리스트 -->
-	
+	<select id="imdaeinBuildingInfo" resultType="BuildingVO">
+		SELECT  building_id
+	     	  , building_name
+		FROM    building_info
+		WHERE   imdaein_id = #{imdaeinId}
+	</select>
 
 
 	<!-- 단건조회 -->
