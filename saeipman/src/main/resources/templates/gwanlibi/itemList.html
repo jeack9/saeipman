@@ -21,7 +21,6 @@
 	margin-top: 10px
 }
 
-
 #appendBtn, #deleteBtn {
 	display: inline-block;
 	background: #6CBEC7;
@@ -50,7 +49,7 @@
 				<button class="btn btn-light" id="appendBtn">추가</button>
 				<button class="btn btn-light" id="deleteBtn">삭제</button>
 			</div>
-			
+
 			<div class="btnDiv2">
 				<button class="btn btn-light saveBtn">저장하기</button>
 			</div>
@@ -63,7 +62,7 @@
 			/* 1. <script th:inline="javascript">
 			   2. Thymeleaf 변수 사용 */
 			let list = [[${ list }]];
-			console.log(list);
+			//console.log(list);
 			
 
 			// TOAST UI //
@@ -136,7 +135,7 @@
 						},
 						// [Column-3] 고정 관리비
 						{
-							header: '고정 관리비 입력',
+							header: '고정 관리비',
 							name: 'fixedPrice',
 							resizable: true,
 							align: 'center',
@@ -145,23 +144,54 @@
 					]
 				})
 				grid.validate();
+				
+				grid.getData().forEach(ele => {
+					console.log(ele.rowKey);
+					if(ele.variableYn == '변동') {
+						grid.disableCell(ele.rowKey, 'fixedPrice');
+					} else {
+						grid.enableCell(ele.rowKey, 'fixedPrice');
+					}
+				})
+				
+				// 수정된 데이터가 고정이면 해당 셀에 값 입력 막기.
+				grid.on('click', function(event) {
+					//console.log(grid.getModifiedRows());
+					if(grid.getModifiedRows().createdRows.length >= 1  || grid.getModifiedRows().updatedRows.length >= 1) {
+						grid.getData().forEach(ele => {
+							if(ele.variableYn == '변동') {
+								grid.disableCell(ele.rowKey, 'fixedPrice');
+							} else {								
+								grid.enableCell(ele.rowKey, 'fixedPrice');
+							}
+						})
+					}
+				})
 				return grid;
 			}
 			
 			const appendBtn = document.getElementById('appendBtn');
 			const deleteBtn = document.getElementById('deleteBtn');
 			
-		    appendBtn.addEventListener('click', () => {
-		        grid.appendRow({ gwanlibiName: '관리비 항목 입력해주세요.'});
+		    appendBtn.addEventListener('click', function() {
+		        grid.appendRow({ gwanlibiName: '추가할 관리비 항목을 입력해주세요.', variableYn: '변동', fixedPrice: 0 });
 		    });
 		    
-		    deleteBtn.addEventListener('click', () => {
-		    	grid.removeCheckedRows();
+		    // 삭제 버튼 클릭 시, 체크된 항목이 없을 경우.
+		    deleteBtn.addEventListener('click', function() {
+		    	if(grid.getCheckedRows().length <= 0){
+		    		alert('삭제할 항목을 선택하세요.');
+		    	} else {
+			    	grid.removeCheckedRows();		    		
+		    	}
 			});
+		    
+		    //todo
 			let buildingId = [[${buildingId}]];
-		    $('.saveBtn').on('click', function() {
-		    	console.log('클릭');
+			$('.saveBtn').on('click', function() {
+		    	//event.preventDefault()		    	
 		    	if(!buildingId) return;
+		    	
 				$.ajax({
 					url: `${ctxPath}/insertItems?buildingId=${buildingId}`,
 					method: 'post',
@@ -170,13 +200,45 @@
 				}).done(function(result) {
 					console.log('success');
 					console.log(result);
-					alert(result + '건이 정상적으로 업데이트 되었습니다')
-				}).fail(function(err){
+					alert(result + '건이 정상적으로 업데이트 되었습니다');
+				}).fail(function(err){					
 					console.log('fail');
+					alert('관리비 항목 업데이트에 실패했습니다.');
+					alert('수정 항목을 한 번 더 확인해주세요.');
 					console.log(err);
 				});
-
+		    		
+		    	
 			});
+		    
+		    /* $('.saveBtn').on('click', function() {
+		    	//event.preventDefault()		    	
+		    	if(!buildingId) return;
+		    	let data = grid.getData();
+		    	data.forEach(ele => {
+		    		if(ele.gwanlibiName == '' || ele.gwanlibiName == '추가할 관리비 항목을 입력해주세요.') {
+		    			alert('관리비 항목을 정확히 입력하세요.');
+		    			//event.preventDefault();
+		    			return;
+		    		} else {
+						$.ajax({
+							url: `${ctxPath}/insertItems?buildingId=${buildingId}`,
+							method: 'post',
+							contentType: 'application/json',
+							data: JSON.stringify(grid.getData())
+						}).done(function(result) {
+							console.log('success');
+							console.log(result);
+							alert(result + '건이 정상적으로 업데이트 되었습니다');
+						}).fail(function(err){					
+							console.log('fail');
+							alert('관리비 항목 업데이트에 실패했습니다.');
+							alert('수정 항목을 한 번 더 확인해주세요.');
+							console.log(err);
+						});
+		    		}
+		    	})
+			}); */
 
 		</script>
 	</div>

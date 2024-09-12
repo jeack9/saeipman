@@ -193,7 +193,7 @@
 				});
 
 				// get date value
-				calMonthKo.on('change', () => {
+				calMonthKo.on('change', function() {
 					//console.log(calMonthKo);
 					let paymentMonth = dateToYM(calMonthKo.getDate());
 					let buildingId = building.buildingId;
