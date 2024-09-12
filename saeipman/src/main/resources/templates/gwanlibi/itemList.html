@@ -64,6 +64,7 @@
 			   2. Thymeleaf 변수 사용 */
 			let list = [[${ list }]];
 			console.log(list);
+			
 
 			// TOAST UI //
 			// async - await
@@ -71,22 +72,6 @@
 			$(document).ready(() => {
 				grid = gridLoad();
 			});
-
-			// 등록 버튼 클릭 이벤트
-			// $('.insertBtn').on('click', function () {
-			// 	$.ajax({
-			// 		type: 'post',
-			// 		url: `/insertMaintenceCost`,
-			// 		contentType: 'application/json',
-			// 		data: JSON.stringify(grid.getData()),
-			// 		success: function (data) {
-			// 			console.log("suceess");
-			// 		},
-			// 		error: function (err) {
-			// 			console.log(err);
-			// 		}
-			// 	})
-			// })
 
 
 			// Toast UI - Grid //

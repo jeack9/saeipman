@@ -12,6 +12,9 @@ public interface GwanlibiService {
 	// 페이징 - 건물 총 개수
 	public int buildingTotalCount(String imdaeinId);
 	
+	// 기본 관리비 항목 리스트
+	public List<GwanlibiVO> basicGwanlibiList();
+	
 	// 관리비 항목 리스트
 	public List<GwanlibiVO> itemList(String buildingId);
 	

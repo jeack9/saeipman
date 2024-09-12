@@ -83,9 +83,8 @@
 			// JavaScript에서 Thymeleaf 변수 사용하기 //
 			/* 1. <script th:inline="javascript">
 			   2. Thymeleaf 변수 사용 */
-			let detailsList = [[${ detailsList }]];
-			let payDate = detailsList[0].paymentMonth;
-			console.log(detailsList);
+			let detailsList = [[${ detailsList }]];			
+			
 
 			// 해당 건물의 관리 비용 총합계 - number format (, 원)
 			function total() {
@@ -108,7 +107,9 @@
 
 
 			// 건물명 출력
-			$('#bName').text(detailsList[0].buildingName);
+			let building = [[${ buildingInfo }]];
+			console.log(building);
+			$('#bName').text(building.buildingName);
 
 
 			// todo
@@ -175,7 +176,7 @@
 							align: 'center'
 						}
 					]
-				});
+				})
 			}
 			
 			
@@ -198,9 +199,10 @@
 				calMonthKo.on('change', () => {
 					//console.log(calMonthKo);
 					let paymentMonth = dateToYM(calMonthKo.getDate());
-					let buildingId = [[${ buildingId }]];
+					let buildingId = building.buildingId;
 					//console.log(calMonthKo.getDate());
 					//console.log(paymentMonth);
+					console.log(buildingId);
 					
 					$.ajax({
 						url: `${ctxPath}/detailsBillList?buildingId=${buildingId}&paymentMonth=${paymentMonth}`,

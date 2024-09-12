@@ -33,6 +33,12 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		return gwanlibiMapper.getBuildingTotalCount(imdaeinId);
 	}
 	
+	// 기본 관리비 항목 리스트
+	@Override
+	public List<GwanlibiVO> basicGwanlibiList() {
+		return gwanlibiMapper.selectBasicGwanlibiList();
+	}
+	
 	// 관리비 항목 리스트
 	@Override
 	public List<GwanlibiVO> itemList(String buildingId) {
@@ -57,15 +63,6 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 	@Override
 	public List<GwanlibiVO> detailsBillList(GwanlibiVO vo) {
 		
-		System.err.println(vo.getPaymentMonth());
-		
-		if (vo.getPaymentMonth() == null) {
-			// 현재 날짜를 VO에 담아주기.
-			Date now = new Date();			
-			//System.err.println(now);
-			vo.setPaymentMonth(now);
-			System.err.println(vo.getPaymentMonth());
-		}		
 		return gwanlibiMapper.selectGwanlibiDetailsBill(vo);
 	}
 	
@@ -84,6 +81,7 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		
 		return map;
 	}
+
 
 	
 }

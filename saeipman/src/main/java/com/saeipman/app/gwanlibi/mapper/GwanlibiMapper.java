@@ -15,6 +15,9 @@ public interface GwanlibiMapper {
 	// 페이징 - 건물 총 개수
 	public int getBuildingTotalCount(String imdaeinId);
 	
+	// 기본 관리비 목록
+	public List<GwanlibiVO> selectBasicGwanlibiList();
+	
 	// 관리비 항목 리스트
 	public List<GwanlibiVO> selectItemList(String buildingId);
 	

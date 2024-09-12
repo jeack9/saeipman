@@ -13,6 +13,7 @@
 			color: #000000;
 			font-size: 20px;
 			font-weight: bold;
+			margin-left: 10px;
 		}
 		
 		#paymentMonth {
@@ -20,6 +21,7 @@
 			color: #000000;
 			font-size: 20px;
 			font-weight: bold;
+			margin-right: 20px;
 		}	
 		
 		.table {
@@ -57,9 +59,10 @@
 		<br>
 
 		<!-- 건물명 -->
-<!-- 		<p id="bName"></p>
+ 		<h3 id="bName"></h3>
 		
-		<p id="paymentMonth"></p> -->
+		<!-- 날짜 -->
+		<h3 id="paymentMonth"></h3>
 
 		<br>
 		<br>
@@ -86,14 +89,18 @@
 		console.log(list);
 
 		// 건물명 출력
-		//$('#bName').text(list[0].buildingName);
+		$('#bName').text(list[0].buildingName);
 		
-		// 등록/수정할 월 출력.
-/* 		console.log(list[0].paymentMonth);
+		// 등록/수정할 월 출력. (전월 출력)
+ 		/* console.log(list[0].paymentMonth);
 		let date = new Date(new Date(list[0].paymentMonth));
-		let splitDate = date.toISOString().split('T')[0].split('-');		
+		let splitDate = date.toISOString().split('T')[0].split('-');
 		let resultDate = splitDate[0] + '년 ' + splitDate[1] + '월';
-		$('#paymentMonth').text(resultDate); */
+		console.log(splitDate); */
+		// $('#paymentMonth').text(resultDate);
+		let date = new Date();
+		let lastMonth = date.getFullYear() + '년 ' + date.getMonth() + '월'
+		$('#paymentMonth').text(lastMonth);
 		
 		// TOAST UI //
 		// async - await
@@ -105,15 +112,16 @@
 		// 등록 버튼 클릭 이벤트
 		$('.insertBtn').on('click', function() {
 			$.ajax({
+				url:  `${ctxPath}/insertMaintenceCost`,
 				type: 'post',
-				url:  `/insertMaintenceCost`,
 				contentType: 'application/json',				
 				data: JSON.stringify(grid.getData()),
 				success: function(data){
-					console.log("success");
-					
+					console.log(date);
+					console.log("success");					
 				},
 				error: function(err){
+					console.log('fail');
 					console.log(err);
 				}
 			})
