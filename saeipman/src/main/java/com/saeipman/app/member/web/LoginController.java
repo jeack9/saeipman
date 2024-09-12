@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.saeipman.app.commom.security.SecurityUtil;
 import com.saeipman.app.member.dto.MemberRequestDTO;
 import com.saeipman.app.member.service.ImdaeinVO;
 import com.saeipman.app.member.service.LoginInfoVO;
@@ -38,7 +40,9 @@ public class LoginController {
 	};
 
 	@GetMapping("home")
-	public void homeP() {
+	public void homeP(Model model) {
+		LoginInfoVO login = SecurityUtil.getLoginInfo();
+		model.addAttribute("login", login);
 	}
 
 	@PostMapping("login") // 로그인처리

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class roomVO {
+public class RoomVO {
 	private String roomId; // 방 아이디 프라이머리
 	private Integer roomNo; // 방 호실
 	private int floor; // 층
