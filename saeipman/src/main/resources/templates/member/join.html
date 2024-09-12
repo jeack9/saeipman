@@ -23,20 +23,23 @@
 									<input type="text" class="form-control"
 										th:errorclass="field-error" th:field=*{name} placeholder="이름">
 									<label for="name">이름</label>
+									<div class="error_text" id="nameMsg">이름: </div>
 									<div class="field-error" th:errors="*{name}"></div>
 								</div>
 								<div class="mb-3">
 									<div class="form-floating d-flex">
 										<input type="text" class="form-control" th:field=*{id}
-											placeholder="아이디" readonly> <label for="id">아이디</label>
+											placeholder="아이디"> <label for="id">아이디</label>
 										<button type="button" class="btn btn-primary" id="ckIdBtn"
 											style="min-width: 90px;">중복확인</button>
 									</div>
-									<div class="field-error" th:errors="*{id}"></div>
+											<div class="error_text" id="idMsg">아이디</div>
+											<div class="field-error" th:errors="*{id}"></div>
 								</div>
 								<div class="form-floating mb-3">
 									<input type="password" class="form-control" th:field=*{pw}
 										placeholder="비밀번호" autoComplete="off"> <label for="pw">비밀번호</label>
+									<div class="error_text" id="pwMsg">비밀번호: </div>
 									<div class="field-error" th:errors="*{pw}"></div>
 								</div>
 								<div class="form-floating mb-3">
@@ -44,6 +47,7 @@
 										th:errorclass="field-error" th:field=*{email}
 										placeholder="이메일(비밀번호 찾기용)"> <label for="email">이메일(비밀번호
 										찾기용)</label>
+									<div class="error_text" id="emialMsg">이메일: </div>
 									<div class="field-error" th:errors="*{email}"></div>
 								</div>
 								<div class="form-floating mb-3">
@@ -51,14 +55,18 @@
 										placeholder="생년월일 8자리" maxlength="10"> <label
 										for="birth">생년월일 8자리</label>
 									<div class="error_text" id="birthMsg" style="display: none"></div>
+									<div class="field-error" th:errors="*{birth}"></div>
 								</div>
-								<div class="form-floating mb-3 d-flex">
+								<div class="mb-3">
+									<div class="d-flex form-floating">
 									<input type="text" class="form-control" th:field=*{phone}
 										placeholder="전화번호"> <label for="phone">전화번호</label>
 									<button type="button" class="btn btn-primary"
 										style="min-width: 90px;">인증요청</button>
-								</div>
+									</div>
+								<div class="error_text" id="phoneMsg">휴대폰</div>
 								<div class="field-error" th:errors="*{phone}"></div>
+								</div>
 								<div class="form-floating mb-3">
 									<input type="text" class="form-control" id="floatingValid"
 										placeholder="인증번호"> <label for="floatingValid">인증번호</label>
@@ -73,37 +81,4 @@
 	</div>
 	<!-- Join In End -->
 	<script th:src="@{/js/joinForm.js}"></script>
-	<script type="text/javascript">
-	// 아이디 중복체크
-		let $ckIdBtn = $("#ckIdBtn");
-		let ckIdValid = false;
-		$ckIdBtn.on("click", () => {
-	  let $idInput = $("#id");
-	  let id = $idInput.val();
-	  if (!id) {
-	    alert("아이디 입력");
-	    $idInput.focus();
-	    return;
-	  }
-	  let dataObj = { id };
-	  $.ajax({
-	    url: `${ctxPath}/member/ckId`,
-	    type: "POST",
-	    data: dataObj,
-	    success: function onData(hasId) {
-	      if (hasId) {
-	        alert("아이디 중복.");
-	        ckIdValid = false;
-	      } else {
-	        alert("아이디 사용가능.");
-	        ckIdValid = true;
-	      }
-	    },
-	    error: function onError(error) {
-	      console.error(error);
-	    },
-	  });
-	});
-
-	</script>
 </div>
