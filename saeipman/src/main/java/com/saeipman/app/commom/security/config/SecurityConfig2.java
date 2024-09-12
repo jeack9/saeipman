@@ -44,15 +44,15 @@ public class SecurityConfig2 {
 		return configuration.getAuthenticationManager();
 	}
 
-	@Bean
-	RoleHierarchy roleHierarchy() {
-		RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
-		hierarchy.setHierarchy("""
-				ROLE_0 > ROLE_1
-				ROLE_1 > ROLE_2
-				""");
-		return hierarchy;
-	}
+//	@Bean
+//	RoleHierarchy roleHierarchy() {
+//		RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+//		hierarchy.setHierarchy("""
+//				ROLE_0 > ROLE_1
+//				ROLE_1 > ROLE_2
+//				""");
+//		return hierarchy;
+//	}
 
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -107,7 +107,7 @@ public class SecurityConfig2 {
 			// 정적 리소스 허용
 			.requestMatchers("/css/**", "/img/**", "/js/**", "/lib/**", "/scss/**", "/dashmin-1.0.0/**").permitAll()
 			.requestMatchers("/member/login", "/member/join", "/join", "/login").permitAll()
-			.requestMatchers("/member/**").hasAnyAuthority("ROLE_1")
+			.requestMatchers("/member/**").hasAnyAuthority("ROLE_1", "ROLE_2")
 			.requestMatchers("/admin/**").hasRole("0")
 			.anyRequest().permitAll() // 일단 임시로 전부 허용 나중에 권한별 분리
 			);
