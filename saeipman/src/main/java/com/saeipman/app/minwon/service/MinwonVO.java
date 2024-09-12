@@ -17,6 +17,7 @@ public class MinwonVO {
 	private String groupId; // 첨부이미지
 	private String roomNo; // 방번호
 	private String acceptState; // 처리상태
+	
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private Timestamp visitsDate; // 방문일자

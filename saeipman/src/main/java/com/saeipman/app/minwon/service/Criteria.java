@@ -7,7 +7,7 @@ import lombok.Data;
 public class Criteria {
 	private int pageNum;
 	private int amount;
-	
+	private String buildingId;
 	private String type;
 	private String keyword;
 	
