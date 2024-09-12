@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.saeipman.app.building.service.BuildingVO;
+import com.saeipman.app.room.service.RoomVO;
 import com.saeipman.app.building.service.BuildingPageDTO;
 
 public interface BuildingMapper {
@@ -15,4 +16,7 @@ public interface BuildingMapper {
 	
 	//페이징
 	public int getTotalPageCount(BuildingPageDTO pageDTO);
+	
+	//자동 방생성
+	public int selectRoomInsert(RoomVO roomVO);
 }

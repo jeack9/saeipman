@@ -12,7 +12,7 @@
 		                      total_gagu
 		                from  building_info
 		                where IMDAEIN_ID = '10'
-						order by 1 desc
+						order by 1
 		 	)a
 		<![CDATA[     
 		where rownum <= #{pageNum} * #{amount} )b   
@@ -104,4 +104,16 @@
 		FROM building_info
 		WHERE imdaein_id = '10'
 	</select>
+	
+	<insert id = "selectRoomInsert" parameterType="RoomVO">
+		insert into room_info(room_id,
+                      room_no,
+                      floor,
+                      building_id)
+		values (#{buildingId}||#{roomNo},
+				#{roomNo},
+				#{floor},
+				#{buildingId}
+				)
+	</insert>
 </mapper>

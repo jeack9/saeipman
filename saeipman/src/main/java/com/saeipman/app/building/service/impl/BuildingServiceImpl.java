@@ -7,9 +7,10 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.saeipman.app.building.mapper.BuildingMapper;
+import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.building.service.BuildingService;
 import com.saeipman.app.building.service.BuildingVO;
-import com.saeipman.app.building.service.BuildingPageDTO;
+import com.saeipman.app.room.service.RoomVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -57,6 +58,15 @@ public class BuildingServiceImpl implements BuildingService{
 	@Override
 	public int totalPage(BuildingPageDTO pageDTO) {
 		return buildingMapper.getTotalPageCount(pageDTO);
+	}
+	
+	@Override
+	public int roomSelectInsert(List<RoomVO> list) {
+		for(RoomVO vo : list) {
+			buildingMapper.selectRoomInsert(vo);
+		}
+		
+		return 1;
 	}
 	
 }

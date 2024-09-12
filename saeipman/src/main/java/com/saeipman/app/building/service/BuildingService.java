@@ -3,6 +3,10 @@ package com.saeipman.app.building.service;
 import java.util.List;
 import java.util.Map;
 
+import com.saeipman.app.room.service.RoomVO;
+
+
+
 
 public interface BuildingService {
 	public List<BuildingVO> buildingDetail(BuildingPageDTO pageDTO);
@@ -13,4 +17,7 @@ public interface BuildingService {
 	
 	//페이징
 	public int totalPage(BuildingPageDTO pageDTO);
+	
+	//방 추가
+	public int roomSelectInsert(List<RoomVO> list);
 }

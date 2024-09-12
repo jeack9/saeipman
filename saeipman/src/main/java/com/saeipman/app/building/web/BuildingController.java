@@ -23,6 +23,7 @@ import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.file.service.FileService;
 import com.saeipman.app.ocrTest.config.OcrApi;
 import com.saeipman.app.ocrTest.config.OcrUtil;
+import com.saeipman.app.room.service.RoomVO;
 import com.saeipman.app.upload.config.FileUtility;
 
 import lombok.RequiredArgsConstructor;
@@ -85,19 +86,25 @@ public class BuildingController {
 	}
 	
 	@PostMapping("/buildingInsert")
-	public String insertBuilding( @RequestPart MultipartFile[] files, MultipartFile ocrFile,
-								 BuildingVO buildingVO) throws IOException {
+	@ResponseBody
+	public int insertBuilding(@RequestPart MultipartFile[] files, MultipartFile ocrFile,
+								 BuildingVO buildingVO, RoomVO roomVO) throws IOException {
 		fileUtill.setFolder("건물");
 		String groupId = fileUtill.multiUpload(files);
 		String ocr = fileUtill.singleUpload(ocrFile);
 		buildingVO.setGroupId(groupId);
 		buildingVO.setOcrFileName(ocr);
 		int success = buildingService.insertBuilding(buildingVO);
-		return "redirect:buildingList";
+		
+
+		
+		return success;
 	}
+	
+	
 	@PostMapping("/ocrUpload")
 	@ResponseBody
-	public Map<String, Object> insertOcr(@RequestParam(value = "file", required=false ) MultipartFile ocrFile, Model model, BuildingVO buildingVO) throws IOException {
+	public Map<String, Object> insertOcr(@RequestParam(value = "file", required=false)  MultipartFile ocrFile, Model model, BuildingVO buildingVO) throws IOException {
 //		if (ocrFile.isEmpty()) {
 //			return "error"; // 파일이 비어있을 경우 에러를 처리하는 HTML 템플릿으로 이동
 //		}
@@ -161,15 +168,7 @@ public class BuildingController {
 		map.put("saedae", saedae);
 		map.put("heigh", heigh);
 		map.put("floorArea", fArea);
-	
-//		model.addAttribute("fullAddress", fullAddress);
-//		model.addAttribute("gunchook", gunchook);
-//		model.addAttribute("floorAreaRatio", floorAreaRatio);
-//		model.addAttribute("floor", floor);
-//		model.addAttribute("saedae", saedae);
-//		model.addAttribute("heigh", heigh);
-//
-//		model.addAttribute("ocrResult", result);
+
 		return map;
 	}
 
