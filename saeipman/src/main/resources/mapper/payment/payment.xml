@@ -15,10 +15,17 @@
                          ON  c.room_id = g.room_id 
                JOIN MONTH_GWANLIBI m
                          ON g.month_gwanlibi_no =  m.month_gwanlibi_no
-        WHERE TO_CHAR(payment_month,'yyyy-MM') = #{paymentMonth}
-        AND g.payment_yn = 1
+        <choose>
+        	<when test="paymentYN != 1">
+        		where g.payment_yn <![CDATA[ <> ]]> 1
+        	</when>
+        	<otherwise>
+		        WHERE TO_CHAR(payment_month,'yyyy-MM') = #{paymentMonth}
+		        AND g.payment_yn = 1
+        	
+        	</otherwise>
+        </choose>                 
 	</select>
-	<!-- 관리비 납부내역 조회 -->
 
 	<!-- 납부해야할 관리비 조회 -->
 
