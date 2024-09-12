@@ -12,5 +12,5 @@ public class RoomVO {
 	private int ipjuState; // 입주 상태(-1 공실, 1 입주)
 	private String buildingId; // 건물 아이디 fk
 	private int deposit; // 기본 보증금
-	private int mRent; // 기본 월세
+	private int mRent; // 기본 월세 
 }
