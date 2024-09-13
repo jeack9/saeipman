@@ -3,11 +3,19 @@
 <mapper
 	namespace="com.saeipman.app.noticeBuilding.mapper.NoticeBuildingMapper">
 
-	<!-- concat 함수 이용해서 검색어 앞뒤에 %를 추가하고 부분 검색 기능 가능하게함. -->
 	<sql id="searchPaging">
 		<if test="scKeyword != null and scKeyword != ''">
 				AND (UPPER(title) like '%'|| UPPER(#{scKeyword}) || '%'	or content like '%' || #{scKeyword} || '%')
 		</if>
+		<!-- 임차인 -->
+		<if test="buildingId != null and buildingId != ''"> 
+				AND bi.building_id = #{buildingId}
+		</if>
+		<!-- 임대인 -->
+		<if test="imdaeinId != null and imdaeinId != ''"> 
+				AND bi.imdaein_id = #{imdaeinId}
+		</if>
+		
 	</sql>
 
 	<!-- 전체조회 -->
@@ -31,13 +39,14 @@
 							, bi.imdaein_id
 					FROM building_notice bn join building_info bi
 											on bn.building_id = bi.building_id
-					WHERE bi.imdaein_id = #{imdaeinId}
+					<where>
+					<include refid="searchPaging"></include>
+					</where>
 					ORDER BY post_no desc
 					) a
 
 		where rownum <![CDATA[ <= ]]>
 		#{nowPage} * #{pageData}
-		<include refid="searchPaging"></include>
 		<!-- rownum <= (페이지에 가져올 가장 큰 게시글 번호) rn > (페이지에 가져올 가장 작은 게시물 번호) -->
 
 		) p
@@ -45,13 +54,12 @@
 		
 	</select>
 
-	<!-- 검색 결과 -->
+	<!-- 게시글 전체 건수 -->
 	<select id="totalBoardNoticeBuilding" resultType="int">
 		SELECT count(*)
 		FROM building_notice bn join building_info bi
 											on bn.building_id = bi.building_id
 		where bn.post_no > 0
-		AND bi.imdaein_id = #{imdaeinId}
 		<include refid="searchPaging"></include>
 	</select>
 	
@@ -81,6 +89,13 @@
 		FROM building_notice bn join building_info bi
 		on bn.building_id = bi.building_id
 		WHERE post_no = #{postNo}
+	</select>
+	
+	<select id="getFile" resultType="String">
+		SELECT fi.file_name as fn
+		FROM building_notice bn join file_info fi
+								on bn.group_id = fi.group_id
+		WHERE bn.post_no = #{postNo}
 	</select>
 
 

@@ -32,6 +32,7 @@ public interface NoticeBuildingMapper {
 		//임대인 건물 목록
 		public List<BuildingVO> imdaeinBuildingInfo(BuildingVO buildingVO);
 		
-		
+		//파일 업로드
+		public List<String> getFile(int postNo);
 		
 }

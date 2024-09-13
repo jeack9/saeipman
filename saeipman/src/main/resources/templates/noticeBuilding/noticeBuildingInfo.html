@@ -19,8 +19,8 @@
 						<tr>
 							<th style="width: 10%">첨부파일</th>
 							<td><img style="width: 30%"
-								th:each=" img : ${BNotice.groupIds}"
-								th:src="@{/images/{fileName}(fileName=${img})}" /></td>
+								th:each=" img : ${BNotice.fileName}"
+								th:src="@{/images/공지사항/{fileName}(fileName=${img})}" /></td>
 						</tr>
 						<tr>
 							<th>최초등록일</th>

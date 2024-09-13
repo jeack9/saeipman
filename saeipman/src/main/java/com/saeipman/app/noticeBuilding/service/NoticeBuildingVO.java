@@ -1,6 +1,7 @@
 package com.saeipman.app.noticeBuilding.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -17,6 +18,7 @@ public class NoticeBuildingVO {
 	private Date regDate; // 작성일자
 	private Date modDate; // 수정일자
 	private String groupId; // 첨부이미지
+	private List<String> fileName;
 	private Integer views; // 조회수
 	private String buildingId; // 건물아이디
 	private String buildingName;// 건물 이름

@@ -67,12 +67,12 @@ public class NoticeBuildingServiceImpl implements NoticeBuildingService {
 		return noticeBuildingMapper.deleteNoticeBuilding(postNO);
 	}
 
-	@Override //조회수  
+	@Override //조회수 증가
 	public int noticeBuildingViews(NoticeBuildingVO noticeBuildingVO) {
 		return noticeBuildingMapper.updateViewNoticeBuilding(noticeBuildingVO);
 	}
 
-	@Override //페이징
+	@Override //게시글 전체 건수 조회
 	public int totalPage(PagingSearchDTO pgsc) {
 		return noticeBuildingMapper.totalBoardNoticeBuilding(pgsc);
 	}
@@ -80,6 +80,11 @@ public class NoticeBuildingServiceImpl implements NoticeBuildingService {
 	@Override //임대인 건물 목록 출력
 	public List<BuildingVO> imdaeinBuilding(BuildingVO buildingVO) {
 		return noticeBuildingMapper.imdaeinBuildingInfo(buildingVO);
+	}
+
+	@Override //파일 업로드
+	public List<String> getFileInfo(int postNo) {
+		return noticeBuildingMapper.getFile(postNo);
 	}
 
 }

@@ -2,14 +2,12 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layouts/default_layout}"
 	layout:fragment="Main">
-	<th:block th:replace="~{common/configs/default_config :: jQueryConfig}"></th:block>
 
 	<div class="container-fluid pt-4 px-4">
 		<div class="row g-4">
 			<div class="col-sm-12 col-xl-12">
 				<div class="bg-light rounded h-100 p-4">
-					<form th:object="${BNotice}" name="UpdateForm" method="post">
-						{% csrf_token %}
+					<form th:object="${BNotice}" name="UpdateForm">
 						<h6 class="mb-4">공지사항 수정</h6>
 
 						<div class="form-floating mb-3">
@@ -66,12 +64,6 @@
     return noticeObj;
   }
 
-  let csrfToken = $("meta[name='_csrf']").attr("content");
-  $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-    if (options["type"].toLowerCase() === "post") {
-      jqXHR.setRequestHeader("X-CSRF-TOKEN", csrfToken);
-    }
-  });
 
   $("#updateBtn").on("click", updateAjax);
   function updateAjax() {

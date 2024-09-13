@@ -7,18 +7,23 @@
 		<div class="bg-light rounded h-100 p-4">
 			<h4 class="mb-4">공지사항</h4>
 
-			<form id="scForm" th:action="@{/noticeBuildingList}" th:method='get'
-				class="d-flex">
-				
-				<select class="form-select mb-6" aria-label="Default select example"
-					id="option">
-					<option selected>건물 목록</option>
-					<option th:each="list : ${Bname}">[[${list.buildingName}]]</option>
-					
-				</select> <input class="form-control me-2" type="search" name="scKeyword"
+			<form name="chagngeForm" id="scForm"
+				th:action="@{/noticeBuildingList}" th:method='get' class="d-flex">
+				<input type="hidden" name="nowPage" value="1"> <select
+					class="form-select mb-6" aria-label="Default select example"
+					id="option" name="buildingId">
+					<option selected value="">건물 목록</option>
+					<option th:each="list : ${Bname}" th:value="${list.buildingId}"
+						th:selected="${list.buildingId}==${pagingSearchDTO.buildingId}">
+						[[${list.buildingName}]]</option></select>
+						
+						<!-- 검색 -->
+						<input class="form-control me-2" type="search" name="scKeyword" 
 					aria-label="Search" placeholder="Search" style="width: 180px;">
-				<button class="btn btn-outline-success">Search</button>
+				<button class="btn btn-outline-success" id="keywordBtn">Search</button>
 			</form>
+			
+			
 			<table class="table table-hover" style="text-align: center">
 				<thead>
 					<tr>
@@ -50,8 +55,9 @@
 				<ul class="pagination justify-content-center">
 					<li class="page-item" th:if="${Paging.startPage > 1}"><a
 						class="page-link"
-						th:href="@{/noticeBuildingList?nowPage={page} (page = ${Paging.startPage -1})}"
+						th:href="|javascript:changePage(${Paging.startPage} - 1)|"
 						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+
 					</a></li>
 
 					<th:block
@@ -60,13 +66,13 @@
 							th:with="start = ${Paging.startPage}, end = ${Paging.endPage}"
 							th:each="pageButton : ${#numbers.sequence(start, end)}"><a
 							class="page-link"
-							th:href="@{/noticeBuildingList?nowPage={page} (page = ${pageButton})}"
+							th:href="|javascript:changePage(${pageButton})|"
 							th:text=${pageButton}></a></li>
 					</th:block>
 
 					<li class="page-item" th:if="${Paging.nextPage}"><a
 						class="page-link"
-						th:href="@{/noticeBuildingList?nowPage={page} (page=${Paging.endPage+1})}"
+						th:href="|javascript:changePage(${Paging.endPage} + 1)|"
 						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 					</a></li>
 				</ul>
@@ -76,13 +82,30 @@
 </div>
 
 <script>
+	// 페이지 변화가 일어날 때 실행할 함수 생성(서치, 페이징번호, 건물목록 다 유지되도록 하기 위해)
+	function changePage(page) {
+		chagngeForm.nowPage.value = page;
+		chagngeForm.submit();
+	}
+
 	$('tbody > tr').on('click', function(event) {
 		let trTag = event.currentTarget;
 		let postNo = $(trTag).children().first().text();
 		let url = ctxPath + '/noticeBuildingInfo?postNo=' + postNo;
 		location.href = url;
 	})
+
+	$('#option').on('change', function(e) {
+			location.href = 'noticeBuildingList?buildingId=' + e.target.value;
+	})
 	
-	$('#option').on('change', )
+	//검색어를 포함한 게시물이 없을 경우
+/* 	$('#keywordBtn').on('click')
+		if(scKeyword.value == ) {
+			
+		} else {
+			
+		}
+	 */
 	
 </script>
