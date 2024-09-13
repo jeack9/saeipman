@@ -20,4 +20,6 @@ public interface BuildingService {
 	
 	//방 추가
 	public Map<String, Object> roomSelectInsert(List<RoomVO> list);
+	//방삭제
+	public int roomDelete(String buildingId);
 }

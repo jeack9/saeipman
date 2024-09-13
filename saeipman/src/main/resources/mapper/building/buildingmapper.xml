@@ -101,8 +101,12 @@
 		
 	</update>
 	<delete id="selectBuildingDelete" parameterType="String">
-		Delete FROM building_info
+		DELETE FROM building_info
 		WHERE building_id =#{buildingId}
+	</delete>
+	<delete id="selectRoomDelete" parameterType="String">
+		DELETE FROM room_info
+		WHERE building_id = #{buildingId}
 	</delete>
 	
 	<select id="getTotalPageCount" resultType="int">

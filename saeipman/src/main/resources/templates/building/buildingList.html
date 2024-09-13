@@ -192,9 +192,16 @@
 						if(data.fileName != null) {
 							//$('#groupId').val(data.groupId);
 							let images = data.fileName;
+							
 							for(img of images){
+							
 								let imgName = $("<img>").attr({'src':ctxPath+'/images/'+'건물/'+img});
+								let imgDel = $("<button>").attr('id','imageDel');
+								imgDel.attr('type','button');
+								imgDel.attr('text','삭제');
+								imgDel.html('X');
 								$("#imgFile").append(imgName);
+								$("#imgFile").append(imgDel);
 							} 
 						} 
 						
@@ -205,6 +212,11 @@
 
 			})
 			//end of $(document).ready
+			
+			//이미지 삭제
+			$('#imageDel').on('click',function(e){
+				console.log(e.target);
+			})
 			
 			function checkFunc(liftYn) {
 				if (liftYn.val() === 'Y') {
