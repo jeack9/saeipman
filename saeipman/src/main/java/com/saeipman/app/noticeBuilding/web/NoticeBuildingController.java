@@ -1,65 +1,72 @@
 package com.saeipman.app.noticeBuilding.web;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hamcrest.core.IsEqual;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.saeipman.app.building.service.BuildingVO;
 import com.saeipman.app.commom.security.SecurityUtil;
+import com.saeipman.app.file.service.FileService;
 import com.saeipman.app.member.service.LoginInfoVO;
 import com.saeipman.app.noticeBuilding.service.NoticeBuildingService;
 import com.saeipman.app.noticeBuilding.service.NoticeBuildingVO;
 import com.saeipman.app.noticeBuilding.utils.PagingSearchDTO;
+import com.saeipman.app.upload.config.FileUtility;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j // 로그 불러오는 어노테이션
 @Controller
+@RequiredArgsConstructor
 public class NoticeBuildingController {
-	private NoticeBuildingService noticeBuildingService;
+	private final NoticeBuildingService noticeBuildingService;
+	private final FileUtility fileUtility;
+	private final FileService fileService;
 
 	@Value("${file.upload.path}") // 경로(file.upload.path)를 uploadPath 변수에 할당함.
 	private String uploadPath;
-
-	@Autowired
-	public NoticeBuildingController(NoticeBuildingService noticeBuildingService) {
-		this.noticeBuildingService = noticeBuildingService;
-	}
+	
 
 	// 전체조회
 	@GetMapping("noticeBuildingList")
 	public String noticeBuildingList(PagingSearchDTO pgsc, Model model) {
-		BuildingVO buildingVO = new BuildingVO();
 		
-		//securityutil에서 임대인id를 받아와서 변수에 할당
-		String imdaeinId = SecurityUtil.getLoginId();
+		int auth = SecurityUtil.getLoginAuth();	
 		
-		//pgsc의 임대인id에 받아온 속성값 부여 => 그래야 해당 임대인이 가진 건물들의 공지사항을 확인할 수 있음.
-		pgsc.setImdaeinId(imdaeinId);
+		//로그인한 권한에 따라 임대인/임차인 페이지가 다르게 보여야함. 1:임대인, 2:임차인
+		
+		if(auth == 1) { //로그인한 권한이 1인 경우(임대인)
+			
+			//securityutil에서 임대인id를 받아와서 변수에 할당
+			String loginId = SecurityUtil.getLoginId();
+			
+			pgsc.setImdaeinId(loginId);
+			//pgsc의 임대인id에 받아온 속성값 부여 => 그래야 해당 임대인이 가진 건물들의 공지사항을 확인할 수 있음.
+//			if(pgsc.getBuildingId() == null || pgsc.getBuildingId().isEmpty()) {
+//			}
+		 
+			//임대인이 소유한 건물의 이름을 확인하기 위해 buildingVO에도 속성값 부여
+			BuildingVO buildingVO = new BuildingVO();
+			buildingVO.setImdaeinId(loginId);
+			List<BuildingVO> name = noticeBuildingService.imdaeinBuilding(buildingVO);
+			model.addAttribute("Bname", name);
+			
+		} else { //로그인한 권한이 2인 경우(임차인) => 임차인은 본인이 거주하는 빌딩의 Id와 동일한 건물ID의 공지글만 확인하기 때문에.
+			String buildingId = SecurityUtil.getBuildingId();
+			pgsc.setBuildingId(buildingId);
+		}
+		
 		List<NoticeBuildingVO> list = noticeBuildingService.noticeBuildingList(pgsc);
 		model.addAttribute("BNotice", list);
-		
-		//임대인이 소유한 건물의 이름을 확인하기 위해 buildingVO에도 속성값 부여
-		buildingVO.setImdaeinId(imdaeinId);
-		List<BuildingVO> name = noticeBuildingService.imdaeinBuilding(buildingVO);
-		model.addAttribute("Bname", name);
-		
+
 		//전체 페이지 수 계산해서 setTotalPage에 전체 페이지 수 할당 
 		int totalPage = noticeBuildingService.totalPage(pgsc);
 		pgsc.setTotal(totalPage);
@@ -73,7 +80,13 @@ public class NoticeBuildingController {
 	public String noticeBuildingInfo(NoticeBuildingVO noticeBuildingVO, PagingSearchDTO pgsc, Model model) {
 		
 		noticeBuildingService.noticeBuildingViews(noticeBuildingVO);
+		
 		NoticeBuildingVO selectVO = noticeBuildingService.noticeBuildingSelect(noticeBuildingVO);
+		
+		List<String> fileName = noticeBuildingService.getFileInfo(noticeBuildingVO.getPostNo());
+		
+		selectVO.setFileName(fileName);
+		
 		model.addAttribute("BNotice", selectVO);
 		model.addAttribute("pgsc", pgsc);
 		
@@ -94,34 +107,16 @@ public class NoticeBuildingController {
 	@PostMapping("noticeBuildingInsert")
 	public String noticeBuildingProc(@RequestPart MultipartFile[] files, NoticeBuildingVO noticeBuildingVO) {
 
-		List<String> fileList = new ArrayList<>(); // 파일 업로드하고 이름 확인을 위해
-
-		log.info(uploadPath);
-		for (MultipartFile file : files) {
-			log.info(file.getContentType());
-			log.info(file.getOriginalFilename());
-			log.info(String.valueOf(file.getSize()));
-
-			String fileName = file.getOriginalFilename();
-			String saveName = uploadPath + File.separator + fileName; // separator => java가 / 경로 인식 못하니까 java가 인식할 수 있는
-																		// 경로를 설정해주기 위해 썼음.
-
-			log.debug("saveName : " + saveName);
-
-			Path savePath = Paths.get(saveName); // Path => java내에서 경로 처리하는 객체 즉, saveName을 매개변수로 받아서 savePath라는 경로 객체를 생성!
-
-			try {
-				file.transferTo(savePath);// transferTo(savePath) => 지정된 경로(savePath)로 전송(저장)
-				fileList.add(fileName);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		System.out.println(fileList);
-		noticeBuildingVO.setGroupId(String.join(":", fileList));
-
+		//업로드 경로 폴더
+		fileUtility.setFolder("공지사항");
+		
+		String loginId = SecurityUtil.getLoginId();
+		
+		String groupId = fileUtility.multiUpload(files);
+		
+		noticeBuildingVO.setGroupId(groupId);
 		int no = noticeBuildingService.noticeBuildingInsert(noticeBuildingVO);
+		
 		return "redirect:noticeBuildingInfo?postNo=" + no;
 	}
 
@@ -134,64 +129,13 @@ public class NoticeBuildingController {
 	}
 
 	// 수정(처리)
-	@PostMapping("noticeBuildingUpdate")
-	@ResponseBody
-	public List<String> noticeBuildingUpdate(@RequestPart MultipartFile[] files, NoticeBuildingVO noticeBuildingVO) {
+//	@PostMapping("noticeBuildingUpdate")
+//	@ResponseBody
+//	public List<String> noticeBuildingUpdate(NoticeBuildingVO noticeBuildingVO) {
+		
+			
+//	}
 
-		List<String> fileList = new ArrayList<String>();
-
-		for (MultipartFile uploadFile : files) {
-
-			// 이미지 파일 말고 다른거 올릴 수도 있지 않을까 싶어서 일단 주석해놨음...
-//				if(uploadFile.getContentType().startsWith("image") == false) {
-//					System.err.println("this file is not image type");
-//		    		return null;
-//		        }
-
-			// 중복 파일 관리
-			String fileName = uploadFile.getOriginalFilename();
-
-			System.out.println("fileName : " + fileName);
-
-			// 날짜 폴더 생성
-			String folderPath = makeFolder();
-
-			// UUID(UUID는 고유 ID임. 중복 제한하려고 사용함!)
-			String uuid = UUID.randomUUID().toString();
-			String uploadFileName = folderPath + File.separator + uuid + "_" + fileName;
-			String saveName = uploadPath + File.separator + uploadFileName;
-			Path savePath = Paths.get(saveName);
-			System.out.println("path : " + saveName);
-
-			try {
-				uploadFile.transferTo(savePath);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			noticeBuildingVO.setGroupId(String.join(":", fileList));
-		}
-
-		return fileList;
-	}
-
-	// LocalDate~ => "yyyy/MM/dd" 형식으로 오늘날짜 변환해서 가져오려고 썼음.
-	// replace 하는 이유는 "/"를 개발자가 사용하는 운영체제 형식에 맞게(File.separator) 변경하기 위해서임.
-	private String makeFolder() {
-		String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-		String folderPath = str.replace("/", File.separator);
-		File uploadPathFolder = new File(uploadPath, folderPath);
-		// uploadPath(경로)랑 folderPath(날짜)랑 합쳐서 사용하려고.. 예를들어 c:/uploads/2024/09/03
-
-		if (uploadPathFolder.exists() == false) {
-			uploadPathFolder.mkdirs();
-			// mkdirs => 상위 디렉토리 존재하지 않을 겨우 상위까지 모두 생성
-		}
-		return folderPath;
-	}
-
-	private String setFilePath(String uploadFileName) {
-		return uploadFileName.replace(File.separator, "/");
-	}
 
 	// 삭제(처리)
 	@GetMapping("noticeBuildingDelete")
@@ -200,7 +144,6 @@ public class NoticeBuildingController {
 		return "redirect:noticeBuildingList";
 	}
 	
-	//조회수
 	
 	
 	

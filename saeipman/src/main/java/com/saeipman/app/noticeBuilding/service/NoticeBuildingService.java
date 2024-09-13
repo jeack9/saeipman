@@ -3,7 +3,7 @@ package com.saeipman.app.noticeBuilding.service;
 import java.util.List;
 import java.util.Map;
 
-import com.saeipman.app.building.service.BuildingVO;
+import com.saeipman.app.building.service.BuildingVO;import com.saeipman.app.commom.security.SecurityUtil;
 import com.saeipman.app.noticeBuilding.utils.PagingSearchDTO;
 
 public interface NoticeBuildingService {
@@ -30,6 +30,9 @@ public interface NoticeBuildingService {
 
 	// 임대인 소유 건물 조회
 	public List<BuildingVO> imdaeinBuilding(BuildingVO buildingVO);
+	
+	//파일 업로드
+	public List<String> getFileInfo(int postNo);
 
 	
 	
