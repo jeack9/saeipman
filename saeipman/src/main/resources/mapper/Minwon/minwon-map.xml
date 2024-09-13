@@ -34,53 +34,56 @@
 	
 	<!-- 전체조회 -->
 	<select id="selectMinwonAll" resultType="MinwonVO">
-	<![CDATA[
+
 	
 	select * from (   select rownum rn ,a.*         from (
          
-                SELECT 
-            M.POST_NO, 
-            M.TITLE, 
-            R.ROOM_NO,
-            M.CONTENT,
-            CASE 
-		WHEN M.ACCEPT_STATE = 0 THEN '접수전'
-		WHEN M.ACCEPT_STATE = 1 THEN '접수중'
-		WHEN M.ACCEPT_STATE = 2 THEN '처리 완료'
-    	    END AS ACCEPT_STATE,
-            M.GROUP_ID,
-            M.REG_DATE, 
-            B.BUILDING_ID  
-      	FROM 
-            MINWON M
-      	JOIN 
-            ROOM_INFO R ON M.ROOM_ID = R.ROOM_ID
-      	JOIN 
-            BUILDING_INFO B ON R.BUILDING_ID = B.BUILDING_ID
+      SELECT 
+	            M.POST_NO, 
+	            M.TITLE, 
+	            M.CONTENT,
+	            CASE 
+					WHEN M.ACCEPT_STATE = 0 THEN '접수전'
+					WHEN M.ACCEPT_STATE = 1 THEN '접수중'
+					WHEN M.ACCEPT_STATE = 2 THEN '처리 완료'
+	    	    END AS ACCEPT_STATE,
+	            M.GROUP_ID,
+	            M.REG_DATE, 
+	            
+	            R.ROOM_NO,
+	            r.BUILDING_ID  
+            
+      	 from room_info r 
+      	 join constract_info c  on c.room_id = r.room_id
+         join minwon m on m.room_id = c.room_id
             
 		where R.BUILDING_ID = #{buildingId}
+	 	<include refid="criteria"></include>
       	order by post_no desc
                 
- 	)a      where 
- 	]]>
+ 	)a      where  rownum <![CDATA[ <= ]]> #{pageNum} * #{amount}  
+ 	)b      where rn  > (#{pageNum} -1) * #{amount}
  	
- 	<include refid="criteria"></include>
- 	
- 	<![CDATA[
- 	rownum <= #{pageNum} * #{amount}  
- 	)b      where rn > (#{pageNum} -1) * #{amount}
- 	]]>
  	
 	</select>
 	<!-- 전체건수 -->
 	<select id="getTotalCount" resultType="int">
 	select count(*) from minwon 
 	where 
-	
 	<include refid="criteria"></include>
 	
 	post_no > 0 
 	</select>
+	
+	<!-- 임대인별 건물 리스트 -->
+	<select id="selectBuilding">
+		select building_id, building_name, imdaein_id 
+		from building_info
+		where imdaein_id = #{imdaeinId}
+	</select>
+	
+	
+	
 	<!-- 단건조회 -->
 	<select id="selectMinwonInfo" resultType="MinwonVO">
 		SELECT 
@@ -131,7 +134,8 @@
 						visits_date1,
 						reg_date,
 						alert_type,
-						room_id
+						room_id,
+						imchain_id
 					)
 				values
 					(
@@ -153,6 +157,7 @@
 						</choose>
 						,#{alertType}
 						,#{roomId}
+						,#{imchainId}
 					)
 	</insert>
 	
@@ -182,6 +187,14 @@
 		select category_no,
 		       category_type
 		from minwon_category
+	</select>
+
+	<select id="selectFileName">
+		select 	fi.file_name as file_name
+		FROM minwon bi JOIN file_info fi
+		                    ON bi.group_id = fi.group_id  
+		WHERE bi.post_no = #{postNo}
+	
 	</select>
 
 </mapper>

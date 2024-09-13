@@ -27,6 +27,15 @@
        <input type='hidden' name='urltype' th:value='${pageMaker.cri.type}'>
 	   <button class="btn btn-default">Search</button>
 	   </form>
+	   <div class="mb-3">
+	   
+	   <select class="form-select" >
+	   	<option selected>건물</option>
+	   	<option th:each="buildingList : ${buildingList}"
+	   			th:text=${buildingList.buildingName} th:value="${buildingList.buildingId}">
+	   </select>
+	   
+	   </div>
 	</div>
 		<table class="table">
 			<thead>

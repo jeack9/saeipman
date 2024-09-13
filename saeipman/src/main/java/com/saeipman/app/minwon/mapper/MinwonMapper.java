@@ -32,4 +32,9 @@ public interface MinwonMapper {
 	//민원상태처리 업로드
 	public int updateAcceptState(MinwonVO minwonVO);
 	
+	//임대인별 건물 리스트
+	public List<MinwonVO> selectBuilding();
+	
+	public List<String> selectFileName(int postNo);
+	
 }
