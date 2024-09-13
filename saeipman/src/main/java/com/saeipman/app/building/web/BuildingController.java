@@ -33,8 +33,10 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class BuildingController {
+	
 	@Value("${naver.service.secretKey}")
 	private String secretKey;
+	
 	private final OcrApi naverApi;
 	private final OcrUtil ocrUtil;
 	
@@ -43,7 +45,7 @@ public class BuildingController {
 	private final FileService fileService;
 	
 	@GetMapping("/buildingList")
-	public String buildingInfo(BuildingPageDTO buildingPageDTO,Model model) {
+	public String buildingInfo(BuildingPageDTO buildingPageDTO, Model model) {
 		LoginInfoVO login = SecurityUtil.getLoginInfo();
 		model.addAttribute("imdaeinId", login);
 		
@@ -52,10 +54,9 @@ public class BuildingController {
 		buildingPageDTO.setTotal(total);
 		
 		//리스트 출력
-		List<BuildingVO> list = buildingService.buildingDetail(buildingPageDTO, login.getLoginId());
+		List<BuildingVO> list = buildingService.buildingList(buildingPageDTO, login.getLoginId());
 		
-		model.addAttribute("buildings", list);
-		
+		model.addAttribute("buildings", list);		
 		model.addAttribute("page",buildingPageDTO);
 		
 		return "building/buildingList";
@@ -64,17 +65,15 @@ public class BuildingController {
 	@GetMapping("/buildingDetails")
 	@ResponseBody
 	public BuildingVO buildingDetails(@RequestParam("id") String buildingId) {
-		
 		BuildingVO buildingVO = new BuildingVO();
 		buildingVO.setBuildingId(buildingId);
-
 		BuildingVO result = buildingService.buildingInfo(buildingVO);
-
-		List<String> fileName = fileService.getFileName(buildingVO.getBuildingId());
-		System.out.println("파일" + fileName);
 		if (result == null) {
 			return null;
 		}
+
+		List<String> fileName = fileService.getFileName(buildingVO.getBuildingId());
+		System.out.println("파일" + fileName);
 
 		result.setFileName(fileName);
 
@@ -85,28 +84,30 @@ public class BuildingController {
 	public String insertBuildingForm() {
 		return "building/buildingInsert";
 	}
-	@GetMapping("/roomInsertTest")
-	public String roomTest() {
-		
-		return "building/roomTest";
-	}
+	
 	
 	@PostMapping("/buildingInsert")
 	@ResponseBody
-	public String insertBuilding(@RequestPart MultipartFile[] files, MultipartFile ocrFile,
-								 BuildingVO buildingVO, RoomVO roomVO) throws IOException {
+	public String insertBuilding(@RequestPart MultipartFile[] files, 
+								 @RequestPart MultipartFile ocrFile,
+								 BuildingVO buildingVO, 
+								 RoomVO roomVO) throws IOException {
+		//업로드 경로 폴더명
 		fileUtill.setFolder("건물");
+		
 		LoginInfoVO login = SecurityUtil.getLoginInfo();
 		
 		String groupId = fileUtill.multiUpload(files);
 		String ocr = fileUtill.singleUpload(ocrFile);
+		
 		buildingVO.setImdaeinId(login.getLoginId());
 		buildingVO.setGroupId(groupId);
 		buildingVO.setOcrFileName(ocr);
-		int success = buildingService.buildingInsert(buildingVO);
+		buildingService.buildingInsert(buildingVO);
 		
 		return buildingVO.getBuildingId();
 	}
+	
 	@PostMapping("/selectRoomInsert")
 	@ResponseBody
 	public Map<String, Object> selectRoomInsert(@RequestBody List<RoomVO> list) {
@@ -117,7 +118,9 @@ public class BuildingController {
 	
 	@PostMapping("/ocrUpload")
 	@ResponseBody
-	public Map<String, Object> insertOcr(@RequestParam(value = "file", required=false)  MultipartFile ocrFile, Model model, BuildingVO buildingVO) throws IOException {
+	public Map<String, Object> insertOcr(@RequestPart(name = "file") MultipartFile ocrFile, 
+									     Model model, 
+									     BuildingVO buildingVO) throws IOException {
 //		if (ocrFile.isEmpty()) {
 //			return "error"; // 파일이 비어있을 경우 에러를 처리하는 HTML 템플릿으로 이동
 //		}
@@ -193,8 +196,9 @@ public class BuildingController {
 		return buildingService.buildingUpdate(buildingVO);
 	}
 
-	@GetMapping("/buildingDelete")
+	@GetMapping("/buildingDelete") //관리비가 존재한다면 알림
 	public String buildingDelete(@RequestParam("id") String buildingId) {
+		buildingService.roomDelete(buildingId);
 		buildingService.buildingDelete(buildingId);
 		return "redirect:buildingList";
 	}

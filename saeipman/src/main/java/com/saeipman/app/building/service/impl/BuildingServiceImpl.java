@@ -22,24 +22,24 @@ public class BuildingServiceImpl implements BuildingService{
 	
 
 	@Override
-	public List<BuildingVO> buildingDetail(BuildingPageDTO pageDTO, String id) {
+	public List<BuildingVO> buildingList(BuildingPageDTO pageDTO, String id) {
 		
-		return buildingMapper.buildingList(pageDTO, id);
+		return buildingMapper.selectBuildingList(pageDTO, id);
 	}
 	@Override
 	public BuildingVO buildingInfo(BuildingVO buildingVO) {
-		return buildingMapper.buildingListInfo(buildingVO);
+		return buildingMapper.selectBuildingListInfo(buildingVO);
 	}
 	@Override
 	public int buildingInsert(BuildingVO buildingVO) {
-		int result = buildingMapper.buildingInsert(buildingVO);
+		int result = buildingMapper.selectBuildingInsert(buildingVO);
 		return result;
 	}
 	@Override
 	public Map<String, Object> buildingUpdate(BuildingVO buildingVO) {
 		Map<String, Object> map = new HashMap<>();
 		boolean isSuccessed = false;
-		int result = buildingMapper.buildingUpdate(buildingVO);
+		int result = buildingMapper.selectBuildingUpdate(buildingVO);
 		
 		if(result == 1) {
 			isSuccessed = true;
@@ -54,6 +54,10 @@ public class BuildingServiceImpl implements BuildingService{
 	
 	@Override
 	public int buildingDelete(String buildingId) {
+		//관리비 유무 체크
+		
+		
+		//방삭제
 		return buildingMapper.selectBuildingDelete(buildingId);
 	}
 	@Override
@@ -64,16 +68,21 @@ public class BuildingServiceImpl implements BuildingService{
 	@Override
 	public Map<String, Object> roomSelectInsert(List<RoomVO> list) {
 		System.out.println();
-		
+	
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		for(RoomVO vo : list) {
-			System.out.println("가나다" + vo);
+			
+			System.out.println("sdfsdf" + vo);
 			buildingMapper.selectRoomInsert(vo);
+			map.put("list", vo);
 		}
-		map.put("list", list);
-		
+
 		return map;
+	}
+	@Override
+	public int roomDelete(String buildingId) {
+		return buildingMapper.selectRoomDelete(buildingId);
 	}
 	
 }

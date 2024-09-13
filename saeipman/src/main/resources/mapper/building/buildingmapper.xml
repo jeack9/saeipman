@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.saeipman.app.building.mapper.BuildingMapper">
-	<select id="buildingList" resultType="BuildingVO">
+	<select id="selectBuildingList" resultType="BuildingVO">
 		select *
 		from (   select rownum rn ,
 				 a.*        
@@ -20,7 +20,7 @@
 		where rn > (#{pageDTO.pageNum} -1) * #{pageDTO.amount}
 		]]>
 	</select>
-	<select id="buildingListInfo" resultType="BuildingVO">
+	<select id="selectBuildingListInfo" resultType="BuildingVO">
 		SELECT building_id,
 			   group_id,
 			   building_name,
@@ -42,7 +42,7 @@
 		FROM building_info 
 		WHERE building_id = #{buildingId}
 	</select>
-	<insert id="buildingInsert" parameterType="BuildingVO">
+	<insert id="selectBuildingInsert" parameterType="BuildingVO">
 	<selectKey keyProperty="buildingId" order="BEFORE" resultType="string">
 	SELECT 'ZIP'||(LPAD(buildingSeq.nextval,6,'0')) FROM dual
 	</selectKey>
@@ -83,7 +83,7 @@
 				#{memo}
 				)
 	</insert>
-	<update id="buildingUpdate" parameterType="BuildingVO" >
+	<update id="selectBuildingUpdate" parameterType="BuildingVO" >
 		UPDATE building_info
 		SET delay_alert_yn = #{delayAlertYn},
 			minwon_alert_yn = #{minwonAlertYn},
@@ -101,8 +101,12 @@
 		
 	</update>
 	<delete id="selectBuildingDelete" parameterType="String">
-		Delete FROM building_info
+		DELETE FROM building_info
 		WHERE building_id =#{buildingId}
+	</delete>
+	<delete id="selectRoomDelete" parameterType="String">
+		DELETE FROM room_info
+		WHERE building_id = #{buildingId}
 	</delete>
 	
 	<select id="getTotalPageCount" resultType="int">

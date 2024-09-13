@@ -10,10 +10,10 @@ import com.saeipman.app.room.service.RoomVO;
 import com.saeipman.app.building.service.BuildingPageDTO;
 
 public interface BuildingMapper {
-	public List<BuildingVO> buildingList(@Param("pageDTO") BuildingPageDTO pageDTO, @Param("imdaeinId") String id);
-	public BuildingVO buildingListInfo(BuildingVO buildingVO);
-	public int buildingInsert(BuildingVO buildingVO);
-	public int buildingUpdate(BuildingVO buildingVo);
+	public List<BuildingVO> selectBuildingList(@Param("pageDTO") BuildingPageDTO pageDTO, @Param("imdaeinId") String id);
+	public BuildingVO selectBuildingListInfo(BuildingVO buildingVO);
+	public int selectBuildingInsert(BuildingVO buildingVO);
+	public int selectBuildingUpdate(BuildingVO buildingVo);
 	public int selectBuildingDelete(String buildingId);
 	
 	//페이징
@@ -21,4 +21,7 @@ public interface BuildingMapper {
 	
 	//자동 방생성
 	public int selectRoomInsert(RoomVO roomVO);
+	
+	//방삭제
+	public int selectRoomDelete(String buildingId);
 }
