@@ -4,7 +4,7 @@ package com.saeipman.app.member.service;
 import java.util.Map;
 import com.saeipman.app.member.dto.MemberRequestDTO;
 
-public interface LoginService {
+public interface MemberService {
 //	   로그인정보 단건 조회 
 	public LoginInfoVO loginInfo(LoginInfoVO loginVO);
 
