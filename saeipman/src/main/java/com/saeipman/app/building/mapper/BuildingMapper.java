@@ -21,4 +21,7 @@ public interface BuildingMapper {
 	
 	//자동 방생성
 	public int selectRoomInsert(RoomVO roomVO);
+	
+	//방삭제
+	public int selectRoomDelete(String buildingId);
 }

@@ -80,5 +80,9 @@ public class BuildingServiceImpl implements BuildingService{
 
 		return map;
 	}
+	@Override
+	public int roomDelete(String buildingId) {
+		return buildingMapper.selectRoomDelete(buildingId);
+	}
 	
 }

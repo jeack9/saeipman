@@ -276,15 +276,12 @@ input {
 			let buildingId=$('#bid').val();
 			//let floor=$('#floorCnt').val();
 			
-										
 			let chks = $('input[name=chk]:checked').next();
 			for(chk of chks){
 				let floor = $(chk).attr('class');
 				let roomNo= chk.value;
 				roomList.push({buildingId, floor, roomNo});
-				
 			} 
-	 	
 			console.log(roomList);
 			return roomList;
 		}; 

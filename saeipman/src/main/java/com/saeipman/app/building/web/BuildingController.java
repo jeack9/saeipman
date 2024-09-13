@@ -198,6 +198,7 @@ public class BuildingController {
 
 	@GetMapping("/buildingDelete") //관리비가 존재한다면 알림
 	public String buildingDelete(@RequestParam("id") String buildingId) {
+		buildingService.roomDelete(buildingId);
 		buildingService.buildingDelete(buildingId);
 		return "redirect:buildingList";
 	}
