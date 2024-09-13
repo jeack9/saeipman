@@ -47,12 +47,16 @@
 		       , mg.payment_month
 		       , mg.month_gwanlibi_no
 		       , mg.gagu_gwanlibi
+		       , mg.total_money
 		       , (gd.gwanlibi_item_money/bi.total_gagu) gwanlibi_by_gagu
 		FROM     gwanlibi_details gd JOIN building_gwanlibi_item bgi
 		                             ON   (gd.building_id = bgi.building_id AND gd.gwanlibi_item_no = bgi.gwanlibi_item_no)
+		                             
 		                             JOIN month_gwanlibi mg
-		                             ON   (gd.building_id = mg.building_id AND mg.month_gwanlibi_no = gd.month_gwanlibi_no AND TO_CHAR(mg.payment_month, 'yyMM')
-		                             = TO_CHAR(#{paymentMonth}, 'yyMM'))
+		                             ON   (gd.building_id = mg.building_id
+		                             AND mg.month_gwanlibi_no = gd.month_gwanlibi_no
+		                             AND TO_CHAR(mg.payment_month, 'yyMM') = TO_CHAR(#{paymentMonth}, 'yyMM'))
+		                             
 		                             JOIN building_info bi
 		                             ON   gd.building_id = bi.building_id
 		WHERE    gd.building_id = #{buildingId}
@@ -120,34 +124,52 @@
 	</insert>
 	
 	<!-- 정산한 관리비 등록 -->
+	<!-- INSERT 중에는 값을 읽을 수 없어서 MAX() 대신 시퀀스를 사용한다. -->
 	<insert id="insertGwanlibi">		
-		
-		INSERT ALL
-		    INTO month_gwanlibi ( month_gwanlibi_no
-		    				    , building_id, total_money
-		    				    , payment_month
-		    				    , gagu_gwanlibi )
-		    VALUES ( (SELECT 'MF' || TO_CHAR(#{paymentMonth}, 'yyMM') || LPAD(COUNT(*), 4, 0) FROM month_gwanlibi)
-				   , #{buildingId}
-				   , #{paymentMonth}
-				   , #{totalMoney}
-				   , #{gaguGwanlibi} )
-		    <foreach collection="">
-			    INTO gwanlibi_details ( gwanlibi_details_no
-			    					  , building_id
-			    					  , month_gwanlibi_no
-			    					  , gwanlibi_item_no
-			    					  , gwanlibi_item_money )
-			    VALUES ( (SELECT 'BMF' || LPAD(NVL(MAX(SUBSTR(gwanlibi_details_no, 4, 4)),0), 4, 0) FROM gwanlibi_details)
-			    	   , #{buildingId}
-			    	   , #{gwanlibiItemNo}
-			    	   , #{gwanlibiItemNo}
-			    	   , #{gwanlibiItemMoney} )
-    	   </foreach>
+		<selectKey order="BEFORE" resultType="string" keyProperty="monthGwanlibiInfo.monthGwanlibiNo" >
+			SELECT GET_MGWANLIBI_NO() FROM DUAL
+		</selectKey>
+			INSERT ALL
+			    INTO month_gwanlibi ( month_gwanlibi_no
+			    				    , building_id
+			    				    , total_money
+			    				    , payment_month
+			    				    , gagu_gwanlibi )
+			    VALUES ( #{monthGwanlibiInfo.monthGwanlibiNo}
+					   , #{monthGwanlibiInfo.buildingId}
+					   , #{monthGwanlibiInfo.totalMoney}
+					   , ADD_MONTHS(SYSDATE, -1)
+					   , #{monthGwanlibiInfo.gaguGwanlibi} )
+					   
+		    <foreach collection="list" item="item">
+		    INTO gwanlibi_details ( gwanlibi_details_no
+		    					  , building_id
+		    					  , month_gwanlibi_no
+		    					  , gwanlibi_item_no
+		    					  , gwanlibi_item_money )
+		    VALUES ( GET_GWANDETAIL_NO()
+		    	   , #{item.buildingId}
+		    	   , #{monthGwanlibiInfo.monthGwanlibiNo}
+		    	   , #{item.gwanlibiItemNo}
+		    	   , #{item.fixedPrice} )
+		    </foreach>
 		SELECT *
 		FROM   dual
-		
 	</insert>
+	
+	<!-- 총 가구수 -->
+	<select id="selectToTalGagu">
+		SELECT total_gagu
+		FROM   building_info
+		WHERE  building_id = #{buildingId}
+	</select>
+	
+	<!-- month_gwnalibi 데이터 개수 : 데이터가 있으면 수정, 없으면 등록 -->
+	<select id="getCountingMonthGwanlibiData">
+		SELECT count(*)
+		FROM   month_gwanlibi
+		WHERE  building_id = #{buildingId} AND TO_CHAR(payment_month, 'yyyy-MM') = #{paymentMonth};
+	</select>
 	
 
 </mapper>

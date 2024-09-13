@@ -90,11 +90,6 @@
 			                hidden: true
 			            },
 			            {
-			                header: '버전',
-			                name: 'version',
-			                hidden: true
-			            },
-			            {
 			                header: '건물 번호',
 			                name: 'buildingId',
 			                hidden: true
@@ -130,29 +125,35 @@
 						grid.disableCell(ele.rowKey, 'fixedPrice');
 					}
 				})
-				return grid;
+				
+				
+				// 관리비 저장 버튼 클릭 이벤트
+				console.log(grid.getData());
+				let buildingId = [[${buildingId}]];
+			    $('.saveBtn').on('click', function() {
+			    	console.log('클릭');
+			    	//if(!buildingId) return;
+					$.ajax({
+						url: `${ctxPath}/insertGwanlibi`,
+						method: 'post',
+						contentType: 'application/json',
+						data: JSON.stringify(grid.getData())
+					}).done(function(result) {
+						location.href = ctxPath + result;
+						alert('성공');
+					}).fail(function(err){
+						console.log('fail');
+						console.log(err);
+						alert('실패');
+					});
+	
+				});
+				
+				return grid;				
 			}
 			
 			
-			/* let buildingId = [[${buildingId}]];
-		    $('.saveBtn').on('click', function() {
-		    	console.log('클릭');
-		    	if(!buildingId) return;
-				$.ajax({
-					url: `${ctxPath}/insertItems?buildingId=${buildingId}`,
-					method: 'post',
-					contentType: 'application/json',
-					data: JSON.stringify(grid.getData())
-				}).done(function(result) {
-					console.log('success');
-					console.log(result);
-					alert(result + '건이 정상적으로 업데이트 되었습니다')
-				}).fail(function(err){
-					console.log('fail');
-					console.log(err);
-				});
 
-			}); */
 
 		</script>
 	</div>

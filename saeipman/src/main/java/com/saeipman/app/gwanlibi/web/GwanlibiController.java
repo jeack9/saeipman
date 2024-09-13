@@ -2,6 +2,11 @@ package com.saeipman.app.gwanlibi.web;
 
 import java.io.PrintWriter;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +37,12 @@ public class GwanlibiController {
 
 	private GwanlibiService gwanlibiService;
 	private BuildingService buildingService;
+	
+	public String getYM() {
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+		return dateFormat.format(date);
+	}
 
 	// 로그인한 사용자(임대인)의 건물들을 목록으로 출력하고, 해당 건물의 전월, 금월 관리비 출력 화면으로 이동
 	@GetMapping("gwanlibiList")
@@ -50,7 +61,14 @@ public class GwanlibiController {
 
 		List<GwanlibiVO> list = gwanlibiService.monthGwanlibiByBuildingList(login.getLoginId(), dto);
 		//List<GwanlibiVO> list = gwanlibiService.monthGwanlibiByBuildingList(imdaeinId, dto);
-
+		
+//		for(GwanlibiVO vo : list) {
+//			System.err.println(vo.getPaymentMonth());
+//			if(vo.getPaymentMonth() == null) {
+//				vo.setPaymentMonth(getYM());
+//			}
+//		}
+		
 		model.addAttribute("list", list);
 		model.addAttribute("page", dto);
 
@@ -108,10 +126,12 @@ public class GwanlibiController {
 
 		// 관리비 상세 내역 목록
 		List<GwanlibiVO> detailsList = gwanlibiService.detailsBillList(gwanlibiVO);
-
+		System.err.println(detailsList);
 		// 빌딩 정보 가져오기. - 단건 조회
 		BuildingVO buildingInfo = buildingService.buildingInfo(buildingVO);
-
+		
+		
+		
 		// 가구별 관리비 number format 설정.
 		for (GwanlibiVO list : detailsList) {
 			double gwanlibi = list.getGwanlibiByGagu();
@@ -139,6 +159,7 @@ public class GwanlibiController {
 		List<GwanlibiVO> detailsList = gwanlibiService.detailsBillList(vo);
 		// 가구별 관리비 number format 설정.
 		for (GwanlibiVO list : detailsList) {
+			System.err.println("여기");
 			double gwanlibi = list.getGwanlibiByGagu();
 			String result = NumberFormat.getInstance().format(gwanlibi) + " 원";
 			list.setStrGwanlibiByGagu(result);
@@ -147,6 +168,7 @@ public class GwanlibiController {
 		// 관리 비용 number format 설정.
 		for (GwanlibiVO list : detailsList) {
 			double gwanlibi = list.getGwanlibiItemMoney();
+			System.err.println(gwanlibi);
 			String result = NumberFormat.getInstance().format(gwanlibi) + " 원";
 			list.setStrGwanlibiItemMoney(result);
 		}
@@ -185,17 +207,35 @@ public class GwanlibiController {
 		return "gwanlibi/gwanlibiSettling"; // 뷰 리졸버가 읽어서 처리 , html 경로
 
 	}
-	//todo
-	// 관리비 등록 - 아작스 (폼 아니고 버튼)
-//	@PostMapping("insertGwanlibi")
-//	@ResponseBody
-//	public Map<String, Object> insertGwanlibi(@RequestBody List<GwanlibiVO> list) {
-//		System.out.println("sdsds");
-//		for (GwanlibiVO vo : list) {
-//			System.out.println(vo.toString());
-//		}
-//		Map<String, Object> map = gwanlibiService.addMaintenanceCoast(list);
-//		return map;
-//	}
+
+	// 관리비 등록 - 아작스
+	@PostMapping("insertGwanlibi")
+	@ResponseBody
+	public String insertGwanlibi(@RequestBody List<GwanlibiVO> list) {
+		
+		gwanlibiService.addGwanlibi(list);
+		
+		String buildingId = "";
+		
+		for(GwanlibiVO vo : list) {
+			buildingId = vo.getBuildingId();
+		}
+		
+		// 전월 구하기
+		// TODO : 1월이면 12로 변경해주기.
+		Date now = new Date();
+		
+		Calendar cal = Calendar.getInstance(); 
+		cal.setTime(now);
+		
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH);
+		String ym = year + "-" + month;
+		//SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+		//String lastMonth = simpleDateFormat.format(ym);
+		
+		
+		return "/detailsBillList?buildingId=" + buildingId + "&paymentMonth=" + ym;
+	}
 
 }
