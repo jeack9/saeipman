@@ -64,7 +64,7 @@ public class FileUtility {
 
 			fileVO.setFileName(uuid + "_" + fileName);
 			fileVO.setFileSize(String.valueOf(file.getSize()));
-			fileVO.setFilePath(uploadPath + folderPath);
+			fileVO.setFilePath(uploadFolder);
 			fileVO.setTableName(folderPath);
 			int index = file.getOriginalFilename().indexOf(".");
 			if (index > 1) {
@@ -88,7 +88,6 @@ public class FileUtility {
 	}
 	
 	public String singleUpload(MultipartFile ocrFile) {
-		List<String> imgFile = new ArrayList<>();
 	 
 		String folderPath = makeFolder(this.folder);
 		log.info(uploadPath);
@@ -98,19 +97,17 @@ public class FileUtility {
 		String uploadFolder = folderPath + "/" + uuid + "_" + fileName;
 		String saveName = uploadPath + uploadFolder; // separator = 자바가 인식하는 경로
 		
-
 		
 		log.debug("saveName : " + saveName);
 
 		Path savePath = Paths.get(saveName);
-
+		
 		try {
 			ocrFile.transferTo(savePath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	
-		imgFile.add(setImgPath(uploadFolder));
 		return fileName;
 		
 	}
