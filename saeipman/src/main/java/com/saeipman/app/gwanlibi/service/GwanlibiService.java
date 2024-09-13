@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.saeipman.app.building.service.BuildingPageDTO;
+import com.saeipman.app.building.service.BuildingVO;
 
 public interface GwanlibiService {
 	// 건물 리스트
@@ -28,6 +29,8 @@ public interface GwanlibiService {
 	public List<GwanlibiVO> detailsBillList(GwanlibiVO vo);
 	
 	// 정산한 관리비 등록
-	public Map<String, Object> addGwanlibi(List<GwanlibiVO> vo);
-
+	public void addGwanlibi(List<GwanlibiVO> item);
+	
+	// 건물의 총 가구수
+	public int getToTalGagu(String buildingId);
 }

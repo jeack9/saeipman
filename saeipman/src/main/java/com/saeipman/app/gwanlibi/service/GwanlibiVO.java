@@ -13,7 +13,7 @@ public class GwanlibiVO {
 	private String buildingId;			  // 건물 식별 ID - FK
 	private int totalMoney; 			  // 관리비 총 금액
 	@DateTimeFormat(pattern = "yyyy-MM")
-	private Date paymentMonth;  		  // 관리비 납부 월	
+	private Date paymentMonth;  		  // 관리비 납부 월
 	private String buildingName; 		  // 건물 이름
 	private int previousMonth;			  // 전월 관리 비용
 	private int thisMonth;				  // 금월 관리 비용
@@ -32,5 +32,6 @@ public class GwanlibiVO {
 	private int fixedPrice;
 	
 	private String gwanlibiDetailsNo;
+	private Integer totalGagu;
 	
 }

@@ -79,7 +79,14 @@
 			// JavaScript에서 Thymeleaf 변수 사용하기 //
 			/* 1. <script th:inline="javascript">
 			   2. Thymeleaf 변수 사용 */
+			   
+			// 건물명 출력
+			let building = [[${ buildingInfo }]];
+			console.log(building);
+			$('#bName').text(building.buildingName);
+				
 			let detailsList = [[${ detailsList }]];
+		    console.log(detailsList);
 
 
 			// 해당 건물의 관리 비용 총합계 - number format (, 원)
@@ -87,38 +94,23 @@
 				let totalGwanlibi = 0;
 				for (i in detailsList) {
 					totalGwanlibi += detailsList[i].gwanlibiItemMoney;
-				}
+				} 
 				//console.log(tatalGwanlibi);
-				$('#totalGwanlibi').text(totalGwanlibi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
+				$('#totalGwanlibi').text(detailsList[0].totalMoney.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
 
 
 				// 가구별 관리비 총합계
-				let totalGwanlibiByGagu = 0;
+				/* let totalGwanlibiByGagu = 0;
 				for (i in detailsList) {
 					totalGwanlibiByGagu += Math.floor(detailsList[i].gwanlibiByGagu);
-				}
+				} */
 				//console.log(tatalGwanlibiByGabu);
-				$('#totalGwanlibiByGagu').text(totalGwanlibiByGagu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
+				$('#totalGwanlibiByGagu').text(detailsList[0].gaguGwanlibi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
 			}
 
 
-			// 건물명 출력
-			let building = [[${ buildingInfo }]];
-			console.log(building);
-			$('#bName').text(building.buildingName);
-
-
-			// todo
+			// todo : select
 			$('.settlingBtn').click(function() {
-				console.log('클릭');
-				//const offset = 1000 * 60 * 60 * 9;
-				//const koreaNow = new Date(new Date(detailsList[0].paymentMonth).getTime() + offset);
-				//const splitDate = koreaNow.toISOString().split('T')[0].split('-');
-				//let resultDate = splitDate[0] + '-' + splitDate[1];
-				//console.log('===========================================');
-				//console.log(resultDate);
-				//console.log('===========================================');
-				//$(location).attr('href', `${ctxPath}/gwanlibiSettling?buildingId=${detailsList[0].buildingId}&paymentMonth=${resultDate}`);
 				$(location).attr('href', `${ctxPath}/gwanlibiSettling?buildingId=${building.buildingId}`);
 			})
 

@@ -1,9 +1,6 @@
 package com.saeipman.app.gwanlibi.service.impl;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
@@ -62,34 +59,47 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 	// 관리비 상세 내역
 	@Override
 	public List<GwanlibiVO> detailsBillList(GwanlibiVO vo) {
-		
 		return gwanlibiMapper.selectGwanlibiDetailsBill(vo);
 	}
 
-	//todo
+
+	// 정산한 관리비 등록 todo
 	@Override
-	public Map<String, Object> addGwanlibi(List<GwanlibiVO> vo) {
-		// TODO Auto-generated method stub
-		return null;
+	public void addGwanlibi(List<GwanlibiVO> list) {
+		// 매퍼에서 받을 값을 monthGwanlibiInfo에 담아서 보내주기.
+		GwanlibiVO monthGwanlibiInfo = new GwanlibiVO();
+		
+		// month_gwanlibi - 관리비 총 금액 계산.
+		int total = 0;
+		String buildingId = "";
+		int gwanlibiMoney = 0;
+		for(GwanlibiVO ele : list) {
+			total += ele.getFixedPrice();
+			buildingId = ele.getBuildingId();
+			//gwanlibiMoney = ele.getFixedPrice();
+		}
+		System.err.println(total);
+		monthGwanlibiInfo.setTotalMoney(total);
+		
+		// building_id 세팅.
+		monthGwanlibiInfo.setBuildingId(buildingId);
+		
+		// 고정 관리비 -> 관리미 항목 별 금액
+		//monthGwanlibiInfo.setGwanlibiItemMoney(gwanlibiMoney);		
+		
+		// month_gwanlibi - 가구별 관리비 계산.
+		int totalGagu = gwanlibiMapper.selectToTalGagu(buildingId);
+		int gwanlibiByGagu = total / totalGagu;
+		monthGwanlibiInfo.setGaguGwanlibi(gwanlibiByGagu);
+
+		gwanlibiMapper.insertGwanlibi(monthGwanlibiInfo, list);
 	}
 	
-	// 정산한 관리비 등록 todo
-//	@Override
-//	public Map<String, Object> addGwanlibi(List<GwanlibiVO> list) {
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		
-//		
-//		// 등록 관리비 한 건씩 넣어주기.
-//		for(GwanlibiVO vo : list) {
-//			gwanlibiMapper.insertGwanlibi(vo);
-//		}
-//		
-//		map.put("result", true);
-//		map.put("list", list);
-//		
-//		return map;
-//	}
-
-
+	// 총 가구수
+	@Override
+	public int getToTalGagu(String buildingId) {
+		int result = gwanlibiMapper.selectToTalGagu(buildingId);
+		return result;
+	}
 	
 }
