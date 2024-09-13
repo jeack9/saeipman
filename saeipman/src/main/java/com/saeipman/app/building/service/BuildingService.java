@@ -9,7 +9,7 @@ import com.saeipman.app.room.service.RoomVO;
 
 
 public interface BuildingService {
-	public List<BuildingVO> buildingDetail(BuildingPageDTO pageDTO, String id);
+	public List<BuildingVO> buildingList(BuildingPageDTO pageDTO, String id);
 	public BuildingVO buildingInfo(BuildingVO buildingVO);
 	public int buildingInsert(BuildingVO buildingVO);
 	public Map<String, Object> buildingUpdate(BuildingVO buildingVO);

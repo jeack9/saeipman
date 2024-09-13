@@ -164,7 +164,7 @@ input {
 		$('#buildingInsertBtn').on('click', insertBuilding);
 		
 		function insertBuilding(){
-			let buildingName = $('input[name="buildingName"]');
+			/* let buildingName = $('input[name="buildingName"]');
 			if (buildingName.val() == '') {
 				alert('빌딩 이름을 입력해주세요.');
 				buildingName.focus();
@@ -211,7 +211,7 @@ input {
 				alert('주차 가능 대수를 입력해주세요.');
 				parking.focus();
 				return;
-			}
+			} */
 			
 			
 			let formData = new FormData(document.insertForm);
@@ -222,7 +222,7 @@ input {
 				contentType: false,
 			    processData: false,
 			}).done(result => {
-				console.log(result, "result");
+				//console.log(result, "result");
 				 if (!confirm("건물이 추가되었습니다.\n자동 방생성을 하시겠습니까?")) {
 					location.href=ctxPath+"/buildingList";
 				 } else {
@@ -256,37 +256,38 @@ input {
 		
 		//방 생성
 		 $('#roomInsertBtn').on('click', function(e) {
-			let list = [];
-			let chks = $('input[name=chk]:checked').next();
-			
-			for(chk of chks){
-				console.log(chk.value);
-				let data= chk.value;
-				list.push(data);
-			}
-			
+		
+			 let data =getList()
 			$.ajax(ctxPath+"/selectRoomInsert",{
 				type:'post',
 				contentType : 'application/json',
-				data:JSON.stringify(list),
+				data:JSON.stringify(data),
 				
 			}).done(result=>{
-				console.log(result.list);
+				location.href= ctxPath + "/buildingList";
 			});
 		}); 
 			
+		//방 자동생성 정보 
+	 	function getList(){
 		
+	 		let roomList = [];
 			
-	/* 	function getList(){
-			let formArr = $('form[name="updateForm"]').serializeArray();
-			//console.log(formArr);
-			let formObj = {};
-			$.each(formArr, function(idx, ele){
-				formObj[ele.name] = ele.value;
-			});
-			console.log(formObj);
-			return formObj;
-		}; */
+			let buildingId=$('#bid').val();
+			//let floor=$('#floorCnt').val();
+			
+										
+			let chks = $('input[name=chk]:checked').next();
+			for(chk of chks){
+				let floor = $(chk).attr('class');
+				let roomNo= chk.value;
+				roomList.push({buildingId, floor, roomNo});
+				
+			} 
+	 	
+			console.log(roomList);
+			return roomList;
+		}; 
 		
 		//ocr 업로드
 		$('#fileImg').on('click', function(){
@@ -351,14 +352,14 @@ input {
 				//console.log(floors);
 				for (let i = 1; i <= floor; i++) {
 					tbody += `<tr>`;
-					tbody += `<td><input type="checkbox" id="checkbox${i}" class="selectRoom">${i}층</td>`;
+					tbody += `<td><input type="checkbox" id="checkbox${i}" class="selectRoom"><span>${i}층<span></td>`;
 					for (let j = 1; j <= gagu; j++) {
 						if (j < 10) {
 							j = '0' + j;
 						} else {
 							j = String(j);
 						}
-						tbody += `<td><input type="checkbox" name="chk"><input type = "text" name="roomNo" id = "hoSel" value=${i+j}></td>`;
+						tbody += `<td><input type="checkbox" name="chk"><input type = "text" class="${i}" name="roomNo" id = "hoSel" value=${i+j}></td>`;
 					}
 					tbody += `<td><button type ="button" id="addBtn${i}" class="addRoom">추가</button>`;
 					tbody += `<button type ="button" id="delBtn${i}" class="delRoom">삭제</button></td>`;
