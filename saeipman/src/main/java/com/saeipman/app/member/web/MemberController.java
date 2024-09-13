@@ -21,7 +21,7 @@ import com.saeipman.app.commom.security.SecurityUtil;
 import com.saeipman.app.member.dto.MemberRequestDTO;
 import com.saeipman.app.member.service.ImdaeinVO;
 import com.saeipman.app.member.service.LoginInfoVO;
-import com.saeipman.app.member.service.LoginService;
+import com.saeipman.app.member.service.MemberService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,16 +29,16 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("all")
-public class LoginController {
-	private final LoginService lsvc;
+public class MemberController {
+	private final MemberService lsvc;
 	
 	// 로그인폼 이동
 	@GetMapping("login") 
-	public void loginForm() {};
+	public void loginP() {};
 
 	// 회원가입폼 이동
 	@GetMapping("join") 
-	public void joinForm(Model model) {
+	public void joinP(Model model) {
 		model.addAttribute("memberReq", new MemberRequestDTO());
 	};
 	
@@ -61,7 +61,7 @@ public class LoginController {
 	public Map<String, Object> checkId(@PathVariable(name = "id") String id) {
 		System.out.println("중복체크중");
 		Map<String, Object> map = new HashMap<String, Object>();
-		boolean hasId = lsvc.checkImdaein(id);
+		boolean hasId = lsvc.existsByLogin(id);
 		map.put("hasId", hasId);
 		map.put("id", id);
 		return map;

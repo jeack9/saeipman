@@ -86,7 +86,7 @@ public class SecurityConfig2 {
 		http
 			.formLogin(login -> login
 			    .loginPage("/all/login")
-			    .loginProcessingUrl("/loginProc") // 로그인 submit url 설정
+			    .loginProcessingUrl("/all/loginProc") // 로그인 submit url 설정
 			    .usernameParameter("loginId") // 파라미터 name 설정
 			    .passwordParameter("pw")
 			    //.successHandler()
