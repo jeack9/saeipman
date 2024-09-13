@@ -55,6 +55,7 @@ public class BuildingServiceImpl implements BuildingService{
 	@Override
 	public int buildingDelete(String buildingId) {
 		//관리비 유무 체크
+		
 		//방삭제
 		return buildingMapper.selectBuildingDelete(buildingId);
 	}
