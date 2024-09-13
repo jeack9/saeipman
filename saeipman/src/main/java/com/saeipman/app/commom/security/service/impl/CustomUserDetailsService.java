@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.saeipman.app.commom.security.service.CustomUserDetails;
 import com.saeipman.app.member.service.LoginInfoVO;
-import com.saeipman.app.member.service.LoginService;
+import com.saeipman.app.member.service.MemberService;
 import com.saeipman.app.room.service.RoomService;
 import com.saeipman.app.room.service.RoomVO;
 
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-	private final LoginService loginService;
+	private final MemberService loginService;
 	private final RoomService roomService;
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

@@ -12,14 +12,14 @@ import com.saeipman.app.member.dto.MemberRequestDTO;
 import com.saeipman.app.member.mapper.MemberMapper;
 import com.saeipman.app.member.service.ImdaeinVO;
 import com.saeipman.app.member.service.LoginInfoVO;
-import com.saeipman.app.member.service.LoginService;
+import com.saeipman.app.member.service.MemberService;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class LoginServiceImpl implements LoginService {
+public class MemberServiceImpl implements MemberService {
 
 	private final MemberMapper lmapper;
 	private final BCryptPasswordEncoder passwordEncoder;
