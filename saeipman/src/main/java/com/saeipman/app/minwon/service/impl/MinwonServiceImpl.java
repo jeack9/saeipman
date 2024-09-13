@@ -100,6 +100,16 @@ public class MinwonServiceImpl implements MinwonService{
 		return minwonMapper.updateAcceptState(minwonVO);
 	}
 
+	@Override
+	public List<MinwonVO> buildingSelect() {
+		return minwonMapper.selectBuilding();
+	}
+
+	@Override
+	public List<String> getFileName(int postNo) {
+		return minwonMapper.selectFileName(postNo);
+	}
+
 
 
 	

@@ -42,8 +42,8 @@
           <th>첨부</th>
           <td>
             <img
-              th:each=" img : ${minwon.chumbuImages}"
-              th:src="@{/images/{f}(f=${img})}"
+              th:each=" img : ${minwon.fileName}"
+              th:src="@{/images/민원/{f}(f=${img})}"
             />
           </td>
         </tr>
@@ -304,28 +304,6 @@
       });
 
       
-    /*  // 대댓글 등록 
-     $(document).on("click", ".reply-comment-btn", function (e) {
-        let group = $(this).data("group");
-        let content = $(`#reply${group}`).val();
-        let writer = "user01";
-        let postNo = $("#postNo").val();
-
-        let data = { content, writer, postNo, cmtGroup: group, cmtRep: "1" }; // 대댓글은 cmtRep가 "1"
-        $.ajax({
-          url: ctxPath + "/replycomment/" + postNo,
-          method: "POST",
-          contentType: "application/json",
-          data: JSON.stringify(data),
-          success: function (response) {
-            console.log(response, "대댓글 등록 성공");
-            loadComment(); // 대댓글 등록 후 댓글 다시 불러오기
-          },
-          error: function (err) {
-            alert("대댓글 등록 실패");
-          },
-        });
-      });*/
     </script>
   </body>
 </html>

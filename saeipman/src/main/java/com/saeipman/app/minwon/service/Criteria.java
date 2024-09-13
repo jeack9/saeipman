@@ -7,9 +7,11 @@ import lombok.Data;
 public class Criteria {
 	private int pageNum;
 	private int amount;
-	private String buildingId;
 	private String type;
 	private String keyword;
+	
+	private String buildingId;
+	private String roomId;
 	
 	public Criteria() {//mapper에서 조회할떄 (페이지번호,amount,검색 키워드,
 		this(1, 10);

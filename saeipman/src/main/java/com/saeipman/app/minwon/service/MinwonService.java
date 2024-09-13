@@ -29,8 +29,12 @@ public interface MinwonService {
 
 	//민원상태처리 업로드
 	public int acceptStateUpdate(MinwonVO minwonVO);
-
 	
+	//임대인별 건물 리스트
+	public List<MinwonVO> buildingSelect();
+
+	//파일업로드
+	public List<String> getFileName(int postNo);
 	
 
 }
