@@ -14,5 +14,5 @@ public class RoomVO {
 	private int deposit; // 기본 보증금
 	private int mRent; // 기본 월세 
 	
-	private List<ConstractVO> constractList;
+	private List<ConstractVO> constractList; // 방의 계약 내역
 }

@@ -28,6 +28,7 @@
 		    <result column="room_id" property="roomId"/>
 		</collection>
 	</resultMap>
+	
 	<!-- 로그인한 임차인 -> 방,계약 단건조회 -->
 	<select id="selectImchainRoom" resultMap="RoomResultMap">
 	SELECT
@@ -56,26 +57,52 @@
 	    imchain_phone = #{imchainId}
 	ORDER BY c.constract_date desc
 	</select>
-	<select id="selectConstractImchain">
-		SELECT
-			constract_no,
-			constract_type,
-			deposit,
-			m_rent,
-			pay_type,
-			imchain_name,
-			imchain_phone,
-			imchain_account,
-			imdaein_account,
-			constract_date,
-			exp_date,
-			constract_state,
-			m_rent_date,
-			memo,
-			room_id
+	
+	
+	<!-- 방의 계약내역 보기 -->
+	<resultMap id="roomConstractHistory" type="com.saeipman.app.room.service.RoomVO">
+	<id column="room_id" property="roomId"/>
+  <collection property="constractList" javaType="java.util.ArrayList" column="room_id" ofType="com.saeipman.app.room.service.ConstractVO" select="roomConstractList"/>
+	</resultMap>
+	
+	<select id="selectRoomInfo" resultMap="roomConstractHistory">
+	  SELECT
+	    room_id,
+	    room_no,
+	    floor,
+	    ipju_state,
+	    building_id,
+	    deposit,
+	    m_rent
 		FROM
-			constract_info
+		    room_info
 		WHERE
-			imchain_phone = #{imchainId}
+		    room_id = #{roomId}
 	</select>
+	<select id="roomConstractList" resultType="com.saeipman.app.room.service.ConstractVO">
+	  SELECT
+	    constract_no,
+	    constract_type,
+	    deposit,
+	    m_rent,
+	    pay_type,
+	    imchain_name,
+	    imchain_phone,
+	    imchain_account,
+	    imdaein_account,
+	    constract_date,
+	    exp_date,
+	    constract_state,
+	    constract_file,
+	    m_rent_date,
+	    memo,
+	    room_id
+		FROM
+		    constract_info
+		WHERE
+		    room_id = #{roomId}
+		ORDER BY
+		    constract_date
+	</select>
+	
 </mapper>
