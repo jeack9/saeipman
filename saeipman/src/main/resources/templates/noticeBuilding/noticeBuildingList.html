@@ -15,15 +15,18 @@
 					<option selected value="">건물 목록</option>
 					<option th:each="list : ${Bname}" th:value="${list.buildingId}"
 						th:selected="${list.buildingId}==${pagingSearchDTO.buildingId}">
-						[[${list.buildingName}]]</option></select>
-						
-						<!-- 검색 -->
-						<input class="form-control me-2" type="search" name="scKeyword" 
+						[[${list.buildingName}]]</option>
+				</select>
+
+				<!-- 검색 -->
+				<input class="form-control me-2" type="search" id="scKeyword"
 					aria-label="Search" placeholder="Search" style="width: 180px;">
 				<button class="btn btn-outline-success" id="keywordBtn">Search</button>
 			</form>
-			
-			
+
+			<div id="searchErr"></div>
+
+
 			<table class="table table-hover" style="text-align: center">
 				<thead>
 					<tr>
@@ -35,7 +38,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<th:block th:each="list : ${BNotice}">
+					<th:block th:each="list : ${BNotice}" id="scResult">
 						<tr>
 							<th scope="row">[[${list.postNo}]]</th>
 							<td>[[${list.buildingName}]]</td>
@@ -96,16 +99,16 @@
 	})
 
 	$('#option').on('change', function(e) {
-			location.href = 'noticeBuildingList?buildingId=' + e.target.value;
+		location.href = 'noticeBuildingList?buildingId=' + e.target.value;
 	})
-	
+
 	//검색어를 포함한 게시물이 없을 경우
-/* 	$('#keywordBtn').on('click')
-		if(scKeyword.value == ) {
-			
-		} else {
-			
+	$('#keywordBtn').on('click', function(keywordNull) {
+		let sc = $('#scKeyword').val();
+
+		if (sc == null || sc == '') {
+			//$('#searchErr').text('검색된 결과가 없습니다.');
+			alert('검색어를 입력해주세요.')
 		}
-	 */
-	
+	});
 </script>
