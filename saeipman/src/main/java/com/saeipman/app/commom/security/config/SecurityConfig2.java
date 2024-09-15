@@ -76,13 +76,6 @@ public class SecurityConfig2 {
 		                    return configuration;	
 						}
 					}));
-		
-		// csrf disable
-//		http
-//			.csrf(auth -> auth.disable());
-		
-		// Form 로그인 방식 disable
-//		http.formLogin((auth) -> auth.disable());
 		http
 			.formLogin(login -> login
 			    .loginPage("/all/login")
@@ -90,7 +83,7 @@ public class SecurityConfig2 {
 			    .usernameParameter("loginId") // 파라미터 name 설정
 			    .passwordParameter("pw")
 			    //.successHandler()
-			    .defaultSuccessUrl("/all/home", true)
+			    .defaultSuccessUrl("/member/home", true)
 			    .permitAll() // 로그인 성공시 이동하는 페이지 허용
 			)
 			.logout(logout -> logout
@@ -102,9 +95,14 @@ public class SecurityConfig2 {
 		http.sessionManagement(session -> session
 				.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
-		// http basic 인증 방식 disable
-//		http.httpBasic((auth) -> auth.disable());
-
+		// 자동로그인
+		http.rememberMe(remember -> remember
+				.key("securityRemember~~~~")
+				.rememberMeParameter("remember-me")
+				.tokenValiditySeconds(60*60*24*14)
+				//.authenticationSuccessHandler(new CustomAuthenticationSuccessHandler())
+		);
+		 
 		// 경로별 인가 작업
 		http
 			.authorizeHttpRequests((auth) -> auth.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
@@ -113,22 +111,10 @@ public class SecurityConfig2 {
 			.requestMatchers("/all/**").permitAll()
 			.requestMatchers("/member/**").hasAnyAuthority("ROLE_1", "ROLE_2")
 			.requestMatchers("/admin/**").hasRole("0")
-			.anyRequest().permitAll() // 일단 임시로 전부 허용 나중에 권한별 분리
+//			.anyRequest().permitAll() // 일단 임시로 전부 허용 나중에 권한별 분리
+			.anyRequest().authenticated()
 			);
-//			.anyRequest().authenticated());
 		
-				
-
-		//필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
-		// 리액트(관리자 페이지) 요청만 Token 필터 적용할거임
-//		http
-//	    	.addFilterBefore(new JwtFilter(jwtUtill), LoginFilter.class);
-//		http
-//		    .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtill), UsernamePasswordAuthenticationFilter.class);
-		// 세션 설정
-//		http
-//			.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
 		return http.build();
 	}
 }
