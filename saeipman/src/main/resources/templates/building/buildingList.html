@@ -1,157 +1,179 @@
 
-<div xmlns:th="http://www.thymeleaf.org"
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}"
-	layout:fragment="Main" class="row">
-	<!-- start 건물리스트 -->
-	<div class="col-md-4" id="buildList">
-		<th:block th:each="building, index:${buildings}">
-			<ul class="list-group">
-				<li th:id="${building.buildingId}" th:data-index="${index.count}"
-					class="list-group-item" style="font-size: 25px;">
-					<div>[[${building.buildingName}]]</div>
-					<div class="ps-4" style="font-size: 18px;">[[${building.doroAddr}]]
-						[[${building.detailsAddr}]]</div>
-					<div class="ps-4" style="font-size: 18px;">[[${building.totalGagu}]]세대</div>
-				</li>
-			</ul>
-		</th:block>
-		<button type="button"
-			th:onclick="|location.href='@{/buildingInsert}'|"
-			class="btn btn-outline-primary m-2">건물추가</button>
-		<!-- 페이징 -->
-		<nav aria-label="Page navigation example">
-			<ul class="pagination justify-content-center">
-				<li class="page-item" th:if="${page.startPage > 1}"><a
-					class="page-link"
-					th:href="@{/buildingList?pageNum={page}(page = ${page.startPage -1})}"
-					aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-				</a></li>
+	layout:decorate="~{common/layouts/default_layout}">
+<head>
+<meta charset="UTF-8">
+<title>title</title>
+<style>
+#imgId{
+	width:200px;
+	
+	height:200px;
+}
+.imgDiv{
+	width:1100px;
+	display:inline;
+}
 
-				<th:block th:with="start = ${page.startPage}, end = ${page.endPage}">
-					<li class="page-item"
-						th:with="start = ${page.startPage}, end = ${page.endPage}"
-						th:each="pageButton : ${#numbers.sequence(start, end)}"><a
+</style>
+</head>
+<body>
+	<div layout:fragment="Main" class="row">
+		<!-- start 건물리스트 -->
+		<div class="col-md-4" id="buildList">
+			<th:block th:each="building, index:${buildings}">
+				<ul class="list-group">
+					<li th:id="${building.buildingId}" th:data-index="${index.count}"
+						class="list-group-item" style="font-size: 25px;">
+						<div>[[${building.buildingName}]]</div>
+						<div class="ps-4" style="font-size: 18px;">[[${building.doroAddr}]]
+							[[${building.detailsAddr}]]</div>
+						<div class="ps-4" style="font-size: 18px;">[[${building.totalGagu}]]세대</div>
+					</li>
+				</ul>
+			</th:block>
+			<button type="button"
+				th:onclick="|location.href='@{/buildingInsert}'|"
+				class="btn btn-outline-primary m-2">건물추가</button>
+			<!-- 페이징 -->
+			<nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-center">
+					<li class="page-item" th:if="${page.startPage > 1}"><a
 						class="page-link"
-						th:href="@{/buildingList?pageNum={page} (page = ${pageButton})}"
-						th:text=${pageButton}></a></li>
-				</th:block>
+						th:href="@{/buildingList?pageNum={page}(page = ${page.startPage -1})}"
+						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+					</a></li>
+
+					<th:block
+						th:with="start = ${page.startPage}, end = ${page.endPage}">
+						<li class="page-item"
+							th:with="start = ${page.startPage}, end = ${page.endPage}"
+							th:each="pageButton : ${#numbers.sequence(start, end)}"><a
+							class="page-link"
+							th:href="@{/buildingList?pageNum={page} (page = ${pageButton})}"
+							th:text=${pageButton}></a></li>
+					</th:block>
 
 
-				<li class="page-item" th:if="${page.next}"><a class="page-link"
-					th:href="@{/buildingList?pageNum={page}(page = ${page.endPage +1})}"
-					aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-				</a></li>
-			</ul>
-		</nav>
-	</div>
-	<!-- end 페이징 -->
+					<li class="page-item" th:if="${page.next}"><a
+						class="page-link"
+						th:href="@{/buildingList?pageNum={page}(page = ${page.endPage +1})}"
+						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+					</a></li>
+				</ul>
+			</nav>
+		</div>
+		<!-- end 페이징 -->
 
 
-	<!-- End 건물리스트 -->
-	<div class="col-md-8">
-		<form name="updateForm" class="row g-3 infoDetail">
-			<!-- start 건물 정보 -->
-			<h1 id="bnameTitle"></h1>
-			<div style="text-align: center;">
-				<button type="button" class="btn btn-outline-primary m-2 "
-					id="updateBtn">수정완료</button>
-				<button type="button"
-					class="btn btn-outline-danger m-2 deleteBtn bid">삭제</button>
-			</div>
-			<div>
-				<input name="buildingId" type="hidden" class="bid" />
-			</div>
-			<!-- 	<div>
+		<!-- End 건물리스트 -->
+		<div class="col-md-8">
+			<form name="updateForm" class="row g-3 infoDetail">
+				<!-- start 건물 정보 -->
+				<h1 id="bnameTitle"></h1>
+				<div style="text-align: center;">
+					<button type="button" class="btn btn-outline-primary m-2 "
+						id="updateBtn">수정완료</button>
+					<button type="button"
+						class="btn btn-outline-danger m-2 deleteBtn bid">삭제</button>
+				</div>
+				<div>
+					<input name="buildingId" type="hidden" class="bid" />
+				</div>
+				<!-- 	<div>
 				<input name="groupId" type="hidden" class="groupid" />
 			</div> -->
 
-			<div>
-				<div class="form-check form-switch" style="display: inline-block;">
-					<label class="form-label"><span>연체 알림</span> </label><input
-						role="switch" type="checkbox" class="form-check-input text-end"
-						name="delayAlertYn" />
+				<div>
+					<div class="form-check form-switch" style="display: inline-block;">
+						<label class="form-label"><span>연체 알림</span> </label><input
+							role="switch" type="checkbox" class="form-check-input text-end"
+							name="delayAlertYn" />
+					</div>
+					<div class="form-check form-switch" style="display: inline-block;">
+						<label class="form-label"><span>민원 알림</span> </label><input
+							role="switch" type="checkbox" class="form-check-input text-end"
+							name="minwonAlertYn" />
+					</div>
 				</div>
-				<div class="form-check form-switch" style="display: inline-block;">
-					<label class="form-label"><span>민원 알림</span> </label><input
-						role="switch" type="checkbox" class="form-check-input text-end"
-						name="minwonAlertYn" />
-				</div>
-			</div>
-			<div id="imgFile"></div>
-			<div class="col-md-4">
-				<label for=" file" class="form-label">빌딩 이미지</label> <input
-					type="file" id="file" multiple name="files" class="form-control">
-			</div>
-			<div class="form-group col-md-7">
-				<label for="bname" class="form-label">빌딩 이름 </label> <input
-					type="text" id="bname" name="buildingName" class="form-control">
-			</div>
-			<div class="form-group col-md-7">
-				<label for="sample6_address" class="form-label"
-					th:style="${'padding-right:20px'}">주소</label> <input type="button"
-					onclick="sample6_execDaumPostcode()" value="주소 찾기"
-					class="btn btn-outline-secondary m-2"> <input type="text"
-					id="sample6_address" placeholder="주소" name="doroAddr"
-					class="form-control addr">
-			</div>
-			<div class="form-group col-md-7">
-				<label for="sample6_detailAddress" class="form-label">상세 주소</label>
-				<input type="text" id="sample6_detailAddress" placeholder="상세주소"
-					name="detailsAddr" class="form-control dAddr">
-			</div>
-			<div class="form-group col-md-5"></div>
-			<div class="form-group col-md-5">
-				<label for="floorArea" class="form-label">연면적 </label> <input
-					type="text" id="floorArea" name="floorArea" class="form-control">
-			</div>
-			<div class="form-group col-md-5">
-				<label for="floorAreaRatio" class="form-label">용적률 산정용 연면적 </label>
-				<input type="text" id="floorAreaRatio" name="floorAreaRatio"
-					class="form-control">
-			</div>
-			<div class="form-group col-md-5">
-				<label for="gunchookArea" class="form-label">건축면적 </label> <input
-					type="text" id="gunchookArea" name="gunchookArea"
-					class="form-control">
-			</div>
-			<div class="form-group col-md-5">
-				<label for="buildingHeigh" class="form-label">건물 높이 </label> <input
-					type="text" id="buildingHeigh" name="buildingHeigh"
-					class="form-control">
-			</div>
-			<div class="form-check form-switch">
-				<label for="liftYn">승강기 여부 </label> <input type="checkbox"
-					id="liftYn" name="liftYn" class="form-check-input text-end"
-					role="switch">
-			</div>
-			<div class="form-group col-md-5">
-				<label for="totalFloor" class="form-label">층 수 </label> <input
-					type="text" id="totalFloor" name="totalFloor" class="form-control">
-			</div>
-			<div class="form-group col-md-5">
-				<label for="floorGaguCount" class="form-label">층 별 가구수 </label> <input
-					type="text" id="floorGaguCount" name="floorGaguCount"
-					class="form-control">
-			</div>
-			<div class="form-group col-md-5">
-				<label for="totalGagu" class="form-label">총 세대수 </label> <input
-					type="text" id="totalGagu" name="totalGagu" class="form-control">
-			</div>
-			<div class="form-group col-md-5">
-				<label for="parking" class="form-label">주차 가능 대수 </label> <input
-					type="text" id="parking" name="parking" class="form-control">
-			</div>
-			<div class="form-group col-md-6">
-				<label for="memo" class="form-label">비고 </label> <input type="text"
-					id="memo" name="memo" class="form-control">
-			</div>
 
-		</form>
-	</div>
-	<!-- End 건물 정보 -->
-	<div>
-		<script>
+				<div id="imgFile" ></div>
+
+				<div class="col-md-4">
+					<label for=" file" class="form-label">빌딩 이미지</label> <input
+						type="file" id="file" multiple name="files" class="form-control">
+				</div>
+				<div class="form-group col-md-7">
+					<label for="bname" class="form-label">빌딩 이름 </label> <input
+						type="text" id="bname" name="buildingName" class="form-control">
+				</div>
+				<div class="form-group col-md-7">
+					<label for="sample6_address" class="form-label"
+						th:style="${'padding-right:20px'}">주소</label> <input type="button"
+						onclick="sample6_execDaumPostcode()" value="주소 찾기"
+						class="btn btn-outline-secondary m-2"> <input type="text"
+						id="sample6_address" placeholder="주소" name="doroAddr"
+						class="form-control addr">
+				</div>
+				<div class="form-group col-md-7">
+					<label for="sample6_detailAddress" class="form-label">상세 주소</label>
+					<input type="text" id="sample6_detailAddress" placeholder="상세주소"
+						name="detailsAddr" class="form-control dAddr">
+				</div>
+				<div class="form-group col-md-5"></div>
+				<div class="form-group col-md-5">
+					<label for="floorArea" class="form-label">연면적 </label> <input
+						type="text" id="floorArea" name="floorArea" class="form-control">
+				</div>
+				<div class="form-group col-md-5">
+					<label for="floorAreaRatio" class="form-label">용적률 산정용 연면적
+					</label> <input type="text" id="floorAreaRatio" name="floorAreaRatio"
+						class="form-control">
+				</div>
+				<div class="form-group col-md-5">
+					<label for="gunchookArea" class="form-label">건축면적 </label> <input
+						type="text" id="gunchookArea" name="gunchookArea"
+						class="form-control">
+				</div>
+				<div class="form-group col-md-5">
+					<label for="buildingHeigh" class="form-label">건물 높이 </label> <input
+						type="text" id="buildingHeigh" name="buildingHeigh"
+						class="form-control">
+				</div>
+				<div class="form-check form-switch">
+					<label for="liftYn">승강기 여부 </label> <input type="checkbox"
+						id="liftYn" name="liftYn" class="form-check-input text-end"
+						role="switch">
+				</div>
+				<div class="form-group col-md-5">
+					<label for="totalFloor" class="form-label">층 수 </label> <input
+						type="text" id="totalFloor" name="totalFloor" class="form-control">
+				</div>
+				<div class="form-group col-md-5">
+					<label for="floorGaguCount" class="form-label">층 별 가구수 </label> <input
+						type="text" id="floorGaguCount" name="floorGaguCount"
+						class="form-control">
+				</div>
+				<div class="form-group col-md-5">
+					<label for="totalGagu" class="form-label">총 세대수 </label> <input
+						type="text" id="totalGagu" name="totalGagu" class="form-control">
+				</div>
+				<div class="form-group col-md-5">
+					<label for="parking" class="form-label">주차 가능 대수 </label> <input
+						type="text" id="parking" name="parking" class="form-control">
+				</div>
+				<div class="form-group col-md-6">
+					<label for="memo" class="form-label">비고 </label> <input type="text"
+						id="memo" name="memo" class="form-control">
+				</div>
+
+			</form>
+		</div>
+		<!-- End 건물 정보 -->
+		<div>
+			<script>
 			$(document).ready(function() {
 				
 				let firstBuilding = $('li[data-index="1"]').attr('id');
@@ -194,16 +216,20 @@
 							let images = data.fileName;
 							
 							for(img of images){
-							
+								let div = $('<div>').attr('class','imgDiv')
 								let imgName = $("<img>").attr({'src':ctxPath+'/images/'+'건물/'+img});
-								let imgDel = $("<button>").attr('id','imageDel');
+								let imgDel = $("<button>").attr('class','imageDel');
+								imgName.attr("id",'imgId')
 								imgDel.attr('type','button');
-								imgDel.attr('text','삭제');
 								imgDel.html('X');
-								$("#imgFile").append(imgName);
-								$("#imgFile").append(imgDel);
+								$("#imgFile").append(div);
+								$(div).append(imgName);
+								$(div).append(imgDel);
+								
 							} 
 						} 
+						//이미지 삭제
+						$('.imageDel').on('click', imgaeDelFunc);
 						
 						checkFunc($("#liftYn"));
 						$(".bid").val(data.buildingId);
@@ -213,10 +239,10 @@
 			})
 			//end of $(document).ready
 			
-			//이미지 삭제
-			$('#imageDel').on('click',function(e){
-				console.log(e.target);
-			})
+			function imgaeDelFunc(e){
+				console.log($(e.target).parent());
+				$(e.target).parent().remove();	
+			}
 			
 			function checkFunc(liftYn) {
 				if (liftYn.val() === 'Y') {
@@ -282,9 +308,9 @@
 		
 			
 		</script>
-		<script
-			src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-		<script>
+			<script
+				src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+			<script>
 		function sample6_execDaumPostcode() {
 			new daum.Postcode({
 				oncomplete : function(data) {
@@ -309,5 +335,10 @@
 			}).open();
 		}
 	</script>
+		</div>
+
 	</div>
-</div>
+
+
+</body>
+</html>
