@@ -23,4 +23,26 @@
 		WHERE
 			imchain_phone = #{imchainId}
 	</select>
+	
+	<!-- 계약번호 - 계약단건 조회 -->
+	<select id="selectConstractInfo">
+		SELECT
+		    constract_no,
+		    constract_type,
+		    deposit,
+		    m_rent,
+		    pay_type,
+		    imchain_name,
+		    imchain_account,
+		    imdaein_account,
+		    constract_date,
+		    exp_date,
+		    constract_state,
+		    constract_file,
+		    m_rent_date,
+		    memo,
+		    room_id
+		FROM constract_info
+		WHERE constract_no = #{constractNo}
+	</select>
 </mapper>

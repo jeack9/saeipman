@@ -31,7 +31,6 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig2 {
 	// AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
 	private final AuthenticationConfiguration authenticationConfiguration;
-	private final JwtUtil jwtUtill;
 
 	@Bean // 비밀번호 암호화
 	BCryptPasswordEncoder passwordEncoder() {
@@ -110,6 +109,7 @@ public class SecurityConfig2 {
 			.requestMatchers("/css/**", "/img/**", "/js/**", "/lib/**", "/scss/**", "/dashmin-1.0.0/**").permitAll()
 			.requestMatchers("/all/**").permitAll()
 			.requestMatchers("/member/**").hasAnyAuthority("ROLE_1", "ROLE_2")
+			.requestMatchers("/room/**").hasAnyAuthority("ROLE_1")
 			.requestMatchers("/admin/**").hasRole("0")
 //			.anyRequest().permitAll() // 일단 임시로 전부 허용 나중에 권한별 분리
 			.anyRequest().authenticated()
