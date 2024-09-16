@@ -119,10 +119,12 @@
 		insert into room_info(room_id,
                       room_no,
                       floor,
+                      ipju_state,
                       building_id)
 		values (#{buildingId}||#{roomNo},
 				#{roomNo},
 				#{floor},
+				-1,
 				#{buildingId}
 				)
 	</insert>
