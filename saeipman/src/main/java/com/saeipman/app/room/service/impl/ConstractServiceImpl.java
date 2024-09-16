@@ -16,5 +16,9 @@ public class ConstractServiceImpl implements ConstractService{
 	public ConstractVO constractInfoImchain(String imcahinId) {
 		return cmapper.selectConstractImchain(imcahinId);
 	}
+	@Override
+	public ConstractVO constractInfo(String constractNo) {
+		return cmapper.selectConstractInfo(constractNo);
+	}
 
 }

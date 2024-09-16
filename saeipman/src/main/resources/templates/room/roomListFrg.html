@@ -1,0 +1,86 @@
+<!-- div.roomWrap -->
+<div class="row roomWrap gx-4 justify-content-center" xmlns:th="http://www.thymeleaf.org">
+	<p>총 호수: [[${hosu.total}]] (거주: [[${hosu.ipju}]] / 공실:
+		[[${hosu.total - hosu.ipju}]])</p>
+	<!-- Room Card -->
+	<th:block th:if="${roomList.size() > 0}">
+		<div class="col-md-5 col-sm-6 border border-dark me-3 mt-3"
+			th:each="room : ${roomList}">
+			<div class="row mb-1 mt-1">
+				<div class="col">
+					<div class="d-flex justify-content-between">
+						<h4>[[${room.buildingName}]]</h4>
+						<div>
+							<button type="button" class="btn btn-outline-success offVisible">입주
+								예정</button>
+						</div>
+						<h5>[[${room.constractType}]]</h5>
+						<div>
+							<button type="button" class="btn btn-outline-success">[[${room.ipjuState
+								== -1 ? '공실' : '입주'}]]</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row gx-0">
+				<h4 class="col">[[${room.roomNo}]]호 &nbsp;
+					[[${room.imchainName}]]</h4>
+				<div class="col text-end">
+					<button type="button" class="btn btn-outline-danger offVisible">연체</button>
+				</div>
+			</div>
+			<h4 class="row gx-0">(보)[[${deposit == null ? '없음' : (deposit /
+				10000) + '만원'}]] (월) [[${mRent == null ? '없음' : (mRent / 10000) +
+				'만원'}]] (관)1만원</h4>
+			<div class="row gx-0">[[${room.constractDate != null ? '계약기간: '
+				+ #dates.format(room.constractDate, 'yyyy.MM.dd') + ' ~ ' +
+				#dates.format(room.expDate, 'yyyy.MM.dd') : '계약 정보가 없습니다.'}]]</div>
+			<div class="row gx-0">
+				<div class="col-8 text-truncate">
+					<b>비고:[[${room.memo}]]</b>
+				</div>
+			</div>
+			<div class="row gx-0">
+				<div class="col">
+					<button type="button"
+						class="btn btn-outline-secondary infoBtn w-100" data-bs-toggle="modal" data-bs-target="#contractModal">계약정보</button>
+				</div>
+				<div class="col">
+					<button type="button"
+						class="btn btn-outline-secondary bookBtn w-100" data-bs-target="#contractModal">입주예약</button>
+				</div>
+			</div>
+		</div>
+		<!-- 페이지네이션 -->
+		<nav aria-label="Page navigation">
+			<ul class="pagination justify-content-center mt-3">
+				<!-- 이전페이지 -->
+				<li class="page-item"
+					th:classappend="${paging.prev ? '' : 'disabled'}"><a
+					class="page-link"
+					th:href="@{/room/roomList(page=${paging.startPage - paging.viewPage})}"
+					aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+				</a></li>
+				<!-- 페이지번호 매기기 -->
+				<li class="page-item"
+					th:classappend="${pageNum == paging.page ? 'active' : ''}"
+					th:each="pageNum : ${#numbers.sequence(paging.startPage, paging.endPage)}">
+					<a class="page-link" th:href="@{/room/roomList(page=${pageNum})}">[[${pageNum}]]</a>
+				</li>
+				<!-- 다음페이지 -->
+				<li class="page-item"
+					th:classappend="${paging.next ? '' : 'disabled'}"><a
+					class="page-link"
+					th:href="@{/room/roomList(page=${paging.endPage + 1})}"
+					aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+				</a></li>
+			</ul>
+		</nav>
+		<!-- 페이지네이션 END -->
+	</th:block>
+	<th:block th:unless="${roomList.size() > 0}">
+		<h3>표시할 방이 없습니다.</h3>
+	</th:block>
+	<!-- Room Card End -->
+</div>
+<!-- div.roomWrap END -->
