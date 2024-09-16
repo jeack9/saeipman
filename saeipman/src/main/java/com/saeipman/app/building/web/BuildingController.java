@@ -88,8 +88,8 @@ public class BuildingController {
 	
 	@PostMapping("/buildingInsert")
 	@ResponseBody
-	public String insertBuilding(@RequestPart MultipartFile[] files, 
-								 @RequestPart MultipartFile ocrFile,
+	public String insertBuilding(@RequestPart(name="files") MultipartFile[] files, 
+								 @RequestPart(name = "ocrFile") MultipartFile ocrFile,
 								 BuildingVO buildingVO, 
 								 RoomVO roomVO) throws IOException {
 		//업로드 경로 폴더명
@@ -118,7 +118,7 @@ public class BuildingController {
 	
 	@PostMapping("/ocrUpload")
 	@ResponseBody
-	public Map<String, Object> insertOcr(@RequestPart(name = "file") MultipartFile ocrFile, 
+	public Map<String, Object> insertOcr(@RequestPart(name = "ocrFile") MultipartFile ocrFile, 
 									     Model model, 
 									     BuildingVO buildingVO) throws IOException {
 //		if (ocrFile.isEmpty()) {
