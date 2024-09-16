@@ -26,6 +26,15 @@ public class PagingSearchDTO {
 	//전체 게시물 수는 달라질 수 있음 따라서 total 값 입력받아서 변경하고, 변경된 값으로 페이지 수 다시 계산해야함.
 	public void setTotal(int total) {
 		this.total = total;
+		//검색결과가 없거나 페이징할 데이터 자체가 없을 경우(0일경우)
+		if(total == 0) {
+			startPage = 0;
+			endPage = 0;
+			realEnd = 0;
+			prePage = false;
+			nextPage = false; 
+			return;
+		}
 		pageCount();
 	}
 

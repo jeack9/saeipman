@@ -1,14 +1,17 @@
 package com.saeipman.app.noticeBuilding.web;
 
 import java.util.List;
+import java.util.Map;
 
-import org.hamcrest.core.IsEqual;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.saeipman.app.building.service.BuildingVO;
@@ -42,16 +45,13 @@ public class NoticeBuildingController {
 		int auth = SecurityUtil.getLoginAuth();	
 		
 		//로그인한 권한에 따라 임대인/임차인 페이지가 다르게 보여야함. 1:임대인, 2:임차인
-		
 		if(auth == 1) { //로그인한 권한이 1인 경우(임대인)
 			
 			//securityutil에서 임대인id를 받아와서 변수에 할당
 			String loginId = SecurityUtil.getLoginId();
 			
-			pgsc.setImdaeinId(loginId);
 			//pgsc의 임대인id에 받아온 속성값 부여 => 그래야 해당 임대인이 가진 건물들의 공지사항을 확인할 수 있음.
-//			if(pgsc.getBuildingId() == null || pgsc.getBuildingId().isEmpty()) {
-//			}
+			pgsc.setImdaeinId(loginId);
 		 
 			//임대인이 소유한 건물의 이름을 확인하기 위해 buildingVO에도 속성값 부여
 			BuildingVO buildingVO = new BuildingVO();
@@ -95,22 +95,42 @@ public class NoticeBuildingController {
 
 	// 등록(페이지)
 	@GetMapping("noticeBuildingInsert")
-	public String noticeBuildingInsertForm(Model model) {
+	public String noticeBuildingInsertForm(NoticeBuildingVO noticeBuildingVO, Model model) {
+		
+		String loginId = SecurityUtil.getLoginId();
 		
 		LoginInfoVO login = SecurityUtil.getLoginInfo();
-	      model.addAttribute("login", login);
+		model.addAttribute("login", login);
+		
+		noticeBuildingVO.setImdaeinId(loginId);
+		
+		BuildingVO buildingVO = new BuildingVO();
+		buildingVO.setImdaeinId(loginId);
+		List<BuildingVO> name = noticeBuildingService.imdaeinBuilding(buildingVO);
+		model.addAttribute("Bname", name);
+		
 		
 		return "noticeBuilding/noticeBuildingInsert";
 	}
 
 	// 등록(처리) + 파일 업로드(처리)
 	@PostMapping("noticeBuildingInsert")
-	public String noticeBuildingProc(@RequestPart MultipartFile[] files, NoticeBuildingVO noticeBuildingVO) {
+	public String noticeBuildingProc(@RequestPart MultipartFile[] files, NoticeBuildingVO noticeBuildingVO, Model model) {
 
+		String loginId = SecurityUtil.getLoginId();
+
+		noticeBuildingVO.setImdaeinId(loginId);
+		
+		BuildingVO buildingVO = new BuildingVO();
+		buildingVO.setImdaeinId(loginId);
+		
+		List<BuildingVO> bname = noticeBuildingService.imdaeinBuilding(buildingVO);
+		model.addAttribute("BuildingList", bname);
+		
+		
 		//업로드 경로 폴더
 		fileUtility.setFolder("공지사항");
 		
-		String loginId = SecurityUtil.getLoginId();
 		
 		String groupId = fileUtility.multiUpload(files);
 		
@@ -129,12 +149,12 @@ public class NoticeBuildingController {
 	}
 
 	// 수정(처리)
-//	@PostMapping("noticeBuildingUpdate")
-//	@ResponseBody
-//	public List<String> noticeBuildingUpdate(NoticeBuildingVO noticeBuildingVO) {
-		
+	@PostMapping("noticeBuildingUpdate")
+	@ResponseBody
+	public Map<String, Object> noticeBuildingUpdate(@RequestBody NoticeBuildingVO noticeBuildingVO) {
+		return noticeBuildingService.noticeBuildingUpdate(noticeBuildingVO);
 			
-//	}
+	}
 
 
 	// 삭제(처리)
