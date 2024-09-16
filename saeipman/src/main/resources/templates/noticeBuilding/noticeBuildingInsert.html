@@ -7,6 +7,7 @@
 		<div class="row g-4">
 			<div class="col-sm-12 col-xl-12">
 				<div class="bg-light rounded h-100 p-4">
+					
 					<form th:action="@{/noticeBuildingInsert}" method="post"
 						name="insertForm" enctype="multipart/form-data">
 
@@ -16,13 +17,16 @@
 								name="title" /> <label for="floatingInput">제목</label>
 						</div>
 						<div class="form-floating mb-1">
-							<select class="form-select" id="floatingSelect" name="buildingId"
-								aria-label="Floating label select example">
-								<option selected>건물 목록</option>
-								<option value="ZIP10">한입만 원룸</option>
-								<option value="ZIP000175">두입만 투룸</option>
-								<option value="ZIP10">세입만 빌딩</option>
-							</select> <label for="floatingSelect">공지사항을 등록할 건물을 선택하세요.</label>
+						
+							<select class="form-select mb-6"
+								aria-label="Default select example" id="option"
+								name="buildingId">
+								<option selected value="">건물 목록</option>
+								<option th:each="list : ${buildingList}" th:value="${list.buildingId}"
+									th:selected="${list.buildingId}==${pagingSearchDTO.buildingId}">
+									[[${list.buildingName}]]</option>
+							</select>
+							
 						</div>
 
 						<div class="mb-3">
