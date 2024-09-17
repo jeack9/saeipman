@@ -1,0 +1,57 @@
+<!-- 건물모달창 body -->
+<div class="modal-body" xmlns:th="http://www.thymeleaf.org" th:fragment="buildingListFrg">
+	<div class="container">
+		<div class="row mb-3">
+			<!-- 건물 목록 반복 -->
+			<div class="col-12 mb-3" th:each="building : ${buildingList}">
+				<div class="card">
+					<div
+						class="card-body d-flex justify-content-between align-items-center">
+						<div>
+							<h5 class="card-title">건물명: [[${building.buildingName}]]</h5>
+							<p class="card-text">도로명: [[${building.doroAddr}]]</p>
+							<p class="card-text">비고: [[${building.memo}]]</p>
+						</div>
+						<button type="button" class="btn btn-danger"
+							th:data-buildingid="${building.buildingId}"
+							onclick="selectBuilding(this)">선택</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 검색 기능 -->
+		<div class="row mb-3">
+			<div class="col-12">
+				<label for="search" class="form-label">검색</label> <input type="text"
+					class="form-control" id="search" placeholder="건물 검색">
+			</div>
+		</div>
+		<!-- 건물리스트 페이징 -->
+		<nav aria-label="Page navigation">
+			<ul class="pagination justify-content-center buildingPagination">
+				<!-- 이전 페이지 링크 -->
+				<li class="page-item" th:classappend="${!bPaging.prev} ? 'disabled'">
+					<a class="page-link"
+					th:href="@{/room/buildingList(page=${bPaging.startPage - 1})}" th:data-page="${bPaging.prev} ? ${bPaging.startPage - 1}"
+					aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+				</a>
+				</li>
+				<!-- 페이지 번호 링크 -->
+				<li class="page-item"
+					th:each="pageNum : ${#numbers.sequence(bPaging.startPage, bPaging.endPage)}"
+					th:classappend="${pageNum == bPaging.page} ? 'active'"><a
+					class="page-link" th:data-page="${pageNum}" th:href="@{/room/buildingList(page=${pageNum})}">[[${pageNum}]]</a>
+				</li>
+				<!-- 다음 페이지 링크 -->
+				<li class="page-item" th:classappend="${!bPaging.next} ? 'disabled'">
+					<a class="page-link" th:data-page="${bPaging.next} ? ${bPaging.endPage + 1}"
+					th:href="@{/room/buildingList(page=${bPaging.endPage + 1})}"
+					aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+				</a>
+				</li>
+			</ul>
+		</nav>
+		<!-- 건물리스트 페이징 -->
+	</div>
+</div>
+<!-- 건물모달창 body END -->

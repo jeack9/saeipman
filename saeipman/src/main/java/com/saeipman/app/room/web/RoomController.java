@@ -7,10 +7,14 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.saeipman.app.building.service.BuildingService;
+import com.saeipman.app.building.service.BuildingVO;
 import com.saeipman.app.commom.paging.PagingDTO;
 import com.saeipman.app.commom.security.SecurityUtil;
 import com.saeipman.app.room.service.BuildingRoom;
@@ -20,8 +24,6 @@ import com.saeipman.app.room.service.RoomService;
 import com.saeipman.app.room.service.RoomVO;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 
 @Controller
 @RequestMapping("room")
@@ -29,45 +31,161 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class RoomController {
 	private final RoomService rsvc;
 	private final ConstractService csvc;
-	
+	private final BuildingService bsvc;
+
+	// 방목록 페이지이동
 	@GetMapping("roomListBackup")
 	public void roomP(Integer page, String buildingId, Model model) {
+		String imdaeinId = SecurityUtil.getLoginId();
 		// 건물 선택
 		BuildingRoom buildingRoom = new BuildingRoom();
-		buildingRoom.setImdaeinId(SecurityUtil.getLoginId());
+		buildingId = buildingId == null ? "" : buildingId;
+		buildingRoom.setImdaeinId(imdaeinId);
 		buildingRoom.setBuildingId(buildingId);
-		
-		// 페이지네이션
+		BuildingVO buildingVO = new BuildingVO();
+		buildingVO.setBuildingId(buildingId);
+		BuildingVO findBuildingVO = bsvc.buildingInfo(buildingVO);
+		if (findBuildingVO == null) {
+			findBuildingVO = new BuildingVO();
+		}
+		model.addAttribute("buildingVO", findBuildingVO);
+
+		// 임대인의 건물리스트 모달창용 페이지네이션
+		int buildingPage = 1; // 수정해야함 값 받아오도록
+		int buildingTotal = bsvc.totalPage(imdaeinId);
+		PagingDTO buildingPaging = new PagingDTO(buildingPage, 4, buildingTotal, 5);
+		List<BuildingVO> buildingList = bsvc.imdaeinBuildingList(buildingPaging, imdaeinId);
+		model.addAttribute("buildingList", buildingList);
+		model.addAttribute("bPaging", buildingPaging);
+
+		// 방 목록 페이지네이션
 		page = page == null ? 1 : page;
 		int total = rsvc.totalBuildingRoom(buildingRoom);
 		PagingDTO paging = new PagingDTO(page, 4, total, 5);
-		
-		// 검색조건
-		
+
+		// 방 목록 검색조건
+
 		// 건물 - 거주 공실 수
 		Map<String, Object> map = new HashMap<String, Object>();
 		int ipju = rsvc.buildingIpjuCount(buildingRoom);
 		map.put("total", total);
 		map.put("ipju", ipju);
 		model.addAttribute("hosu", map);
-		
+
 		List<BuildingRoom> roomList = rsvc.buildingRoomList(buildingRoom, paging);
 		model.addAttribute("roomList", roomList);
 		model.addAttribute("paging", paging);
 	};
-	
+
+	// 현재 계약정보 htmlFrg 반환 ajax
 	@PostMapping("getConstract")
 	public String getConstract(@RequestBody HashMap<String, Object> map, Model model) {
-		ConstractVO constractVo = new ConstractVO();
-		if(map.get("constractNo") != null) {
-			constractVo = csvc.constractInfo((String)map.get("constractNo"));
+		ConstractVO findVo = csvc.constractInfo((String) map.get("constractNo"));
+		// 현재 계약정보 없으면 다음 계약정보 조회
+		if (findVo == null) {
+			findVo = csvc.nextConstractInfoByRoomId((String) map.get("roomId"));
 		}
-		RoomVO roomVo = rsvc.roomInfo((String)map.get("roomId"));
-		model.addAttribute("constractVo", constractVo);
+		// 다음 계약정보 없으면 빈 정보 전달
+		if (findVo == null) {
+			findVo = new ConstractVO();
+		}
+		RoomVO roomVo = rsvc.roomInfo((String) map.get("roomId"));
+
+		model.addAttribute("constractVo", findVo);
 		model.addAttribute("roomVo", roomVo);
-		model.addAttribute("buildingName", (String)map.get("buildingName"));
-		model.addAttribute("ipjuState", map.get("ipjuState"));
+		model.addAttribute("buildingName", (String) map.get("buildingName"));
+		model.addAttribute("page", (int) map.get("page"));
+		model.addAttribute("buildingId", (String) map.get("buildingId"));
 		return "room/fragments/constractModal :: modalContent";
 	}
-	
+
+	// 다음 계약정보 모달창 반환
+	@PostMapping("getNextConstract")
+	public String getNextConstract(@RequestBody HashMap<String, Object> map, Model model) {
+		ConstractVO findVo = csvc.nextConstractInfoByRoomId((String) map.get("roomId"));
+		RoomVO roomVo = rsvc.roomInfo((String) map.get("roomId"));
+		if (findVo == null) {
+			findVo = new ConstractVO();
+		}
+		model.addAttribute("constractVo", findVo);
+		model.addAttribute("roomVo", roomVo);
+		model.addAttribute("buildingName", (String) map.get("buildingName"));
+		model.addAttribute("page", (int) map.get("page"));
+		model.addAttribute("buildingId", (String) map.get("buildingId"));
+		return "room/fragments/constractModal :: modalContent";
+	}
+
+	// 현재사용안함
+	@PostMapping("loadRoomListFrg/{buildingId}")
+	public String loadRoomListFrg(Integer page, @PathVariable String buildingId, Model model) {
+		// 건물 선택
+		BuildingRoom buildingRoom = new BuildingRoom();
+		buildingRoom.setImdaeinId(SecurityUtil.getLoginId());
+		buildingRoom.setBuildingId(buildingId);
+
+		// 페이지네이션
+		page = page == null ? 1 : page;
+		int total = rsvc.totalBuildingRoom(buildingRoom);
+		PagingDTO paging = new PagingDTO(page, 4, total, 5);
+
+		// 검색조건
+
+		// 건물 - 거주 공실 수
+		Map<String, Object> map = new HashMap<String, Object>();
+		int ipju = rsvc.buildingIpjuCount(buildingRoom);
+		map.put("total", total);
+		map.put("ipju", ipju);
+		model.addAttribute("hosu", map);
+
+		List<BuildingRoom> roomList = rsvc.buildingRoomList(buildingRoom, paging);
+		model.addAttribute("roomList", roomList);
+		model.addAttribute("paging", paging);
+		return "room/fragments/roomWrapFrg :: roomWrap";
+	}
+
+	// 건물목록Frg모달창 ajax 반환
+	@GetMapping("buildingList")
+	public String buildingList(Integer buildingPage, Model model) {
+		String imdaeinId = SecurityUtil.getLoginId();
+		// 임대인의 건물리스트 모달창용
+		buildingPage = buildingPage == null ? 1 : buildingPage; // 수정해야함 값 받아오도록
+		int buildingTotal = bsvc.totalPage(imdaeinId);
+		PagingDTO buildingPaging = new PagingDTO(buildingPage, 4, buildingTotal, 5);
+		List<BuildingVO> buildingList = bsvc.imdaeinBuildingList(buildingPaging, imdaeinId);
+		model.addAttribute("buildingList", buildingList);
+		model.addAttribute("bPaging", buildingPaging);
+
+		return "room/fragments/buildingList :: buildingListFrg";
+	}
+
+	// 방 계약정보 수정
+	@PostMapping("updateConstract")
+	@ResponseBody
+	public String updateConstract(@RequestBody ConstractVO constractVO, Model model) {
+		String roomId = constractVO.getRoomId();
+		int newState = constractVO.getConstractState();
+		System.out.println(constractVO.getmRent() + " mrentmrean");
+		System.out.println(constractVO.getDeposit() + " deposit");
+		try {
+			// 대기계약 정보 확인
+			if (newState == 0) {
+				ConstractVO nextConstract = csvc.nextConstractInfoByRoomId(roomId);
+				if (nextConstract != null && !nextConstract.getConstractNo().equals(constractVO.getConstractNo())) {
+					return "fail1";
+				}
+			}
+			// 현재계약 정보 확인
+			if (newState == 1) {
+				ConstractVO currentConstract = csvc.currentConstractInfoByRoomId(roomId);
+				if (currentConstract != null && !currentConstract.getConstractNo().equals(constractVO.getConstractNo())) {
+					return "fail2";
+				}
+			}
+			csvc.modiConstract(constractVO);
+			return "ok";
+		} catch (Exception e) {
+			return "error";
+		}
+	}
+
 }
