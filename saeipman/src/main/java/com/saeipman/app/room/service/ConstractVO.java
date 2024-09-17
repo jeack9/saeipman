@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,4 +30,17 @@ public class ConstractVO {
 	private String mRentDate; // 월세 납부일
 	private String memo; // 비고
 	private String roomId; // 방 아이디 fk
+	public int getmRent() {
+		return mRent;
+	}
+	public void setmRent(int mRent) {
+		this.mRent = mRent;
+	}
+	public String getmRentDate() {
+		return mRentDate;
+	}
+	public void setmRentDate(String mRentDate) {
+		this.mRentDate = mRentDate;
+	}
+	
 }

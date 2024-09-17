@@ -17,11 +17,37 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-6">
-					<button type="button" class="btn btn-outline-primary">
+					<button type="button" class="btn btn-outline-primary"
+						data-bs-toggle="modal" data-bs-target="#buildingModal">
 						<i class="fa fa-home me-2"></i>건물 선택
 					</button>
-					<button type="button" class="btn btn-outline-primary">선택
-						초기화</button>
+					<button type="button" class="btn btn-outline-primary"
+						id="resetBuildingBtn">선택 초기화</button>
+					<button type="button" class="btn btn-outline-danger"
+						th:if="${buildingVO.buildingName != null}">[[${buildingVO.buildingName}]]</button>
+					<!-- 건물선택 모달창 -->
+					<div class="modal fade" id="buildingModal" tabindex="-1"
+						aria-labelledby="buildingModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-lg">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="buildingModalLabel">건물 선택</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div id="buildingList">
+									<th:block
+										th:replace="~{room/fragments/buildingList :: buildingListFrg}">
+										</th:replace>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">닫기</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- 건물선택 모달창 END -->
 				</div>
 				<div class="col-md-6">
 					<div>
@@ -50,80 +76,104 @@
 			</div>
 			<!-- div.roomWrap -->
 			<div class="row roomWrap gx-4 justify-content-center">
-			<p>총 호수: [[${hosu.total}]] (거주: [[${hosu.ipju}]] / 공실: [[${hosu.total - hosu.ipju}]])</p>
+				<p>총 호수: [[${hosu.total}]] (거주: [[${hosu.ipju}]] / 공실:
+					[[${hosu.total - hosu.ipju}]])</p>
 				<!-- Room Card -->
 				<th:block th:if="${roomList.size() > 0}">
-				<div class="col-md-5 col-sm-6 border border-dark me-3 mt-3" th:each="room : ${roomList}">
-					<div class="row mb-1 mt-1">
-						<div class="col">
-							<div class="d-flex justify-content-between">
-								<h4>[[${room.buildingName}]]</h4>
-								<div>
-									<button type="button" class="btn btn-outline-success offVisible">입주 예정</button>
-								</div>
-								<h5>[[${room.constractType}]]</h5>
-								<div>
-									<button type="button" class="btn btn-outline-success">[[${room.ipjuState == -1 ? '공실' : '입주'}]]</button>
+					<div class="col-md-5 col-sm-6 border border-dark me-3 mt-3"
+						th:each="room : ${roomList}">
+						<div class="row mb-1 mt-1">
+							<div class="col">
+								<div class="d-flex justify-content-between">
+									<h4>[[${room.buildingName}]]</h4>
+									<div>
+										<button type="button"
+											class="btn btn-outline-success offVisible">입주 예정</button>
+									</div>
+									<h5>[[${room.constractType}]]</h5>
+									<div>
+										<button type="button" class="btn btn-outline-success">[[${room.ipjuState
+											== -1 ? '공실' : '입주'}]]</button>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="row gx-0">
-						<h4 class="col">[[${room.roomNo}]]호 &nbsp; [[${room.imchainName}]]</h4>
-						<div class="col text-end">
-							<button type="button" class="btn btn-outline-danger offVisible">연체</button>
+						<div class="row gx-0">
+							<h4 class="col">[[${room.roomNo}]]호 &nbsp;
+								[[${room.imchainName}]]</h4>
+							<div class="col text-end">
+								<button type="button" class="btn btn-outline-danger offVisible">연체</button>
+							</div>
+						</div>
+						<h4 class="row gx-0">(보)[[${room.deposit == 0 ? '없음' :
+							(room.deposit / 10000) + '만원'}]] (월) [[${room.mRent == 0 ? '없음' :
+							(room.mRent / 10000) + '만원'}]] (관)1만원</h4>
+						<div class="row gx-0">[[${room.constractDate != null ?
+							'계약기간: ' + #dates.format(room.constractDate, 'yyyy.MM.dd') + ' ~
+							' + #dates.format(room.expDate, 'yyyy.MM.dd') : '계약 정보가 없습니다.'}]]</div>
+						<div class="row gx-0">
+							<div class="col-8 text-truncate">
+								<b>비고:[[${room.memo}]]</b>
+							</div>
+						</div>
+						<div class="row gx-0">
+							<div class="col">
+								<button type="button" th:data-cno="${room.constractNo}"
+									th:data-bname="${room.buildingName}"
+									th:data-page="${paging.page}"
+									th:data-buildingid="${buildingVO.buildingId}"
+									th:data-roomid="${room.roomId}"
+									class="btn btn-outline-secondary infoBtn w-100"
+									data-bs-toggle="modal" data-bs-target="#contractModal">계약정보</button>
+							</div>
+							<div class="col">
+								<button type="button" th:data-bname="${room.buildingName}"
+									th:data-roomid="${room.roomId}" th:data-page="${paging.page}"
+									th:data-buildingid="${buildingVO.buildingId}"
+									class="btn btn-outline-secondary bookBtn w-100"
+									data-bs-toggle="modal" data-bs-target="#contractModal">입주예약</button>
+							</div>
 						</div>
 					</div>
-					<h4 class="row gx-0">(보)[[${deposit == null ? '없음' :  (deposit / 10000) + '만원'}]] (월) [[${mRent == null ? '없음' :  (mRent / 10000) + '만원'}]] (관)1만원</h4>
-					<div class="row gx-0"> [[${room.constractDate != null ? '계약기간: ' + #dates.format(room.constractDate, 'yyyy.MM.dd') + ' ~ ' + #dates.format(room.expDate, 'yyyy.MM.dd') : '계약 정보가 없습니다.'}]]</div>
-					<div class="row gx-0">
-						<div class="col-8 text-truncate">
-							<b>비고:[[${room.memo}]]</b>
-						</div>
-					</div>
-					<div class="row gx-0">
-						<div class="col" th:if="${room.constractNo != null}">
-							<button type="button" th:data-cno="${room.constractNo}" th:data-bname="${room.buildingName}" th:data-roomid="${room.roomId}" class="btn btn-outline-secondary infoBtn w-100" data-bs-toggle="modal" data-bs-target="#contractModal">계약정보</button>
-						</div>
-						<div class="col">
-							<button type="button" th:data-bname="${room.buildingName}" th:data-roomid="${room.roomId}" class="btn btn-outline-secondary bookBtn w-100" data-bs-toggle="modal" data-bs-target="#contractModal">입주예약</button>
-						</div>
-					</div>
-				</div>
-				<!-- 페이지네이션 -->
-				<nav aria-label="Page navigation">
-				  <ul class="pagination justify-content-center mt-3">
-				  <!-- 이전페이지 -->
-				    <li class="page-item" th:classappend="${paging.prev ? '' : 'disabled'}">
-				      <a class="page-link" th:href="@{/room/roomListBackup(page=${paging.startPage - paging.viewPage})}" aria-label="Previous">
-				        <span aria-hidden="true">&laquo;</span>
-				      </a>
-				    </li>
-				    <!-- 페이지번호 매기기 -->
-				    <li class="page-item" th:classappend="${pageNum == paging.page ? 'active' : ''}" th:each="pageNum : ${#numbers.sequence(paging.startPage, paging.endPage)}">
-				    	<a class="page-link" th:href="@{/room/roomListBackup(page=${pageNum})}" >[[${pageNum}]]</a>
-				    </li>
-				    <!-- 다음페이지 -->
-				    <li class="page-item" th:classappend="${paging.next ? '' : 'disabled'}">
-				      <a class="page-link" th:href="@{/room/roomListBackup(page=${paging.endPage + 1})}" aria-label="Next">
-				        <span aria-hidden="true">&raquo;</span>
-				      </a>
-				    </li>
-				  </ul>
-				</nav>
-				<!-- 페이지네이션 END -->
+					<!-- 페이지네이션 -->
+					<nav aria-label="Page navigation">
+						<ul class="pagination justify-content-center mt-3">
+							<!-- 이전페이지 -->
+							<li class="page-item"
+								th:classappend="${paging.prev ? '' : 'disabled'}"><a
+								class="page-link"
+								th:href="@{/room/roomListBackup(page=${paging.startPage - paging.viewPage}, buildingId=${buildingVO.buildingId})}"
+								aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+							</a></li>
+							<!-- 페이지번호 매기기 -->
+							<li class="page-item"
+								th:classappend="${pageNum == paging.page ? 'active' : ''}"
+								th:each="pageNum : ${#numbers.sequence(paging.startPage, paging.endPage)}">
+								<a class="page-link"
+								th:href="@{/room/roomListBackup(page=${pageNum}, buildingId=${buildingVO.buildingId})}">[[${pageNum}]]</a>
+							</li>
+							<!-- 다음페이지 -->
+							<li class="page-item"
+								th:classappend="${paging.next ? '' : 'disabled'}"><a
+								class="page-link"
+								th:href="@{/room/roomListBackup(page=${paging.endPage + 1}, buildingId=${buildingVO.buildingId})}"
+								aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+							</a></li>
+						</ul>
+					</nav>
+					<!-- 페이지네이션 END -->
 				</th:block>
 				<th:block th:unless="${roomList.size() > 0}">
-				<h3>표시할 방이 없습니다.</h3>
+					<h3>표시할 방이 없습니다.</h3>
 				</th:block>
 				<!-- Room Card End -->
 			</div>
 			<!-- div.roomWrap END -->
-			<!-- 모달창 들어가는 곳 -->
+			<!-- 계약정보 모달창 들어가는 곳 -->
 			<div class="modal fade" id="contractModal" tabindex="-1"
 				aria-labelledby="contractModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg" id="modalContent">
-				
+					<!-- 계약정보 모달 프래그먼트 삽입위치 -->
 				</div>
 			</div>
 		</div>
@@ -132,13 +182,17 @@
     	let $infoBtn = $(".infoBtn");
     	let $bookBtn = $(".bookBtn");
     	let $modalContent = $("#modalContent"); // 모달창 삽입 공간
-
+    	let page;
+    	let buildingId;
     	// 방의 계약정보 모달창 띄우기
     	$infoBtn.on("click", (e) => {
+    		isUpdateMode = true;
     		let constractNo = $(e.target).data("cno");
     		let roomId = $(e.target).data("roomid");
     		let buildingName = $(e.target).data("bname");
-    		let dataObj = {constractNo, roomId, buildingName};
+    		buildingId = $(e.target).data("buildingid");
+    		page = $(e.target).data("page");
+    		let dataObj = {constractNo, roomId, buildingName, page, buildingId};
     		$.ajax({
     		    url: `${ctxPath}/room/getConstract`,
     		    method: 'post',
@@ -154,11 +208,14 @@
     	});
     	// 방의 입주예약 모달창 띄우기
     	$bookBtn.on("click", (e)=>{
+    		isUpdateMode = false;
     		let roomId = $(e.target).data("roomid");
     		let buildingName = $(e.target).data("bname");
-    		let dataObj = {roomId, buildingName};
+    		buildingId = $(e.target).data("buildingid");
+    		page = $(e.target).data("page");
+    		let dataObj = {roomId, buildingName, page, buildingId};
     		$.ajax({
-    		    url: `${ctxPath}/room/getConstract`,
+    		    url: `${ctxPath}/room/getNextConstract`,
     		    method: 'post',
     		    contentType : 'application/json',
     		    data : JSON.stringify(dataObj),
@@ -169,6 +226,100 @@
     		    	console.log(err);
     		    }
     		});
+    	});
+    	
+    	// 건물목록 모달창 프래그먼트 교체
+    	$(document).on('click', '.buildingPagination a', function(e) {
+		    e.preventDefault();
+		    let buildingPage = $(this).data("page");
+		    if(!buildingPage) return;
+		    $.ajax({
+		        url: `${ctxPath}/room/buildingList`,
+		        type: 'GET',
+		        data: { buildingPage },
+		        success: function(response) {
+		            // 받아온 프래그먼트를 HTML로 교체
+		            $('#buildingList').html(response);
+		        },
+		        error: function(err) {
+		            console.log(err);
+		        }
+		    });
+		});
+    	// 건물선택 이벤트
+    	function selectBuilding(target){
+    		let buildingId = $(target).data("buildingid");
+    		location.href=`${ctxPath}/room/roomListBackup?buildingId=${buildingId}`;
+    	}
+    	// 건물선택 초기화버튼
+    	let $resetBuildingBtn = $("#resetBuildingBtn");
+    	$resetBuildingBtn.on('click', resetBuilding);
+    	function resetBuilding(){
+    		location.href=`${ctxPath}/room/roomListBackup`;
+    	}
+    	
+    	// 모달창 동적 생성 -> 그룹이벤트로 이벤트 연결
+    	// 계약정보 저장
+    	$(document).on("click", "#saveConstractBtn", (e)=>{
+    		let formDataArr = $('#contractForm').serializeArray(); // 폼 데이터 가져오기
+    		let formObj = {};
+    		$.each(formDataArr, (idx, field)=>{
+    			formObj[field.name] = field.value;
+    		});
+    		if(formObj.constractState == -1){
+    			if(!confirm("계약만료를 진행하시겠습니까?")){
+    				return;
+    			}
+    		}
+    		// 계약 번호가 없는 경우 insert
+    	    if (!formObj.constractNo) {
+    	        // insert
+    	        $.ajax({
+    	            url: `${ctxPath}/room/insertConstract`,
+    	            method: 'POST',
+    	            contentType: 'application/json',
+    	            data: JSON.stringify(formObj),
+    	            success: function(response) {
+    	                alert('계약정보를 추가하였습니다.');
+    	                $('#contractModal').modal('hide');
+    	                location.reload();
+    	            },
+    	            error: function(err) {
+    	                console.log(err);
+    	                alert('계약정보 추가 중 오류가 발생했습니다.');
+    	            }
+    	        });
+    	    } else {
+    	        // update
+    	        console.log("업데이트");
+    	        $.ajax({
+    	            url: `${ctxPath}/room/updateConstract`,
+    	            method: 'POST',
+    	            contentType: 'application/json',
+    	            data: JSON.stringify(formObj),
+    	            success: function(response) {
+    	            	switch(response){
+    	            		case "fail1" :
+    	            			alert("대기계약이 존재합니다.");
+    	            			break;
+    	            		case "fail2" :
+    	            			alert("현재 계약된 정보가 있습니다.")
+    	            			break;
+    	            		case "ok" :
+    	            			alert("계약정보를 수정하였습니다.")
+    	                		$('#contractModal').modal('hide');
+   	            			 	location.href = `${ctxPath}/room/roomListBackup?page=${page}&buildingId=${buildingId}`;
+    	            			break;
+    	            		default:
+    	                        alert("계약 수정 중 오류가 발생했습니다.");
+    	            	}
+    	            },
+    	            error: function(err) {
+    	                console.log(err);
+    	                alert('계약정보를 수정 중 오류가 발생했습니다.');
+    	            }
+    	        });
+    	    }
     	});
     </script>
 	</div>
