@@ -85,4 +85,19 @@ public class BuildingServiceImpl implements BuildingService{
 		return buildingMapper.selectRoomDelete(buildingId);
 	}
 	
+	@Override
+	public int fileDelete(List<String> fileNames) {
+		int result = 0;
+		for(String fileName : fileNames) {
+			result = buildingMapper.selectDeleteFileName(fileName);
+		}
+		return result;
+	}
+	
+	@Override
+	public int fileNamesByGroupId(String groupId) {
+		
+		return buildingMapper.selectFileNamesByGroupId(groupId);
+	}
+	
 }

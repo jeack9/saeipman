@@ -22,4 +22,8 @@ public interface BuildingService {
 	public Map<String, Object> roomSelectInsert(List<RoomVO> list);
 	//방삭제
 	public int roomDelete(String buildingId);
+	
+	//파일관련
+	public int fileDelete(List<String> fileNames);
+	public int fileNamesByGroupId(String groupId);
 }

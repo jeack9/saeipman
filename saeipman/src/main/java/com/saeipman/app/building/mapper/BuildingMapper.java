@@ -24,4 +24,8 @@ public interface BuildingMapper {
 	
 	//방삭제
 	public int selectRoomDelete(String buildingId);
+	
+	//파일
+	public int selectDeleteFileName(String fileName);
+	public int selectFileNamesByGroupId(String groupId);
 }
