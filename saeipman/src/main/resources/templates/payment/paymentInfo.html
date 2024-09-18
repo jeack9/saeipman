@@ -76,8 +76,8 @@ th, td {
 														class="form-check-label" for="flexCheckDefault"></label>
 												</div>
 											</td>
-											<td>월</td>
-											<td>금액</td>
+											<td>월세 납입예정일</td>
+											<td>월세 납입예정 금액</td>
 										</tr>
 									</th:block>
 								</tbody>
@@ -95,8 +95,10 @@ th, td {
 														id="flexCheckDefault"><label
 														class="form-check-label" for="flexCheckDefault"></label>
 												</div></td>
-											<td>[[${payInF.paymentMonth}]]</td>
-											<td>[[${payInF.gaguGwanlibi}]]</td>
+											<td>[[${#strings.substring(payInF.paymentMonth, 0,
+												11)}]]</td>
+											<td>[[${#numbers.formatInteger(payInF.gaguGwanlibi, 3,
+												'COMMA')}]]</td>
 										</tr>
 									</th:block>
 								</tbody>
@@ -104,6 +106,11 @@ th, td {
 						</td>
 					</tr>
 				</tbody>
+				<tfoot>
+					<tr>
+						<td>결제 구역</td>
+					</tr>
+				</tfoot>
 			</table>
 		</div>
 		<script>
@@ -134,24 +141,37 @@ th, td {
 					data : {
 						pay : paymentMonth
 					},
-				}).done(function(pay) {
+				}).done(
+						function(pay) {
 
-					//현재 다른 결제월의 test데이터는 없는데, 다른 결제월을 선택해도 기존의 결제일에 출력된 데이터가 계속 남아있어서 작성함.
-					if (pay == null || pay == '') {
-						$('.delete').html('');
-					} else {
-						//.html로 한 이유는 기존의 값을 지우고 새로 선택한 값만 출력하기 위해서임.
-						let paymentMonth = pay[0].paymentMonth; //2024-07-07 00:00:00()
-						let year = paymentMonth.substring(0, 4); //2024
-						let month = paymentMonth.substring(5, 7); //07
-						let day = paymentMonth.substring(8, 10)//07
-						let payM = `${year}/${month}/${day}`;
+							//현재 다른 결제월의 test데이터는 없는데, 다른 결제월을 선택해도 기존의 결제일에 출력된 데이터가 계속 남아있어서 작성함.
+							if (pay == null || pay == '') {
+								$('.delete').html('');
+							} else {
+								//.html로 한 이유는 기존의 값을 지우고 새로 선택한 값만 출력하기 위해서임.
+								let paymentMonth = pay[0].paymentMonth; //2024-07-07 00:00:00()
+								let year = paymentMonth.substring(0, 4); //2024
+								let month = paymentMonth.substring(5, 7); //07
+								let day = paymentMonth.substring(8, 10)//07
+								let payM = `${year}/${month}/${day}`;
 
-						$('#gwanlibiMonth').html(payM);
-						$('#Gwanlibi').html(pay[0].gaguGwanlibi);
-					}
-				})
+								$('#gwanlibiMonth').html(payM);
+								$('#Gwanlibi').html(
+										pay[0].gaguGwanlibi.toString().replace(
+												/\B(?=(\d{3})+(?!\d))/g, ","));
+
+							}
+						})
 			}
+			
+			//결제 api
+			
+			let imp = window.imp;
+			imp.init('imp04648344'); //가맹점 식별코드
+			
+			
+			
+			
 		</script>
 	</div>
 </body>
