@@ -26,6 +26,25 @@
 	background: #6CBEC7;
 	color: rgb(56, 53, 53);
 }
+
+#validateMsg {
+	background-color: rgba(0, 0, 0, 0.4);
+	width: 40%;
+	height: 30%;
+	z-index: 10;
+	/* 
+	position: fixed;
+	top: 0;
+	left: 0; */ 
+    /* width: "100%",;
+	backgroundColor: " rgba(0, 0, 0, 0.4)",
+    width: "100%",
+    height: "100vh",
+    zIndex: "10",
+    position: "fixed",
+    top: "0",
+    left: "0", */
+}
 </style>
 
 </head>
@@ -54,6 +73,11 @@
 				<button class="btn btn-light saveBtn">저장하기</button>
 			</div>
 			<br>
+			
+			<dialog id="validateMsg">
+				<h3>등록할 내용을 확인해주세요.</h3>
+				<input type="button" id="closeBtn" value="확인">
+			</dialog>
 		</div>
 
 		<script th:inline="javascript">
@@ -112,6 +136,10 @@
 						{
 							header: '관리비 항목',
 							name: 'gwanlibiName',
+							validation: {
+						        dataType: 'string',
+						        required: true
+						      },
 							resizable: true,
 							align: 'center',
 							sortable: true,
@@ -121,6 +149,10 @@
 						{
 							header: '관리비 변동 여부',
 							name: 'variableYn',
+							validation: {
+						        dataType: 'string',
+						        required: true
+						      },
 							resizable: true,
 							align: 'center',
 							editor: {
@@ -143,7 +175,7 @@
 						}
 					]
 				})
-				grid.validate();
+				//grid.validate();
 				
 				grid.getData().forEach(ele => {
 					console.log(ele.rowKey);
@@ -174,7 +206,7 @@
 			const deleteBtn = document.getElementById('deleteBtn');
 			
 		    appendBtn.addEventListener('click', function() {
-		        grid.appendRow({ gwanlibiName: '추가할 관리비 항목을 입력해주세요.', variableYn: '변동', fixedPrice: 0 });
+		        grid.appendRow({ variableYn: '변동', fixedPrice: 0 });
 		    });
 		    
 		    // 삭제 버튼 클릭 시, 체크된 항목이 없을 경우.
@@ -188,9 +220,20 @@
 		    
 		    //todo
 			let buildingId = [[${buildingId}]];
+		    
 			$('.saveBtn').on('click', function() {
-		    	//event.preventDefault()		    	
+		    	//event.preventDefault()
+		    	// 유효성 검사 1
 		    	if(!buildingId) return;
+		    	
+		    	// 유효성 검사 2
+		    	if(grid.validate().length >= 1) {
+					//let modal = document.getElementById('validateMsg');
+					//modal.showModal();
+					//$('#closeBtn').showModal();
+		    		alert('입력이 잘못되었습니다. 다시 확인해주세요.');
+		    		return;
+		    	}
 		    	
 				$.ajax({
 					url: `${ctxPath}/insertItems?buildingId=${buildingId}`,
@@ -201,7 +244,8 @@
 					console.log('success');
 					console.log(result);
 					alert(result + '건이 정상적으로 업데이트 되었습니다');
-				}).fail(function(err){					
+					
+				}).fail(function(err){
 					console.log('fail');
 					alert('관리비 항목 업데이트에 실패했습니다.');
 					alert('수정 항목을 한 번 더 확인해주세요.');

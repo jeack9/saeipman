@@ -1,5 +1,7 @@
 package com.saeipman.app.gwanlibi.service.impl;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -84,6 +86,21 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		// building_id 세팅.
 		monthGwanlibiInfo.setBuildingId(buildingId);
 		
+		// paymentMont -> 전월
+//		Date now = new Date();		
+//		Calendar cal = Calendar.getInstance(); 
+//		cal.setTime(now);
+//		cal.add(Calendar.MONTH, -1);
+//		System.err.println(cal);		//int year = cal.get(Calendar.YEAR);
+		//int month = cal.get(Calendar.MONTH);
+		//String ym = year + "-" + month;
+		
+//		int cnt = gwanlibiMapper.getCountingMonthGwanlibiData(monthGwanlibiInfo);
+//		System.err.println("cnt : " + cnt);
+//		if(cnt >= 0) {
+//			
+//		}
+		
 		// 고정 관리비 -> 관리미 항목 별 금액
 		//monthGwanlibiInfo.setGwanlibiItemMoney(gwanlibiMoney);		
 		
@@ -101,5 +118,41 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		int result = gwanlibiMapper.selectToTalGagu(buildingId);
 		return result;
 	}
+	
+	// 월 관리비 데이터 개수
+	@Override
+	public int getCountingMonthGwanlibiData(String buildingId) {
+		return gwanlibiMapper.getCountingMonthGwanlibiData(buildingId);
+	}
+
+	// 관리비 수정
+	@Override
+	public void modifyGwanlibi(List<GwanlibiVO> gridDatalist) {
+		System.err.println(gridDatalist);
+		// updateGwanlibiDetails
+		gwanlibiMapper.updateGwanlibiDetails(gridDatalist);
+		
+		// month_gwanlibi update setting
+		GwanlibiVO gwanlibiVO = new GwanlibiVO();
+		int totalMoney = 0;
+		String buildingId = "";
+		for(GwanlibiVO gwanlibi : gridDatalist) {
+			buildingId = gwanlibi.getBuildingId();
+			gwanlibiVO.setPaymentMonth(gwanlibi.getPaymentMonth());
+			totalMoney += gwanlibi.getGwanlibiItemMoney();
+		}
+		gwanlibiVO.setBuildingId(buildingId);
+		gwanlibiVO.setTotalMoney(totalMoney);
+		
+		int totalGagu = gwanlibiMapper.selectToTalGagu(buildingId);
+		System.err.println("총 가구 수 : " + totalGagu);
+		int gwanlibiByGagu = totalMoney / totalGagu;
+		gwanlibiVO.setGaguGwanlibi(gwanlibiByGagu);
+		
+		System.err.println(gwanlibiVO);
+		// updateMonthGwanlibi
+		gwanlibiMapper.updateMonthGwanlibi(gwanlibiVO);
+	}
+	
 	
 }

@@ -33,7 +33,14 @@ public interface GwanlibiMapper {
 	// 정산한 관리비 등록
 	public int insertGwanlibi(@Param("monthGwanlibiInfo") GwanlibiVO monthGwanlibiInfo, @Param("list") List<GwanlibiVO> list);
 	
+	// 정산한 관리비 수정
+	public int updateGwanlibiDetails(List<GwanlibiVO> list);
+	public int updateMonthGwanlibi(GwanlibiVO gwanlibiVO);
+	
 	// 총 가구수
 	public int selectToTalGagu(String buildingId);
+	
+	// 월 관리비 데이터 수
+	public int getCountingMonthGwanlibiData(String buildingId);
 	
 }
