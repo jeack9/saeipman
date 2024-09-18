@@ -157,4 +157,10 @@
     	AND bi.building_id = #{buildingId}
     </if>
 	</select>
+	
+	<update id="updateIpjuState">
+		UPDATE room_info
+		SET ipju_state = #{ipjuState}
+		WHERE room_id = #{roomId}
+	</update>
 </mapper>

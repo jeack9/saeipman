@@ -16,4 +16,6 @@ public interface RoomService {
 	public int buildingIpjuCount(BuildingRoom buildingRoom);
 	// 방 단건조회 방아이디 -> 방 조회
 	public RoomVO roomInfo(String roomId);
+	// 방 입주상태 변경
+	public boolean modiIpjuState(RoomVO roomVO);
 }

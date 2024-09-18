@@ -266,61 +266,52 @@
     		$.each(formDataArr, (idx, field)=>{
     			formObj[field.name] = field.value;
     		});
+    		// 계약만료할건지 체크
     		if(formObj.constractState == -1){
     			if(!confirm("계약만료를 진행하시겠습니까?")){
     				return;
     			}
     		}
-    		// 계약 번호가 없는 경우 insert
-    	    if (!formObj.constractNo) {
-    	        // insert
-    	        $.ajax({
-    	            url: `${ctxPath}/room/insertConstract`,
-    	            method: 'POST',
-    	            contentType: 'application/json',
-    	            data: JSON.stringify(formObj),
-    	            success: function(response) {
-    	                alert('계약정보를 추가하였습니다.');
-    	                $('#contractModal').modal('hide');
-    	                location.reload();
-    	            },
-    	            error: function(err) {
-    	                console.log(err);
-    	                alert('계약정보 추가 중 오류가 발생했습니다.');
-    	            }
-    	        });
-    	    } else {
-    	        // update
-    	        console.log("업데이트");
-    	        $.ajax({
-    	            url: `${ctxPath}/room/updateConstract`,
-    	            method: 'POST',
-    	            contentType: 'application/json',
-    	            data: JSON.stringify(formObj),
-    	            success: function(response) {
-    	            	switch(response){
-    	            		case "fail1" :
-    	            			alert("대기계약이 존재합니다.");
-    	            			break;
-    	            		case "fail2" :
-    	            			alert("현재 계약된 정보가 있습니다.")
-    	            			break;
-    	            		case "ok" :
-    	            			alert("계약정보를 수정하였습니다.")
-    	                		$('#contractModal').modal('hide');
-   	            			 	location.href = `${ctxPath}/room/roomListBackup?page=${page}&buildingId=${buildingId}`;
-    	            			break;
-    	            		default:
-    	                        alert("계약 수정 중 오류가 발생했습니다.");
-    	            	}
-    	            },
-    	            error: function(err) {
-    	                console.log(err);
-    	                alert('계약정보를 수정 중 오류가 발생했습니다.');
-    	            }
-    	        });
-    	    }
+    		// 계약정보 추가, 수정 구분
+    		if (!formObj.constractNo) {
+    		    handleConstract(`${ctxPath}/room/insertConstract`, formObj, page, buildingId);
+    		} else {
+    		    handleConstract(`${ctxPath}/room/updateConstract`, formObj, page, buildingId);
+    		}
     	});
+    	// 계약정보 ajax 추가,수정 처리함수
+    	function handleConstract(url, formObj, page=1, buildingId="") {
+    	    $.ajax({
+    	        url: url,
+    	        method: 'POST',
+    	        contentType: 'application/json',
+    	        data: JSON.stringify(formObj),
+    	        success: function(response) {
+    	            switch(response.retCode) {
+    	                case "fail3":
+    	                    alert("(비고란,파일 제외) 모든 값을 입력해주세요.");
+    	                    break;
+    	                case "fail1":
+    	                    alert("대기계약이 존재합니다.");
+    	                    break;
+    	                case "fail2":
+    	                    alert("현재 진행중인 계약정보가 있습니다.");
+    	                    break;
+    	                case "ok":
+    	                    alert("계약정보가 저장되었습니다.");
+    	                    $('#contractModal').modal('hide');
+    	                    location.href = `${ctxPath}/room/roomListBackup?page=${page}&buildingId=${buildingId}`;
+    	                    break;
+    	                default:
+    	                    alert("계약 처리 중 오류가 발생했습니다.");
+    	            }
+    	        },
+    	        error: function(err) {
+    	            console.log(err);
+    	            alert('계약 처리 중 오류가 발생했습니다.');
+    	        }
+    	    });
+    	}
     </script>
 	</div>
 </body>

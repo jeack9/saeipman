@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,12 +18,14 @@ import com.saeipman.app.building.service.BuildingService;
 import com.saeipman.app.building.service.BuildingVO;
 import com.saeipman.app.commom.paging.PagingDTO;
 import com.saeipman.app.commom.security.SecurityUtil;
+import com.saeipman.app.member.service.MemberService;
 import com.saeipman.app.room.service.BuildingRoom;
 import com.saeipman.app.room.service.ConstractService;
 import com.saeipman.app.room.service.ConstractVO;
 import com.saeipman.app.room.service.RoomService;
 import com.saeipman.app.room.service.RoomVO;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -32,6 +35,7 @@ public class RoomController {
 	private final RoomService rsvc;
 	private final ConstractService csvc;
 	private final BuildingService bsvc;
+	private final MemberService msvc;
 
 	// 방목록 페이지이동
 	@GetMapping("roomListBackup")
@@ -157,35 +161,88 @@ public class RoomController {
 
 		return "room/fragments/buildingList :: buildingListFrg";
 	}
-
+	// 방 계약정보 등록
+	@PostMapping("insertConstract")
+	@ResponseBody
+	public Map<String, Object> insertConstract(@Valid @RequestBody ConstractVO constractVO, BindingResult bindingResult, Model model) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (bindingResult.hasErrors()) {
+			map.put("retCode", "fail3");
+	        return map; // 유효성 오류 발생 시 다시 폼 페이지로 이동
+	    }
+		String roomId = constractVO.getRoomId();
+		int newState = constractVO.getConstractState();
+		// 대기계약 정보 확인
+		if (newState == 0) {
+			ConstractVO nextConstract = csvc.nextConstractInfoByRoomId(roomId);
+			if (nextConstract != null && !nextConstract.getConstractNo().equals(constractVO.getConstractNo())) {
+				map.put("retCode", "fail1");
+				System.err.println("인서트: 대기계약 있음.");
+				return map;
+			}
+		}
+		// 현재계약 정보 확인
+		if (newState == 1) {
+			ConstractVO currentConstract = csvc.currentConstractInfoByRoomId(roomId);
+			if (currentConstract != null && !currentConstract.getConstractNo().equals(constractVO.getConstractNo())) {
+				map.put("retCode", "fail2");
+				System.err.println("인서트: 현재계약 있음.");
+				return map;
+			}
+		}
+		// 계약정보 insert -- 방의 입주상태 변경
+		String newConstractNo = csvc.addConstract(constractVO);
+		// 계약확정 -> 계약정보를 이용하여 임차인 정보, 로그인 정보 단건등록
+		// 이미 등록된 임차인 정보가 있으면 삭제 후 등록
+		if(constractVO.getConstractState() == 1) {
+			msvc.addImchain(constractVO);
+		}
+		map.put("retCode", "ok");
+		map.put("newConstractNo", newConstractNo);
+		return map;
+	}
 	// 방 계약정보 수정
 	@PostMapping("updateConstract")
 	@ResponseBody
-	public String updateConstract(@RequestBody ConstractVO constractVO, Model model) {
+	public Map<String,Object> updateConstract(@Valid @RequestBody ConstractVO constractVO, BindingResult bindingResult, Model model) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (bindingResult.hasErrors()) {
+			map.put("retCode", "fail3");
+	        return map; // 유효성 오류 발생 시 다시 폼 페이지로 이동
+	    }
 		String roomId = constractVO.getRoomId();
 		int newState = constractVO.getConstractState();
-		System.out.println(constractVO.getmRent() + " mrentmrean");
-		System.out.println(constractVO.getDeposit() + " deposit");
-		try {
-			// 대기계약 정보 확인
-			if (newState == 0) {
-				ConstractVO nextConstract = csvc.nextConstractInfoByRoomId(roomId);
-				if (nextConstract != null && !nextConstract.getConstractNo().equals(constractVO.getConstractNo())) {
-					return "fail1";
-				}
+		// 대기계약 정보 확인
+		if (newState == 0) {
+			ConstractVO nextConstract = csvc.nextConstractInfoByRoomId(roomId);
+			if (nextConstract != null && !nextConstract.getConstractNo().equals(constractVO.getConstractNo())) {
+				map.put("retCode", "fail1");
+				System.err.println("업데이트: 대기계약 있음.");
+				return map;
 			}
-			// 현재계약 정보 확인
-			if (newState == 1) {
-				ConstractVO currentConstract = csvc.currentConstractInfoByRoomId(roomId);
-				if (currentConstract != null && !currentConstract.getConstractNo().equals(constractVO.getConstractNo())) {
-					return "fail2";
-				}
-			}
-			csvc.modiConstract(constractVO);
-			return "ok";
-		} catch (Exception e) {
-			return "error";
 		}
+		// 현재계약 정보 확인
+		if (newState == 1) {
+			ConstractVO currentConstract = csvc.currentConstractInfoByRoomId(roomId);
+			if (currentConstract != null && !currentConstract.getConstractNo().equals(constractVO.getConstractNo())) {
+				map.put("retCode", "fail2");
+				System.err.println("엄데이트: 현재계약 있음");
+				return map;
+			}
+		}
+		// 계약정보 update -- 방의 입주상태 변경
+		map.put("modiConstract", csvc.modiConstract(constractVO));
+		// 계약확정 -> 계약정보를 이용하여 임차인 정보, 로그인 정보 단건등록
+		// 이미 등록된 임차인 정보가 있으면 삭제 후 등록
+		if(constractVO.getConstractState() == 1) {
+			msvc.addImchain(constractVO);
+		}else {
+			// 계약만료 or 대기 -> 임차인 정보 삭제
+			msvc.removeImchain(constractVO.getImchainPhone());
+			msvc.removeLogin(constractVO.getImchainPhone());
+		}
+		map.put("retCode", "ok");
+		return map;
 	}
 
 }

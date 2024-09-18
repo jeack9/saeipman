@@ -31,4 +31,7 @@ public interface RoomMapper {
 	// 건물의 방 수
 	public int totalBuildingRoom(BuildingRoom buildingRoom);
 	public int buildingIpjuCount(BuildingRoom buildingRoom);
+	
+	// 방 입주상태 변경
+	public int updateIpjuState(RoomVO roomVO);
 }
