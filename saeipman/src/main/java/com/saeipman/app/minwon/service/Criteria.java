@@ -10,6 +10,10 @@ public class Criteria {
 	private String type;
 	private String keyword;
 	
+	private int auth;
+	private String loginId;
+	private String imdaeinId; //임대인 아이디
+	private String imchainId;
 	private String buildingId;
 	private String roomId;
 	

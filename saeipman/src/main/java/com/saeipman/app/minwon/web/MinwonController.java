@@ -41,48 +41,55 @@ public class MinwonController {
 
 	// 전체조회
 	@GetMapping("minwonList")
-	public String minwonList(Criteria cri, Model model, MinwonVO minwonVO) {
+	public String minwonList(Criteria cri, Model model) {
 		int auth = SecurityUtil.getLoginAuth();
+		String loginId = SecurityUtil.getLoginId();
+	
+		cri.setAuth(auth);
+		cri.setLoginId(loginId);
 		
 		if(auth == 1) {
-			String loginId = SecurityUtil.getLoginId();
+			String buildingId = SecurityUtil.getBuildingId();
+			cri.setBuildingId(buildingId);
 			
-			if(cri.getBuildingId() == null || cri.getBuildingId().isEmpty()) {
-				minwonVO.setImdaeinId(loginId);
-			}
-			
-			
+		    cri.setImdaeinId(loginId);
+		    
+			List<MinwonVO> buildingList = minwonService.buildingSelect(cri);
+			model.addAttribute("buildingList",buildingList);
+		}else if(auth == 2) {
+			cri.setImchainId(loginId);
 		}
-			
-			
 		
+		//String roomId = SecurityUtil.getRoomId();
+		//cri.setRoomId(roomId);
+		//cri.setAmount(5);
 		
-		
-		String building = SecurityUtil.getBuildingId();
-		cri.setBuildingId(building);
-		
-		String roomId = SecurityUtil.getRoomId();
-		cri.setRoomId(roomId);
-		//cri.setBuildingId("ZIP10"); //로그인한 임차인의 아이디(연락처)로 계약서의 방, 건물 아이디가 필요하다.
-		cri.setAmount(5);
 		List<MinwonVO> list = minwonService.minwonList(cri);
 		model.addAttribute("minwon", list);
+		
 		int total = minwonService.pageTotal(cri);
 		model.addAttribute("pageMaker", new PageDTO(cri, total));
-		List<MinwonVO> buildingList = minwonService.buildingSelect();
-		model.addAttribute("buildingList",buildingList );
+		
+		
 		return "minwon/minwonList";
 	}
 
 	// 단건조회
 	@GetMapping("minwonInfo")
 	public String minwonInfo(@ModelAttribute Criteria cri, MinwonVO minwonVO, Model model) {
+		int auth = SecurityUtil.getLoginAuth();
+		String loginId = SecurityUtil.getLoginId();
+		
+		cri.setAuth(auth);
+		cri.setLoginId(loginId);
+		
 		MinwonVO findVO = minwonService.minwonSelect(minwonVO);
 		
 		List<String> fileName = minwonService.getFileName(minwonVO.getPostNo());
 		findVO.setFileName(fileName);
 		model.addAttribute("minwon", findVO);
 		model.addAttribute("cri", cri);
+		model.addAttribute("loginId", loginId); 
 		return "minwon/minwonInfo";
 	}
 
@@ -143,6 +150,7 @@ public class MinwonController {
 	@PostMapping("minwonUpdate")
 	@ResponseBody
 	public Map<String, Object> updateList(@RequestBody MinwonVO minwonVO){
+		
 	    return minwonService.minwonUpdate(minwonVO);
 	}
 
