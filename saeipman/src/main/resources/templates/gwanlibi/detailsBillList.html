@@ -1,38 +1,38 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layouts/default_layout}">
 
 <head>
-	<meta charset="UTF-8">
+<meta charset="UTF-8">
 
-	<style>
-		.table {
-			margin-left: auto;
-			margin-right: auto;
-		}
+<style>
+.table {
+	margin-left: auto;
+	margin-right: auto;
+}
 
-		.table td,
-		.table th {
-			text-align: center;
-			border-collapse: collapse;
-			border: 0px solid black;
-			color: black;
-		}
+.table td, .table th {
+	text-align: center;
+	border-collapse: collapse;
+	border: 0px solid black;
+	color: black;
+}
 
-		.settlingBtn {
-			margin: auto;
-			display: none;
-			background: #6CBEC7;
-			color: rgb(56, 53, 53);
-		}
+.settlingBtn {
+	margin: auto;
+	display: none;
+	background: #6CBEC7;
+	color: rgb(56, 53, 53);
+}
 
-		#bName {
-			float: left;
-			color: #323f5d;
-			font-size: 20px;
-			font-weight: bold;
-		}
-	</style>
+#bName {
+	float: left;
+	color: #323f5d;
+	font-size: 20px;
+	font-weight: bold;
+}
+</style>
 
 </head>
 
@@ -45,12 +45,14 @@
 			<p id="bName"></p>
 
 			<!-- Toast UI - Date Picker -->
-			<div class="inputDiv" style="position: relative; z-index: 2; float: right;">
+			<div class="inputDiv"
+				style="position: relative; z-index: 2; float: right;">
 				<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
 					<input type="text" id="datepicker-input-ko" aria-label="Year-Month">
 					<span class="tui-ico-date"></span>
 				</div>
-				<div class="datepicker-cell" id="datepicker-month-ko" style="margin-top: -1px;"></div>
+				<div class="datepicker-cell" id="datepicker-month-ko"
+					style="margin-top: -1px;"></div>
 			</div>
 
 			<br> <br>
@@ -86,7 +88,7 @@
 			$('#bName').text(building.buildingName);
 				
 			let detailsList = [[${ detailsList }]];
-		    console.log(detailsList);
+		    
 
 
 			// 해당 건물의 관리 비용 총합계 - number format (, 원)
@@ -109,10 +111,7 @@
 			}
 
 
-			// todo : select
-			$('.settlingBtn').click(function() {
-				$(location).attr('href', `${ctxPath}/gwanlibiSettling?buildingId=${building.buildingId}`);
-			})
+			
 
 
 			// TOAST UI //
@@ -129,7 +128,7 @@
 			// # reference : https://park-duck.tistory.com/entry/javascript-1-Toast-UI-Grid-%EA%B8%B0%EC%B4%88API-%EC%82%AC%EC%9A%A9%EB%B2%95
 			// 01. Grid 생성.
 			// return void
-			function gridLoad() {				
+			function gridLoad() {
 				const Grid = tui.Grid;
 				// 02. Grid theme 설정. (clean, stripe, default)
 				Grid.applyTheme('stripe');
@@ -220,9 +219,31 @@
 						$('.settlingBtn').css('display', 'none');
 					}
 					
+					
 				});
 
 			}
+			
+			// 정산 버튼
+			$('.settlingBtn').click(function() {
+				$.ajax({
+					url: `${ctxPath}/gwanlibiCalculationForm?buildingId=${building.buildingId}`,
+					method: 'post',
+					contentType: 'application/json',
+					data: JSON.stringify(detailsList)
+				}).done(function(result) {
+					if(result.gwanlibiItmeListSize <= 0) {
+						alert('관리비 항목이 미등록되어있습니다. 관리비 항목을 등록해주세요.');
+						location.href = ctxPath + '/itemList?buildingId=' + building.buildingId;
+					} else {
+						location.href = ctxPath + result.url;						
+					}
+				}).fail(function(err) {
+					console.log(err);
+				})
+			})
+			
+
 
 		</script>
 	</div>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}">
+
+<head>
+	<meta charset="UTF-8">
+
+	<style>
+		.updateBtn {
+			margin: auto;
+			background: #6CBEC7;
+			color: rgb(56, 53, 53);
+		}
+
+		#bName {
+			float: left;
+			color: #323f5d;
+			font-size: 20px;
+			font-weight: bold;
+		}
+	</style>
+
+</head>
+
+<body>
+	<div layout:fragment="Main">
+		<div>
+			<br> <br>
+
+			<!-- 건물명 -->
+			<p id="bName"></p>
+
+			<br> <br>
+
+			<!-- Toast UI - Grid -->
+			<div id="grid" style="position: relative; z-index: 1;"></div>
+
+			<hr style="color: black">
+
+			<button class="btn btn-light updateBtn">저장</button>
+
+			<br>
+		</div>
+
+		<script th:inline="javascript">
+			// JavaScript에서 Thymeleaf 변수 사용하기 //
+			/* 1. <script th:inline="javascript">
+			   2. Thymeleaf 변수 사용 */
+			   
+			// 건물명 출력
+			let building = [[${ buildingInfo }]];
+			//console.log(building);
+			$('#bName').text(building.buildingName);
+				
+			let detailsList = [[${ detailsList }]];
+
+			// TOAST UI //
+			// async - await
+			$(document).ready(async() => {
+				await gridLoad();
+			});
+
+
+			// Toast UI - Grid //
+			// # reference : https://adjh54.tistory.com/95
+			// # reference : https://park-duck.tistory.com/entry/javascript-1-Toast-UI-Grid-%EA%B8%B0%EC%B4%88API-%EC%82%AC%EC%9A%A9%EB%B2%95
+			// 01. Grid 생성.
+			// return void
+			function gridLoad() {				
+				const Grid = tui.Grid;
+				// 02. Grid theme 설정. (clean, stripe, default)
+				Grid.applyTheme('stripe');
+
+				// 03. Toast UI Grid 구성.
+				const grid = new Grid({
+					// ================================== 공통 옵션 적용 ================================== //
+					el: document.getElementById('grid'), // 필수 : Container element
+					data: detailsList,
+					scrollX: false,
+					scrollY: false,
+					// ================================== 컬럼 옵션 적용 ================================== //
+					columns: [
+						// [Column-1] 관리비 항목 명
+						{
+							header: '관리비 항목 명',           // [필수] 컬럼 이름
+							name: 'gwanlibiName',           // [필수] 컬럼 매핑 이름 값
+							resizable: true,                // [선택] 컬럼의 리사이즈 여부 옵션
+							align: 'center'
+						},
+						// [Column-2] 관리 비용
+						{
+							header: '관리 비용',
+							name: 'gwanlibiItemMoney',
+							resizable: true,
+							align: 'center',
+							editor: 'text'
+						},
+						{
+							header: '건물 번호',
+							name: 'buildingId',
+			                hidden: true
+						},
+						{
+							header: '관리비 상세 내역 인덱스',
+							name: 'gwanlibiDetailsNo',
+			                hidden: true
+						},
+						{
+							header: '납부 월',
+							name: 'paymentMonth',
+			                hidden: true
+						}
+					]
+				})
+				
+				let now = new Date();
+				let paymentMonth = now.getFullYear() + '-' + (now.getMonth() + '').padStart(2, '0');
+				$('.updateBtn').on('click', function(){
+					console.log('클릭');
+					$.ajax({
+						url:`${ctxPath}/updateGwanlibi`,
+						method: 'post',
+						contentType: 'application/json',
+						data: JSON.stringify(grid.getData())						
+					})
+					.done(function(result) {
+						alert('업데이트 성공!');						
+						location.href = ctxPath + '/detailsBillList?buildingId=' + building.buildingId + '&paymentMonth=' + paymentMonth;
+					})
+					.fail(function(err){
+						console.log(err);
+						alert('실패');
+					});
+				})
+					
+			}
+			
+
+		</script>
+	</div>
+</body>
+
+</html>

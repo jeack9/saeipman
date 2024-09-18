@@ -30,7 +30,12 @@ public interface GwanlibiService {
 	
 	// 정산한 관리비 등록
 	public void addGwanlibi(List<GwanlibiVO> item);
+	// 정산한 관리비 수정
+	public void modifyGwanlibi(List<GwanlibiVO> gridDatalist);
 	
 	// 건물의 총 가구수
 	public int getToTalGagu(String buildingId);
+	
+	// 월 관리비 데이터 수
+	public int getCountingMonthGwanlibiData(String buildingId);
 }

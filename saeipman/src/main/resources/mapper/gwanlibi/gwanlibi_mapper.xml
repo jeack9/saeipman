@@ -42,6 +42,7 @@
 	
 		SELECT   bi.building_id
 		       , bi.building_name
+		       , gd.gwanlibi_details_no
 		       , bgi.gwanlibi_name
 		       , gd.gwanlibi_item_money
 		       , mg.payment_month
@@ -55,7 +56,7 @@
 		                             JOIN month_gwanlibi mg
 		                             ON   (gd.building_id = mg.building_id
 		                             AND mg.month_gwanlibi_no = gd.month_gwanlibi_no
-		                             AND TO_CHAR(mg.payment_month, 'yyMM') = TO_CHAR(#{paymentMonth}, 'yyMM'))
+		                             AND TO_CHAR(mg.payment_month, 'yyyyMM') = TO_CHAR(#{paymentMonth}, 'yyyyMM'))
 		                             
 		                             JOIN building_info bi
 		                             ON   gd.building_id = bi.building_id
@@ -84,8 +85,9 @@
 		         version
 		FROM     building_gwanlibi_item
 		WHERE    building_id = #{buildingId}
-		AND      version = (SELECT NVL(MAX(version), 0)
-		                    FROM   building_gwanlibi_item)
+		AND      version = ( SELECT MAX(version)
+		                     FROM   building_gwanlibi_item
+		                     WHERE  building_id = #{buildingId} )
 		ORDER BY gwanlibi_item_no
 		
 	</select>
@@ -140,7 +142,7 @@
 					   , #{monthGwanlibiInfo.totalMoney}
 					   , ADD_MONTHS(SYSDATE, -1)
 					   , #{monthGwanlibiInfo.gaguGwanlibi} )
-					   
+
 		    <foreach collection="list" item="item">
 		    INTO gwanlibi_details ( gwanlibi_details_no
 		    					  , building_id
@@ -168,8 +170,33 @@
 	<select id="getCountingMonthGwanlibiData">
 		SELECT count(*)
 		FROM   month_gwanlibi
-		WHERE  building_id = #{buildingId} AND TO_CHAR(payment_month, 'yyyy-MM') = #{paymentMonth};
+		WHERE  building_id = #{buildingId} AND TO_CHAR(payment_month, 'yyyy-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'yyyy-MM')
 	</select>
 	
+	<!-- 관리비 상세 내역 수정 -->
+	<!-- 1. UPDATE gwanlibi_details -->
+	<update id="updateGwanlibiDetails">
+		<foreach collection="list" item="item" open="DECLARE BEGIN" close="; END;" separator=";">
+			UPDATE  gwanlibi_details
+			SET     gwanlibi_item_money = #{item.gwanlibiItemMoney}
+			<where>
+				building_id = #{item.buildingId} AND gwanlibi_details_no = #{item.gwanlibiDetailsNo}
+			</where>
+		</foreach>
+	</update>
+	<!-- 2. UPDATE month_gwanlibi -->
+	<update id="updateMonthGwanlibi">
+			UPDATE  month_gwanlibi
+			SET     total_money = #{totalMoney}
+			      , payment_month = #{paymentMonth}
+			      , gagu_gwanlibi = #{gaguGwanlibi}
+			WHERE   building_id = #{buildingId}
+			AND     TO_CHAR(payment_month, 'yyyyMM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'yyyyMM')
+	</update>
+	
+<!-- 	<select id="">
+		SELECT TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'yyyy-MM')
+		FROM   DUAL;
+	</select> -->
 
 </mapper>
