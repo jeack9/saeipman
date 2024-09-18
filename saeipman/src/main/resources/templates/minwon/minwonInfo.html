@@ -9,20 +9,60 @@
     <meta charset="UTF-8" />
     <title>Insert title here</title>
   </head>
-  <style>
-    .ply {
-      padding-left: 50px;
-    }
-  </style>
+<style>
+/* 댓글 섹션 스타일 */
+#comments-section {
+margin-top: 30px;
+padding: 10px;
+background-color: #f9f9f9;
+border: 1px solid #ddd;
+}
+
+.form-group {
+margin-bottom: 10px;
+}
+
+/* 댓글 영역 */
+.ply {
+padding-left: 50px;
+ }
+
+.fw-bold {
+font-weight: bold;
+}
+
+#textarea {
+white-space: pre-line;
+}
+
+/* 댓글 작성 폼 스타일 */
+textarea {
+width: 100%;
+resize: vertical;
+}
+
+.group {
+margin-bottom: 15px;
+}
+
+/* 버튼 중앙 정렬 */
+.button-container {
+display: flex;
+justify-content: center;
+margin-top: 20px;
+}
+    
+</style>
   <body>
     <div>
       <input type="hidden" id="postNo" th:value="${minwon.postNo}" />
+      <input type="hidden" id="loginId" th:value="${loginId}">
     </div>
     <div>
-      <table>
-        <tr>
-          <th>제목</th>
-          <td>[[${minwon.title}]]</td>
+      <table class="table">
+        <tr class="col-md-12">
+          <th style="width: 5%">제목</th>
+          <td style="width: 30%">[[${minwon.title}]]</td>
           <th>작성자</th>
           <td>[[${minwon.roomNo}]]</td>
         </tr>
@@ -39,9 +79,9 @@
           <td id="textarea">[[${minwon.content}]]</td>
         </tr>
         <tr>
-          <th>첨부</th>
+          <th style="width: 10%">첨부파일</th>
           <td>
-            <img
+            <img style="width: 30%"
               th:each=" img : ${minwon.fileName}"
               th:src="@{/images/민원/{f}(f=${img})}"
             />
@@ -49,33 +89,45 @@
         </tr>
       </table>
     </div>
-    <div>
+    <div class="button-container" th:if="${cri.auth == 2}">
       <button
         type="button"
         th:onClick="|location.href = '@{/minwonUpdate(postNo=${minwon.postNo})}'|"
+      	class="btn btn-outline-warning m-2"
       >
         수정
       </button>
       <button
         type="button"
         th:onClick="|location.href = '@{/minwonList(pageNum=${cri.pageNum}, type=${param.type}, keyword=${param.keyword})}'|"
+      	class="btn btn-outline-success m-2"
       >
         목록
       </button>
       <button
         type="button"
         th:onClick="|location.href = '@{/minwonDelete(postNo=${minwon.postNo})}'|"
+      	class="btn btn-outline-danger m-2"
       >
         삭제
       </button>
     </div>
-    <div>
+    
+    <div class="button-container" th:if="${cri.auth == 1}">
+   	   <button
+        type="button"
+        th:onClick="|location.href = '@{/minwonList(pageNum=${cri.pageNum}, type=${param.type}, keyword=${param.keyword})}'|"
+      	class="btn btn-outline-success m-2"
+      >
+        목록
+      </button>
+   	  
       <!-- 접수 버튼 -->
       <form th:action="@{/updateMinwonState}" method="post">
         <input type="hidden" name="postNo" th:value="${minwon.postNo}" />
         <input type="hidden" name="state" th:value="1" />
         <!-- 접수중은 숫자 1로 전송 -->
-        <button type="submit">접수</button>
+        <button type="submit" class="btn btn-outline-warning m-2">접수</button>
       </form>
 
       <!-- 완료 버튼 -->
@@ -83,7 +135,7 @@
         <input type="hidden" name="postNo" th:value="${minwon.postNo}" />
         <input type="hidden" name="state" th:value="2" />
         <!-- 처리 완료는 숫자 2로 전송 -->
-        <button type="submit">완료</button>
+        <button type="submit" class="btn btn-outline-danger m-2">완료</button>
       </form>
     </div>
 
@@ -245,7 +297,7 @@
 
                   let group = $(this).data("group");
                   let content = $(`#reply${group}`).val();
-                  let writer = "user01";
+                  let writer = $("#loginId").val();
                   let postNo = $("#postNo").val();
 
                   let data = {
@@ -284,7 +336,7 @@
       let cmtBtn = document.getElementById("create-comment-btn");
       cmtBtn.addEventListener("click", function (e) {
         let content = $("#comment").val();
-        let writer = "user01";
+        let writer = $("#loginId").val();
         let postNo = $("#postNo").val();
 
         let data = { content, writer, postNo };
