@@ -3,6 +3,7 @@ package com.saeipman.app.member.service;
 
 import java.util.Map;
 import com.saeipman.app.member.dto.MemberRequestDTO;
+import com.saeipman.app.room.service.ConstractVO;
 
 public interface MemberService {
 //	   로그인정보 단건 조회 
@@ -22,4 +23,13 @@ public interface MemberService {
 
 	// 로그인정보 중복체크
 	public boolean existsByLogin(String loginId);
+	
+	// 임차인 단건추가 -- 전화번호 반환
+	public boolean addImchain(ConstractVO constractVO);
+	
+	// 임차인 단건삭제
+	public void removeImchain(String imchainId);
+	
+	// 로그인 단건삭제
+	public void removeLogin(String imchainId);
 }
