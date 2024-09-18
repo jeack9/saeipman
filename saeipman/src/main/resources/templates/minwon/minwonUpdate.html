@@ -29,10 +29,14 @@
 		</select>
 		</div>
 		
+		
 		<div class="mb-3">
-			<label for="visitsDate">방문날짜</label>
-			<input type="datetime-local" class="form-control" name="visitsDate1" th:value="${#dates.format(minwon.visitsDate1, 'yyyy-MM-dd HH:mm')}">
-		</div> 
+		    <label for="visitsDate">방문날짜</label>
+		    <input type="datetime-local" class="form-control" name="visitsDate1" th:value="*{minwon.visitsDate1, 'yyyy-MM-dd HH:mm')}">
+		</div>
+
+		
+		
 		<div class="file-input">
 			 <label for="formFile" class="form-label">첨부파일</label>
 			 <input class="form-control" type="file" name="file" th:field="*{chumbuImage}">
@@ -42,7 +46,7 @@
   			<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" th:field="*{content}"></textarea>
 		</div>
 		<div>
-			<button type="button" id="updateBtn">수정</button>
+			<button type="button" id="updateBtn" class="btn btn-outline-warning m-2">수정</button>
 		</div>
 	</form>
 	<script>
