@@ -70,12 +70,12 @@
 
 						<th:block
 							th:with="start = ${Paging.startPage}, end = ${Paging.endPage}">
-							<li class="page-item"
+							<li class="page-item" 
 								th:with="start = ${Paging.startPage}, end = ${Paging.endPage}"
 								th:each="pageButton : ${#numbers.sequence(start, end)}"><a
 								class="page-link"
 								th:href="|javascript:changePage(${pageButton})|"
-								th:text=${pageButton}></a></li>
+								th:text=${pageButton} ></a></li>
 						</th:block>
 
 						<li class="page-item" th:if="${Paging.nextPage}"><a
@@ -108,12 +108,5 @@
 		location.href = 'noticeBuildingList?buildingId=' + e.target.value;
 	})
 
-	//검색어를 포함한 게시물이 없을 경우
-	/* 	$('#keywordBtn').on('click')
-	 if(scKeyword.value == ) {
 	
-	 } else {
-	
-	 }
-	 */
 </script>
