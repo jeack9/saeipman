@@ -36,5 +36,9 @@ public class RoomServiceImpl implements RoomService {
 	public RoomVO roomInfo(String roomId) {
 		return roomMapper.selectRoomInfo(roomId);
 	}
+	@Override
+	public boolean modiIpjuState(RoomVO roomVO) {
+		return roomMapper.updateIpjuState(roomVO) == 1;
+	}
 
 }
