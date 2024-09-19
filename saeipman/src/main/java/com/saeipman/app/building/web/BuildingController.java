@@ -17,11 +17,12 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.building.service.BuildingService;
 import com.saeipman.app.building.service.BuildingVO;
 import com.saeipman.app.commom.security.SecurityUtil;
-import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.file.service.FileService;
+import com.saeipman.app.file.service.FileVO;
 import com.saeipman.app.member.service.LoginInfoVO;
 import com.saeipman.app.ocrTest.config.OcrApi;
 import com.saeipman.app.ocrTest.config.OcrUtil;
@@ -29,6 +30,7 @@ import com.saeipman.app.room.service.RoomVO;
 import com.saeipman.app.upload.config.FileUtility;
 
 import lombok.RequiredArgsConstructor;
+import retrofit2.http.Multipart;
 
 @Controller
 @RequiredArgsConstructor
@@ -48,7 +50,9 @@ public class BuildingController {
 	public String buildingInfo(BuildingPageDTO buildingPageDTO, Model model) {
 		LoginInfoVO login = SecurityUtil.getLoginInfo();
 		model.addAttribute("imdaeinId", login);
-		
+		String loginId = SecurityUtil.getLoginId();
+
+
 		//리스트 총 수
 		int total = buildingService.totalPage(login.getLoginId());
 		buildingPageDTO.setTotal(total);
@@ -97,7 +101,7 @@ public class BuildingController {
 		
 		LoginInfoVO login = SecurityUtil.getLoginInfo();
 		
-		String groupId = fileUtill.multiUpload(files);
+		String groupId = fileUtill.multiUpload(files, "-1");
 		String ocr = fileUtill.singleUpload(ocrFile);
 		
 		buildingVO.setImdaeinId(login.getLoginId());
@@ -190,11 +194,41 @@ public class BuildingController {
 
 	@PostMapping("/buildingUpdate")
 	@ResponseBody
-	public Map<String, Object> updateBuilding(@RequestBody BuildingVO buildingVO) {
-		System.out.println(buildingVO);
+	public Map<String, Object> updateBuilding(BuildingVO buildingVO, MultipartFile[] newFiles,
+										     @RequestParam(name ="deleteFileNames" , required = false ) List<String> deleteFileNames) {
+		System.out.println("삭제" + deleteFileNames);
+		
 
-		return buildingService.buildingUpdate(buildingVO);
+		fileUtill.setFolder("건물");
+
+		 // 2. 파일 삭제 처리
+        if (deleteFileNames != null && !deleteFileNames.isEmpty()) {
+            buildingService.fileDelete(deleteFileNames);
+            for (String fileName : deleteFileNames) {
+            	fileUtill.deleteFile(fileName);  // 실제 파일 삭제
+            	//buildingService.fileDelete(fileName);
+            }
+        }
+
+        System.out.println("ssssss");
+        // 3. 새 파일 업로드 처리
+        if (newFiles != null && newFiles.length > 0) {
+        	System.out.println("kkkkk" + newFiles.length);
+            String groupId = buildingVO.getGroupId();  // 기존 그룹 ID 가져오기
+        
+            // group_id가 없으면 새로 생성
+        	
+            groupId = fileUtill.multiUpload(newFiles, groupId);
+            buildingVO.setGroupId(groupId);
+            
+        }
+
+
+      ;
+		return  buildingService.buildingUpdate(buildingVO);
 	}
+	
+	//public String updateFile()
 
 	@GetMapping("/buildingDelete") //관리비가 존재한다면 알림
 	public String buildingDelete(@RequestParam("id") String buildingId) {
