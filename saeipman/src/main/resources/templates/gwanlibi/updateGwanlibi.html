@@ -48,11 +48,11 @@
 			   2. Thymeleaf 변수 사용 */
 			   
 			// 건물명 출력
-			let building = [[${ buildingInfo }]];
+			let building = /*[[${ buildingInfo }]]*/'기본값';
 			//console.log(building);
 			$('#bName').text(building.buildingName);
 				
-			let detailsList = [[${ detailsList }]];
+			let detailsList = /*[[${ detailsList }]]*/'기본값';
 
 			// TOAST UI //
 			// async - await
@@ -125,7 +125,7 @@
 					})
 					.done(function(result) {
 						alert('업데이트 성공!');						
-						location.href = ctxPath + '/detailsBillList?buildingId=' + building.buildingId + '&paymentMonth=' + paymentMonth;
+						location.href = ctxPath + '/gwanlibiDetailsBillList?buildingId=' + building.buildingId + '&paymentMonth=' + paymentMonth;
 					})
 					.fail(function(err){
 						console.log(err);

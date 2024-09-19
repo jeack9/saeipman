@@ -18,7 +18,7 @@
 		                                          LEFT OUTER JOIN month_gwanlibi p
 		                                          ON   b.building_id = p.building_id AND TO_CHAR(p.payment_month, 'yymm') = TO_CHAR(sysdate, 'yymm') -1
 		                 WHERE    b.imdaein_id = #{imdaeinId}
-		                 ORDER BY b.building_name ) a
+		                 ORDER BY b.building_id ) a
 		         WHERE   ROWNUM <![CDATA[<=]]> #{dto.pageNum} * #{dto.amount} ) b
 		WHERE    rn > (#{dto.pageNum} - 1) * #{dto.amount}
 	
@@ -170,7 +170,8 @@
 	<select id="getCountingMonthGwanlibiData">
 		SELECT count(*)
 		FROM   month_gwanlibi
-		WHERE  building_id = #{buildingId} AND TO_CHAR(payment_month, 'yyyy-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'yyyy-MM')
+		WHERE  building_id = #{buildingId} 
+		  AND TO_CHAR(payment_month, 'yyyy-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'yyyy-MM')
 	</select>
 	
 	<!-- 관리비 상세 내역 수정 -->
@@ -193,6 +194,18 @@
 			WHERE   building_id = #{buildingId}
 			AND     TO_CHAR(payment_month, 'yyyyMM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'yyyyMM')
 	</update>
+	
+	<!-- 건물별 임차인 연락처 조회 -->
+	<select id="selectLesseePhoneNumber">
+		SELECT   bi.building_id
+		       , ri.ipju_state
+		       , ci.imchain_phone
+		FROM     building_info bi JOIN room_info ri
+		         				  ON   (bi.building_id = bi.building_id AND bi.building_id = #{buildingId} AND ri.ipju_state = 1)
+								  JOIN constract_info ci
+								  ON   (ci.room_id = ri.room_id)
+	</select>
+	
 	
 <!-- 	<select id="">
 		SELECT TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'yyyy-MM')

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.gwanlibi.service.GwanlibiVO;
+import com.saeipman.app.gwanlibi.service.LesseeInfoVO;
 
 public interface GwanlibiMapper {
 	// 건물 리스트
@@ -43,4 +44,6 @@ public interface GwanlibiMapper {
 	// 월 관리비 데이터 수
 	public int getCountingMonthGwanlibiData(String buildingId);
 	
+	// 해당 건물에 입주한 임차인 연락처 조회
+	public List<LesseeInfoVO> selectLesseePhoneNumber(String buildingId);
 }
