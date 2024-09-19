@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.saeipman.app.building.service.BuildingVO;
 import com.saeipman.app.file.mapper.FileMapper;
 import com.saeipman.app.file.service.FileVO;
 import com.saeipman.app.file.service.FileService;
@@ -27,5 +28,9 @@ public class FileServiceImpl implements FileService{
 	@Override
 	public List<String> getFileName(String buildingId) {
 		return fileMapper.selectFileName(buildingId);
+	}
+	@Override
+	public int getUpdateGroupId(BuildingVO buildingVO) {
+		return fileMapper.selectFileUpdateGroupId(buildingVO);
 	}
 }

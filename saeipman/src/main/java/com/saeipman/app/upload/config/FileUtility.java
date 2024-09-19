@@ -49,7 +49,7 @@ public class FileUtility {
 		}
 	}
 
-	public String multiUpload(MultipartFile[] files) {
+	public String multiUpload(MultipartFile[] files, String groupId) {
 		List<String> imgList = new ArrayList<>();
 		FileVO fileVO = new FileVO();
 
@@ -57,8 +57,11 @@ public class FileUtility {
 
 		// 폴더 경로
 		String folderPath = makeFolder(this.folder);
+		String group = groupId;
 		// group_id
-		String group = fileService.fileGroupId(fileVO);
+		if (groupId.equals("-1") || groupId.isEmpty()) {
+			group = fileService.fileGroupId(fileVO);
+		}
 		fileVO.setGroupId(group);
 
 		for (MultipartFile file : files) {
@@ -98,6 +101,8 @@ public class FileUtility {
 		} // for END
 		return group;
 	}
+
+	
 
 	public String singleUpload(MultipartFile ocrFile) {
 

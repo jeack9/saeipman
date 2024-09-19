@@ -2,6 +2,8 @@ package com.saeipman.app.building.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Data;
 
 @Data
@@ -28,4 +30,5 @@ public class BuildingVO {
 	private String buildingHeigh;
 	
 	private List<String> fileName;
+
 }

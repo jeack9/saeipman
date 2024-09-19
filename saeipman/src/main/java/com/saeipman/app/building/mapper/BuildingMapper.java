@@ -33,5 +33,8 @@ public interface BuildingMapper {
 
 	// 임대인아이디 -> 건물 리스트 조회 
 	public List<BuildingVO> selectImdaeinBuildingList(@Param("paging") PagingDTO paging, @Param("imdaeinId") String imdaeinId);
+	
+	
+	
 
 }
