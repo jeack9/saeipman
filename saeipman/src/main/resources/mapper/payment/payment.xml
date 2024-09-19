@@ -28,9 +28,16 @@
 	</select>
 
 	<!-- 납부한 결제건 납부상태 변경  -->
+	<!-- plsql문으로 update문이 동시에 2개가 되는지 확인해보기.. -->
 	<update id="updatePayment">
-		UPDATE gagu_gwanlibi_history
+	BEGIN	
+		UPDATE gagu_gwanlibi_history 
 		SET    payment_yn = 1
-		WHERE  month_gwanlibi_no = {#monthGwanlibiNo}
+		WHERE  month_gwanlibi_no = #{monthGwanlibiNo}
+		
+		UPDATE m_rent_payment_history	
+		SET    payment_state = 1
+		WHERE  m_rent_history_no = #{mRentHistoryNo}
+		END
 	</update>
 </mapper>
