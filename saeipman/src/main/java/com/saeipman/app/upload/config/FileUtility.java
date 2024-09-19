@@ -28,7 +28,6 @@ public class FileUtility {
 
 	private final FileService fileService;
 
-	
 	@Value("${file.upload.path}")
 	private String uploadPath;
 
@@ -36,8 +35,21 @@ public class FileUtility {
 
 	@Setter
 	private String folder;
-	
-	public String multiUpload(MultipartFile[] files) {
+
+	// 삭제
+	public void deleteFile(String fileName) {
+		Path filePath = Paths.get(uploadPath, fileName);
+		try {
+			File file = filePath.toFile();
+			if (file.exists()) {
+				file.delete();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public String multiUpload(MultipartFile[] files, String groupId) {
 		List<String> imgList = new ArrayList<>();
 		FileVO fileVO = new FileVO();
 
@@ -45,8 +57,11 @@ public class FileUtility {
 
 		// 폴더 경로
 		String folderPath = makeFolder(this.folder);
+		String group = groupId;
 		// group_id
-		String group = fileService.fileGroupId(fileVO);
+		if (groupId.equals("-1") || groupId.isEmpty()) {
+			group = fileService.fileGroupId(fileVO);
+		}
 		fileVO.setGroupId(group);
 
 		for (MultipartFile file : files) {
@@ -86,9 +101,11 @@ public class FileUtility {
 		} // for END
 		return group;
 	}
+
 	
+
 	public String singleUpload(MultipartFile ocrFile) {
-	 
+
 		String folderPath = makeFolder(this.folder);
 		log.info(uploadPath);
 
@@ -96,20 +113,19 @@ public class FileUtility {
 		String fileName = uuid + ocrFile.getOriginalFilename();
 		String uploadFolder = folderPath + "/" + uuid + "_" + fileName;
 		String saveName = uploadPath + uploadFolder; // separator = 자바가 인식하는 경로
-		
-		
+
 		log.debug("saveName : " + saveName);
 
 		Path savePath = Paths.get(saveName);
-		
+
 		try {
 			ocrFile.transferTo(savePath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	
+
 		return fileName;
-		
+
 	}
 
 	public String makeFolder(String folder) {

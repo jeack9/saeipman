@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>방 목록</title>
+<style>
+.offVisible {
+	visibility: hidden;
+}
+</style>
+</head>
+<body>
+	<div layout:fragment="Main">
+		<div class="container">
+			<div class="row">
+				<!-- 상단 버튼 -->
+				<div class="col-md-6">
+					<button type="button" class="btn btn-outline-primary"
+						data-bs-toggle="modal" data-bs-target="#buildingModal">
+						<i class="fa fa-home me-2"></i>건물 선택
+					</button>
+					<button type="button" class="btn btn-outline-primary"
+						id="resetBuildingBtn">선택 초기화</button>
+					<button type="button" class="btn btn-outline-danger"
+						th:if="${buildingVO.buildingName != null}">[[${buildingVO.buildingName}]]</button>
+					<!-- 건물선택 모달창 -->
+					<div class="modal fade" id="buildingModal" tabindex="-1"
+						aria-labelledby="buildingModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-lg">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="buildingModalLabel">건물 선택</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div id="buildingList">
+									<th:block
+										th:replace="~{room/fragments/buildingList :: buildingListFrg}">
+										</th:replace>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">닫기</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- 건물선택 모달창 END -->
+				</div>
+				<!-- 상단 우측 -->
+				<div class="col-md-6"></div>
+				<!-- 상단 버튼 영역 END -->
+				<!-- 계약목록 -->
+				<div>
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col" rowspan="2" class="align-middle">호실</th>
+							<th scope="col">계약유형</th>
+							<th scope="col">계약일</th>
+							<th scope="col">월세</th>
+							<th scope="col">임차인명</th>
+							<th scope="col" rowspan="2" class="align-middle">계약서 파일</th>
+							<th scope="col" rowspan="2" class="align-middle">내역보기</th>
+							<th scope="col" rowspan="2" class="align-middle">보증금반환</th>
+						</tr>
+						<tr>
+						 <th scope="col">보증금</th>
+						 <th scope="col">만료일</th>
+						 <th scope="col">선후불/납입일</th>
+						 <th scope="col">연락처</th>
+						</tr>
+					</thead>
+					<tbody>
+						<th:block th:each="constract : ${constractList}">
+						<tr>
+							<td rowspan="2" class="align-middle">[[${constract.get("ROOM_NO")}]]</td>
+							<td>[[${constract.get("CONSTRACT_TYPE")}]]</td>
+							<td>[[${#dates.format(constract.get("CONSTRACT_DATE"), 'yyyy-MM-dd')}]]</td>
+							<td>[[${constract.get("M_RENT")}]]</td>
+							<td>[[${constract.get("IMCHAIN_NAME")}]]</td>
+							<td rowspan="2" class="align-middle">파일</td>
+							<td rowspan="2" class="align-middle">내역보기</td>
+							<td rowspan="2" class="align-middle">보증금반환</td>
+						</tr>
+						<tr>
+							<td>보증금</td>
+							<td>만료일</td>
+							<td>선후불/납입일</td>
+							<td>연락처</td>
+						</tr>
+						</th:block>
+					</tbody>
+				</table>
+				</div>
+				<!-- 계약목록 END -->
+			</div>
+		</div>
+		<!-- div.container END -->
+		<script type="text/javascript">
+		// 건물목록 모달창 프래그먼트 교체
+    	$(document).on('click', '.buildingPagination a', function(e) {
+		    e.preventDefault();
+		    let buildingPage = $(this).data("page");
+		    if(!buildingPage) return;
+		    $.ajax({
+		        url: `${ctxPath}/room/buildingList`,
+		        type: 'GET',
+		        data: { buildingPage },
+		        success: function(response) {
+		            // 받아온 프래그먼트를 HTML로 교체
+		            $('#buildingList').html(response);
+		        },
+		        error: function(err) {
+		            console.log(err);
+		        }
+		    });
+			});
+			// 건물선택 이벤트
+			function selectBuilding(target) {
+				let buildingId = $(target).data("buildingid");
+				//location.href = `${ctxPath}/room/roomListBackup?buildingId=${buildingId}`;
+			}
+			// 건물선택 초기화버튼
+			let $resetBuildingBtn = $("#resetBuildingBtn");
+			$resetBuildingBtn.on('click', resetBuilding);
+			function resetBuilding() {
+				//location.href = `${ctxPath}/room/roomListBackup`;
+			}
+		</script>
+	</div>
+	<!-- Main END -->
+</body>
+</html>

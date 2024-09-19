@@ -1,5 +1,8 @@
 package com.saeipman.app.room.service.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,6 +73,10 @@ public class ConstractServiceImpl implements ConstractService{
 			return constractVO;
 		}
 		return null;
+	}
+	@Override
+	public List<Map<String, Object>> roomConstractList(String buildingId) {
+		return cmapper.selectRoomConstract(buildingId);
 	}
 
 }
