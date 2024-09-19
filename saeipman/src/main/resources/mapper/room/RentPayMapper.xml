@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saeipman.app.room.mapper.RentPayMapper">
+		<!-- 월세납부내역 단건 등록 -->
+		<insert id="insertRentPayHistory">
+			<selectKey order="BEFORE" resultType="string" keyProperty="mRentHistoryNo">
+				SELECT 'MRO' || LPAD(m_rent_pay_his_seq.nextval, 5, '0') FROM DUAL
+			</selectKey>
+			INSERT INTO m_rent_payment_history (
+		    m_rent_history_no,
+		    constract_no,
+		    room_id,
+		    payment_date,
+		    real_payment_date,
+		    payment_money,
+		    real_payment_money,
+		    depositor_name,
+		    payment_state,
+		    alert_type,
+		    memo
+			) VALUES (
+		    #{mRentHistoryNo},
+		    #{constractNo},
+		    #{roomId},
+		    #{paymentDate},
+		    #{realPaymentDate},
+		    #{paymentMoney},
+		    #{realPaymentMoney},
+		    #{depositorName},
+		    0,
+		    0,
+		    #{memo}
+		)
+		</insert>
+		<!-- 월세납부내역 상태변경 -->
+		<update id="updatePayStateByRentPayNo">
+			UPDATE m_rent_payment_history
+			SET payment_state = #{paymentState}
+			WHERE m_rent_history_no = #{mRentHistoryNo}
+		</update>
+</mapper>

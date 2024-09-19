@@ -159,4 +159,30 @@
 	        room_id = #{roomId}
     	WHERE constract_no = #{constractNo}
 	</update>
+	
+	<!-- 건물선택 - 방의 현재계약 목록 -->
+	<select id="selectRoomConstract" resultType="map">
+		SELECT
+		    ri.room_no room_no,
+		    ci.constract_no constract_no,
+		    ci.constract_type constract_type,
+		    ci.deposit deposit,
+		    ci.m_rent m_rent,
+		    ci.pay_type pay_type,
+		    ci.imchain_name imchain_name,
+		    ci.imchain_phone imchain_phone,
+		    ci.imchain_account imchain_account,
+		    ci.imdaein_account imdaein_account,
+		    ci.constract_date constract_date,
+		    ci.exp_date exp_date,
+		    ci.constract_state constract_state,
+		    ci.constract_file constract_file,
+		    ci.m_rent_date m_rent_date,
+		    ci.memo memo,
+		    ci.room_id room_id
+		FROM constract_info ci RIGHT OUTER JOIN room_info ri 
+		                        ON ri.room_id = ci.room_id AND ci.constract_state = 1
+		WHERE ri.building_id = #{buildingId}
+		ORDER BY ri.room_no
+	</select>
 </mapper>
