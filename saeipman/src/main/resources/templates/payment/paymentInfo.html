@@ -22,6 +22,10 @@ th, td {
 .form-check {
 	justify-content: center;
 }
+
+.button {
+	justify-content: center;
+}
 </style>
 </head>
 <body>
@@ -106,14 +110,13 @@ th, td {
 						</td>
 					</tr>
 				</tbody>
-				<tfoot>
-					<tr>
-						<td>결제 구역</td>
-					</tr>
-				</tfoot>
 			</table>
+			<div>
+				<button id="payBtn">결제하기</button>
+			</div>
 		</div>
-		<script>
+		<script type="text/javascript"
+			src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js">
 			let date = new Date();
 			let nowMonth = dateToM(date);
 			let startMonth = nowMonth - 4;
@@ -163,15 +166,31 @@ th, td {
 							}
 						})
 			}
-			
+
 			//결제 api
+/* 
+			$('#payBtn').on('click', payImp)
 			
-			let imp = window.imp;
-			imp.init('imp04648344'); //가맹점 식별코드
-			
-			
-			
-			
+			function payImp() {
+				let imp = window.imp;
+				imp.init('imp04648344'); //가맹점 식별코드
+				IMP.request_pay({
+				    pg : 'html5_inicis',
+				    pay_method : 'trans',
+				    merchant_uid: "order_no_0001", // 상점에서 관리하는 주문 번호를 전달
+				    name : '주문명:결제테스트',
+				    amount : 14000,
+				    buyer_email : 'iamport@siot.do',
+				    buyer_name : '구매자이름',
+				    buyer_tel : '010-1234-5678',
+				    buyer_addr : '서울특별시 강남구 삼성동',
+				    buyer_postcode : '123-456',
+				    m_redirect_url : '{모바일에서 결제 완료 후 리디렉션 될 URL}' // 예: https://www.my-service.com/payments/complete/mobile
+				}, function(rsp) { // callback 로직
+					
+				});
+
+			} */
 		</script>
 	</div>
 </body>

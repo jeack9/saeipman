@@ -18,6 +18,7 @@
         <choose>
         	<when test="paymentYN != 1">
         		where g.payment_yn <![CDATA[ <> ]]> 1
+				AND   c.imchain_phone = #{imchainPhone}      		
         	</when>
         	<otherwise>
 		        WHERE TO_CHAR(payment_month,'yyyy-MM') = #{paymentMonth}

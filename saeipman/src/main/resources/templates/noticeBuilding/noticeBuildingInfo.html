@@ -41,7 +41,7 @@
 				th:onclick="|location.href='@{/noticeBuildingUpdate(postNo=${BNotice.postNo})}'|"
 				class="btn btn-outline-warning m-2">수정</button>
 			<button type="button"
-				th:onclick="history.back();"
+				th:onclick="|location.href='@{/noticeBuildingList(nowPage=${pagingSearchDTO.nowPage}, scKeyword=${param.scKeyword})}'|"
 				class="btn btn-outline-success m-2">목록</button>
 			<button type="button"
 				th:onclick="|location.href='@{/noticeBuildingDelete(no=${BNotice.postNo})}'|"
