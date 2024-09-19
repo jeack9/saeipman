@@ -23,11 +23,14 @@
         	<otherwise>
 		        WHERE TO_CHAR(payment_month,'yyyy-MM') = #{paymentMonth}
 		        AND g.payment_yn = 1
-        	
         	</otherwise>
         </choose>                 
 	</select>
 
-	<!-- 납부해야할 관리비 조회 -->
-
+	<!-- 납부한 결제건 납부상태 변경  -->
+	<update id="updatePayment">
+		UPDATE gagu_gwanlibi_history
+		SET    payment_yn = 1
+		WHERE  month_gwanlibi_no = {#monthGwanlibiNo}
+	</update>
 </mapper>

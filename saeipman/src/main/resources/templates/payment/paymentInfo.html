@@ -72,7 +72,6 @@ th, td {
 								<tbody>
 									<th:block th:each="payInF : ${payInfo}">
 										<tr>
-
 											<td>
 												<div class="form-check">
 													<input class="form-check-input" type="checkbox" value=""
@@ -90,13 +89,13 @@ th, td {
 						<!-- 관리비 출력 -->
 						<td>
 							<table class="table table-bordered">
-								<tbody>
+								<tbody id="paytotal">
 									<th:block th:each="payInF : ${payInfo}">
 										<tr>
 											<td><div class="form-check">
 
-													<input class="form-check-input" type="checkbox" value=""
-														id="flexCheckDefault"><label
+													<input class="form-check-input" type="checkbox" th:value="${payInF.monthGwanlibiNo}"
+														id="checkbox" name="check"><label
 														class="form-check-label" for="flexCheckDefault"></label>
 												</div></td>
 											<td>[[${#strings.substring(payInF.paymentMonth, 0,
@@ -111,12 +110,17 @@ th, td {
 					</tr>
 				</tbody>
 			</table>
-			<div>
-				<button id="payBtn">결제하기</button>
-			</div>
+			<table>
+				<tr>
+					<th>
+						<button id="payBtn">결제하기</button>
+					</th>
+					<th>결제 금액 :</th>
+					<td id="total"></td>
+				</tr>
+			</table>
 		</div>
-		<script type="text/javascript"
-			src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js">
+		<script>
 			let date = new Date();
 			let nowMonth = dateToM(date);
 			let startMonth = nowMonth - 4;
@@ -167,30 +171,57 @@ th, td {
 						})
 			}
 
-			//결제 api
-/* 
-			$('#payBtn').on('click', payImp)
-			
-			function payImp() {
-				let imp = window.imp;
-				imp.init('imp04648344'); //가맹점 식별코드
-				IMP.request_pay({
-				    pg : 'html5_inicis',
-				    pay_method : 'trans',
-				    merchant_uid: "order_no_0001", // 상점에서 관리하는 주문 번호를 전달
-				    name : '주문명:결제테스트',
-				    amount : 14000,
-				    buyer_email : 'iamport@siot.do',
-				    buyer_name : '구매자이름',
-				    buyer_tel : '010-1234-5678',
-				    buyer_addr : '서울특별시 강남구 삼성동',
-				    buyer_postcode : '123-456',
-				    m_redirect_url : '{모바일에서 결제 완료 후 리디렉션 될 URL}' // 예: https://www.my-service.com/payments/complete/mobile
-				}, function(rsp) { // callback 로직
-					
-				});
+			//체크한 달의 관리비 값 합산
+			$("input[name='check']").click(
+					function(e) {
+						//console.log($(e.target).closest('tr').children().eq(2).text());
+						let payMoney = $('#paytotal').find('tr');
+						let total = 0;
+						for (let i = 0; i < payMoney.length; i++) {
+							if (payMoney.eq(i).find('#checkbox').prop("checked")) {
+								total += Number(payMoney.eq(i).children().eq(2).text().replace(",",""));
+								console.log(total);
+							}
+						}
+						$('#total').text(total);
 
-			} */
+					})
+			//		
+			$("#payBtn").on("click", updateAjax);
+			
+			function updateAjax(){
+				
+			}
+			
+			
+			
+			
+			
+
+			//결제 api
+			/* 
+			 $('#payBtn').on('click', payImp)
+			
+			 function payImp() {
+			 let imp = window.imp;
+			 imp.init('imp04648344'); //가맹점 식별코드
+			 IMP.request_pay({
+			 pg : 'html5_inicis',
+			 pay_method : 'trans',
+			 merchant_uid: "order_no_0001", // 상점에서 관리하는 주문 번호를 전달
+			 name : '주문명:결제테스트',
+			 amount : 14000,
+			 buyer_email : 'iamport@siot.do',
+			 buyer_name : '구매자이름',
+			 buyer_tel : '010-1234-5678',
+			 buyer_addr : '서울특별시 강남구 삼성동',
+			 buyer_postcode : '123-456',
+			 m_redirect_url : '{모바일에서 결제 완료 후 리디렉션 될 URL}' // 예: https://www.my-service.com/payments/complete/mobile
+			 }, function(rsp) { // callback 로직
+			
+			 });
+
+			 } */
 		</script>
 	</div>
 </body>
