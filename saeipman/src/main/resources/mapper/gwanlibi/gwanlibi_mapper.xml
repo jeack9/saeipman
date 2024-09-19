@@ -140,7 +140,8 @@
 			    VALUES ( #{monthGwanlibiInfo.monthGwanlibiNo}
 					   , #{monthGwanlibiInfo.buildingId}
 					   , #{monthGwanlibiInfo.totalMoney}
-					   , ADD_MONTHS(SYSDATE, -1)
+					   <!-- , ADD_MONTHS(SYSDATE, -1) -->
+					   , #{monthGwanlibiInfo.paymentMonth}
 					   , #{monthGwanlibiInfo.gaguGwanlibi} )
 
 		    <foreach collection="list" item="item">
@@ -189,7 +190,7 @@
 	<update id="updateMonthGwanlibi">
 			UPDATE  month_gwanlibi
 			SET     total_money = #{totalMoney}
-			      , payment_month = #{paymentMonth}
+			      <!-- , payment_month = #{paymentMonth} -->
 			      , gagu_gwanlibi = #{gaguGwanlibi}
 			WHERE   building_id = #{buildingId}
 			AND     TO_CHAR(payment_month, 'yyyyMM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'yyyyMM')

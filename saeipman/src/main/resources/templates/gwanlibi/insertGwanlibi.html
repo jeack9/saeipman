@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{common/layouts/default_layout}">
 
 <head>
 	<meta charset="UTF-8">
@@ -22,20 +23,31 @@
 			color: rgb(56, 53, 53);
 		}
 	</style>
-
 </head>
 
 <body>
 	<div layout:fragment="Main">
 
 		<div>
-			<br> <br>
+			<br>
+			<br>
 
 			<!-- 건물명 -->
 			<p id="bName"></p>
 
-			<br> <br>
+			
+			<!-- Toast UI - Date Picker -->
+			<p>관리비 납부일을 선택하세요.</p>
+			<div class="inputDiv" style="position: relative; z-index: 2; float: right;">
+				<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+					<input type="text" id="datepicker-input-ko" aria-label="Year-Month">
+					<span class="tui-ico-date"></span>
+				</div>
+				<div class="datepicker-cell" id="datepicker-month-ko" style="margin-top: -1px;"></div>
+			</div>
 
+			<br> <br>
+			
 			<!-- Toast UI - Grid -->
 			<div id="grid" style="position: relative; z-index: 1;"></div>
 
@@ -58,18 +70,44 @@
 			// 건물 정보.
 			let buildingInfo = /*[[${buildingInfo}]]*/'기본값';
 			let buildingId = buildingInfo.buildingId;
+			
+			let paymentDate = '';
 
+			
 			// 건물 이름 출력.
 			$('#bName').text(buildingInfo.buildingName);
 
 			// TOAST UI //
 			// async - await
 			let grid;
-			$(document).ready(() => {
-				grid = gridLoad();
+			let toastDate;
+			$(document).ready(async() => {
+				grid = await gridLoad();
+				toastDate = await dateLoad();
 			});
 
+			
+			// Toast UI - Date Picker //
+			// # reference : https://nhn.github.io/tui.date-picker/latest/tutorial-example05-picking-month
+			// # reference : https://nhn.github.io/tui.date-picker/latest/DatePicker#event-change
+			function dateLoad() {
+				toastDate = new tui.DatePicker('#datepicker-month-ko', {
+					date: new Date(),
+					language: 'ko',
+					input: {
+						element: '#datepicker-input-ko',
+						format: 'dd일'
+					}
+				});
 
+				// get date value
+				toastDate.on('change', function() {
+					paymentDate = toastDate.getDate().getDate();
+				});
+				
+				return toastDate;
+			}
+			
 			// Toast UI - Grid //
 			// # reference : https://adjh54.tistory.com/95
 			// # reference : https://park-duck.tistory.com/entry/javascript-1-Toast-UI-Grid-%EA%B8%B0%EC%B4%88API-%EC%82%AC%EC%9A%A9%EB%B2%95
@@ -122,6 +160,7 @@
 							editor: 'text',
 							validation: {
 								dataType: 'number',
+								regExp: /^[0-9]*$/,
 								required: true,
 								min: 0
 							}
@@ -144,10 +183,31 @@
 				console.log(grid.getData());
 				$('.saveBtn').on('click', function () {
 
-					if (!buildingId) return;
+					// 유효성 검사
+					if(!buildingId) return;
+					
+					// 유효성 검사
+					if(paymentDate == '') {
+						Swal.fire({
+							icon: "error",
+							title: "등록 실패 😢",
+							text: "납부일을 선택해주세요!"
+						});
+						return;
+					}					
+
+					// 유효성 검사
+					if(grid.validate().length > 0) {
+						Swal.fire({
+							icon: "error",
+							title: "등록 실패 😢",
+							text: "금액을 정확하게 입력해주세요."
+						});
+						return;
+					}
 
 					$.ajax({
-						url: `${ctxPath}/insertGwanlibi`,
+						url: `${ctxPath}/insertGwanlibi?paymentDate=${paymentDate}`,
 						method: 'post',
 						contentType: 'application/json',
 						data: JSON.stringify(grid.getData())
@@ -160,14 +220,13 @@
 								location.href = ctxPath + url;
 							}
 						})
-
 					}).fail(function (err) {
 						console.log(err);
 						Swal.fire({
-			    			  icon: "error",
-			    			  title: "등록 실패 😢",
-			    			  text: "관리자에게 문의하세요."
-		    			});
+							icon: "error",
+							title: "등록 실패 😢",
+							text: "관리자에게 문의하세요."
+						});
 					});
 
 				});

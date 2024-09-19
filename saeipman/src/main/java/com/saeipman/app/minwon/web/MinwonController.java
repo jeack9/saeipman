@@ -122,13 +122,13 @@ public class MinwonController {
 	public String minwonInsert(@RequestPart MultipartFile[] files, MinwonVO minwonVO) {
 		
 		fileUtill.setFolder("민원");//폴더명
-		String groupId = fileUtill.multiUpload(files);
+		//String groupId = fileUtill.multiUpload(files);
 		String login = SecurityUtil.getLoginId();
 		String roomId = SecurityUtil.getRoomId();
 		minwonVO.setRoomId(roomId);
 		minwonVO.setImchainId(login);
 		minwonVO.setGroupId(login);
-		minwonVO.setGroupId(groupId);
+		//minwonVO.setGroupId(groupId);
 		
 		minwonService.minwonInsert(minwonVO);
 		return "redirect:minwonList";
