@@ -9,4 +9,7 @@ public interface RentPayService {
 	
 	// 계약등록시 월세납부내역 추가
 	public boolean addRentPayAfterConstract(ConstractVO constractVO);
+	
+	// 스케줄러 7일 후 납부일인 계약들의 월세고지서 발급
+	public void generateBillsScheduler();
 }

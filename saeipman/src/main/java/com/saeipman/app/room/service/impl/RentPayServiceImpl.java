@@ -1,5 +1,11 @@
 package com.saeipman.app.room.service.impl;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,4 +52,28 @@ public class RentPayServiceImpl implements RentPayService {
 		return result;
 	}
 
+	// 월세납부 고지서 발급 스케줄러(7일 후 납부일인 계약들)
+	@Scheduled(cron = "0 45 23 * * *")
+	@Override
+	public void generateBillsScheduler() {
+		List<ConstractVO> upcomingPayConstracts = rentPayMapper.selectUpcomingPayConstractList();
+		for (ConstractVO constract : upcomingPayConstracts) {
+            RentPayVO rentPay = new RentPayVO();
+            rentPay.setConstractNo(constract.getConstractNo());
+            rentPay.setRoomId(constract.getRoomId());
+            rentPay.setPaymentDate(calculateNextPaymentDate());
+            rentPay.setPaymentMoney(constract.getmRent());
+            rentPay.setDepositorName(constract.getImchainName());
+            rentPayMapper.insertRentPayHistory(rentPay);
+        }
+	}
+
+	
+	// 월세납부 고지서 납부일 계산함수
+	private Date calculateNextPaymentDate() {
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        LocalDate nextPayLocalDate = today.plusDays(7);
+        Date nextPayDate = Date.from(nextPayLocalDate.atStartOfDay(ZoneId.of("Asia/Seoul")).toInstant());
+        return nextPayDate;
+    }
 }
