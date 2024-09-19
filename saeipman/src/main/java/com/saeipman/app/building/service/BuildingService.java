@@ -31,5 +31,7 @@ public interface BuildingService {
 
 	// 임대인 아이디 -> 건물 리스트 조회
 	public List<BuildingVO> imdaeinBuildingList(PagingDTO paging, String imdaeinId);
-
+	
+	//방 수정
+	public List<RoomVO> roomUpdate(RoomVO roomVO);
 }
