@@ -27,9 +27,14 @@
 				)
 	</insert>
 	<select id="selectFileName" resultType="String">
-		select 	fi.file_name as file_name
+		SELECT 	fi.file_name as file_name
 		FROM building_info bi JOIN file_info fi
 		                    ON bi.group_id = fi.group_id  
 		WHERE bi.building_id = #{buildingId}
 	</select>
+	<select id="selectFileUpdateGroupId" resultType="int">
+		SELECT group_id
+		FROM building_info
+		WHERE building_id = #{buildingId}
+	</select> 
 </mapper>
