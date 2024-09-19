@@ -73,6 +73,8 @@ margin-top: 20px;
         <tr>
           <th>방문날짜</th>
           <td>[[${minwon.visitsDate1}]]</td>
+          
+          <td>또는[[${minwon.visitsDate2}]]</td>
         </tr>
         <tr>
           <th>내용</th>
@@ -81,7 +83,7 @@ margin-top: 20px;
         <tr>
           <th style="width: 10%">첨부파일</th>
           <td>
-            <img style="width: 30%"
+            <img style="width: 75%"
               th:each=" img : ${minwon.fileName}"
               th:src="@{/images/민원/{f}(f=${img})}"
             />

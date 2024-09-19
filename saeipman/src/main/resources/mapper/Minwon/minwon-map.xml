@@ -30,6 +30,7 @@
     
     <if test="imchainId != null and imchainId != ''">
       AND m.imchain_id = #{imchainId}
+      AND c.imchain_phone  = #{imchainId}
     </if>
     
     <if test="imdaeinId != null and imdaeinId != ''">
@@ -62,7 +63,7 @@
 	        R.ROOM_NO,
 	        R.BUILDING_ID
 	      FROM room_info R 
-	      JOIN constract_info C ON C.room_id = R.room_id
+	      JOIN constract_info C ON C.room_id = R.room_id  
 	      JOIN minwon M ON M.room_id = C.room_id
 	      <where>
 	      <include refid="criteria"/>
@@ -104,6 +105,7 @@
 		    r.room_no,
 		    m.accept_state,
 		    m.visits_date1,
+		    m.visits_date2,
 		    m.reg_date,
 		    m.mod_date,
 		    m.alert_type,
@@ -143,6 +145,7 @@
 						ACCEPT_STATE,
 						room_no,
 						visits_date1,
+						visits_date2,
 						reg_date,
 						alert_type,
 						room_id,
@@ -158,6 +161,7 @@
 						, 0
 						, #{acceptState}
 						, #{visitsDate1}
+						, #{visitsDate2}
 						<choose>
 							<when test="regDate != null">
 							, #{regDate}
@@ -183,6 +187,7 @@
 			, GROUP_ID = #{groupId}
 			</if>
 			, visits_date1 = #{visitsDate1}
+			, visits_date2 = #{visitsDate2}
 			
 		where post_no = #{postNo}
 	</update>

@@ -25,6 +25,9 @@ public class MinwonVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime visitsDate1; // 방문일자
 	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	private LocalDateTime visitsDate2; // 방문일자
+	
 	private Date regDate; // 작성일자
 	private Date modDate; // 수정일자
 	private Integer alertType; //알림유형

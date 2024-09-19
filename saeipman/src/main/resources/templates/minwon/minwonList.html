@@ -39,6 +39,7 @@ min-width: 200px;
 	<div class='row'>
 	  <form id="searchFrom" th:action="@{/minwonList}" th:method='get'>
 	  
+	  <div th:if="${cri.auth == 1}">
 	   <select class="form-select" name="buildingId" style="width: 150px;" id="option">
    		<option selected>건물</option>
    		<option th:each="building : ${buildingList}"
@@ -47,6 +48,7 @@ min-width: 200px;
            [[${building.buildingName}]]
    		</option>
 	   </select>
+	   </div>
 	   
 	   <select name='type' class="form-select" style="width: 150px;">
 	     <option value="TWC">제목 or 내용 or 작성자</option>
@@ -56,7 +58,6 @@ min-width: 200px;
 	   		<option value="TC">제목 or 내용</option>
 	   		<option value="TW">제목 or 작성자</option>
 	   </select>
-	   
 	   
 	   <input type='text' name='keyword'  class="form-control me-2" style="width: 180px;"/>
 	   
@@ -91,7 +92,18 @@ min-width: 200px;
 		</table>
 	
 	
-		<nav aria-label="Page navigation example ">
+	<div style="text-align : right" th:if="${cri.auth == 2}">
+	  <button
+        type="button"
+        th:onClick="|location.href = '@{/minwonInsert}'|"
+      	class="btn btn-outline-success m-2"
+      >
+        등록
+      </button>
+	
+	</div>
+	
+		<nav aria-label="Page navigation example" >
    
     <ul class="pagination">
         <li class="page-item"><!-- 타임리프에서는 조건이 참일 때 'selected'라는 문자열을 반환할 필요가 없음. 대신 조건이 참이면 selected 속성이 추가되고, 거짓이면 속성이 추가되지 않음 -->
@@ -130,7 +142,9 @@ min-width: 200px;
     </ul>
 </nav>
 
+
 </div>
+
 	<script>
 	
 		var searchFrom = $("#searchFrom");
@@ -162,7 +176,7 @@ min-width: 200px;
 		
 		$('#option').on('change', function(e) {
 			// 선택된 건물 id가 변경되면 폼을 자동으로 제출
-		    this.form.submit();
+		    location.href = 'minwonList?buildingId=' + e.target.value;
 	    });
 		
 	
