@@ -1,15 +1,21 @@
 package com.saeipman.app.message;
 
 
-import org.json.simple.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.saeipman.app.gwanlibi.service.LesseeInfoVO;
+
 import jakarta.annotation.PostConstruct;
 import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.exception.NurigoEmptyResponseException;
+import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
+import net.nurigo.sdk.message.exception.NurigoUnknownException;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 
 @Service
@@ -45,5 +51,45 @@ public class MsgService {
 		this.messageService.sendOne(new SingleMessageSendingRequest(message)); // 메시지 발송 요청
 	                
 
+	}
+	
+	// 경민
+	public void sendGroup(List<LesseeInfoVO> list, String msg) {
+		List<Message> messageList = new ArrayList<Message>();
+		
+		for(LesseeInfoVO item : list) {
+			if (item.getImchainPhone().length() > 9 && item.getImchainPhone().length() < 12) {
+				System.err.println("===============================");
+				System.err.println("Send To : " + item.getImchainPhone());
+				
+				Message message = new Message();
+				
+				message.setFrom(fromPhoneNumber);
+				message.setTo(item.getImchainPhone());
+				message.setText(msg);
+				
+				
+				messageList.add(message);
+				
+				// 테스트 환경
+				System.err.print(messageList.toString());
+				
+//				try {
+//					// 테스트 환경
+//					System.out.print(messageList.toString());
+//					// 실제 사용 시에만 주석 풀고 사용하세용
+//					// this.messageService.send(messageList);
+//				} catch (NurigoMessageNotReceivedException e) {
+//					System.out.println("NurigoMessageNotReceivedException : " + e.getMessage());
+//				} catch (NurigoEmptyResponseException e) {
+//					System.out.println("NurigoEmptyResponseException : " + e.getMessage());
+//				} catch (NurigoUnknownException e) {
+//					System.out.println("NurigoUnknownException : " + e.getMessage());
+//				}
+			} else {
+				return;
+			}
+		}
+		
 	}
 }

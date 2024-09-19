@@ -24,6 +24,7 @@ import com.saeipman.app.building.service.BuildingVO;
 import com.saeipman.app.commom.security.SecurityUtil;
 import com.saeipman.app.gwanlibi.service.GwanlibiService;
 import com.saeipman.app.gwanlibi.service.GwanlibiVO;
+import com.saeipman.app.gwanlibi.service.LesseeInfoVO;
 import com.saeipman.app.member.service.LoginInfoVO;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -116,19 +117,7 @@ public class GwanlibiController {
 	@PostMapping("insertItems")
 	@ResponseBody
 	public int insertItems(@RequestBody List<GwanlibiVO> list, 
-			               @RequestParam(name = "buildingId") String buildingId
-			              // ,@RequestParam(name = "selectedDate") String selectedDate) throws ParseException {
-							) {
-		
-//		System.err.println("납부일자" + selectedDate);
-//		
-//		 // 문자열        
-//		String dateStr = selectedDate;
-//		// 포맷터        
-//		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-//		// 문자열 -> Date        
-//		Date paymentMonth = formatter.parse(selectedDate);
-//		System.out.println(paymentMonth);
+			               @RequestParam(name = "buildingId") String buildingId) {
 		
 		int cnt = 0;
 		System.err.println(buildingId + "건물번호");
@@ -139,7 +128,6 @@ public class GwanlibiController {
 		for (GwanlibiVO item : list) {
 			item.setVersion(version);
 			item.setBuildingId(buildingId);
-			//item.setPaymentMonth(paymentMonth);
 			cnt++;
 		}
 
@@ -233,6 +221,7 @@ public class GwanlibiController {
 									 GwanlibiVO gwanlibiVO,
 									 BuildingVO buildingVO,
 									 Model model) {
+		
 		List<GwanlibiVO> gwanlibiItemList = gwanlibiService.itemList(buildingId);
 		BuildingVO buildingInfo = buildingService.buildingInfo(buildingVO);
 		model.addAttribute("gwanlibiItemList", gwanlibiItemList);
@@ -244,14 +233,22 @@ public class GwanlibiController {
 	// 관리비 등록 처리 - 아작스
 	@PostMapping("insertGwanlibi")
 	@ResponseBody
-	public String insertGwanlibi(@RequestBody List<GwanlibiVO> gridDatalist) {
-
-		gwanlibiService.addGwanlibi(gridDatalist);
-
+	public String insertGwanlibi(@RequestParam(name = "paymentDate") String paymentDate,
+								 @RequestBody List<GwanlibiVO> gridDatalist) throws ParseException {
+		
+		String ym = preYM();
+		String date = ym + "-" + paymentDate;
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date paymentMonth = formatter.parse(date);
+		
+		gridDatalist.get(0).setPaymentMonth(paymentMonth);
+		
 		String buildingId = gridDatalist.get(0).getBuildingId();
 
-		String ym = preYM();		
 
+		gwanlibiService.addGwanlibi(gridDatalist);
+		
 		return "/gwanlibiDetailsBillList?buildingId=" + buildingId + "&paymentMonth=" + ym;
 	}
 	
@@ -282,12 +279,9 @@ public class GwanlibiController {
 	
 	// ~/sendSMSMsg 요청 -> sendSMSMessage()
 	@GetMapping("sendSMSMsg")
-	public String sendSMSMessage(String buildingId) {
+	public void sendSMSMessage(String buildingId) {
 		// 해당 건물에 거주하고 있는 임차인의 연락처 조회
 		gwanlibiService.getLesseePhoneNumber(buildingId);
-		
-		
-		return "";
 	}
 
 }

@@ -1,52 +1,34 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}">
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{common/layouts/default_layout}">
 
 <head>
-<meta charset="UTF-8">
-<style>
-#bName {
-	float: left;
-	color: #323f5d;
-	font-size: 20px;
-	font-weight: bold;
-}
+	<meta charset="UTF-8">
+	<style>
+		#bName {
+			float: left;
+			color: #323f5d;
+			font-size: 20px;
+			font-weight: bold;
+		}
 
-.btnDiv, .btnDiv2 {
-	text-align: center;
-}
+		.btnDiv,
+		.btnDiv2 {
+			text-align: center;
+		}
 
-.btnDiv2 {
-	margin-top: 10px
-}
+		.btnDiv2 {
+			margin-top: 10px
+		}
 
-#appendBtn, #deleteBtn {
-	display: inline-block;
-	background: #6CBEC7;
-	color: rgb(56, 53, 53);
-}
-
-#validateMsg {
-	background-color: rgba(0, 0, 0, 0.4);
-	width: 40%;
-	height: 30%;
-	z-index: 10;
-	/* 
-	position: fixed;
-	top: 0;
-	left: 0; */ 
-    /* width: "100%",;
-	backgroundColor: " rgba(0, 0, 0, 0.4)",
-    width: "100%",
-    height: "100vh",
-    zIndex: "10",
-    position: "fixed",
-    top: "0",
-    left: "0", */
-}
-</style>
-
+		#appendBtn,
+		#deleteBtn {
+			display: inline-block;
+			background: #6CBEC7;
+			color: rgb(56, 53, 53);
+		}
+	</style>
 </head>
 
 <body>
@@ -57,12 +39,6 @@
 
 			<!-- 건물명 -->
 			<p id="bName"></p>
-			
-			<!-- 날짜 선택 -->
-			<div style="float: right;">
-				<p style="display: inline;">관리비 납부일자 선택 : 납부일이 고정이면 한 번만 설정하시면 됩니다.</p>
-				<input type="date" class="form-control" id="selectedDate" style="display: inline-block;  width: 50%">
-			</div>
 
 			<br> <br>
 
@@ -75,13 +51,12 @@
 				<button class="btn btn-light" id="appendBtn">추가</button>
 				<button class="btn btn-light" id="deleteBtn">삭제</button>
 			</div>
-			
-			<br>
-			
+
 			<div class="btnDiv2">
 				<button class="btn btn-primary saveBtn">저장</button>
 				<button class="btn btn-primary" th:onclick="|location.href='@{/gwanlibiDetailsBillList(buildingId=${buildingInfo.buildingId})}'|">정산</button>
 			</div>
+
 			<br>
 
 		</div>
@@ -92,11 +67,9 @@
 			/* 1. <script th:inline="javascript">
 			   2. Thymeleaf 변수 사용 */
 			let gwanlibiItemlist = /*[[${ gwanlibiItemlist }]]*/'기본값';
-			console.log(gwanlibiItemlist);
 			let buildingInfo = /*[[${ buildingInfo }]]*/'기본값';
 			let buildingId = buildingInfo.buildingId;
-			console.log(buildingInfo);
-			
+
 			// 건물 이름 출력.
 			$('#bName').text(buildingInfo.buildingName);
 
@@ -128,29 +101,30 @@
 					rowHeaders: ['checkbox'],
 					// ================================== 컬럼 옵션 적용 ================================== //
 					columns: [
+						// hidden columns
 						{
-			                header: '번호',
-			                name: 'gwanlibiItemNo',
-			                hidden: true
-			            },
-			            {
-			                header: '버전',
-			                name: 'version',
-			                hidden: true
-			            },
-			            {
-			                header: '건물 번호',
-			                name: 'buildingId',
-			                hidden: true
-			            },
+							header: '번호',
+							name: 'gwanlibiItemNo',
+							hidden: true
+						},
+						{
+							header: '버전',
+							name: 'version',
+							hidden: true
+						},
+						{
+							header: '건물 번호',
+							name: 'buildingId',
+							hidden: true
+						},
 						// [Column-1] 관리비 항목
 						{
 							header: '관리비 항목',
 							name: 'gwanlibiName',
 							validation: {
-						        dataType: 'string',
-						        required: true
-						      },
+								dataType: 'string',
+								required: true
+							},
 							resizable: true,
 							align: 'center',
 							sortable: true,
@@ -161,9 +135,9 @@
 							header: '관리비 변동 여부',
 							name: 'variableYn',
 							validation: {
-						        dataType: 'string',
-						        required: true
-						      },
+								dataType: 'string',
+								required: true
+							},
 							resizable: true,
 							align: 'center',
 							editor: {
@@ -182,141 +156,116 @@
 							name: 'fixedPrice',
 							resizable: true,
 							align: 'center',
-							editor: 'text'
+							editor: 'text',
+							validation: {
+								dataType: 'number',
+								regExp: /^[0-9]*$/,
+								required: true,
+								min: 0
+							}
 						}
 					]
 				})
-				//grid.validate();
 				
+				// 관리비 금액 상태 변동 -> cell disable
 				grid.getData().forEach(ele => {
 					console.log(ele.rowKey);
-					if(ele.variableYn == '변동') {
+					if (ele.variableYn == '변동') {
 						grid.disableCell(ele.rowKey, 'fixedPrice');
 					} else {
 						grid.enableCell(ele.rowKey, 'fixedPrice');
 					}
 				})
-				
-				// 수정된 데이터가 고정이면 해당 셀에 값 입력 막기.
-				grid.on('click', function(event) {
+
+				// 수정된 관리비 금액 상태 변동 -> cell disable
+				grid.on('click', function (event) {
 					//console.log(grid.getModifiedRows());
-					if(grid.getModifiedRows().createdRows.length >= 1  || grid.getModifiedRows().updatedRows.length >= 1) {
+					if (grid.getModifiedRows().createdRows.length >= 1 || grid.getModifiedRows().updatedRows.length >= 1) {
 						grid.getData().forEach(ele => {
-							if(ele.variableYn == '변동') {
+							if (ele.variableYn == '변동') {
 								grid.disableCell(ele.rowKey, 'fixedPrice');
-							} else {								
+							} else {
 								grid.enableCell(ele.rowKey, 'fixedPrice');
 							}
 						})
 					}
 				})
+
 				return grid;
 			}
-			
+
 			const appendBtn = document.getElementById('appendBtn');
 			const deleteBtn = document.getElementById('deleteBtn');
-			
-		    appendBtn.addEventListener('click', function() {
-		        grid.appendRow({ variableYn: '변동', fixedPrice: 0 });
-		    });
-		    
-		    // 삭제 버튼 클릭 시, 체크된 항목이 없을 경우.
-		    deleteBtn.addEventListener('click', function() {
-		    	if(grid.getCheckedRows().length <= 0){
-		    		alert('삭제할 항목을 선택하세요.');
-		    	} else {
-			    	grid.removeCheckedRows();		    		
-		    	}
+
+			appendBtn.addEventListener('click', function () {
+				grid.appendRow({ variableYn: '변동', fixedPrice: 0 }); // 추가 -> default value setting
 			});
-		    
-		    // 저장 버튼 클릭 시, 유효성 검사 후 아작스 처리.
-			$('.saveBtn').on('click', function() {
-		    	//event.preventDefault();
-				console.log($('#selectedDate').val());
-		    	let selectedDate = $('#selectedDate').val();
-		    	// 예외처리 1
-		    	if(!buildingId) return;
-		    	
-		    	// 예외 처리 - 유효성 검사 2
-		    	if(grid.validate().length >= 1) {
-		    		
+
+			// 삭제 버튼 클릭 시, 체크된 항목이 없을 경우.
+			deleteBtn.addEventListener('click', function () {
+				if (grid.getCheckedRows().length <= 0) {
 					Swal.fire({
-		    			  icon: "error",
-		    			  title: "Oops...",
-		    			  text: "입력한 내용을 다시 한 번 확인해주세요."
-		    			});
-					
-		    		return;
-		    	}
-		    	
-		    	// 예외 처리 3
-		    	if(selectedDate == '') {
-		    		
-		    		Swal.fire({
-		    			  icon: "error",
-		    			  title: "Oops...",
-		    			  text: "납부일자를 선택해주세요."
-		    			});
-		    		
-		    		return;						
+						icon: "error",
+						text: "삭제할 항목을 선택하세요."
+					});
+					return;
+				} else {
+					grid.removeCheckedRows();
 				}
-		    	
- 				$.ajax({
-					url: `${ctxPath}/insertItems?buildingId=${buildingId}&selectedDate=${selectedDate}`,
+			});
+
+			// 저장 버튼 클릭 시, 유효성 검사 후 아작스 처리.
+			$('.saveBtn').on('click', function () {
+				//event.preventDefault();
+
+				// 유효성 검사 1
+				if (!buildingId) return;
+
+				// grid.getModifiedRows().updatedRows.forEach(ele => {
+				// 	if(!isNaN(ele.fixedPrice) || ele.fixedPrice == '' || ele.fixedPrice < 0) {
+				// 		Swal.fire({
+				// 		icon: "error",
+				// 		text: "금액을 정확하게 입력하세요."
+				// 	});
+				// 	return;
+				// 	}
+				// })
+
+				// 유효성 검사 2
+				if (grid.validate().length >= 1) {
+					Swal.fire({
+						icon: "error",
+						text: "입력한 내용을 다시 한 번 확인해주세요."
+					});
+					return;
+				}
+
+
+				$.ajax({
+					url: `${ctxPath}/insertItems?buildingId=${buildingId}`,
 					method: 'post',
 					contentType: 'application/json',
 					data: JSON.stringify(grid.getData())
 
-				}).done(function(result) {					
-					
+				}).done(function (result) {
+
 					console.log('success');
 					console.log(result);
 					Swal.fire({
-		    			  icon: "success",
-		    			  title: "등록 완료 😊",
-		    			  text: `${result}건의 관리비 항목이 등록되었습니다. `
-	    			});
-					
-				}).fail(function(err){
+						icon: "success",
+						title: "등록 완료 😊",
+						text: `${result}건의 관리비 항목이 등록되었습니다. `
+					});
+
+				}).fail(function (err) {
 					console.log(err);
 					Swal.fire({
-		    			  icon: "error",
-		    			  title: "등록 실패 😢",
-		    			  text: "관리자에게 문의하세요."
-	    			});
+						icon: "error",
+						title: "등록 실패 😢",
+						text: "관리자에게 문의하세요."
+					});
 				});
-		    		
-		    	
 			});
-		    
-		    /* $('.saveBtn').on('click', function() {
-		    	//event.preventDefault()		    	
-		    	if(!buildingId) return;
-		    	let data = grid.getData();
-		    	data.forEach(ele => {
-		    		if(ele.gwanlibiName == '' || ele.gwanlibiName == '추가할 관리비 항목을 입력해주세요.') {
-		    			alert('관리비 항목을 정확히 입력하세요.');
-		    			//event.preventDefault();
-		    			return;
-		    		} else {
-						$.ajax({
-							url: `${ctxPath}/insertItems?buildingId=${buildingId}`,
-							method: 'post',
-							contentType: 'application/json',
-							data: JSON.stringify(grid.getData())
-						}).done(function(result) {
-							console.log('success');
-							console.log(result);
-							alert(result + '건이 정상적으로 업데이트 되었습니다');
-						}).fail(function(err){					
-							console.log('fail');
-							alert('관리비 항목 업데이트에 실패했습니다.');
-							alert('수정 항목을 한 번 더 확인해주세요.');
-							console.log(err);
-						});
-		    		}
-		    	})
-			}); */
 
 		</script>
 	</div>

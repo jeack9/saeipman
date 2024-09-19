@@ -38,5 +38,5 @@ public interface GwanlibiService {
 	public int getCountingMonthGwanlibiData(String buildingId);
 	
 	// 해당 건물에 입주한 임차인 연락처 조회
-	public List<LesseeInfoVO> getLesseePhoneNumber(String buildingId);
+	public void getLesseePhoneNumber(String buildingId);
 }

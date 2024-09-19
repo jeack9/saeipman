@@ -92,9 +92,6 @@
 
 			// 건물명 출력
 			let building = /*[[${ buildingInfo }]]*/'기본값';
-			console.log('여기');
-			console.log(building);
-			console.log('여기');
 			$('#bName').text(building.buildingName);
 
 			let detailsList = /*[[${ detailsList }]]*/'기본값';
@@ -195,12 +192,12 @@
 					//console.log(calMonthKo);
 					let paymentMonth = dateToYM(calMonthKo.getDate());
 					let buildingId = building.buildingId;
-					//console.log(calMonthKo.getDate());
+					console.log(paymentMonth);
 					//console.log(paymentMonth + "-15"); // 관리비 날짜
 					console.log(buildingId);
 
 					$.ajax({
-						url: `${ctxPath}/detailsBillList?buildingId=${buildingId}&paymentMonth=${paymentMonth}`,
+						url: `${ctxPath}/gwanlibiDetailsBillList?buildingId=${buildingId}&paymentMonth=${paymentMonth}`,
 						method: 'post'
 					}).done(function (result) {
 						console.log(result)
@@ -258,16 +255,22 @@
 					  cancelButtonText: "Cancel"
 					}).then((result) => {
 					  if (result.isConfirmed) {
+						  //1. 전송 버튼 클릭시 임차인 연락처 리스트 가져와서 for문
+						  //2.
 						  // confirm -> 완료 확인 메세지
 					      Swal.fire({
 					          title: "전송 완료",
 					          text: "Success !",
 					          icon: "success"
-					    });
-					    // 전송 기능 - 아작스
-					    $.ajax({
-					    	url: $(ctxPath) + '/sendSMSMsg',
-					    	method: 'get'
+					    }).then(result => {
+					    	if (result.isConfirmed) {
+							    // 전송 기능 - 아작스
+							    $.ajax({
+							    	url: $(ctxPath) + '/sendSMSMsg?buildingId=' + buildingId,
+							    	method: 'get'
+							    })
+					    	}
+					    	
 					    })
 					  } // end of if
 					});
