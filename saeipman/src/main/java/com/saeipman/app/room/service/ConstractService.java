@@ -1,5 +1,7 @@
 package com.saeipman.app.room.service;
 
+import java.util.List;
+import java.util.Map;
 
 public interface ConstractService {
 	// 임차인아이디 - 계약단건 조회
@@ -19,5 +21,8 @@ public interface ConstractService {
 	
 	// 계약단건 수정 - 수정된 계약정보 반환
 	public ConstractVO modiConstract(ConstractVO constractVO);
+	
+	// 건물선택 - 방들의 현재계약 리스트
+	public List<Map<String, Object>> roomConstractList(String buildingId);
 	
 }

@@ -2,7 +2,9 @@ package com.saeipman.app.building.service;
 
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
+
+
+import com.saeipman.app.room.service.RoomVO;
 
 import lombok.Data;
 
@@ -30,5 +32,7 @@ public class BuildingVO {
 	private String buildingHeigh;
 	
 	private List<String> fileName;
+	
+	private List<RoomVO> rooms;
 
 }

@@ -8,7 +8,7 @@
 <style>
 #bName {
 	float: left;
-	color: #000000;
+	color: #323f5d;
 	font-size: 20px;
 	font-weight: bold;
 }
@@ -55,7 +55,14 @@
 		<div>
 			<br> <br>
 
-			<h1>관리비 항목 설정</h1>
+			<!-- 건물명 -->
+			<p id="bName"></p>
+			
+			<!-- 날짜 선택 -->
+			<div style="float: right;">
+				<p style="display: inline;">관리비 납부일자 선택 : 납부일이 고정이면 한 번만 설정하시면 됩니다.</p>
+				<input type="date" class="form-control" id="selectedDate" style="display: inline-block;  width: 50%">
+			</div>
 
 			<br> <br>
 
@@ -68,16 +75,15 @@
 				<button class="btn btn-light" id="appendBtn">추가</button>
 				<button class="btn btn-light" id="deleteBtn">삭제</button>
 			</div>
-
-			<div class="btnDiv2">
-				<button class="btn btn-light saveBtn">저장하기</button>
-			</div>
+			
 			<br>
 			
-			<dialog id="validateMsg">
-				<h3>등록할 내용을 확인해주세요.</h3>
-				<input type="button" id="closeBtn" value="확인">
-			</dialog>
+			<div class="btnDiv2">
+				<button class="btn btn-primary saveBtn">저장</button>
+				<button class="btn btn-primary" th:onclick="|location.href='@{/gwanlibiDetailsBillList(buildingId=${buildingInfo.buildingId})}'|">정산</button>
+			</div>
+			<br>
+
 		</div>
 
 		<script th:inline="javascript">
@@ -85,9 +91,14 @@
 			// JavaScript에서 Thymeleaf 변수 사용하기 //
 			/* 1. <script th:inline="javascript">
 			   2. Thymeleaf 변수 사용 */
-			let list = [[${ list }]];
-			//console.log(list);
+			let gwanlibiItemlist = /*[[${ gwanlibiItemlist }]]*/'기본값';
+			console.log(gwanlibiItemlist);
+			let buildingInfo = /*[[${ buildingInfo }]]*/'기본값';
+			let buildingId = buildingInfo.buildingId;
+			console.log(buildingInfo);
 			
+			// 건물 이름 출력.
+			$('#bName').text(buildingInfo.buildingName);
 
 			// TOAST UI //
 			// async - await
@@ -111,7 +122,7 @@
 				const grid = new Grid({
 					// ================================== 공통 옵션 적용 ================================== //
 					el: document.getElementById('grid'), // 필수 : Container element
-					data: list,
+					data: gwanlibiItemlist,
 					scrollX: false,
 					scrollY: false,
 					rowHeaders: ['checkbox'],
@@ -218,38 +229,61 @@
 		    	}
 			});
 		    
-		    //todo
-			let buildingId = [[${buildingId}]];
-		    
+		    // 저장 버튼 클릭 시, 유효성 검사 후 아작스 처리.
 			$('.saveBtn').on('click', function() {
-		    	//event.preventDefault()
-		    	// 유효성 검사 1
+		    	//event.preventDefault();
+				console.log($('#selectedDate').val());
+		    	let selectedDate = $('#selectedDate').val();
+		    	// 예외처리 1
 		    	if(!buildingId) return;
 		    	
-		    	// 유효성 검사 2
+		    	// 예외 처리 - 유효성 검사 2
 		    	if(grid.validate().length >= 1) {
-					//let modal = document.getElementById('validateMsg');
-					//modal.showModal();
-					//$('#closeBtn').showModal();
-		    		alert('입력이 잘못되었습니다. 다시 확인해주세요.');
+		    		
+					Swal.fire({
+		    			  icon: "error",
+		    			  title: "Oops...",
+		    			  text: "입력한 내용을 다시 한 번 확인해주세요."
+		    			});
+					
 		    		return;
 		    	}
 		    	
-				$.ajax({
-					url: `${ctxPath}/insertItems?buildingId=${buildingId}`,
+		    	// 예외 처리 3
+		    	if(selectedDate == '') {
+		    		
+		    		Swal.fire({
+		    			  icon: "error",
+		    			  title: "Oops...",
+		    			  text: "납부일자를 선택해주세요."
+		    			});
+		    		
+		    		return;						
+				}
+		    	
+ 				$.ajax({
+					url: `${ctxPath}/insertItems?buildingId=${buildingId}&selectedDate=${selectedDate}`,
 					method: 'post',
 					contentType: 'application/json',
 					data: JSON.stringify(grid.getData())
-				}).done(function(result) {
+
+				}).done(function(result) {					
+					
 					console.log('success');
 					console.log(result);
-					alert(result + '건이 정상적으로 업데이트 되었습니다');
+					Swal.fire({
+		    			  icon: "success",
+		    			  title: "등록 완료 😊",
+		    			  text: `${result}건의 관리비 항목이 등록되었습니다. `
+	    			});
 					
 				}).fail(function(err){
-					console.log('fail');
-					alert('관리비 항목 업데이트에 실패했습니다.');
-					alert('수정 항목을 한 번 더 확인해주세요.');
 					console.log(err);
+					Swal.fire({
+		    			  icon: "error",
+		    			  title: "등록 실패 😢",
+		    			  text: "관리자에게 문의하세요."
+	    			});
 				});
 		    		
 		    	

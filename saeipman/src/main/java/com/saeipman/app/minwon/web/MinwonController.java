@@ -41,15 +41,15 @@ public class MinwonController {
 
 	// 전체조회
 	@GetMapping("minwonList")
-	public String minwonList(Criteria cri, Model model) {
+	public String minwonList(@RequestParam(name = "buildingId", required = false)String buildingId, Criteria cri, Model model) {
 		int auth = SecurityUtil.getLoginAuth();
 		String loginId = SecurityUtil.getLoginId();
 	
 		cri.setAuth(auth);
 		cri.setLoginId(loginId);
-		
+		System.out.println("zjsxmfhffj");
 		if(auth == 1) {
-			String buildingId = SecurityUtil.getBuildingId();
+			System.out.println(buildingId + "buildingId");
 			cri.setBuildingId(buildingId);
 			
 		    cri.setImdaeinId(loginId);
@@ -58,6 +58,7 @@ public class MinwonController {
 			model.addAttribute("buildingList",buildingList);
 		}else if(auth == 2) {
 			cri.setImchainId(loginId);
+			cri.setBuildingId(buildingId);
 		}
 		
 		//String roomId = SecurityUtil.getRoomId();
@@ -70,6 +71,7 @@ public class MinwonController {
 		int total = minwonService.pageTotal(cri);
 		model.addAttribute("pageMaker", new PageDTO(cri, total));
 		
+		model.addAttribute("cri", cri);
 		
 		return "minwon/minwonList";
 	}

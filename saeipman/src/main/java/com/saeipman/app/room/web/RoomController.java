@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.saeipman.app.building.service.BuildingService;
@@ -22,6 +23,7 @@ import com.saeipman.app.member.service.MemberService;
 import com.saeipman.app.room.service.BuildingRoom;
 import com.saeipman.app.room.service.ConstractService;
 import com.saeipman.app.room.service.ConstractVO;
+import com.saeipman.app.room.service.RentPayService;
 import com.saeipman.app.room.service.RoomService;
 import com.saeipman.app.room.service.RoomVO;
 
@@ -36,10 +38,12 @@ public class RoomController {
 	private final ConstractService csvc;
 	private final BuildingService bsvc;
 	private final MemberService msvc;
+	private final RentPayService rentPaySvc;
 
 	// 방목록 페이지이동
 	@GetMapping("roomListBackup")
-	public void roomP(Integer page, String buildingId, Model model) {
+	public void roomP(@RequestParam(name = "page", required = false) Integer page,
+			@RequestParam(name = "buildingId", required = false) String buildingId, Model model) {
 		String imdaeinId = SecurityUtil.getLoginId();
 		// 건물 선택
 		BuildingRoom buildingRoom = new BuildingRoom();
@@ -121,7 +125,8 @@ public class RoomController {
 
 	// 현재사용안함
 	@PostMapping("loadRoomListFrg/{buildingId}")
-	public String loadRoomListFrg(Integer page, @PathVariable String buildingId, Model model) {
+	public String loadRoomListFrg(@RequestParam(name = "page", required = false) Integer page,
+			@PathVariable String buildingId, Model model) {
 		// 건물 선택
 		BuildingRoom buildingRoom = new BuildingRoom();
 		buildingRoom.setImdaeinId(SecurityUtil.getLoginId());
@@ -149,7 +154,8 @@ public class RoomController {
 
 	// 건물목록Frg모달창 ajax 반환
 	@GetMapping("buildingList")
-	public String buildingList(Integer buildingPage, Model model) {
+	public String buildingList(@RequestParam(name = "buildingPage", required = false) Integer buildingPage,
+			Model model) {
 		String imdaeinId = SecurityUtil.getLoginId();
 		// 임대인의 건물리스트 모달창용
 		buildingPage = buildingPage == null ? 1 : buildingPage; // 수정해야함 값 받아오도록
@@ -161,15 +167,17 @@ public class RoomController {
 
 		return "room/fragments/buildingList :: buildingListFrg";
 	}
+
 	// 방 계약정보 등록
 	@PostMapping("insertConstract")
 	@ResponseBody
-	public Map<String, Object> insertConstract(@Valid @RequestBody ConstractVO constractVO, BindingResult bindingResult, Model model) {
+	public Map<String, Object> insertConstract(@Valid @RequestBody ConstractVO constractVO, BindingResult bindingResult,
+			Model model) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (bindingResult.hasErrors()) {
 			map.put("retCode", "fail3");
-	        return map; // 유효성 오류 발생 시 다시 폼 페이지로 이동
-	    }
+			return map; // 유효성 오류 발생 시 다시 폼 페이지로 이동
+		}
 		String roomId = constractVO.getRoomId();
 		int newState = constractVO.getConstractState();
 		// 대기계약 정보 확인
@@ -194,22 +202,26 @@ public class RoomController {
 		String newConstractNo = csvc.addConstract(constractVO);
 		// 계약확정 -> 계약정보를 이용하여 임차인 정보, 로그인 정보 단건등록
 		// 이미 등록된 임차인 정보가 있으면 삭제 후 등록
-		if(constractVO.getConstractState() == 1) {
+		if (newState == 1) {
 			msvc.addImchain(constractVO);
+			// 월세 첫 납부내역 등록 (납부상태 1)
+			rentPaySvc.addRentPayAfterConstract(constractVO);
 		}
 		map.put("retCode", "ok");
 		map.put("newConstractNo", newConstractNo);
 		return map;
 	}
+
 	// 방 계약정보 수정
 	@PostMapping("updateConstract")
 	@ResponseBody
-	public Map<String,Object> updateConstract(@Valid @RequestBody ConstractVO constractVO, BindingResult bindingResult, Model model) {
+	public Map<String, Object> updateConstract(@Valid @RequestBody ConstractVO constractVO, BindingResult bindingResult,
+			Model model) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (bindingResult.hasErrors()) {
 			map.put("retCode", "fail3");
-	        return map; // 유효성 오류 발생 시 다시 폼 페이지로 이동
-	    }
+			return map; // 유효성 오류 발생 시 다시 폼 페이지로 이동
+		}
 		String roomId = constractVO.getRoomId();
 		int newState = constractVO.getConstractState();
 		// 대기계약 정보 확인
@@ -234,15 +246,40 @@ public class RoomController {
 		map.put("modiConstract", csvc.modiConstract(constractVO));
 		// 계약확정 -> 계약정보를 이용하여 임차인 정보, 로그인 정보 단건등록
 		// 이미 등록된 임차인 정보가 있으면 삭제 후 등록
-		if(constractVO.getConstractState() == 1) {
+		if (newState == 1) {
 			msvc.addImchain(constractVO);
-		}else {
+			msvc.addImchain(constractVO);
+			// 월세 첫 납부내역 등록 (납부상태 1)
+			rentPaySvc.addRentPayAfterConstract(constractVO);
+		} else {
 			// 계약만료 or 대기 -> 임차인 정보 삭제
 			msvc.removeImchain(constractVO.getImchainPhone());
 			msvc.removeLogin(constractVO.getImchainPhone());
 		}
 		map.put("retCode", "ok");
 		return map;
+	}
+
+	// 계약관리 페이지 이동
+	@GetMapping("constractList")
+	public void constractListP(@RequestParam(name = "buildingId", defaultValue = "ZIP000392") String buildingId,
+			Model model) {
+		String imdaeinId = SecurityUtil.getLoginId();
+
+		// 임대인의 건물리스트 모달창용 페이지네이션
+		int buildingPage = 1; // 수정해야함 값 받아오도록
+		int buildingTotal = bsvc.totalPage(imdaeinId);
+		PagingDTO buildingPaging = new PagingDTO(buildingPage, 4, buildingTotal, 5);
+		List<BuildingVO> buildingList = bsvc.imdaeinBuildingList(buildingPaging, imdaeinId);
+		model.addAttribute("buildingList", buildingList);
+		model.addAttribute("bPaging", buildingPaging);
+
+		BuildingVO buildingVO = new BuildingVO();
+		model.addAttribute("buildingVO", buildingVO);
+
+		// 건물선택 - 방계약 목록
+		List<Map<String, Object>> constractList = csvc.roomConstractList(buildingId);
+		model.addAttribute("constractList", constractList);
 	}
 
 }

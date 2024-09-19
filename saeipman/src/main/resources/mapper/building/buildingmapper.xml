@@ -89,17 +89,17 @@
 	<update id="selectBuildingUpdate" parameterType="BuildingVO">
 		UPDATE building_info
 		SET delay_alert_yn = #{delayAlertYn},
-		minwon_alert_yn = #{minwonAlertYn},
-		building_name = #{buildingName},
-		doro_addr = #{doroAddr},
-		details_addr = #{detailsAddr},
-		gunchook_area = #{gunchookArea},
-		lift_yn = #{liftYn},
-		total_floor = #{totalFloor},
-		floor_gagu_count = #{floorGaguCount},
-		total_gagu = #{totalGagu},
-		parking = #{parking},
-		memo = #{memo}
+			minwon_alert_yn = #{minwonAlertYn},
+			building_name = #{buildingName},
+			doro_addr = #{doroAddr},
+			details_addr = #{detailsAddr},
+			gunchook_area = #{gunchookArea},
+			lift_yn = #{liftYn},
+			total_floor = #{totalFloor},
+			floor_gagu_count = #{floorGaguCount},
+			total_gagu = #{totalGagu},
+			parking = #{parking},
+			memo = #{memo}
 		WHERE building_id = #{buildingId}
 
 	</update>
@@ -163,5 +163,13 @@
 	    WHERE imdaein_id = #{imdaeinId})
 	WHERE row_num BETWEEN (#{paging.page} - 1) * #{paging.recordSize} + 1 AND #{paging.page} * #{paging.recordSize}
 	</select>
-
+	<!-- 방 정보 조회 -->
+	<select id="selectRoomUpdate" resultType="RoomVO">
+		SELECT room_id,
+			   room_no,
+			   floor
+		FROM room_info
+		WHERE building_id = #{buildingId}
+		ORDER BY room_id
+	</select>
 </mapper>

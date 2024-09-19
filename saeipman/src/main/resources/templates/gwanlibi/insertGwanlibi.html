@@ -1,28 +1,27 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layouts/default_layout}">
 
 <head>
-<meta charset="UTF-8">
-<style>
-#bName {
-	float: left;
-	color: #000000;
-	font-size: 20px;
-	font-weight: bold;
-}
+	<meta charset="UTF-8">
+	<style>
+		#bName {
+			float: left;
+			color: #000000;
+			font-size: 20px;
+			font-weight: bold;
+		}
 
-.btnDiv {
-	text-align: center;
-}
+		.btnDiv {
+			text-align: center;
+		}
 
-.saveBtn {
-	display: inline-block;
-	background: #6CBEC7;
-	color: rgb(56, 53, 53);
-}
-</style>
+		.saveBtn {
+			display: inline-block;
+			background: #6CBEC7;
+			color: rgb(56, 53, 53);
+		}
+	</style>
 
 </head>
 
@@ -32,7 +31,8 @@
 		<div>
 			<br> <br>
 
-			<h1>관리비 업데이트</h1>
+			<!-- 건물명 -->
+			<p id="bName"></p>
 
 			<br> <br>
 
@@ -40,7 +40,7 @@
 			<div id="grid" style="position: relative; z-index: 1;"></div>
 
 			<br>
-			
+
 			<div class="btnDiv">
 				<button class="btn btn-light saveBtn">저장</button>
 			</div>
@@ -52,9 +52,15 @@
 			// JavaScript에서 Thymeleaf 변수 사용하기 //
 			/* 1. <script th:inline="javascript">
 			   2. Thymeleaf 변수 사용 */
-			let list = [[${ list }]];
-			//console.log(list);
-			
+			// 관리비 항목 목록.
+			let gwanlibiItemList = /*[[${ gwanlibiItemList }]]*/'기본값';
+
+			// 건물 정보.
+			let buildingInfo = /*[[${buildingInfo}]]*/'기본값';
+			let buildingId = buildingInfo.buildingId;
+
+			// 건물 이름 출력.
+			$('#bName').text(buildingInfo.buildingName);
 
 			// TOAST UI //
 			// async - await
@@ -78,22 +84,22 @@
 				const grid = new Grid({
 					// ================================== 공통 옵션 적용 ================================== //
 					el: document.getElementById('grid'), // 필수 : Container element
-					data: list,
+					data: gwanlibiItemList,
 					scrollX: false,
 					scrollY: false,
 					rowHeaders: ['rowNum'],
 					// ================================== 컬럼 옵션 적용 ================================== //
 					columns: [
 						{
-			                header: '번호',
-			                name: 'gwanlibiItemNo',
-			                hidden: true
-			            },
-			            {
-			                header: '건물 번호',
-			                name: 'buildingId',
-			                hidden: true
-			            },
+							header: '번호',
+							name: 'gwanlibiItemNo',
+							hidden: true
+						},
+						{
+							header: '건물 번호',
+							name: 'buildingId',
+							hidden: true
+						},
 						{
 							header: '관리비 변동 여부',
 							name: 'variableYn',
@@ -113,46 +119,63 @@
 							name: 'fixedPrice',
 							resizable: true,
 							align: 'center',
-							editor: 'text'
+							editor: 'text',
+							validation: {
+								dataType: 'number',
+								required: true,
+								min: 0
+							}
 						}
 					]
 				})
-				grid.validate();
+				//grid.validate();
 				//console.log(grid.getData());
+
+				// variableYn가 고정 값이면 해당 셀 사용 막기.
 				grid.getData().forEach(ele => {
 					console.log(ele.rowKey);
-					if(ele.variableYn == '고정') {
+					if (ele.variableYn == '고정') {
 						grid.disableCell(ele.rowKey, 'fixedPrice');
 					}
 				})
-				
-				
+
+
 				// 관리비 저장 버튼 클릭 이벤트
 				console.log(grid.getData());
-				let buildingId = [[${buildingId}]];
-			    $('.saveBtn').on('click', function() {
-			    	console.log('클릭');
-			    	//if(!buildingId) return;
+				$('.saveBtn').on('click', function () {
+
+					if (!buildingId) return;
+
 					$.ajax({
 						url: `${ctxPath}/insertGwanlibi`,
 						method: 'post',
 						contentType: 'application/json',
 						data: JSON.stringify(grid.getData())
-					}).done(function(result) {
-						location.href = ctxPath + result;
-						alert('성공');
-					}).fail(function(err){
-						console.log('fail');
+					}).done(function (url) {
+						Swal.fire({
+							icon: "success",
+							title: "등록 완료 😊"
+						}).then((result) => {
+							if (result.isConfirmed) {
+								location.href = ctxPath + url;
+							}
+						})
+
+					}).fail(function (err) {
 						console.log(err);
-						alert('실패');
+						Swal.fire({
+			    			  icon: "error",
+			    			  title: "등록 실패 😢",
+			    			  text: "관리자에게 문의하세요."
+		    			});
 					});
-	
+
 				});
-				
-				return grid;				
+
+				return grid;
 			}
-			
-			
+
+
 
 
 		</script>

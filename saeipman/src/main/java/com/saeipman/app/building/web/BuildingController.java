@@ -68,17 +68,26 @@ public class BuildingController {
 
 	@GetMapping("/buildingDetails")
 	@ResponseBody
-	public BuildingVO buildingDetails(@RequestParam("id") String buildingId) {
+	public BuildingVO buildingDetails(@RequestParam("id") String buildingId, Model model) {
 		BuildingVO buildingVO = new BuildingVO();
+		RoomVO roomVO = new RoomVO();
+		
 		buildingVO.setBuildingId(buildingId);
 		BuildingVO result = buildingService.buildingInfo(buildingVO);
 		if (result == null) {
 			return null;
 		}
-
+		//방 정보
+		roomVO.setBuildingId(buildingId);
+		
+		List<RoomVO> roomSelect = buildingService.roomUpdate(roomVO);
+		System.out.println(roomSelect + "확인");
+		result.setRooms(roomSelect);
+		
+		//파일 정보
 		List<String> fileName = fileService.getFileName(buildingVO.getBuildingId());
 		System.out.println("파일" + fileName);
-
+		
 		result.setFileName(fileName);
 
 		return result;
@@ -210,10 +219,10 @@ public class BuildingController {
             }
         }
 
-        System.out.println("ssssss");
+       
         // 3. 새 파일 업로드 처리
         if (newFiles != null && newFiles.length > 0) {
-        	System.out.println("kkkkk" + newFiles.length);
+        	
             String groupId = buildingVO.getGroupId();  // 기존 그룹 ID 가져오기
         
             // group_id가 없으면 새로 생성

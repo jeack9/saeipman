@@ -107,6 +107,11 @@ public class BuildingServiceImpl implements BuildingService{
 		return buildingMapper.selectImdaeinBuildingList(paging, imdaeinId);
 
 	}
+	@Override
+	public List<RoomVO> roomUpdate(RoomVO roomVO) {
+		return buildingMapper.selectRoomUpdate(roomVO);
+	}
+	
 	
 	
 }

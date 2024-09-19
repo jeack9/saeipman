@@ -49,11 +49,11 @@
 						<!-- 날짜는 VO의 포맷으로 변환시켜서 보내주어야 한다. -->
 						<button type="button"
 								class="btn btn-outline-primary m-1"
-								th:onclick="|location.href='@{/itemList(buildingId=${building.buildingId})}'|">관리비 항목 설정
+								th:onclick="|location.href='@{/gwanlibiItemList(buildingId=${building.buildingId})}'|">관리비 항목 설정
 						</button>
 						<button type="button"
 								class="btn btn-outline-primary m-1"
-								th:onclick="|location.href='@{/detailsBillList(buildingId=${building.buildingId})}'|">관리비 상세 내역
+								th:onclick="|location.href='@{/gwanlibiDetailsBillList(buildingId=${building.buildingId})}'|">관리비 상세 내역
 						</button>
 					</div>
 				</div>
@@ -66,7 +66,7 @@
 				<!-- 맨 첫 페이지로 이동 : 시작 페이지(startPage)가 1보다 크면 이전 버튼 출력 -->
 				<th:block th:if="${page.startPage > 1}">
 					<li class="page-item">
-						<a class="page-link" th:href="@{/gwanlibiList?pageNum=1}" aria-label="Previous">
+						<a class="page-link" th:href="@{/buildingGwanlibiList?pageNum=1}" aria-label="Previous">
 							<span aria-hidden="true">&laquo;</span>
 						</a>
 					</li>
@@ -75,7 +75,7 @@
 				<!-- 이전 페이지 버튼 (Previous) -->
 				<th:block th:if="${page.prev}">
 					<li class="page-item">
-						<a class="page-link" th:href="@{/gwanlibiList?pageNum={page}(page = ${page.startPage - 1})}" aria-label="Previous">
+						<a class="page-link" th:href="@{/buildingGwanlibiList?pageNum={page}(page = ${page.startPage - 1})}" aria-label="Previous">
 							<span aria-hidden="false">&lt;</span>
 						</a>
 					</li>
@@ -84,13 +84,13 @@
 				<!-- 페이지 버튼 생성 -->
 				<th:block th:with="start=${page.startPage}, end=${page.endPage}">
 					<li class="page-item" th:with="start=${page.startPage}, end=${page.endPage}" th:each="pageButton : ${#numbers.sequence(start, end)}">
-						<a class="page-link" th:href="@{/gwanlibiList?pageNum={page} (page=${pageButton})}" th:text=${pageButton}></a>
+						<a class="page-link" th:href="@{/buildingGwanlibiList?pageNum={page} (page=${pageButton})}" th:text=${pageButton}></a>
 					</li>
 				</th:block>
 				
 				<!-- 다음 페이지 버튼 (Next) -->
 				<li class="page-item" th:if="${page.next}">
-					<a class="page-link" th:href="@{/gwanlibiList?pageNum={page} (page = ${page.endPage +1})}" aria-label="Next">
+					<a class="page-link" th:href="@{/buildingGwanlibiList?pageNum={page} (page = ${page.endPage +1})}" aria-label="Next">
 						<span aria-hidden="true">&gt;</span>
 					</a>
 				</li>
@@ -98,7 +98,7 @@
 				<!-- 끝 페이지(endPage)-->
 				<th:block th:if="${page.endPage < page.realEnd}">
 					<li class="page-item">
-						<a class="page-link" th:href="@{/gwanlibiList?pageNum={page}(page = ${page.realEnd})}" aria-label="Previous">
+						<a class="page-link" th:href="@{/buildingGwanlibiList?pageNum={page}(page = ${page.realEnd})}" aria-label="Previous">
 							<span aria-hidden="false">&raquo;</span>
 						</a>
 					</li>

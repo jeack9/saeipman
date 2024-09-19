@@ -1,6 +1,7 @@
 package com.saeipman.app.room.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.saeipman.app.room.service.ConstractVO;
 
@@ -21,4 +22,7 @@ public interface ConstractMapper {
 	
 	// 계약 단건수정 - 수정된 계약정보 반환
 	public int updateConstractInfo(ConstractVO constractVO);
+	
+	// 건물선택 - 건물의 현재계약 목록
+	public List<Map<String,Object>> selectRoomConstract(String buildingId);
 }

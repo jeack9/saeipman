@@ -33,9 +33,10 @@ public interface GwanlibiService {
 	// 정산한 관리비 수정
 	public void modifyGwanlibi(List<GwanlibiVO> gridDatalist);
 	
-	// 건물의 총 가구수
-	public int getToTalGagu(String buildingId);
 	
 	// 월 관리비 데이터 수
 	public int getCountingMonthGwanlibiData(String buildingId);
+	
+	// 해당 건물에 입주한 임차인 연락처 조회
+	public List<LesseeInfoVO> getLesseePhoneNumber(String buildingId);
 }

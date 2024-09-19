@@ -1,7 +1,5 @@
 package com.saeipman.app.gwanlibi.service.impl;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -11,6 +9,8 @@ import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.gwanlibi.mapper.GwanlibiMapper;
 import com.saeipman.app.gwanlibi.service.GwanlibiService;
 import com.saeipman.app.gwanlibi.service.GwanlibiVO;
+import com.saeipman.app.gwanlibi.service.LesseeInfoVO;
+import com.saeipman.app.message.mapper.MsgMapper;
 
 import lombok.AllArgsConstructor;
 
@@ -19,10 +19,13 @@ import lombok.AllArgsConstructor;
 public class GwanlibiServiceImpl implements GwanlibiService {
 
 	private GwanlibiMapper gwanlibiMapper;
+	private MsgMapper msgMapper;
+	
 	
 	// 건물 리스트 출력 - 전월, 금월 관리비, 페이징 처리
 	@Override
-	public List<GwanlibiVO> monthGwanlibiByBuildingList(@Param("imdaeinId") String imdaeinId, @Param("dto") BuildingPageDTO dto) {
+	public List<GwanlibiVO> monthGwanlibiByBuildingList(@Param("imdaeinId") String imdaeinId,
+													    @Param("dto") BuildingPageDTO dto) {
 		return gwanlibiMapper.selectMonthGwanlibiByBuildingList(imdaeinId, dto);
 	}
 	
@@ -65,7 +68,7 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 	}
 
 
-	// 정산한 관리비 등록 todo
+	// 정산한 관리비 등록
 	@Override
 	public void addGwanlibi(List<GwanlibiVO> list) {
 		// 매퍼에서 받을 값을 monthGwanlibiInfo에 담아서 보내주기.
@@ -74,11 +77,9 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		// month_gwanlibi - 관리비 총 금액 계산.
 		int total = 0;
 		String buildingId = "";
-		int gwanlibiMoney = 0;
 		for(GwanlibiVO ele : list) {
 			total += ele.getFixedPrice();
 			buildingId = ele.getBuildingId();
-			//gwanlibiMoney = ele.getFixedPrice();
 		}
 		System.err.println(total);
 		monthGwanlibiInfo.setTotalMoney(total);
@@ -104,7 +105,7 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		// 고정 관리비 -> 관리미 항목 별 금액
 		//monthGwanlibiInfo.setGwanlibiItemMoney(gwanlibiMoney);		
 		
-		// month_gwanlibi - 가구별 관리비 계산.
+		// month_gwanlibi - 가구별 관리비 계산.  // TODO 현재 입주 가구 수만 가져오기
 		int totalGagu = gwanlibiMapper.selectToTalGagu(buildingId);
 		int gwanlibiByGagu = total / totalGagu;
 		monthGwanlibiInfo.setGaguGwanlibi(gwanlibiByGagu);
@@ -112,12 +113,6 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		gwanlibiMapper.insertGwanlibi(monthGwanlibiInfo, list);
 	}
 	
-	// 총 가구수
-	@Override
-	public int getToTalGagu(String buildingId) {
-		int result = gwanlibiMapper.selectToTalGagu(buildingId);
-		return result;
-	}
 	
 	// 월 관리비 데이터 개수
 	@Override
@@ -152,6 +147,13 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		System.err.println(gwanlibiVO);
 		// updateMonthGwanlibi
 		gwanlibiMapper.updateMonthGwanlibi(gwanlibiVO);
+	}
+	
+	
+	// 해당 건물에 입주한 임차인 연락처 조회
+	@Override
+	public List<LesseeInfoVO> getLesseePhoneNumber(String buildingId) {		
+		return gwanlibiMapper.selectLesseePhoneNumber(buildingId);
 	}
 	
 	
