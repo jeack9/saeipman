@@ -100,7 +100,7 @@ public class BuildingServiceImpl implements BuildingService{
 	public int fileNamesByGroupId(String groupId) {
 		
 		return buildingMapper.selectFileNamesByGroupId(groupId);
-
+	}
 	// 임대인 아이디 -> 건물리스트 조회
 	@Override
 	public List<BuildingVO> imdaeinBuildingList(PagingDTO paging, String imdaeinId) {
