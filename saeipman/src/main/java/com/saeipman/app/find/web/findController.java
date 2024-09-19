@@ -5,6 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.saeipman.app.find.service.FindService;
 import com.saeipman.app.find.service.FindVO;
@@ -20,14 +22,27 @@ public class findController {
 		this.findService = findService;
 	}
 	
-	//아이디 찾기
-	@RequestMapping(value = "/all/idSelect", method = RequestMethod.GET)
-	public String idSelect(FindVO findVO, Model model) {
-		FindVO fVO = findService.idSelect(findVO);
-		model.addAttribute("idfind", fVO);
-		
-		
+	@GetMapping("/all/idSelect")
+	public String findId() {
 		return "find/id";
+	}
+	
+	//아이디 찾기
+	@RequestMapping(value = "/all/idfind", method = RequestMethod.GET)
+	@ResponseBody
+	public String idSelect(@RequestParam(value = "imdaeinName", required = false) String imdaeinName, 
+            @RequestParam(value = "imdaeinEmail", required = false) String imdaeinEmail) {
+	    FindVO findVO = new FindVO();
+	    findVO.setImdaeinName(imdaeinName);
+	    findVO.setImdaeinEmail(imdaeinEmail);
+
+	    FindVO fVO = findService.idSelect(findVO);
+
+	    if (fVO != null && fVO.getImdaeinId() != null) {
+	        return fVO.getImdaeinId();  // 조회한 아이디 반환
+	    } else {
+	        return "0";  // 해당 사용자를 찾지 못한 경우
+	    }
 	}
 	
 	

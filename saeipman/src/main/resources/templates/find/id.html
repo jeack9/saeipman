@@ -1,102 +1,102 @@
 <div xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/login_layout}" layout:fragment="Main">
-	
-	<div class="container-xxl position-relative bg-white d-flex p-0">
-			<div class="container-fluid">
-				<div class="row h-100 align-items-center justify-content-center"
-					style="min-height: 100vh;">
-					<div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
-						<div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
-							<div
-								class="d-flex align-items-center justify-content-between mb-3">
-								<h3 class="text-primary">
-									<i class="fa fa-hashtag me-1"></i>Saeipman
-								</h3>
-								<h3 style="font-size:20px">아이디 찾기</h3>
-							</div>
-							
-							
-							<div class="form-floating mb-3">
-								<input type="text" class="form-control" id="name"
-									name="loginId"> <label for="floatingInput">이름</label>
-							</div>
-							<div class="form-floating mb-4">
-								<input type="imail" class="form-control" name="imail"
-									id="imail" > <label
-									for="floatingPassword">이메일</label>
-							</div>
-							<div class="d-flex align-items-center justify-content-between mb-4">
-							
-								
-								
-								<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary py-3 w-100 mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal"
-id="findId">
-  아이디 찾기
-</button>
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{common/layouts/login_layout}" layout:fragment="Main">
 
+    <div class="container-xxl position-relative bg-white d-flex p-0">
+        <div class="container-fluid">
+            <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
+                <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+                    <div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h3 class="text-primary">
+                                <i class="fa fa-hashtag me-1"></i>Saeipman
+                            </h3>
+                            <h3 style="font-size:20px">아이디 찾기</h3>
+                        </div>
 
+                        <!-- 이름 입력 -->
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="name" name="imdaeinName" placeholder="이름">
+                            <label for="name">이름</label>
+                        </div>
+                        
+                        <!-- 이메일 입력 -->
+                        <div class="form-floating mb-4">
+                            <input type="email" class="form-control" name="imdaeinEmail" id="imail" placeholder="이메일">
+                            <label for="imail">이메일</label>
+                        </div>
 
+                        <!-- 아이디 찾기 버튼 -->
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <button type="button" class="btn btn-primary py-3 w-100 mb-3" onclick="findId_click()">
+                                아이디 찾기
+                            </button>
+                        </div>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">회원님의 아이디를 확인해 주세요</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <h2 id="id_value"></h2>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">로그인하기</button>
-      </div>
+                        <!-- 아이디 확인 모달 -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">회원님의 아이디를 확인해 주세요</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h2 id="id_value"></h2> <!-- 여기서 아이디를 표시 -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
-								
-								
-							</div>
-							<p class="text-center mb-0">
-								<a th:href="@{/all/login}">로그인하기</a>
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- Sign In End -->
-		</div>
-	
-</div>
+
+
 
 <script>
-	function findId_click(){
-		let name = $("#name").val()
-		let imail = $("#imail").val()
-		
-		$.ajax({
-			type:"POST",
-			url: ctxPath + "/all/idSelect",
-			data:{"name":name, "imail":imail},
-			success:function(data){
-				console.log(data);
-				if(data == 0){
-					$('#id_value').text("회원 정보를 확인해주세요")
-				}else{
-					$('#id_value').text(data)
-				}
-				
-			},
-			error:function(){
-				alert("에러")
-			}
-			
-		})
-	}
-	
+    function findId_click() {
+        let name = $("#name").val();  // 사용자가 입력한 이름
+        let imail = $("#imail").val();  // 사용자가 입력한 이메일
+        
+       
+        console.log("이름:", name, "이메일:", imail);
 
-	
+        $.ajax({
+            type: "GET",
+            url: ctxPath + "/all/idfind",  
+            data: {
+                "imdaeinName": name,   // 서버로 전송할 이름
+                "imdaeinEmail": imail  // 서버로 전송할 이메일
+            },
+            success: function (data) {
+                console.log(data);
+                $('#id_value').text(""); // 모달 열기 전에 초기화
+                if (data == "0") {
+                    $('#id_value').text("회원 정보를 확인해주세요");  // 아이디를 찾지 못한 경우
+                } else {
+                    $('#id_value').text("회원님의 아이디는 " + data + " 입니다.");  // 아이디를 찾은 경우
+                }
+                $('#exampleModal').modal('show');  // 모달 창을 띄움
+            },
+            error: function () {
+                alert("에러 발생");
+            }
+        });
+    }
+    
+    
+ 	// 모달이 닫힐 때 입력 폼 초기화
+    $('#exampleModal').on('hidden.bs.modal', function () {
+        $('#name').val('');  // 이름 입력 필드 초기화
+        $('#imail').val(''); // 이메일 입력 필드 초기화
+    });
 </script>
