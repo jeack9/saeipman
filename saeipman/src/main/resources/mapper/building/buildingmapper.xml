@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.saeipman.app.building.mapper.BuildingMapper">
+<mapper
+	namespace="com.saeipman.app.building.mapper.BuildingMapper">
 	<select id="selectBuildingList" resultType="BuildingVO">
 		select *
-		from (   select rownum rn ,
-				 a.*        
-		         from (SELECT building_id,
-		                      building_name,
-		                      doro_addr,
-		                      details_addr,
-		                      total_gagu
-		                from  building_info
-		                where IMDAEIN_ID = #{imdaeinId}
-						order by 1
-		 	)a
+		from ( select rownum rn ,
+		a.*
+		from (SELECT building_id,
+		building_name,
+		doro_addr,
+		details_addr,
+		total_gagu
+		from building_info
+		where IMDAEIN_ID = #{imdaeinId}
+		order by 1
+		)a
 		<![CDATA[     
 		where rownum <= #{pageDTO.pageNum} * #{pageDTO.amount} )b   
 		
@@ -21,113 +22,132 @@
 		]]>
 	</select>
 	<select id="selectBuildingListInfo" resultType="BuildingVO">
-		SELECT building_id,
-			   group_id,
-			   building_name,
-			   doro_addr,
-			   jibun_addr,
-			   details_addr,
-			   gunchook_area,
-			   total_floor,
-			   floor_gagu_count,
-			   total_gagu,
-			   parking,
-			   lift_yn,
-			   delay_alert_yn,
-			   minwon_alert_yn,
-			   group_id,
-			   floor_area,
-			   building_heigh,
-			   floor_area_ratio
-		FROM building_info 
+		SELECT
+		building_id,
+		group_id,
+		building_name,
+		doro_addr,
+		jibun_addr,
+		details_addr,
+		gunchook_area,
+		total_floor,
+		floor_gagu_count,
+		total_gagu,
+		parking,
+		lift_yn,
+		delay_alert_yn,
+		minwon_alert_yn,
+		group_id,
+		floor_area,
+		building_heigh,
+		floor_area_ratio
+		FROM building_info
 		WHERE building_id = #{buildingId}
 	</select>
 	<insert id="selectBuildingInsert" parameterType="BuildingVO">
-	<selectKey keyProperty="buildingId" order="BEFORE" resultType="string">
-	SELECT 'ZIP'||(LPAD(buildingSeq.nextval,6,'0')) FROM dual
-	</selectKey>
+		<selectKey keyProperty="buildingId" order="BEFORE"
+			resultType="string">
+			SELECT 'ZIP'||(LPAD(buildingSeq.nextval,6,'0')) FROM dual
+		</selectKey>
 		INSERT INTO building_info ( building_id,
-									ocr_file_name,
-									group_id,
-									imdaein_id,
-									building_name,
-									doro_addr,
-									details_addr,
-									floor_area,
-									floor_area_ratio,
-									gunchook_area,
-									building_heigh,
-									lift_yn,
-									total_floor,
-									floor_gagu_count,
-									total_gagu,
-									parking,
-									memo
-								  )
+		ocr_file_name,
+		group_id,
+		imdaein_id,
+		building_name,
+		doro_addr,
+		details_addr,
+		floor_area,
+		floor_area_ratio,
+		gunchook_area,
+		building_heigh,
+		lift_yn,
+		total_floor,
+		floor_gagu_count,
+		total_gagu,
+		parking,
+		memo
+		)
 		VALUES (#{buildingId},
-				#{ocrFileName},
-				#{groupId},
-				#{imdaeinId},
-				#{buildingName},
-				#{doroAddr},
-				#{detailsAddr},
-				#{floorArea},
-				#{floorAreaRatio},
-				#{gunchookArea},
-				#{buildingHeigh},
-				#{liftYn},
-				#{totalFloor},
-				#{floorGaguCount},
-				#{totalGagu},
-				#{parking},
-				#{memo}
-				)
+		#{ocrFileName},
+		#{groupId},
+		#{imdaeinId},
+		#{buildingName},
+		#{doroAddr},
+		#{detailsAddr},
+		#{floorArea},
+		#{floorAreaRatio},
+		#{gunchookArea},
+		#{buildingHeigh},
+		#{liftYn},
+		#{totalFloor},
+		#{floorGaguCount},
+		#{totalGagu},
+		#{parking},
+		#{memo}
+		)
 	</insert>
-	<update id="selectBuildingUpdate" parameterType="BuildingVO" >
+	<update id="selectBuildingUpdate" parameterType="BuildingVO">
 		UPDATE building_info
 		SET delay_alert_yn = #{delayAlertYn},
-			minwon_alert_yn = #{minwonAlertYn},
-			building_name = #{buildingName},
-			doro_addr = #{doroAddr},
-			details_addr = #{detailsAddr},
-			gunchook_area = #{gunchookArea},
-			lift_yn = #{liftYn},
-			total_floor = #{totalFloor},
-			floor_gagu_count = #{floorGaguCount},
-			total_gagu = #{totalGagu},
-			parking = #{parking},
-			memo = #{memo}
+		minwon_alert_yn = #{minwonAlertYn},
+		building_name = #{buildingName},
+		doro_addr = #{doroAddr},
+		details_addr = #{detailsAddr},
+		gunchook_area = #{gunchookArea},
+		lift_yn = #{liftYn},
+		total_floor = #{totalFloor},
+		floor_gagu_count = #{floorGaguCount},
+		total_gagu = #{totalGagu},
+		parking = #{parking},
+		memo = #{memo}
 		WHERE building_id = #{buildingId}
-		
+
 	</update>
 	<delete id="selectBuildingDelete" parameterType="String">
-		DELETE FROM building_info
+		DELETE FROM
+		building_info
 		WHERE building_id =#{buildingId}
 	</delete>
 	<delete id="selectRoomDelete" parameterType="String">
-		DELETE FROM room_info
+		DELETE FROM
+		room_info
 		WHERE building_id = #{buildingId}
 	</delete>
-	
+
 	<select id="getTotalPageCount" resultType="int">
 		SELECT count(*)
-		FROM building_info
+		FROM
+		building_info
 		WHERE imdaein_id = #{imdaeinId}
 	</select>
-	
-	<insert id = "selectRoomInsert" parameterType="RoomVO">
-		insert into room_info(room_id,
-                      room_no,
-                      floor,
-                      ipju_state,
-                      building_id)
+
+	<insert id="selectRoomInsert" parameterType="RoomVO">
+		insert into
+		room_info(room_id,
+		room_no,
+		floor,
+		ipju_state,
+		building_id)
 		values (#{buildingId}||#{roomNo},
-				#{roomNo},
-				#{floor},
-				-1,
-				#{buildingId}
-				)
+		#{roomNo},
+		#{floor},
+		-1,
+		#{buildingId}
+		)
 	</insert>
+
+	<!-- 파일 삭제 -->
+	<delete id="selectDeleteFileName" parameterType="String"> 
+		DELETE FROM file_info 
+		WHERE file_name = #{fileName} 
+	</delete> 
+	<!-- 특정 빌딩에 속한 파일 정보 조회 -->
+	<select id="selectFileNamesByGroupId" resultType="String"> 
+		SELECT file_name 
+		FROM file_info 
+		WHERE group_id= #{groupId} 
+	</select> 
+
 	
 	
 	<!-- 임대인 아이디 -> 건물리스트 조회 -->
@@ -143,4 +163,5 @@
 	    WHERE imdaein_id = #{imdaeinId})
 	WHERE row_num BETWEEN (#{paging.page} - 1) * #{paging.recordSize} + 1 AND #{paging.page} * #{paging.recordSize}
 	</select>
+
 </mapper>

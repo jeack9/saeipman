@@ -26,6 +26,12 @@ public interface BuildingMapper {
 	//방삭제
 	public int selectRoomDelete(String buildingId);
 	
+
+	//파일
+	public int selectDeleteFileName(String fileName);
+	public int selectFileNamesByGroupId(String groupId);
+
 	// 임대인아이디 -> 건물 리스트 조회 
 	public List<BuildingVO> selectImdaeinBuildingList(@Param("paging") PagingDTO paging, @Param("imdaeinId") String imdaeinId);
+
 }
