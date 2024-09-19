@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saeipman.app.find.mapper.FindMapper">
+
+	<!-- 아이디 찾기 -->
+	<select id="selectId" resultType="FindVO">
+		select imdaein_id
+		from imdaein
+		where imdaein_email = #{imdaeinEmail}
+		and imdaein_name = #{imdaeinName}
+	</select>
+	
+	
+	<!-- 비번 변경 -->
+	<update id="updatePw">
+		update login_info
+		set pw = #{pw}
+		where login_id = #{imdaeinId}
+	</update>
+</mapper>

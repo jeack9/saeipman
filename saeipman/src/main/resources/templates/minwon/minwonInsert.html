@@ -33,8 +33,13 @@
 		
 		<div class="mb-3">
 			<label for="visitsDate">방문날짜</label>
+			택1
 			<input type="datetime-local" id="visitsDate1" name="visitsDate1">
 			<input type="hidden" name="visitsDate1">
+			택2
+			<input type="datetime-local" id="visitsDate2" name="visitsDate2">
+			<input type="hidden" name="visitsDate2">
+			
 		</div>
 		<div class="mb-3">
 			 <label for="formFile" class="form-label">첨부파일</label>
@@ -54,6 +59,7 @@
 		function insertHandler(e){
 			e.preventDefault()
 			$('[name="visitsDate1"]').val(  $("#visitsDate1").val().replace("T", " "))
+			$('[name="visitsDate2"]').val(  $("#visitsDate2").val().replace("T", " "))
 			insertForm.submit();
 		}
 	</script>
