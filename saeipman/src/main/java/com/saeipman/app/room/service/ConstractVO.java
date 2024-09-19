@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -45,8 +46,10 @@ public class ConstractVO {
 	@NotNull(message = "계약 상태는 필수입니다.")
 	private int constractState; // 계약 상태(-1 만료, 0 예정, 1 계약)
 	private String constractFile; // OCR용 파일
-	@NotBlank(message = "월세 납부일은 필수입니다.")
-	private String mRentDate; // 월세 납부일
+	@NotNull(message = "월세 납부일은 필수입니다.")
+	@Min(value = 1, message = "납부일은 최소 1이어야 합니다.")
+    @Max(value = 30, message = "납부일은 최대 30이어야 합니다.")
+	private int mRentDate; // 월세 납부일
 	private String memo; // 비고
 	@NotBlank(message = "방 아이디는 필수입니다.")
 	private String roomId; // 방 아이디 fk
@@ -56,10 +59,10 @@ public class ConstractVO {
 	public void setmRent(int mRent) {
 		this.mRent = mRent;
 	}
-	public String getmRentDate() {
+	public int getmRentDate() {
 		return mRentDate;
 	}
-	public void setmRentDate(String mRentDate) {
+	public void setmRentDate(int mRentDate) {
 		this.mRentDate = mRentDate;
 	}
 	

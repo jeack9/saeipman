@@ -38,4 +38,12 @@
 			SET payment_state = #{paymentState}
 			WHERE m_rent_history_no = #{mRentHistoryNo}
 		</update>
+		
+		<!-- 7일 후 납부일이 있는 계약리스트 조회 -->
+		<select id="selectUpcomingPayConstractList">
+			select * 
+			from constract_info 
+			where constract_state = 1 
+				AND m_rent_date = TO_NUMBER(TO_CHAR(sysdate + 7, 'dd'))
+		</select>
 </mapper>

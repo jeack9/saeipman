@@ -1,5 +1,8 @@
 package com.saeipman.app;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -12,17 +15,18 @@ import com.saeipman.app.room.mapper.RoomMapper;
 
 @SpringBootTest
 class SaeipmanApplicationTests {
-	
+
 	@Autowired
 	RoomMapper roomMapper;
 	@Autowired
 	ConstractMapper constractMapper;
-	
+
 	@Test
 	public void test() {
-		List<Map<String, Object>> constractList = constractMapper.selectRoomConstract("ZIP000392");
-		System.out.println(constractList.get(0).get("M_RENT"));
+		LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+		LocalDate nextPayLocalDate = today.plusDays(7);
+		Date nextPayDate = Date.from(nextPayLocalDate.atStartOfDay(ZoneId.of("Asia/Seoul")).toInstant());
+		System.out.println(nextPayDate);
 	}
-
 
 }
