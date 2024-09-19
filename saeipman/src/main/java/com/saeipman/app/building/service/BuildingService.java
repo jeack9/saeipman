@@ -3,6 +3,7 @@ package com.saeipman.app.building.service;
 import java.util.List;
 import java.util.Map;
 
+import com.saeipman.app.commom.paging.PagingDTO;
 import com.saeipman.app.room.service.RoomVO;
 
 
@@ -23,7 +24,12 @@ public interface BuildingService {
 	//방삭제
 	public int roomDelete(String buildingId);
 	
+
 	//파일관련
 	public int fileDelete(List<String> fileNames);
 	public int fileNamesByGroupId(String groupId);
+
+	// 임대인 아이디 -> 건물 리스트 조회
+	public List<BuildingVO> imdaeinBuildingList(PagingDTO paging, String imdaeinId);
+
 }

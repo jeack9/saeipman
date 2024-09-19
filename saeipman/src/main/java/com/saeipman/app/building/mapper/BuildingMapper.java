@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.saeipman.app.building.service.BuildingVO;
+import com.saeipman.app.commom.paging.PagingDTO;
 import com.saeipman.app.room.service.RoomVO;
 import com.saeipman.app.building.service.BuildingPageDTO;
 
@@ -25,7 +26,12 @@ public interface BuildingMapper {
 	//방삭제
 	public int selectRoomDelete(String buildingId);
 	
+
 	//파일
 	public int selectDeleteFileName(String fileName);
 	public int selectFileNamesByGroupId(String groupId);
+
+	// 임대인아이디 -> 건물 리스트 조회 
+	public List<BuildingVO> selectImdaeinBuildingList(@Param("paging") PagingDTO paging, @Param("imdaeinId") String imdaeinId);
+
 }

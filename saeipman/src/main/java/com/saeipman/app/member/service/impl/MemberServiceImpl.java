@@ -10,9 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.saeipman.app.member.dto.MemberRequestDTO;
 import com.saeipman.app.member.mapper.MemberMapper;
+import com.saeipman.app.member.service.ImchainVO;
 import com.saeipman.app.member.service.ImdaeinVO;
 import com.saeipman.app.member.service.LoginInfoVO;
 import com.saeipman.app.member.service.MemberService;
+import com.saeipman.app.room.mapper.RoomMapper;
+import com.saeipman.app.room.service.ConstractVO;
+import com.saeipman.app.room.service.RoomVO;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +27,7 @@ public class MemberServiceImpl implements MemberService {
 
 	private final MemberMapper lmapper;
 	private final BCryptPasswordEncoder passwordEncoder;
+	private final RoomMapper rmapper;
 
 	@Override
 	public LoginInfoVO loginInfo(LoginInfoVO loginVO) {
@@ -93,7 +98,7 @@ public class MemberServiceImpl implements MemberService {
 		//로그인정보 추가
 		LoginInfoVO joinVO = new LoginInfoVO();
 		joinVO.setLoginId(loginId);
-		//joinVO.setPw(passwordEncoder.encode(pw));
+		joinVO.setPw(passwordEncoder.encode(pw));
 		joinVO.setAuth(1);
 		
 		lmapper.insertLogin(joinVO);
@@ -103,5 +108,43 @@ public class MemberServiceImpl implements MemberService {
 	public boolean existsByLogin(String loginId) {
 		return lmapper.existsByLogin(loginId) == 1;
 	}
+	// 임차인 단건추가 -- 로그인정보 추가
+	@Override
+	@Transactional
+	public boolean addImchain(ConstractVO constractVO) {
+		String id = constractVO.getImchainPhone();
+		int duplicateLogin = lmapper.existsByLogin(id);
+		if(duplicateLogin == 1) {
+			lmapper.deleteImchain(id);
+			lmapper.deleteLogin(id);
+		}
+		// 임차인 단건추가
+		ImchainVO imchainVO = new ImchainVO();
+		RoomVO roomVO = rmapper.selectRoomInfo(constractVO.getRoomId()); 
+		imchainVO.setImchainId(id);
+		imchainVO.setImchainName(constractVO.getImchainName());
+		imchainVO.setRoomNo(roomVO.getRoomNo());
+		int result = lmapper.insertImchain(imchainVO);
+		if(result == 1) {
+			// 임차인 단건추가 성공 - 로그인정보 단건추가
+			LoginInfoVO loginVO = new LoginInfoVO();
+			loginVO.setLoginId(id);
+			loginVO.setPw(passwordEncoder.encode(constractVO.getImchainAccount()));
+			loginVO.setAuth(2);
+			lmapper.insertLogin(loginVO);
+			return true;
+		}
+		return false;
+	}
+	@Override
+	public void removeImchain(String imchainId) {
+		lmapper.deleteImchain(imchainId);
+	}
+	@Override
+	public void removeLogin(String id) {
+		lmapper.deleteLogin(id);
+	}
+	
+	
 
 }

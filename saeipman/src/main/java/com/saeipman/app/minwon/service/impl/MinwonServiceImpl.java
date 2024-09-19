@@ -101,8 +101,8 @@ public class MinwonServiceImpl implements MinwonService{
 	}
 
 	@Override
-	public List<MinwonVO> buildingSelect() {
-		return minwonMapper.selectBuilding();
+	public List<MinwonVO> buildingSelect(Criteria cri) {
+		return minwonMapper.selectBuilding(cri);
 	}
 
 	@Override

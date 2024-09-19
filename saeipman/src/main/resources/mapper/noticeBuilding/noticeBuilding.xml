@@ -117,7 +117,7 @@
 		)
 		values(#{postNo}
 		, #{title}
-		, '10'
+		, #{writer}
 		, #{groupId}
 		, #{content}
 		, SYSDATE

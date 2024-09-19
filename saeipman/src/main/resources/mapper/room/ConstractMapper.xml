@@ -23,4 +23,140 @@
 		WHERE
 			imchain_phone = #{imchainId}
 	</select>
+	
+	<!-- 계약번호 - 계약단건 조회 -->
+	<select id="selectConstractInfo">
+		SELECT
+		    constract_no,
+		    constract_type,
+		    deposit,
+		    m_rent,
+		    pay_type,
+		    imchain_name,
+		    imchain_phone,
+		    imchain_account,
+		    imdaein_account,
+		    constract_date,
+		    exp_date,
+		    constract_state,
+		    constract_file,
+		    m_rent_date,
+		    memo,
+		    room_id
+		FROM constract_info
+		WHERE constract_no = #{constractNo}
+	</select>
+	
+	<!-- roomId 현재계약 조회 -->
+	<select id="selectCurrentConstractInfoByRoomId">
+		SELECT
+		    constract_no,
+		    constract_type,
+		    deposit,
+		    m_rent,
+		    pay_type,
+		    imchain_name,
+		    imchain_phone,
+		    imchain_account,
+		    imdaein_account,
+		    constract_date,
+		    exp_date,
+		    constract_state,
+		    constract_file,
+		    m_rent_date,
+		    memo,
+		    room_id
+		FROM constract_info
+		WHERE room_id = #{roomId} AND constract_state = 1
+	</select>
+	<!-- roomId 다음계약 조회 -->
+	<select id="selectNextConstractInfoByRoomId">
+		SELECT
+		    constract_no,
+		    constract_type,
+		    deposit,
+		    m_rent,
+		    pay_type,
+		    imchain_name,
+		    imchain_phone,
+		    imchain_account,
+		    imdaein_account,
+		    constract_date,
+		    exp_date,
+		    constract_state,
+		    constract_file,
+		    m_rent_date,
+		    memo,
+		    room_id
+		FROM constract_info
+		WHERE room_id = #{roomId} AND constract_state = 0
+	</select>
+	
+	<!-- 계약단건 등록 -->
+	<insert id="insertConstractInfo">
+		<selectKey order="BEFORE" keyProperty="constractNo" resultType="string">
+		SELECT 
+				'RO' 
+				|| TO_CHAR(#{constractDate}, 'yyMMdd')
+				|| LPAD(constract_seq.NEXTVAL, 4, '0')
+		FROM dual
+		</selectKey>
+		INSERT INTO constract_info (
+		    constract_no,
+		    constract_type,
+		    deposit,
+		    m_rent,
+		    pay_type,
+		    imchain_name,
+		    imchain_phone,
+		    imchain_account,
+		    imdaein_account,
+		    constract_date,
+		    exp_date,
+		    constract_state,
+		    constract_file,
+		    m_rent_date,
+		    memo,
+		    room_id
+		) VALUES (
+		    #{constractNo}
+		    ,#{constractType}
+		    ,#{deposit}
+		    ,#{mRent}
+		    ,#{payType}
+		    ,#{imchainName}
+		    ,#{imchainPhone}
+		    ,#{imchainAccount}
+		    ,#{imdaeinAccount}
+		    ,#{constractDate}
+		    ,#{expDate}
+		    ,#{constractState}
+		    ,#{constractFile}
+		    ,#{mRentDate}
+		    ,#{memo}
+		    ,#{roomId}
+		)
+	</insert>
+	
+	<!-- 계약단건 수정 -->
+	<update id="updateConstractInfo">
+		UPDATE constract_info
+    	SET
+	        constract_type = #{constractType},
+	        deposit = #{deposit},
+	        m_rent = #{mRent},
+	        pay_type = #{payType},
+	        imchain_name = #{imchainName},
+	        imchain_phone = #{imchainPhone},
+	        imchain_account = #{imchainAccount},
+	        imdaein_account = #{imdaeinAccount},
+	        constract_date = #{constractDate},
+	        exp_date = #{expDate},
+	        constract_state = #{constractState},
+	        constract_file = #{constractFile},
+	        m_rent_date = #{mRentDate},
+	        memo = #{memo},
+	        room_id = #{roomId}
+    	WHERE constract_no = #{constractNo}
+	</update>
 </mapper>

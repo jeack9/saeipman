@@ -2,82 +2,91 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.saeipman.app.minwon.mapper.MinwonMapper">
 	
-	<sql id="criteria">
-	  <trim prefix="(" suffix=") AND " prefixOverrides="OR">
-	    <foreach item='type' collection="typeArr">
-	      <trim prefix="OR">
-	       <choose>
-	         <when test="type == 'T'.toString()">
-	           title like '%'||#{keyword}||'%'
-	         </when>
-	         <when test="type == 'C'.toString()">
-	           content like '%'||#{keyword}||'%'
-	         </when>
-	         <when test="type == 'W'.toString()">
-	            room_no like '%'||#{keyword}||'%'
-	         </when>
-	       	 <!-- 복합 조건 추가 -->
-	         <when test="type == 'TC'.toString()">
-	           title like '%'||#{keyword}||'%' OR content like '%'||#{keyword}||'%'
-	         </when>
-	         <when test="type == 'TW'.toString()">
-	           title like '%'||#{keyword}||'%' OR room_no like '%'||#{keyword}||'%'
-	         </when>
-	         <when test="type == 'TWC'.toString()">
-	           title like '%'||#{keyword}||'%' OR content like '%'||#{keyword}||'%' OR room_no like '%'||#{keyword}||'%'
-	         </when>
-	       </choose>
-	      </trim>
-	    </foreach>
-	  </trim>
-	</sql>
-	
+<sql id="criteria">
+  
+  
+    <if test="typeArr != null and typeArr.length > 0">
+        <choose>
+          <when test="type == 'T'.toString()">
+            title LIKE '%' || #{keyword} || '%'
+          </when>
+          <when test="type == 'C'.toString()">
+            content LIKE '%' || #{keyword} || '%'
+          </when>
+          <when test="type == 'W'.toString()">
+            room_no LIKE '%' || #{keyword} || '%'
+          </when>
+          <when test="type == 'TC'.toString()">
+            (title LIKE '%' || #{keyword} || '%' OR content LIKE '%' || #{keyword} || '%')
+          </when>
+          <when test="type == 'TW'.toString()">
+            (m.title LIKE '%' || #{keyword} || '%' OR r.room_no LIKE '%' || #{keyword} || '%')
+          </when>
+          <when test="type == 'TWC'.toString()">
+            (m.title LIKE '%' || #{keyword} || '%' OR m.content LIKE '%' || #{keyword} || '%' OR r.room_no LIKE '%' || #{keyword} || '%')
+          </when>
+        </choose>
+    </if>
+    
+    <if test="imchainId != null and imchainId != ''">
+      AND m.imchain_id = #{imchainId}
+    </if>
+    
+    <if test="imdaeinId != null and imdaeinId != ''">
+      AND r.building_id IN (
+        SELECT B.building_id FROM building_info B WHERE B.imdaein_id = #{imdaeinId}
+      )
+    </if>
+    
+    <if test="buildingId != null and buildingId != ''">
+       AND R.BUILDING_ID = #{buildingId}
+   </if>
+  
+</sql>
+
 	<!-- 전체조회 -->
 	<select id="selectMinwonAll" resultType="MinwonVO">
-
-	
-	select * from (   select rownum rn ,a.*         from (
-         
-      SELECT 
-	            M.POST_NO, 
-	            M.TITLE, 
-	            M.CONTENT,
-	            CASE 
-					WHEN M.ACCEPT_STATE = 0 THEN '접수전'
-					WHEN M.ACCEPT_STATE = 1 THEN '접수중'
-					WHEN M.ACCEPT_STATE = 2 THEN '처리 완료'
-	    	    END AS ACCEPT_STATE,
-	            M.GROUP_ID,
-	            M.REG_DATE, 
-	            
-	            R.ROOM_NO,
-	            r.BUILDING_ID  
-            
-      	 from room_info r 
-      	 join constract_info c  on c.room_id = r.room_id
-         join minwon m on m.room_id = c.room_id
-            
-		where R.BUILDING_ID = #{buildingId}
-	 	<include refid="criteria"></include>
-      	order by post_no desc
-                
- 	)a      where  rownum <![CDATA[ <= ]]> #{pageNum} * #{amount}  
- 	)b      where rn  > (#{pageNum} -1) * #{amount}
- 	
- 	
+	  SELECT * FROM (
+	    SELECT ROWNUM RN, A.* FROM (
+	      SELECT 
+	        M.POST_NO, 
+	        M.TITLE, 
+	        M.CONTENT,
+	        CASE 
+	          WHEN M.ACCEPT_STATE = 0 THEN '접수전'
+	          WHEN M.ACCEPT_STATE = 1 THEN '접수중'
+	          WHEN M.ACCEPT_STATE = 2 THEN '처리 완료'
+	        END AS ACCEPT_STATE,
+	        M.GROUP_ID,
+	        M.REG_DATE,
+	        R.ROOM_NO,
+	        R.BUILDING_ID
+	      FROM room_info R 
+	      JOIN constract_info C ON C.room_id = R.room_id
+	      JOIN minwon M ON M.room_id = C.room_id
+	      <where>
+	      <include refid="criteria"/>
+	      </where>
+	      ORDER BY M.post_no DESC
+	    ) A WHERE ROWNUM <![CDATA[ <= ]]> #{pageNum} * #{amount}
+	  ) B WHERE RN > (#{pageNum} - 1) * #{amount}
 	</select>
+	
+	
 	<!-- 전체건수 -->
 	<select id="getTotalCount" resultType="int">
-	select count(*) from minwon 
-	where 
-	<include refid="criteria"></include>
+	  	SELECT COUNT(*)
+        FROM room_info R 
+        JOIN constract_info C ON C.room_id = R.room_id
+        JOIN minwon M ON M.room_id = C.room_id
 	
-	post_no > 0 
+	 <where>
+	<include refid="criteria"></include></where>
 	</select>
 	
 	<!-- 임대인별 건물 리스트 -->
 	<select id="selectBuilding">
-		select building_id, building_name, imdaein_id 
+		select building_id, building_name, imdaein_id
 		from building_info
 		where imdaein_id = #{imdaeinId}
 	</select>
@@ -92,7 +101,7 @@
 		    m.content,
 		    c.category_type AS categoryType, <!-- 카테고리 이름을 가져옴 -->
 		    m.GROUP_ID,
-		    m.room_no,
+		    r.room_no,
 		    m.accept_state,
 		    m.visits_date1,
 		    m.reg_date,
@@ -100,11 +109,13 @@
 		    m.alert_type,
 		    m.room_id
 		FROM 
-		    minwon m
-		LEFT JOIN 
-		    minwon_category c
+		    minwon m LEFT JOIN minwon_category c
 		ON 
 		    m.category = c.category_no  <!-- category 번호를 기준으로 조인 -->
+		JOIN
+    		constract_info ci ON m.room_id = ci.room_id  
+		JOIN
+    		room_info r ON ci.room_id = r.room_id     
 		WHERE 
 		    m.post_no = #{postNo}
 	</select>
@@ -168,10 +179,10 @@
 			title = #{title}
 			, content = #{content}
 			, category = #{category}
-			<if test="chumbuImage != null and chumbuImage != ''">
+			<if test="groupId != null and groupId != ''">
 			, GROUP_ID = #{groupId}
 			</if>
-			, visits_date = #{visitsDate1}
+			, visits_date1 = #{visitsDate1}
 			
 		where post_no = #{postNo}
 	</update>

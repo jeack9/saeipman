@@ -5,42 +5,73 @@
 	  layout:fragment="Main">
 <head>
 <meta charset="UTF-8">
-
 <title>Insert title here</title>
+
+<style>
+#searchFrom {
+display: flex;
+align-items: center;
+gap: 5px;
+}
+
+#searchFrom > * {
+margin: 0 !important;
+padding: 8px 12px;
+}
+
+.form-select {
+ width: 200px !important;
+}
+
+.form-control {
+flex-grow: 1;
+min-width: 200px;
+}
+
+.btn {
+ white-space: nowrap;
+}
+</style>
+
 </head>
 <body>
 	<div class="container">
 	<div class='row'>
 	  <form id="searchFrom" th:action="@{/minwonList}" th:method='get'>
-	   <select name='type'>
-	     <option value="">--</option>
+	  
+	   <select class="form-select" name="buildingId" style="width: 150px;" id="option">
+   		<option selected>건물</option>
+   		<option th:each="building : ${buildingList}"
+           th:value="${building.buildingId}"
+           th:selected="${building.buildingId}==${info?.buildingId}">
+           [[${building.buildingName}]]
+   		</option>
+	   </select>
+	   
+	   <select name='type' class="form-select" style="width: 150px;">
+	     <option value="TWC">제목 or 내용 or 작성자</option>
 	        <option value="T">제목</option>
 	        <option value="C">내용</option>
 	   		<option value="W">작성자</option>
 	   		<option value="TC">제목 or 내용</option>
 	   		<option value="TW">제목 or 작성자</option>
-	   		<option value="TWC">제목 or 내용 or 작성자</option>
 	   </select>
-	   <input type='text' name='keyword' />
+	   
+	   
+	   <input type='text' name='keyword'  class="form-control me-2" style="width: 180px;"/>
+	   
 	   <input type='hidden' name='pageNum' th:value='${pageMaker.cri.pageNum}'>
 	   <input type='hidden' name='urlkeyword' th:value='${pageMaker.cri.keyword}'>
        <input type='hidden' name='urltype' th:value='${pageMaker.cri.type}'>
-	   <button class="btn btn-default">Search</button>
+	   <button class="btn btn-outline-success">Search</button>
+	   
 	   </form>
-	   <div class="mb-3">
 	   
-	   <select class="form-select" >
-	   	<option selected>건물</option>
-	   	<option th:each="buildingList : ${buildingList}"
-	   			th:text=${buildingList.buildingName} th:value="${buildingList.buildingId}">
-	   </select>
-	   
-	   </div>
 	</div>
 		<table class="table">
 			<thead>
 				<tr>
-					<th>NO</th>
+					<th>번호</th>
 					<th>제목</th>
 					<th>작성자</th>
 					<th>처리상태</th>
@@ -129,6 +160,10 @@
 		});
 
 		
+		$('#option').on('change', function(e) {
+			// 선택된 건물 id가 변경되면 폼을 자동으로 제출
+		    this.form.submit();
+	    });
 		
 	
 		$('tbody > tr').on('click', function(event){

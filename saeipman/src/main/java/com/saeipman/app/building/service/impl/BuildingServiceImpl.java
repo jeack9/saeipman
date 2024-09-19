@@ -11,6 +11,7 @@ import com.saeipman.app.building.mapper.BuildingMapper;
 import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.building.service.BuildingService;
 import com.saeipman.app.building.service.BuildingVO;
+import com.saeipman.app.commom.paging.PagingDTO;
 import com.saeipman.app.room.service.RoomVO;
 
 import lombok.RequiredArgsConstructor;
@@ -85,6 +86,7 @@ public class BuildingServiceImpl implements BuildingService{
 		return buildingMapper.selectRoomDelete(buildingId);
 	}
 	
+
 	@Override
 	public int fileDelete(List<String> fileNames) {
 		int result = 0;
@@ -98,6 +100,12 @@ public class BuildingServiceImpl implements BuildingService{
 	public int fileNamesByGroupId(String groupId) {
 		
 		return buildingMapper.selectFileNamesByGroupId(groupId);
+
+	// 임대인 아이디 -> 건물리스트 조회
+	@Override
+	public List<BuildingVO> imdaeinBuildingList(PagingDTO paging, String imdaeinId) {
+		return buildingMapper.selectImdaeinBuildingList(paging, imdaeinId);
+
 	}
 	
 }

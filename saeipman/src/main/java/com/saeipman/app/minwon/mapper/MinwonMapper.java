@@ -33,7 +33,7 @@ public interface MinwonMapper {
 	public int updateAcceptState(MinwonVO minwonVO);
 	
 	//임대인별 건물 리스트
-	public List<MinwonVO> selectBuilding();
+	public List<MinwonVO> selectBuilding(Criteria cri);
 	
 	public List<String> selectFileName(int postNo);
 	
