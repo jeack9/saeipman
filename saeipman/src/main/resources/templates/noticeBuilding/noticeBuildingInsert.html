@@ -7,7 +7,7 @@
 		<div class="row g-4">
 			<div class="col-sm-12 col-xl-12">
 				<div class="bg-light rounded h-100 p-4">
-					
+
 					<form th:action="@{/noticeBuildingInsert}" method="post"
 						name="insertForm" enctype="multipart/form-data">
 
@@ -17,16 +17,15 @@
 								name="title" /> <label for="floatingInput">제목</label>
 						</div>
 						<div class="form-floating mb-1">
-						
+
 							<select class="form-select mb-6"
 								aria-label="Default select example" id="option"
 								name="buildingId">
 								<option selected value="">건물 목록</option>
-								<option th:each="list : ${buildingList}" th:value="${list.buildingId}"
-									th:selected="${list.buildingId}==${pagingSearchDTO.buildingId}">
+								<option th:each="list : ${Bname}" th:value="${list.buildingId}">
 									[[${list.buildingName}]]</option>
 							</select>
-							
+
 						</div>
 
 						<div class="mb-3">

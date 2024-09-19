@@ -19,7 +19,7 @@ public class PagingSearchDTO {
 
 	// 기본생성자 => 현재 페이지, 1페이지 게시물 수(pageData)1과 10으로 초기설정
 	public PagingSearchDTO() {
-		this.nowPage = 1;
+		this.nowPage = nowPage;
 		this.pageData = 10;
 	}
 	

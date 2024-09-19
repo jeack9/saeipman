@@ -27,9 +27,14 @@ public class PaymentController {
 	@GetMapping("paymentInfo")
 	public String paymentInfo(PaymentVO payVO, Model model) {
 		
-		LoginInfoVO login = SecurityUtil.getLoginInfo();
-	      model.addAttribute("login", login);
+		int payYN = payVO.getPaymentYN(); 
 		
+		String loginId = SecurityUtil.getLoginId();
+		
+		payVO.setImchainPhone(loginId);
+		
+	      //model.addAttribute("login", loginId);
+			
 		payVO.setPaymentYN(-1); 
 		List<PaymentVO> payInfo = paymentService.selectMonthInfo(payVO);
 		model.addAttribute("payInfo", payInfo);

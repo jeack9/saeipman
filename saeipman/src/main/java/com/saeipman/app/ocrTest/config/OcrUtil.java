@@ -9,8 +9,6 @@ public class OcrUtil {
 //
 	public String mergeWords(List<String> ocrWords, String keyword) {
 
-		// StringBuilder merge = new StringBuilder();// 문자 병합
-
 		StringBuilder merge = new StringBuilder();
 		boolean isLine = false;
 //		for (String word : ocrWords) {

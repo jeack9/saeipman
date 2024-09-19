@@ -7,16 +7,19 @@
 <meta charset="UTF-8">
 <title>title</title>
 <style>
-#imgId{
-	width:200px;
-	
-	height:200px;
-}
-.imgDiv{
-	width:1100px;
-	display:inline;
+.imgId {
+	width: 200px;
+	height: 200px;
 }
 
+.imgDiv {
+	width: 1100px;
+	display: inline;
+}
+
+.deletedImg {
+	display: none;
+}
 </style>
 </head>
 <body>
@@ -70,7 +73,9 @@
 
 		<!-- End 건물리스트 -->
 		<div class="col-md-8">
-			<form name="updateForm" class="row g-3 infoDetail">
+			<form name="updateForm" class="row g-3 infoDetail"
+				enctype="multipart/form-data">
+				<input name="groupId" type="hidden" class="groupid" />
 				<!-- start 건물 정보 -->
 				<h1 id="bnameTitle"></h1>
 				<div style="text-align: center;">
@@ -82,9 +87,6 @@
 				<div>
 					<input name="buildingId" type="hidden" class="bid" />
 				</div>
-				<!-- 	<div>
-				<input name="groupId" type="hidden" class="groupid" />
-			</div> -->
 
 				<div>
 					<div class="form-check form-switch" style="display: inline-block;">
@@ -99,11 +101,12 @@
 					</div>
 				</div>
 
-				<div id="imgFile" ></div>
+				<div id="imgFile"></div>
 
 				<div class="col-md-4">
-					<label for=" file" class="form-label">빌딩 이미지</label> <input
-						type="file" id="file" multiple name="files" class="form-control">
+					<label for=" file" class="form-label">빌딩 이미지</label> 
+					<input type="file" id="file" multiple name="newFiles"
+						class="form-control">
 				</div>
 				<div class="form-group col-md-7">
 					<label for="bname" class="form-label">빌딩 이름 </label> <input
@@ -168,7 +171,11 @@
 					<label for="memo" class="form-label">비고 </label> <input type="text"
 						id="memo" name="memo" class="form-control">
 				</div>
-
+				<button type="button">▼</button>
+				<div>
+					
+				</div>
+			
 			</form>
 		</div>
 		<!-- End 건물 정보 -->
@@ -209,17 +216,18 @@
 						$("#floorArea").val(data.floorArea);
 						$("#buildingHeigh").val(data.buildingHeigh);
 						$("#floorAreaRatio").val(data.floorAreaRatio);
-						console.log(data);
+						$('input[name="groupId"]').val(data.groupId);
+						//console.log(data);
 						
 						if(data.fileName != null) {
 							//$('#groupId').val(data.groupId);
 							let images = data.fileName;
 							
 							for(img of images){
-								let div = $('<div>').attr('class','imgDiv')
+								let div = $('<div>').attr({'class':'imgDiv',  'data-fildid':img} );
 								let imgName = $("<img>").attr({'src':ctxPath+'/images/'+'건물/'+img});
 								let imgDel = $("<button>").attr('class','imageDel');
-								imgName.attr("id",'imgId')
+								imgName.attr("class",'imgId')
 								imgDel.attr('type','button');
 								imgDel.html('X');
 								$("#imgFile").append(div);
@@ -238,10 +246,14 @@
 
 			})
 			//end of $(document).ready
-			
+			 let delList = [];
 			function imgaeDelFunc(e){
-				console.log($(e.target).parent());
-				$(e.target).parent().remove();	
+				//console.log($(e.target).parent());
+				$(e.target).parent().addClass("deletedImg"); //remove();
+				let dImg = $(e.target).parent().data('fildid');
+				delList.push({dImg});
+				console.log(delList);
+	
 			}
 			
 			function checkFunc(liftYn) {
@@ -253,9 +265,40 @@
 				}
 			}//end of checkFunc
 			//수정
-			$('#updateBtn').on('click', updateAjax);
+			$('#updateBtn').on('click', submitUpdateForm);
 			
-			function updateAjax(){
+			function submitUpdateForm(e) {
+			    let formData = new FormData(document.updateForm);
+			
+			    // 삭제된 파일 목록 추가
+			     delList.forEach((fileName) => {
+			        formData.append("deleteFileNames", fileName.dImg);
+			        console.log(fileName);
+			    }); 
+		
+	
+			  /*   console.log(formData.getAll("newFiles"),'formdata');
+			    console.log(formData.getAll("buildingName"),'bname');
+			    return; */
+			    $.ajax({
+			        url: ctxPath+'/buildingUpdate',
+			        type: 'POST',
+			        data: formData,
+			        processData: false,
+			        contentType: false,
+			        success: function(response) {
+			            alert("업데이트 성공");
+			            location.reload();
+			            
+			        },
+			        error: function(error) {
+			            console.error("업데이트 실패:", error);
+			        }
+			    });
+			}
+
+			
+			/* function updateAjax(){
 				let dataObj = getData();
 				
 				$.ajax(ctxPath + '/buildingUpdate',{
@@ -286,7 +329,7 @@
 				});
 				console.log(formObj);
 				return formObj;
-			}
+			} */
 			//체크박스
 			$('input:checkbox').change(function() {
 				if (this.checked) {

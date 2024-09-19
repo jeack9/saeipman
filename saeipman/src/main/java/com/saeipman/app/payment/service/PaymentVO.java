@@ -10,9 +10,9 @@ public class PaymentVO {
 	private int gaguGwanlibi;
 	private String monthGwanlibiNo;
 	private String buildingId;
-	//private String roomId;
 	private String paymentHistory;
 	private int paymentYN;
+	private String imchainPhone;
 	
 	
 
