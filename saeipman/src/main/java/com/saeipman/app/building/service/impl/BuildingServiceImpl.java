@@ -93,6 +93,7 @@ public class BuildingServiceImpl implements BuildingService{
 		for(String fileName : fileNames) {
 			result = buildingMapper.selectDeleteFileName(fileName);
 		}
+		
 		return result;
 	}
 	
@@ -108,10 +109,13 @@ public class BuildingServiceImpl implements BuildingService{
 
 	}
 	@Override
-	public List<RoomVO> roomUpdate(RoomVO roomVO) {
+	public List<RoomVO> roomSelect(RoomVO roomVO) {
+		return buildingMapper.selectRoom(roomVO);
+	}
+	@Override
+	public int roomUpdate(RoomVO roomVO) {
 		return buildingMapper.selectRoomUpdate(roomVO);
 	}
-	
 	
 	
 }

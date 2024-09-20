@@ -35,7 +35,8 @@ public interface BuildingMapper {
 	public List<BuildingVO> selectImdaeinBuildingList(@Param("paging") PagingDTO paging, @Param("imdaeinId") String imdaeinId);
 	
 	//방 수정
-	public List<RoomVO> selectRoomUpdate(RoomVO roomVO);
+	public List<RoomVO> selectRoom(RoomVO roomVO);
+	public int selectRoomUpdate(RoomVO roomVO);
 	
 
 }
