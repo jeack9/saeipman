@@ -187,11 +187,11 @@
     	// 방의 계약정보 모달창 띄우기
     	$infoBtn.on("click", (e) => {
     		isUpdateMode = true;
-    		let constractNo = $(e.target).data("cno");
-    		let roomId = $(e.target).data("roomid");
-    		let buildingName = $(e.target).data("bname");
-    		buildingId = $(e.target).data("buildingid");
-    		page = $(e.target).data("page");
+    		let constractNo = $(e.target).data("cno") + "";
+    		let roomId = $(e.target).data("roomid") + "";
+    		let buildingName = $(e.target).data("bname") + "";
+    		buildingId = $(e.target).data("buildingid") + "";
+    		page = $(e.target).data("page") + "";
     		let dataObj = {constractNo, roomId, buildingName, page, buildingId};
     		$.ajax({
     		    url: `${ctxPath}/room/getConstract`,
@@ -209,10 +209,10 @@
     	// 방의 입주예약 모달창 띄우기
     	$bookBtn.on("click", (e)=>{
     		isUpdateMode = false;
-    		let roomId = $(e.target).data("roomid");
-    		let buildingName = $(e.target).data("bname");
-    		buildingId = $(e.target).data("buildingid");
-    		page = $(e.target).data("page");
+    		let roomId = $(e.target).data("roomid") + "";
+    		let buildingName = $(e.target).data("bname") + "";
+    		buildingId = $(e.target).data("buildingid") +"";
+    		page = $(e.target).data("page") + "";
     		let dataObj = {roomId, buildingName, page, buildingId};
     		$.ajax({
     		    url: `${ctxPath}/room/getNextConstract`,
