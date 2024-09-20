@@ -29,8 +29,8 @@ input {
 	border-width: 0 0 1px;
 }
 
-#hoSel {
-	width: 60px;
+.hoSel, .fl {
+	width: 65px;
 }
 </style>
 </head>
@@ -82,7 +82,6 @@ input {
 		</div>
 		<!-- end 페이징 -->
 
-
 		<!-- End 건물리스트 -->
 		<div class="col-md-9">
 			<form name="updateForm" class="row g-3 infoDetail"
@@ -96,10 +95,10 @@ input {
 					<button type="button"
 						class="btn btn-outline-danger m-2 deleteBtn bid">삭제</button>
 				</div>
-				<div>
+				<!-- 	<div>
 					<input name="buildingId" type="hidden" class="bid" />
 				</div>
-
+ -->
 				<div>
 					<div class="form-check form-switch" style="display: inline-block;">
 						<label class="form-label"><span>연체 알림</span> </label><input
@@ -185,7 +184,6 @@ input {
 				</div>
 				<button type="button" id="roomUpdateBtn">▼</button>
 				<div id="roomUpdate">
-					<h1>확인</h1>
 					<div>
 						<input type="text" name="buildingId" id="bid">
 						<h5 id="staticBackdropLabel">방 수정</h5>
@@ -202,6 +200,7 @@ input {
 
 							</tbody>
 						</table>
+						<button type="button" id="floorInsert">+</button>
 					</div>
 				</div>
 
@@ -210,6 +209,8 @@ input {
 		<!-- End 건물 정보 -->
 
 		<script>
+	
+		let updateRoomList = [];
 			$(document).ready(function() {
 				
 				let firstBuilding = $('li[data-index="1"]').attr('id');
@@ -247,7 +248,7 @@ input {
 						$("#floorAreaRatio").val(data.floorAreaRatio);
 						$('input[name="groupId"]').val(data.groupId);
 						$('#bid').val(data.buildingId);
-						console.log(data.rooms);
+						//console.log(data.rooms);
 						//let td;
 						//let tr;
 						if(data.rooms != null){
@@ -259,20 +260,46 @@ input {
 								}
 							}
 							for(let i = floors[0]; i <= floors[floors.length- 1]; i++){
-								let tr = `<tr><td><input type='checkbox'>${i}층</td>`;
+								let tr = `<tr><td><input type='checkbox' id="checkbox${i}" class='selectRoom'><input type='text' name='floor'  value=${i} class='fl'></td>`;
 								for(room of data.rooms){
 									if(room.floor == i){
-										tr += `<td><input type='checkbox'>${room.roomNo}</td>`;
+										tr += `<td><input type='checkbox' name = 'chk' ><input type='text'  class='hoSel' name = 'roomNo' id=${room.roomId} value=${room.roomNo}>
+											<input type='hidden' name=${room.roomId}></td>`;
 									} 
 								}
-									tr+=`<td><button type='button' class='selectRoomInsert'>추가</button>
-									<button type='button' class='selectRoomDelete'>삭제</button></td>`;
+									tr+=`<td><button type='button' class='addRoom'>추가</button>
+									<button type='button' class='delRoom'>삭제</button></td>`;
 									
 								tr+= `</tr>`;
 								$('#tb').append(tr);
 							}
+							
+							//let floorBtn = `<button type ="button" id="floorInsert">+</button>`;
+							//$('#tb').append(floorBtn);
+							//행 선택 checkbox
+							
+							
+							/*   $("#tb").delegate(".hoSel","keyup", function(event) {
+								   var keyVal = event.keyCode;         
+								  if(((keyVal >= 48) && (keyVal <= 57))){      
+									        return true;     
+									     }
+								 else{
+							            alert('숫자만 입력해주세요.');
+							            $(this).val($(this).val().replace(/[^0-9]/g,""));
+							        }
+							    }); */
+							
 						}
+						//방번호 수정
+						$('.hoSel').on('change',function(e){
+							let roomNo = $(e.target).val();
+							let roomId = $(e.target).attr('id');
 						
+							updateRoomList[roomId]=roomNo;
+							
+							console.log(updateRoomList);
+						})
 						if(data.fileName != null) {
 							//$('#groupId').val(data.groupId);
 							let images = data.fileName;
@@ -299,16 +326,96 @@ input {
 				}
 
 			})
+			$('#tb').delegate('.selectRoom','click',function(e){
+				$('#tb').html("");
+				let parent = $(e.target).closest('tr');
+				if($(e.target).is(":checked")){
+					parent.find('input[name="chk"]').prop("checked",true);
+									
+				}else{
+					parent.find('input[name="chk"]').prop("checked",false);
+				
+				}
+			})
+							
+			$('#tb').delegate("input[name=chk]",'click',function(e) {
+				let tr = $(e.target).closest('tr');
+				let total = tr.find("input[name=chk]").length;
+				let checked = tr.find("input[name=chk]:checked").length;
+				
+				if(total != checked) {
+					tr.find(".selectRoom").prop("checked", false);
+				}
+				else {
+					tr.find(".selectRoom").prop("checked", true); 
+				}
+			});//end 행선택
+			//층 추가
+			$('#floorInsert').on('click', function(){
+				let newFloor;
+			
+				newFloor += `<tr>`;
+				newFloor += `<td><input type="checkbox" class='selectRoom'><input type='text' name = 'fl' class='hoSel' placeholder='숫자입력'></td>`;
+				newFloor +=`<td><button type='button' class='addRoom'>추가</button>
+					<button type='button' class='delRoom'>삭제</button></td>`;
+				newFloor+=`</tr>`;
+				//$(newFloor).append(newButton);
+				$('#tb').append(newFloor);
+			});
+			//호실 추가
+			$('#tb').delegate('.addRoom','click',function(e){
+				let addSel = $(e.target).closest('tr');
+				console.log(addSel);
+				addSel.find('.addRoom').parent().before(`<td><input type="checkbox" name="chk"><input type="text" name='roomNo' class = "hoSel"></td>`);
+				
+			});
+			//호실 삭제
+			$('#tb').delegate('.delRoom','click',function(e){
+				let delSel = $(e.target).closest('tr');
+				if(delSel.find('.selectRoom').is(':checked')){
+					delSel.find('input[name=chk]').closest('tr').remove();
+				}
+				else {
+					delSel.find("input[name=chk]:checked").parent().remove();
+				}
+			
+			});
+			//행 선택 checkbox
+			$('.selectRoom').click(function(e){
+			
+				let parent = $(e.target).closest('tr')
+				if($(e.target).is(":checked")){
+					parent.find('input[name="chk"]').prop("checked",true);
+									
+				}else{
+					parent.find('input[name="chk"]').prop("checked",false);
+				
+				}
+			})
+			$("input[name=chk]").click(function(e) {
+				let tr = $(e.target).closest('tr');
+				let total = tr.find("input[name=chk]").length;
+				let checked = tr.find("input[name=chk]:checked").length;
+				
+				if(total != checked) {
+					tr.find(".selectRoom").prop("checked", false);
+				}
+				else {
+					tr.find(".selectRoom").prop("checked", true); 
+				}
+			});
 			//end of $(document).ready
-			 let delList = [];
+			
+			let delList = [];
 			function imgaeDelFunc(e){
 				//console.log($(e.target).parent());
 				$(e.target).parent().addClass("deletedImg"); //remove();
 				let dImg = $(e.target).parent().data('fildid');
 				delList.push({dImg});
-				console.log(delList);
+				//console.log(delList);
 	
 			}
+			
 			
 			function checkFunc(liftYn) {
 				if (liftYn.val() === 'Y') {
@@ -319,29 +426,42 @@ input {
 				}
 			}//end of checkFunc
 			//수정
+			
+
 			$('#updateBtn').on('click', submitUpdateForm);
-			
 			function submitUpdateForm(e) {
+				let roomList = [];
+				//let updateList = {};
 			    let formData = new FormData(document.updateForm);
-			
 			    // 삭제된 파일 목록 추가
-			     delList.forEach((fileName) => {
+			    delList.forEach((fileName) => {
 			        formData.append("deleteFileNames", fileName.dImg);
-			        console.log(fileName);
 			    }); 
-		
-	
-			  /*   console.log(formData.getAll("newFiles"),'formdata');
-			    console.log(formData.getAll("buildingName"),'bname');
-			    return; */
+			    //console.log(updateRoomList);
+			    //방 번호 수정
+		     	for(roomId in updateRoomList){
+		     		roomList.push({ roomId, roomNo: updateRoomList[roomId] });
+			     	
+			   	}  
+			    roomList.forEach(room=>{
+			    	
+			    	formData.append("updateRoomList", JSON.stringify(room));
+			    })
+		     		
+				
+			   	console.log(roomList, " ROOMLIST");
+
 			    $.ajax({
 			        url: ctxPath+'/buildingUpdate',
 			        type: 'POST',
 			        data: formData,
+			        //data: JSON.stringify(roomList),
 			        processData: false,
 			        contentType: false,
+			        //contentType: "application/json",
 			        success: function(response) {
 			            alert("업데이트 성공");
+			          
 			            location.reload();
 			            
 			        },
@@ -378,7 +498,7 @@ input {
 					  $('#roomUpdate').hide();
 				  }
 		});
-			
+		
 		</script>
 		<script
 			src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -408,113 +528,10 @@ input {
 		}
 	</script>
 		<script>
-	//방관련
-	$('#roomInsertBtn').on('click', function(e) {
+			
+			
+			
 		
-			 let data =getList()
-			$.ajax(ctxPath+"/selectRoomInsert",{
-				type:'post',
-				contentType : 'application/json',
-				data:JSON.stringify(data),
-				
-			}).done(result=>{
-				location.href= ctxPath + "/buildingList";
-			});
-		}); 
-			
-		//방 자동생성 정보 
-	 	function getList(){
-		
-	 		let roomList = [];
-			
-			let buildingId=$('#bid').val();
-			//let floor=$('#floorCnt').val();
-			
-			let chks = $('input[name=chk]:checked').next();
-			for(chk of chks){
-				let floor = $(chk).attr('class');
-				let roomNo= chk.value;
-				roomList.push({buildingId, floor, roomNo});
-			} 
-			console.log(roomList);
-			return roomList;
-		}; 
-		$('#insertBtn').on('click', roomCreate);
-
-		function roomCreate() {
-			let floor = Number($('#floorCnt').val());
-			let gagu = Number($('#gaguCnt').val());
-			
-			let tbody;
-			//console.log(floors);
-			for (let i = 1; i <= floor; i++) {
-				tbody += `<tr>`;
-				tbody += `<td><input type="checkbox" id="checkbox${i}" class="selectRoom"><span>${i}층<span></td>`;
-				for (let j = 1; j <= gagu; j++) {
-					if (j < 10) {
-						j = '0' + j;
-					} else {
-						j = String(j);
-					}
-					tbody += `<td><input type="checkbox" name="chk"><input type = "text" class="${i}" name="roomNo" id = "hoSel" value=${i+j}></td>`;
-				}
-				tbody += `<td><button type ="button" id="addBtn${i}" class="addRoom">추가</button>`;
-				tbody += `<button type ="button" id="delBtn${i}" class="delRoom">삭제</button></td>`;
-				tbody += `</tr>`;
-
-			}
-			$("#tb").html("");
-			$('#tb').append(tbody);
-			
-			//호실 추가 버튼
-			$('.addRoom').on('click', insertRoom);
-			function insertRoom(event) {
-				
-			}
-				
-			//행 선택 checkbox
-			$('.selectRoom').click(function(e){
-			
-				let parent = $(e.target).closest('tr');
-				if($(e.target).is(":checked")){
-					parent.find('input[name="chk"]').prop("checked",true);
-									
-				}else{
-					parent.find('input[name="chk"]').prop("checked",false);
-				
-				}
-			})
-			$("input[name=chk]").click(function(e) {
-				let tr = $(e.target).closest('tr');
-				let total = tr.find("input[name=chk]").length;
-				let checked = tr.find("input[name=chk]:checked").length;
-				
-				if(total != checked) {
-					tr.find(".selectRoom").prop("checked", false);
-				}
-				else {
-					tr.find(".selectRoom").prop("checked", true); 
-				}
-			});//end 행선택
-			
-			//호실 삭제
-			$('.delRoom').on('click',function(e){
-				let delSel = $(e.target).closest('tr');
-				if(delSel.find('.selectRoom').is(':checked')){
-					delSel.find('input[name=chk]').closest('tr').remove();
-				}
-				else {
-					delSel.find("input[name=chk]:checked").parent().remove();
-				}
-			
-			});
-			//호실 추가
-			$('.addRoom').on('click',function(e){
-				let addSel = $(e.target).closest('tr');
-				addSel.find('.addRoom').parent().before(`<td><input type="checkbox" name="chk"><input type="text" id = "hoSel"></td>`);
-				
-			})
-		}
 	</script>
 
 

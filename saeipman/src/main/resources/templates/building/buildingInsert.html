@@ -233,7 +233,7 @@ input {
 			});
 		}	
 		//insertFrom input data
-		function getData(){
+		/* function getData(){
 			let formArr = $('form[name=insertForm]').serializeArray();
 			let formList = {};
 			
@@ -242,7 +242,7 @@ input {
 			})
 			console.log(formList);
 			return formList;
-		}
+		} */
 
 		//체크박스
 		$('input:checkbox').change(function() {
@@ -367,12 +367,6 @@ input {
 				}
 				$("#tb").html("");
 				$('#tb').append(tbody);
-				
-				//호실 추가 버튼
-				$('.addRoom').on('click', insertRoom);
-				function insertRoom(event) {
-					
-				}
 					
 				//행 선택 checkbox
 				$('.selectRoom').click(function(e){

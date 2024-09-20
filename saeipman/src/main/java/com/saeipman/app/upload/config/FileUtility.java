@@ -59,11 +59,12 @@ public class FileUtility {
 		String folderPath = makeFolder(this.folder);
 		String group = groupId;
 		// group_id
-		if (groupId.equals("-1") || groupId.isEmpty()) {
+		if (group.equals("-1")) {
 			group = fileService.fileGroupId(fileVO);
+			System.out.println("파일 그룹" + groupId);
 		}
 		fileVO.setGroupId(group);
-
+		
 		for (MultipartFile file : files) {
 			log.info(file.getContentType());
 			log.info(file.getOriginalFilename());
@@ -99,6 +100,7 @@ public class FileUtility {
 			fileService.fileInsert(fileVO);
 			imgList.add(setImgPath(uploadFolder));
 		} // for END
+		
 		return group;
 	}
 

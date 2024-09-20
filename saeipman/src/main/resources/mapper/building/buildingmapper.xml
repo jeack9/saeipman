@@ -98,7 +98,8 @@
 			floor_gagu_count = #{floorGaguCount},
 			total_gagu = #{totalGagu},
 			parking = #{parking},
-			memo = #{memo}
+			memo = #{memo},
+			group_id=#{groupId}
 		WHERE building_id = #{buildingId}
 
 	</update>
@@ -148,19 +149,20 @@
 	
 	<!-- 임대인 아이디 -> 건물리스트 조회 -->
 	<select id="selectImdaeinBuildingList">
-	SELECT * FROM
-	    (SELECT 
-	      building_id
-	      ,building_name
-	      ,doro_addr
-	      ,memo
-	      ,ROW_NUMBER() OVER (ORDER BY building_id ASC) AS row_num
-	    FROM building_info 
-	    WHERE imdaein_id = #{imdaeinId})
-	WHERE row_num BETWEEN (#{paging.page} - 1) * #{paging.recordSize} + 1 AND #{paging.page} * #{paging.recordSize}
-	</select>
+		SELECT *
+		FROM
+		    (SELECT 
+		      building_id
+		      ,building_name
+		      ,doro_addr
+		      ,memo
+		      ,ROW_NUMBER() OVER (ORDER BY building_id ASC) AS row_num
+		    FROM building_info 
+		    WHERE imdaein_id = #{imdaeinId})
+		WHERE row_num BETWEEN (#{paging.page} - 1) * #{paging.recordSize} + 1 AND #{paging.page} * #{paging.recordSize}
+		</select>
 	<!-- 방 정보 조회 -->
-	<select id="selectRoomUpdate" resultType="RoomVO">
+	<select id="selectRoom" resultType="RoomVO">
 		SELECT room_id,
 			   room_no,
 			   floor
@@ -168,4 +170,12 @@
 		WHERE building_id = #{buildingId}
 		ORDER BY room_id
 	</select>
+	
+	<!-- 방 수정시 방이 존재하면 업데이트 -->
+	<update id="selectRoomUpdate" parameterType="RoomVO">
+		UPDATE room_info
+		SET room_no=#{roomNo},
+			floor=#{floor}
+		WHERE room_id =#{roomId}
+	</update>
 </mapper>
