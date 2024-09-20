@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saeipman.app.gwanlibi.mapper.GwanlibiPaymentMapper">
+	
+	
+	<!-- 호실별 관리비 납부 상태 조회 -->
+	<select id="selectGwanlibiPaymentStateList" resultType="com.saeipman.app.gwanlibi.service.GwanlibiPaymentVO" parameterType="String">
+		SELECT r.room_no,
+		       g.payment_yn
+		FROM   room_info r JOIN gagu_gwanlibi_history g
+		                   ON (r.room_id = g.room_id)
+		AND    r.building_id = #{buildingId}
+	</select>
+	
+	
+
+</mapper>
