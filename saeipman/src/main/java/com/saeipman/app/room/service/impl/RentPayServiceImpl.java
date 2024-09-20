@@ -53,7 +53,7 @@ public class RentPayServiceImpl implements RentPayService {
 	}
 
 	// 월세납부 고지서 발급 스케줄러(7일 후 납부일인 계약들)
-	@Scheduled(cron = "0 45 23 * * *")
+	//@Scheduled(cron = "0 45 23 * * *") -- 오라클 스케줄러로 변경
 	@Override
 	public void generateBillsScheduler() {
 		List<ConstractVO> upcomingPayConstracts = rentPayMapper.selectUpcomingPayConstractList();
