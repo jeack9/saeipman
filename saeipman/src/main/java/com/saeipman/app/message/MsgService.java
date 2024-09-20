@@ -1,19 +1,15 @@
 package com.saeipman.app.message;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.saeipman.app.gwanlibi.service.LesseeInfoVO;
+import com.saeipman.app.gwanlibi.service.GwanlibiMsgVO;
 
 import jakarta.annotation.PostConstruct;
 import net.nurigo.sdk.NurigoApp;
-import net.nurigo.sdk.message.exception.NurigoEmptyResponseException;
-import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
-import net.nurigo.sdk.message.exception.NurigoUnknownException;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.service.DefaultMessageService;
@@ -28,56 +24,91 @@ public class MsgService {
 
 	@Value("${coolsms.api.number}")
 	private String fromPhoneNumber;
-	
+
 	private DefaultMessageService messageService;
-	
+
 	@PostConstruct
 	private void init() {
 		this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
 	}
-	
-	
-	
+
 	public void sendOne(String toFromPhoneNumber, String msg) {
 		Message message = new Message();
-		
+
 		message.setFrom(fromPhoneNumber);
 		message.setTo(toFromPhoneNumber);
 		message.setText(msg);
-		
-		//SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-        //System.out.println(response);
-		
+
+		// SingleMessageSentResponse response = this.messageService.sendOne(new
+		// SingleMessageSendingRequest(message));
+		// System.out.println(response);
+
 		this.messageService.sendOne(new SingleMessageSendingRequest(message)); // 메시지 발송 요청
-	                
 
 	}
-	
+
 	// 경민
-	public void sendGroup(List<LesseeInfoVO> list, String msg) {
+	public void sendGroup(List<GwanlibiMsgVO> imchainInfoList, String imdaeinPhoneNumber, String msg) {
+
 		List<Message> messageList = new ArrayList<Message>();
-		
-		for(LesseeInfoVO item : list) {
-			if (item.getImchainPhone().length() > 9 && item.getImchainPhone().length() < 12) {
-				System.err.println("===============================");
-				System.err.println("Send To : " + item.getImchainPhone());
+
+		Message message = new Message();
+
+		// 예외처리 - 임차인 정보가 없으면 리턴.
+		if (imchainInfoList.size() <= 0) {
+			
+			return;
+			
+		// 예외처리 - 임차인이 한 명일 경우 단건 처리.
+		} else if (imchainInfoList.size() == 1) {
+			// 유효성 검사 - 임차인 휴대 전화 번호가 10 ~ 11 자리일 경우만.
+			if (imchainInfoList.get(0).getImchainPhone().length() > 9 && imchainInfoList.get(0).getImchainPhone().length() < 12) {
 				
-				Message message = new Message();
-				
-				message.setFrom(fromPhoneNumber);
-				message.setTo(item.getImchainPhone());
+				message.setFrom(imdaeinPhoneNumber);
+				message.setTo(imchainInfoList.get(0).getImchainPhone());
 				message.setText(msg);
 				
-				
-				messageList.add(message);
-				
-				// 테스트 환경
-				System.err.print(messageList.toString());
+				// 테스트 환경.
+				System.err.print(message.toString());
 				
 //				try {
-//					// 테스트 환경
-//					System.out.print(messageList.toString());
-//					// 실제 사용 시에만 주석 풀고 사용하세용
+//					// 실제 사용 시에만 주석 풀고 사용하자아!
+//					// this.messageService.send(message);
+//				} catch (NurigoMessageNotReceivedException e) {
+//					System.out.println("NurigoMessageNotReceivedException : " + e.getMessage());
+//				} catch (NurigoEmptyResponseException e) {
+//					System.out.println("NurigoEmptyResponseException : " + e.getMessage());
+//				} catch (NurigoUnknownException e) {
+//					System.out.println("NurigoUnknownException : " + e.getMessage());
+//				}
+
+			} else {
+				return;
+			}
+
+		// 예외처리 - 여러 건일 경우.
+		} else {
+			
+			for (GwanlibiMsgVO imchain : imchainInfoList) {
+				// 유효성 검사 - 임차인 휴대 전화 번호가 10 ~ 11 자리일 경우만.
+				if (imchain.getImchainPhone().length() > 9 && imchain.getImchainPhone().length() < 12) {
+					System.err.println("***임차인 번호***");
+					System.err.println(imchain.getImchainPhone());
+
+					// Message message = new Message();
+
+					message.setFrom(imdaeinPhoneNumber);
+					message.setTo(imchain.getImchainPhone());
+					message.setText(msg);
+
+					messageList.add(message);
+
+					// 테스트 환경.
+					System.err.println("***메세지 리스트***");
+					System.err.print(messageList.toString());
+
+//				try {
+//					// 실제 사용 시에만 주석 풀고 사용하자아!
 //					// this.messageService.send(messageList);
 //				} catch (NurigoMessageNotReceivedException e) {
 //					System.out.println("NurigoMessageNotReceivedException : " + e.getMessage());
@@ -86,10 +117,13 @@ public class MsgService {
 //				} catch (NurigoUnknownException e) {
 //					System.out.println("NurigoUnknownException : " + e.getMessage());
 //				}
-			} else {
-				return;
-			}
+					
+				} else { // 유효성 조건에 맞지 않으면 리턴. 
+					return;
+				} // end of if 유효성 검사				
+			} // end of for(imchainInfoList)
+			
 		}
-		
-	}
+
+	} // end of sendGroup()
 }

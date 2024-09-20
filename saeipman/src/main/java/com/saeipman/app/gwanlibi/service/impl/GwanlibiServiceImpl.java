@@ -7,11 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.gwanlibi.mapper.GwanlibiMapper;
+import com.saeipman.app.gwanlibi.service.GaguGwanlibiHistoryVO;
 import com.saeipman.app.gwanlibi.service.GwanlibiService;
 import com.saeipman.app.gwanlibi.service.GwanlibiVO;
-import com.saeipman.app.gwanlibi.service.LesseeInfoVO;
-import com.saeipman.app.message.MsgService;
-import com.saeipman.app.message.mapper.MsgMapper;
 
 import lombok.AllArgsConstructor;
 
@@ -20,7 +18,6 @@ import lombok.AllArgsConstructor;
 public class GwanlibiServiceImpl implements GwanlibiService {
 
 	private GwanlibiMapper gwanlibiMapper;
-	private MsgService msgService;
 	
 	
 	// 건물 리스트 출력 - 전월, 금월 관리비, 페이징 처리
@@ -71,7 +68,7 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 
 	// 정산한 관리비 등록
 	@Override
-	public void addGwanlibi(List<GwanlibiVO> list) {
+	public void addGwanlibi(List<GwanlibiVO> list, List<GaguGwanlibiHistoryVO> roomIdlist) {
 		// 매퍼에서 받을 값을 monthGwanlibiInfo에 담아서 보내주기.
 		GwanlibiVO monthGwanlibiInfo = new GwanlibiVO();
 		
@@ -97,7 +94,7 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		int gwanlibiByGagu = total / totalGagu;
 		monthGwanlibiInfo.setGaguGwanlibi(gwanlibiByGagu);
 
-		gwanlibiMapper.insertGwanlibi(monthGwanlibiInfo, list);
+		gwanlibiMapper.insertGwanlibi(monthGwanlibiInfo, list, roomIdlist);
 	}
 	
 	
@@ -135,14 +132,11 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		// updateMonthGwanlibi
 		gwanlibiMapper.updateMonthGwanlibi(gwanlibiVO);
 	}
-	
-	
-	// 해당 건물에 입주한 임차인 연락처 조회
+
+	// 방 아이디 리스트
 	@Override
-	public void getLesseePhoneNumber(String buildingId) {		
-		List<LesseeInfoVO> phoneNumbers = gwanlibiMapper.selectLesseePhoneNumber(buildingId);
-		msgService.sendGroup(phoneNumbers, "메세지 설정하기, 날짜 금액 등");
-	}
-	
+	public List<GaguGwanlibiHistoryVO> roomIdList(String buildingId) {
+		return gwanlibiMapper.selectRoomIdList(buildingId);
+	}	
 	
 }

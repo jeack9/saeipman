@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-				layout:decorate="~{common/layouts/default_layout}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}">
 
 <head>
 	<meta charset="UTF-8">
@@ -19,11 +18,11 @@
 			border: 0px solid black;
 			color: black;
 		}
-		
+
 		.btnDiv {
 			text-align: center;
 		}
-		
+
 		.claimBtn,
 		.settlingBtn {
 			margin: auto;
@@ -76,10 +75,10 @@
 				</tbody>
 			</table>
 			<hr style="color: black">
-			
+
 			<div class="btnDiv">
 				<button class="btn btn-primary settlingBtn">관리비 정산</button>
-				<button class="btn btn-primary claimBtn">관리비 청구</button>			
+				<button class="btn btn-primary claimBtn">관리비 청구</button>
 			</div>
 
 			<br>
@@ -109,10 +108,10 @@
 
 
 				// 가구별 관리비 총합계
-				/* let totalGwanlibiByGagu = 0;
-				for (i in detailsList) {
-					totalGwanlibiByGagu += Math.floor(detailsList[i].gwanlibiByGagu);
-				} */
+				/* 				let totalGwanlibiByGagu = 0;
+								for (i in detailsList) {
+									totalGwanlibiByGagu += Math.floor(detailsList[i].gwanlibiByGagu);
+								} */
 				//console.log(tatalGwanlibiByGabu);
 				$('#totalGwanlibiByGagu').text(detailsList[0].gaguGwanlibi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
 			}
@@ -192,20 +191,20 @@
 					//console.log(calMonthKo);
 					let paymentMonth = dateToYM(calMonthKo.getDate());
 					let buildingId = building.buildingId;
-					console.log(paymentMonth);
+					//console.log(paymentMonth);
 					//console.log(paymentMonth + "-15"); // 관리비 날짜
-					console.log(buildingId);
+					//console.log(buildingId);
 
 					$.ajax({
 						url: `${ctxPath}/gwanlibiDetailsBillList?buildingId=${buildingId}&paymentMonth=${paymentMonth}`,
 						method: 'post'
 					}).done(function (result) {
-						console.log(result)
+						//console.log(result)
 						$('#grid').html('');
 						detailsList = result.detailsList;
 						gridLoad();
 						total();
-						console.log('성공');
+						//console.log('성공');
 					}).fail(function (err) {
 						console.log(err);
 					})
@@ -242,39 +241,53 @@
 					console.log(err);
 				})
 			})
-			
-			// 관리비 청구 버튼
-			$('.claimBtn').click(function(){
-				Swal.fire({
-					  title: "관리비 청구 메시지를 전송하시겠습니까?",
-					  icon: "question",
-					  showCancelButton: true,
-					  confirmButtonColor: "#3085d6",
-					  cancelButtonColor: "#d33",
-					  confirmButtonText: "Yes",
-					  cancelButtonText: "Cancel"
-					}).then((result) => {
-					  if (result.isConfirmed) {
-						  //1. 전송 버튼 클릭시 임차인 연락처 리스트 가져와서 for문
-						  //2.
-						  // confirm -> 완료 확인 메세지
-					      Swal.fire({
-					          title: "전송 완료",
-					          text: "Success !",
-					          icon: "success"
-					    }).then(result => {
-					    	if (result.isConfirmed) {
-							    // 전송 기능 - 아작스
-							    $.ajax({
-							    	url: $(ctxPath) + '/sendSMSMsg?buildingId=' + buildingId,
-							    	method: 'get'
-							    })
-					    	}
-					    	
-					    })
-					  } // end of if
-					});
+
+			// 관리비 청구 메세지 전송 버튼
+			$('.claimBtn').click(function () {
+				//console.log($('#totalGwanlibiByGagu').text());
+				let totalMoney = $('#totalGwanlibiByGagu').text().split(' ', 1);
+				// 년월일만 추출
+				let ymd = detailsList[0].paymentMonth.split('-');
 				
+				let year = ymd[0];
+				let month = ymd[1];
+				let date = ymd[2].split('T', 1);
+				let paymentDate = `${year}년 ${month}월 ${date}일`;
+				Swal.fire({
+					title: "관리비 청구 메시지를 전송하시겠습니까?",
+					icon: "question",
+					showCancelButton: true,
+					confirmButtonColor: "#3085d6",
+					cancelButtonColor: "#d33",
+					confirmButtonText: "Yes",
+					cancelButtonText: "Cancel"
+				}).then(result => {
+					if (result.isConfirmed) {
+						$.ajax({
+							url: `${ctxPath}/sendSMSMsg?buildingId=${building.buildingId}&total=${totalMoney}&paymentDate=${paymentDate}`,
+							type: 'get',
+							success: function (result) {
+								console.log('성공');
+								console.log(result);
+								Swal.fire({
+									icon: "success",
+									title: "전송 완료",
+									text: "Success !"
+								});
+							},
+							error: function (err) {
+								console.log('실패');
+								console.log(err);
+								Swal.fire({
+									icon: "error",
+									title: "전송 실패",
+									text: "관리자에게 문의하세요."
+								});								
+							}
+						}); // end of ajax
+					} // end of if
+				});
+
 			})
 
 
