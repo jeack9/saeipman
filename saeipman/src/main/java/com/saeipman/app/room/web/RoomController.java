@@ -102,7 +102,7 @@ public class RoomController {
 		model.addAttribute("constractVo", findVo);
 		model.addAttribute("roomVo", roomVo);
 		model.addAttribute("buildingName", (String) map.get("buildingName"));
-		model.addAttribute("page", (int) map.get("page"));
+		model.addAttribute("page", (String) map.get("page"));
 		model.addAttribute("buildingId", (String) map.get("buildingId"));
 		return "room/fragments/constractModal :: modalContent";
 	}
@@ -118,7 +118,7 @@ public class RoomController {
 		model.addAttribute("constractVo", findVo);
 		model.addAttribute("roomVo", roomVo);
 		model.addAttribute("buildingName", (String) map.get("buildingName"));
-		model.addAttribute("page", (int) map.get("page"));
+		model.addAttribute("page", (String) map.get("page"));
 		model.addAttribute("buildingId", (String) map.get("buildingId"));
 		return "room/fragments/constractModal :: modalContent";
 	}
