@@ -3,10 +3,7 @@ package com.saeipman.app.gwanlibi.service;
 import lombok.Data;
 
 @Data
-public class LesseeInfoVO {
+public class GwanlibiPaymentVO {
 	
 	private String buildingId;
-	private int ipjuState;
-	private String imchainPhone;
-	
 }

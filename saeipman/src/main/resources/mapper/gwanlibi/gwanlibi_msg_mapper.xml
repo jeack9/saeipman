@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saeipman.app.gwanlibi.mapper.GwanlibiMsgMapper">
+
+	<!-- 건물별 임차인 연락처 조회 -->
+	<select id="selectImcahinPhoneNumber" resultType="com.saeipman.app.gwanlibi.service.GwanlibiMsgVO">
+		SELECT   bi.building_id
+		       , ri.ipju_state
+		       , ci.imchain_phone
+		FROM     building_info bi JOIN room_info ri
+		         				  ON   (bi.building_id = bi.building_id AND bi.building_id = #{buildingId} AND ri.ipju_state = 1)
+								  JOIN constract_info ci
+								  ON   (ci.room_id = ri.room_id)
+	</select>
+	
+	<!-- 현재 로그인한 임차인 연락처 조회 -->
+	<select id="selectImdaeinPhoneNumber">
+		SELECT phone
+		FROM   imdaein
+		WHERE  imdaein_id = #{imdaeinId}
+	</select>
+
+</mapper>
