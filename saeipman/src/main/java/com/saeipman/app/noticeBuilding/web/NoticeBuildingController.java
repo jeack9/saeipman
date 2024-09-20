@@ -152,6 +152,9 @@ public class NoticeBuildingController {
 	@PostMapping("noticeBuildingUpdate")
 	@ResponseBody
 	public Map<String, Object> noticeBuildingUpdate(@RequestBody NoticeBuildingVO noticeBuildingVO) {
+		
+		//fileUtill.set
+		
 		return noticeBuildingService.noticeBuildingUpdate(noticeBuildingVO);
 			
 	}

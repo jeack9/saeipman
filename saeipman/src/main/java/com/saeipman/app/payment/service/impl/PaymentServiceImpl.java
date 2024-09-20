@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.saeipman.app.payment.mapper.PaymentMapper;
 import com.saeipman.app.payment.service.PaymentService;
@@ -23,9 +24,13 @@ public class PaymentServiceImpl implements PaymentService {
 		return paymentMapper.selectMonthPay(payVO);
 	}
 
+
 	@Override
-	public int updatePaymentInfo(int paymentYN) {
-		return paymentMapper.updatePayment(paymentYN);
+	@Transactional
+	public int updatePaymentStatus(PaymentVO payVO) {
+		paymentMapper.updateGwanlibiStatus(payVO);
+		//paymentMapper.updateMonthRentStatus(payVO);
+		return 1;
 	}
 
 

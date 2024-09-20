@@ -22,110 +22,112 @@ th, td {
 .form-check {
 	justify-content: center;
 }
-
+/* 
 .button {
 	justify-content: center;
 }
-</style>
+ */</style>
 </head>
 <body>
 	<div layout:fragment="Main" id="container">
-		<select class="form-select mb-6" aria-label="Default select example"
-			id="option">
-			<option selected>조회할 기간 선택(최근 3개월)</option>
-		</select>
+		<form id="updateForm">
+			<select class="form-select mb-6" aria-label="Default select example"
+				id="option">
+				<option selected>조회할 기간 선택(최근 3개월)</option>
+			</select>
 
 
-		<div>
-			<div class="bg-light rounded h-100 p-4">
-				<h6 class="mb-4" style="text-align: center;">납부내역</h6>
-				<div class="container text-center">
-					<div class="row">
-						<div class="col-12 col-sm-6">월세</div>
-						<div class="col-12 col-sm-6">관리비</div>
-						<!-- Ajax에서 받아온 내용을 append 활용해서 데이터 출력하는 부분 -->
-						<div class="col-12 col-sm-3 delete" id="rentMonth"></div>
-						<div class="col-12 col-sm-3 delete" id="Rentpay"></div>
-						<div class="col-12 col-sm-3 delete" id="gwanlibiMonth"></div>
-						<div class="col-12 col-sm-3 delete" id="Gwanlibi"></div>
+			<div>
+				<div class="bg-light rounded h-100 p-4">
+					<h6 class="mb-4" style="text-align: center;">납부내역</h6>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-12 col-sm-6">월세</div>
+							<div class="col-12 col-sm-6">관리비</div>
+							<!-- Ajax에서 받아온 내용을 append 활용해서 데이터 출력하는 부분 -->
+							<div class="col-12 col-sm-3 delete" id="rentMonth"></div>
+							<div class="col-12 col-sm-3 delete" id="Rentpay"></div>
+							<div class="col-12 col-sm-3 delete" id="gwanlibiMonth"></div>
+							<div class="col-12 col-sm-3 delete" id="Gwanlibi"></div>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<div>
-			<table class="table table-bordered">
-				<thead>
-					<tr>
-						<th colspan="2">납부 예정</th>
-					</tr>
-					<tr>
-						<th>월세</th>
-						<th>관리비</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<!-- 월세 출력 -->
-						<td>
-							<table>
-								<tbody>
-									<th:block th:each="payInF : ${payInfo}">
-										<tr>
-											<td>
-												<div class="form-check">
-													<input class="form-check-input" type="checkbox" value=""
-														id="flexCheckDefault"><label
-														class="form-check-label" for="flexCheckDefault"></label>
-												</div>
-											</td>
-											<td>월세 납입예정일</td>
-											<td>월세 납입예정 금액</td>
-										</tr>
-									</th:block>
-								</tbody>
-							</table>
-						</td>
-						<!-- 관리비 출력 -->
-						<td>
-							<form id="updateForm">
+			<div>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th colspan="2">납부 예정</th>
+						</tr>
+						<tr>
+							<th>월세</th>
+							<th>관리비</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<!-- 월세 출력 -->
+							<td>
+								<table>
+									<tbody>
+										<th:block th:each="payInF : ${payInfo}">
+											<tr>
+												<td>
+													<div class="form-check">
+														<input class="form-check-input" type="checkbox" value=""
+															id="flexCheckDefault"><label
+															class="form-check-label" for="flexCheckDefault"></label>
+													</div>
+												</td>
+												<td>월세 납입예정일</td>
+												<td>월세 납입예정 금액</td>
+											</tr>
+										</th:block>
+									</tbody>
+								</table>
+							</td>
+							<!-- 관리비 출력 -->
+							<td>
 								<table class="table table-bordered">
 									<tbody id="paytotal">
 										<th:block th:each="payInF : ${payInfo}">
 											<tr>
 												<td><div class="form-check">
-
-														<input class="form-check-input" type="checkbox"
-															th:value="${payInF.monthGwanlibiNo}" id="checkbox"
-															name="check"><label class="form-check-label"
+														<input class="form-check-input check" type="checkbox"
+															th:value="${payInF.gaguPaymentHistoryNo}" id="checkbox"
+															name="gaguPaymentHistoryNo"><label class="form-check-label"
 															for="flexCheckDefault"></label>
 													</div></td>
 												<td>[[${#strings.substring(payInF.paymentMonth, 0,
 													11)}]]</td>
 												<td>[[${#numbers.formatInteger(payInF.gaguGwanlibi, 3,
 													'COMMA')}]]</td>
+													<td th:if="${payInF.paymentYN == -1}"><button type="button" class="btn btn-outline-danger" >연체</button></td>
+													<td th:if="${payInF.paymentYN != -1}"><button type="button" class="btn btn-outline-warning">예정</button></td>
 											</tr>
 										</th:block>
 									</tbody>
 								</table>
-							</form>
-						</td>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<table>
+					<tr>
+						<th>
+							<button type="button" id="payBtn" class="btn btn-outline-primary">결제하기</button>
+						</th>
+						<th>결제 금액 :</th>
+						<td id="total"></td>
 					</tr>
-				</tbody>
-			</table>
-			<table>
-				<tr>
-					<th>
-						<button id="payBtn">결제하기</button>
-					</th>
-					<th>결제 금액 :</th>
-					<td id="total"></td>
-				</tr>
-			</table>
-		</div>
-		
-		<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
-		
+				</table>
+			</div>
+		</form>
+
+		<script type="text/javascript"
+			src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+
 		<script>
 			let date = new Date();
 			let nowMonth = dateToM(date);
@@ -176,10 +178,13 @@ th, td {
 							}
 						})
 			}
-
+		
 			//체크한 달의 관리비 값 합산
-			$("input[name='check']").click(
+						
+			$(".check").click(
+			
 					function(e) {
+					
 						//console.log($(e.target).closest('tr').children().eq(2).text());
 						let payMoney = $('#paytotal').find('tr');
 						let total = 0;
@@ -187,47 +192,58 @@ th, td {
 							//find(배열 내에서 특정 요소(id가 checkbox)를 찾아냄), prop() : 체크여부에 따라 true, false 반환
 							if (payMoney.eq(i).find('#checkbox').prop("checked")) {
 								total += Number(payMoney.eq(i).children().eq(2).text().replace(",",""));
-								console.log(total);
 							}
 						}
 						$('#total').text(total);
 
+
 					})
-					
-			//ajax 넘길 정보
-			/* function payInfo(){
-				let formData = new FormData($('#updateForm'));
-			} */
-					
-					
-					
-			//결제 여부 ajax로 갱신
-			 $("#payBtn").on("click", updateAjax);
-				let updateInfo = new FormData($('#updateForm'));
 			
+			//결제 여부 ajax로 갱신
+			$("#payBtn").on("click", updateAjax);
+			
+		 	//console.log(updateInfo.getAll());
+			
+		 	// 
+
 			function updateAjax(){
-				$.ajax(ctxPath + "/paymentInfo", {
+			 	let listFormObj = [];
+			 	let formObjArr = $(updateForm).serializeArray();
+			 	formObjArr.forEach(obj => {
+			 		let paymentResult = {}; 
+			 		paymentResult[obj.name] = obj.value;
+			 		listFormObj.push(paymentResult);
+		 		});
+			 	console.log(JSON.stringify(listFormObj));
+				//return;
+				$.ajax(ctxPath + "/updateAjax", {
 					type : "post",
 					contentType : "application/json",
-					data : JSON.stringify(updateInfo),
+					data : JSON.stringify(listFormObj),
 				})
 				.done((result) => {
-					alert("납부 성공")
+					alert("납부 성공");
 					location.href = ctxPath + "/paymentInfo";
 				})
 				.fail((err) => alert("결제 오류"));
 			} 
 			
 			
-			
-			
-			
+			function getList(){
+				let checks =$('.check:checked');
+				let checkList = [];
+				for(chk of checks){
+					let gaguPaymentHistoryNo = chk.value;
+					checkList.push({gaguPaymentHistoryNo});
+				}
+				return checkList;
+			} 
 
 			/* //결제 api
 			 $('#payBtn').on('click', payImp)
 			
 			 function payImp() {
-			 let imp = window.imp;
+			 let imp = window.IMP;
 			 imp.init('imp04648344'); //가맹점 식별코드
 			 IMP.request_pay({
 			 pg : 'html5_inicis',
@@ -243,7 +259,9 @@ th, td {
 			 }, function(rsp) { 
 			 });
 
-			 } */
+			 }  */
+			
+			
 		</script>
 	</div>
 </body>
