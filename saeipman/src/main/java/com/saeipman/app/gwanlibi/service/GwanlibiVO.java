@@ -26,12 +26,15 @@ public class GwanlibiVO {
 	private int gwanlibiItemMoney;		  // 항목별 관리비
 	private String strGwanlibiItemMoney;  // 항목별 관리비 (,)
 	
-	private Integer gwanlibiItemNo;
-	private String variableYn; // 관리비 변동 여부
-	private Integer version;
-	private int fixedPrice;
+	private Integer gwanlibiItemNo;		  // 관리비 항목 번호
+	private String variableYn; 			  // 관리비 변동 여부
+	private Integer version;			  // 관리비 항목 버전 (업데이트 될 때마다 새로운 버전으로 추가)
+	private int fixedPrice;				  // 고정 관리비
 	
-	private String gwanlibiDetailsNo;
-	private Integer totalGagu;
+	private String gwanlibiDetailsNo;	  // 관리비 상세 내역 번호
+	private Integer totalGagu;			  // 총 가구 수
+	
+	
+	private String roomId;
 	
 }

@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.saeipman.app.building.service.BuildingPageDTO;
+import com.saeipman.app.gwanlibi.service.GaguGwanlibiHistoryVO;
 import com.saeipman.app.gwanlibi.service.GwanlibiVO;
-import com.saeipman.app.gwanlibi.service.LesseeInfoVO;
 
 public interface GwanlibiMapper {
 	// 건물 리스트
@@ -15,6 +15,7 @@ public interface GwanlibiMapper {
 	
 	// 페이징 - 건물 총 개수
 	public int getBuildingTotalCount(String imdaeinId);
+	
 	
 	// 기본 관리비 목록
 	public List<GwanlibiVO> selectBasicGwanlibiList();
@@ -29,10 +30,10 @@ public interface GwanlibiMapper {
 	public int insertItems(GwanlibiVO vo);
 	
 	// 사용자의 건물별 관리비 상세 내역
-	public List<GwanlibiVO> selectGwanlibiDetailsBill(GwanlibiVO vo);	
+	public List<GwanlibiVO> selectGwanlibiDetailsBill(GwanlibiVO vo);
 	
 	// 정산한 관리비 등록
-	public int insertGwanlibi(@Param("monthGwanlibiInfo") GwanlibiVO monthGwanlibiInfo, @Param("list") List<GwanlibiVO> list);
+	public int insertGwanlibi(@Param("monthGwanlibiInfo") GwanlibiVO monthGwanlibiInfo, @Param("list") List<GwanlibiVO> list, @Param("gaguGwanlibiHistoryList") List<GaguGwanlibiHistoryVO> gList);
 	
 	// 정산한 관리비 수정
 	public int updateGwanlibiDetails(List<GwanlibiVO> list);
@@ -44,6 +45,8 @@ public interface GwanlibiMapper {
 	// 월 관리비 데이터 수
 	public int getCountingMonthGwanlibiData(String buildingId);
 	
-	// 해당 건물에 입주한 임차인 연락처 조회
-	public List<LesseeInfoVO> selectLesseePhoneNumber(String buildingId);
+	// 건물별 방 아이디 - 가구별 관리비 납부 내역에 필요
+	public List<GaguGwanlibiHistoryVO> selectRoomIdList(String buildingId);
+	
+
 }

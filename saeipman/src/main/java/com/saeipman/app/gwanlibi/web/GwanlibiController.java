@@ -22,41 +22,46 @@ import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.building.service.BuildingService;
 import com.saeipman.app.building.service.BuildingVO;
 import com.saeipman.app.commom.security.SecurityUtil;
+import com.saeipman.app.gwanlibi.service.GaguGwanlibiHistoryVO;
+import com.saeipman.app.gwanlibi.service.GwanlibiMsgService;
+import com.saeipman.app.gwanlibi.service.GwanlibiMsgVO;
 import com.saeipman.app.gwanlibi.service.GwanlibiService;
 import com.saeipman.app.gwanlibi.service.GwanlibiVO;
-import com.saeipman.app.gwanlibi.service.LesseeInfoVO;
 import com.saeipman.app.member.service.LoginInfoVO;
+import com.saeipman.app.message.MsgService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 
 @Controller
-@AllArgsConstructor //롬복 어노테이션 - 모든 필드의 생성자 생성
+@AllArgsConstructor // 롬복 어노테이션 - 모든 필드의 생성자 생성
 public class GwanlibiController {
-	
+
 	// 필드
 	private GwanlibiService gwanlibiService;
 	private BuildingService buildingService;
+	private GwanlibiMsgService gwanlibiMsgService;
+	private MsgService msgService;
 
 	public String getYM() {
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
 		return dateFormat.format(date);
 	}
-	
+
 	// 전월 구하기
 	public String preYM() {
 		Date now = new Date();
-		
+
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(now);
-		
+
 		int year = cal.get(Calendar.YEAR);
 		int month = cal.get(Calendar.MONTH);
 		String ym = year + "-" + month;
 		return ym;
 	}
-	
+
 	public String numberToString(double gwanlibi) {
 		String result = NumberFormat.getInstance().format(gwanlibi) + " 원";
 		return result;
@@ -85,14 +90,14 @@ public class GwanlibiController {
 
 	// 관리비 항목 리스트
 	@GetMapping("gwanlibiItemList")
-	//public String gwanlibiItemList(@RequestParam(name = "buildingId") String buildingId,
-	public String gwanlibiItemList(BuildingVO buildingVO,
-								   Model model) {
+	// public String gwanlibiItemList(@RequestParam(name = "buildingId") String
+	// buildingId,
+	public String gwanlibiItemList(BuildingVO buildingVO, Model model) {
 
 		// 건물 단건 조회 - 건물 이름이 필요해서
 		BuildingVO buildingInfo = buildingService.buildingInfo(buildingVO);
-		
-		//List<GwanlibiVO> list = gwanlibiService.itemList(buildingId);
+
+		// List<GwanlibiVO> list = gwanlibiService.itemList(buildingId);
 		List<GwanlibiVO> gwanlibiItemlist = gwanlibiService.itemList(buildingInfo.getBuildingId());
 		System.err.println(gwanlibiItemlist.size());
 
@@ -104,9 +109,8 @@ public class GwanlibiController {
 //				ele.setBuildingId(buildingId);
 				ele.setBuildingId(buildingInfo.getBuildingId());
 			});
-		} 
-		
-		
+		}
+
 		model.addAttribute("gwanlibiItemlist", gwanlibiItemlist);
 		model.addAttribute("buildingInfo", buildingInfo);
 
@@ -116,9 +120,8 @@ public class GwanlibiController {
 	// 관리비 항목 등록 - 아작스
 	@PostMapping("insertItems")
 	@ResponseBody
-	public int insertItems(@RequestBody List<GwanlibiVO> list, 
-			               @RequestParam(name = "buildingId") String buildingId) {
-		
+	public int insertItems(@RequestBody List<GwanlibiVO> list, @RequestParam(name = "buildingId") String buildingId) {
+
 		int cnt = 0;
 		System.err.println(buildingId + "건물번호");
 		// 관리비 항목 최대 버전 + 1 가져오기.
@@ -144,11 +147,11 @@ public class GwanlibiController {
 		// 관리비 상세 내역 목록
 		List<GwanlibiVO> detailsList = gwanlibiService.detailsBillList(gwanlibiVO);
 		System.err.println(detailsList);
-		
+
 		// 빌딩 정보 가져오기. - 단건 조회
 		BuildingVO buildingInfo = buildingService.buildingInfo(buildingVO);
 
-		// 가구별 관리비 number format 설정. 
+		// 가구별 관리비 number format 설정.
 		for (GwanlibiVO list : detailsList) {
 			list.setStrGwanlibiByGagu(numberToString(list.getGwanlibiByGagu()));
 			list.setStrGwanlibiItemMoney(numberToString(list.getGwanlibiItemMoney()));
@@ -165,7 +168,7 @@ public class GwanlibiController {
 	public Map<String, Object> reDetailsBillList(GwanlibiVO vo) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<GwanlibiVO> detailsList = gwanlibiService.detailsBillList(vo);
-		
+
 		// 가구별 관리비, 관리 비용 number format 설정.
 		for (GwanlibiVO list : detailsList) {
 			list.setStrGwanlibiByGagu(numberToString(list.getGwanlibiByGagu()));
@@ -175,24 +178,20 @@ public class GwanlibiController {
 		map.put("detailsList", detailsList);
 		return map;
 	}
-	
+
 	// 건물별 관리비 정산 화면 선택
 	@PostMapping("gwanlibiCalculationForm")
 	@ResponseBody
 	public Map<String, Object> insertGwanlibi(@RequestParam(name = "buildingId") String buildingId,
-											  GwanlibiVO gwanlibiVO,
-											  BuildingVO buildingVO,
-											  HttpServletResponse response,
-											  Model model
-											  ) {
-		
+			GwanlibiVO gwanlibiVO, BuildingVO buildingVO, HttpServletResponse response, Model model) {
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		// 설정된 관리비 항목 리스트의 데이터 개수
 		List<GwanlibiVO> gwanlibiItmeList = gwanlibiService.itemList(buildingId);
 		int gwanlibiItmeListSize = gwanlibiItmeList.size();
 		map.put("gwanlibiItmeListSize", gwanlibiItmeListSize);
-		
+
 		// 이미 관리비 정산을 했으면 수정 화면으로, 아니면 등록 화면으로.
 		int dataCnt = gwanlibiService.getCountingMonthGwanlibiData(buildingId);
 		if (dataCnt <= 0) {
@@ -201,35 +200,31 @@ public class GwanlibiController {
 		} else {
 			// paymentMont -> 전월
 			Date now = new Date();
-			Calendar cal = Calendar.getInstance(); 
+			Calendar cal = Calendar.getInstance();
 			cal.setTime(now);
-			//cal.add(Calendar.MONTH, -1);
+			// cal.add(Calendar.MONTH, -1);
 			int year = cal.get(Calendar.YEAR);
 			int month = cal.get(Calendar.MONTH);
-			String paymentMonth = year + "-" + month;			
-			
+			String paymentMonth = year + "-" + month;
+
 			String url = "/updateGwanlibi?buildingId=" + buildingId + "&paymentMonth=" + paymentMonth;
 			map.put("url", url);
 		}
 		return map;
 	}
 
-	
 	// 관리비 등록 화면
 	@GetMapping("insertGwanlibi")
-	public String insertGwanlibiForm(@RequestParam(name = "buildingId", required=false) String buildingId,
-									 GwanlibiVO gwanlibiVO,
-									 BuildingVO buildingVO,
-									 Model model) {
-		
+	public String insertGwanlibiForm(@RequestParam(name = "buildingId", required = false) String buildingId,
+			GwanlibiVO gwanlibiVO, BuildingVO buildingVO, Model model) {
+
 		List<GwanlibiVO> gwanlibiItemList = gwanlibiService.itemList(buildingId);
 		BuildingVO buildingInfo = buildingService.buildingInfo(buildingVO);
 		model.addAttribute("gwanlibiItemList", gwanlibiItemList);
 		model.addAttribute("buildingInfo", buildingInfo);
 		return "gwanlibi/insertGwanlibi";
 	}
-	
-	
+
 	// 관리비 등록 처리 - 아작스
 	@PostMapping("insertGwanlibi")
 	@ResponseBody
@@ -238,50 +233,73 @@ public class GwanlibiController {
 		
 		String ym = preYM();
 		String date = ym + "-" + paymentDate;
-		
+
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date paymentMonth = formatter.parse(date);
-		
+
 		gridDatalist.get(0).setPaymentMonth(paymentMonth);
-		
+
 		String buildingId = gridDatalist.get(0).getBuildingId();
-
-
-		gwanlibiService.addGwanlibi(gridDatalist);
 		
+		// 방 리스트
+		List<GaguGwanlibiHistoryVO> roomIdList = gwanlibiService.roomIdList(buildingId);
+		gwanlibiService.addGwanlibi(gridDatalist, roomIdList);
+
 		return "/gwanlibiDetailsBillList?buildingId=" + buildingId + "&paymentMonth=" + ym;
 	}
-	
+
 	// 관리비 업데이트 화면
 	@GetMapping("updateGwanlibi")
 	public String updateGwanlibiForm(Model model, GwanlibiVO gwanlibiVO, BuildingVO buildingVO) {
 		// 관리비 상세 내역 목록
 		List<GwanlibiVO> detailsList = gwanlibiService.detailsBillList(gwanlibiVO);
 		System.err.println(detailsList);
-		
+
 		// 빌딩 정보 가져오기. - 단건 조회
 		BuildingVO buildingInfo = buildingService.buildingInfo(buildingVO);
-		
+
 		model.addAttribute("detailsList", detailsList);
 		model.addAttribute("buildingInfo", buildingInfo);
-		
+
 		return "gwanlibi/updateGwanlibi";
 	}
-	
+
 	// 관리비 업데이트 처리
 	@PostMapping("updateGwanlibi")
 	@ResponseBody
 	public void updateGwanlibiProcess(@RequestBody List<GwanlibiVO> gridDatalist) {
-		//int result = 
-				gwanlibiService.modifyGwanlibi(gridDatalist);
-		//return result;
+		gwanlibiService.modifyGwanlibi(gridDatalist);
 	}
-	
-	// ~/sendSMSMsg 요청 -> sendSMSMessage()
+
+	// 문자 /sendSMSMsg 요청 -> sendSMSMessage()
 	@GetMapping("sendSMSMsg")
-	public void sendSMSMessage(String buildingId) {
-		// 해당 건물에 거주하고 있는 임차인의 연락처 조회
-		gwanlibiService.getLesseePhoneNumber(buildingId);
+	@ResponseBody
+	public String sendSMSMessage(@RequestParam String buildingId,
+								 @RequestParam String total,
+								 @RequestParam String paymentDate) {
+		// 해당 건물에 거주하고 있는 임차인의 연락처 조회.
+		List<GwanlibiMsgVO> imdeainList = gwanlibiMsgService.getImchainPhoneNumber(buildingId);
+
+		// 현재 로그인한 임대인 ID 조회 -> 임대인의 연락처.
+		LoginInfoVO loginInfoVO = SecurityUtil.getLoginInfo();
+
+		// 임대인 휴대 전화 번호.
+		String imdaeinPhoneNumber = gwanlibiMsgService.getImdaeinPhoneNumber(loginInfoVO.getLoginId());
+
+		// 전월.
+		Date now = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(now);
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH);
+
+		// 메시지 내용.
+		String msg = year + "년 " + month + "월 관리비는 " + total + "원입니다.\n납부 기한은 " + paymentDate + "까지입니다.";
+
+		msgService.sendGroup(imdeainList, imdaeinPhoneNumber, msg);
+
+		// console 확인 용도.
+		return msg;
 	}
 
 }

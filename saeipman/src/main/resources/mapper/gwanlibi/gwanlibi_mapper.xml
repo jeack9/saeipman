@@ -125,6 +125,7 @@
 
 	</insert>
 	
+	
 	<!-- 정산한 관리비 등록 -->
 	<!-- INSERT 중에는 값을 읽을 수 없어서 MAX() 대신 시퀀스를 사용한다. -->
 	<insert id="insertGwanlibi">		
@@ -156,9 +157,21 @@
 		    	   , #{item.gwanlibiItemNo}
 		    	   , #{item.fixedPrice} )
 		    </foreach>
+		    
+		    <foreach collection="gaguGwanlibiHistoryList" item="item2">
+		    INTO gagu_gwanlibi_history ( gagu_payment_history_no
+                                 			  , month_gwanlibi_no
+                                 			  , room_id
+                                 			  , payment_yn )
+			VALUES ( get_gagu_payment_history_no()
+				   , #{monthGwanlibiInfo.monthGwanlibiNo}
+				   , #{item2.roomId}
+				   , 0 )
+		    </foreach>
 		SELECT *
 		FROM   dual
 	</insert>
+	
 	
 	<!-- 총 가구수 -->
 	<select id="selectToTalGagu">
@@ -196,17 +209,16 @@
 			AND     TO_CHAR(payment_month, 'yyyyMM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'yyyyMM')
 	</update>
 	
-	<!-- 건물별 임차인 연락처 조회 -->
-	<select id="selectLesseePhoneNumber">
-		SELECT   bi.building_id
-		       , ri.ipju_state
-		       , ci.imchain_phone
-		FROM     building_info bi JOIN room_info ri
-		         				  ON   (bi.building_id = bi.building_id AND bi.building_id = #{buildingId} AND ri.ipju_state = 1)
-								  JOIN constract_info ci
-								  ON   (ci.room_id = ri.room_id)
+	
+	<!-- 건물별 방 아이디 조회 -->
+	<select id="selectRoomIdList" resultType="com.saeipman.app.gwanlibi.service.GaguGwanlibiHistoryVO">
+		SELECT   room_id
+		FROM     room_info
+		WHERE    building_id = #{buildingId}
+		ORDER BY 1
 	</select>
 	
+
 	
 <!-- 	<select id="">
 		SELECT TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'yyyy-MM')

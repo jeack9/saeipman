@@ -1,10 +1,8 @@
 package com.saeipman.app.gwanlibi.service;
 
 import java.util.List;
-import java.util.Map;
 
 import com.saeipman.app.building.service.BuildingPageDTO;
-import com.saeipman.app.building.service.BuildingVO;
 
 public interface GwanlibiService {
 	// 건물 리스트
@@ -29,7 +27,7 @@ public interface GwanlibiService {
 	public List<GwanlibiVO> detailsBillList(GwanlibiVO vo);
 	
 	// 정산한 관리비 등록
-	public void addGwanlibi(List<GwanlibiVO> item);
+	public void addGwanlibi(List<GwanlibiVO> item, List<GaguGwanlibiHistoryVO> roomIdList);
 	// 정산한 관리비 수정
 	public void modifyGwanlibi(List<GwanlibiVO> gridDatalist);
 	
@@ -37,6 +35,6 @@ public interface GwanlibiService {
 	// 월 관리비 데이터 수
 	public int getCountingMonthGwanlibiData(String buildingId);
 	
-	// 해당 건물에 입주한 임차인 연락처 조회
-	public void getLesseePhoneNumber(String buildingId);
+	// 건물별 방 아이디 - 가구별 관리비 납부 내역에 필요
+	public List<GaguGwanlibiHistoryVO> roomIdList(String buildingId);
 }

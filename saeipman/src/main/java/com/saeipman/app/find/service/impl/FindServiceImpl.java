@@ -19,6 +19,11 @@ public class FindServiceImpl implements FindService{
 		return findMapper.selectId(findVO);
 	}
 
+	@Override
+	public FindVO pwSelect(FindVO findVO) {
+		return findMapper.seletPw(findVO);
+	}
+
 
 
 }

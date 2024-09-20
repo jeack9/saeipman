@@ -48,7 +48,7 @@ public class MinwonServiceImpl implements MinwonService{
 		int result = minwonMapper.insertMinwon(minwonVO);
 		if(result == 1) {
 			//메세지
-			String msg = msgMapper.selectMinwonMsg(0);
+			String msg = msgMapper.selectMinwonMsg(1); 
 			//String msg = "새로운 민원이 등록되었습니다.";
 			//전화번호 조회
 			String phone = msgMapper.selectPhone(minwonVO.getRoomId());
