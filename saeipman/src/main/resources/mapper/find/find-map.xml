@@ -10,6 +10,16 @@
 		and imdaein_name = #{imdaeinName}
 	</select>
 	
+	<!-- 비번 조회 -->
+	<select id="selectPw" resultType="FindVO">
+		select imdaein_id,
+		       imdaein_name,
+		       phone
+		from imdaein
+		where imdaein_id = #{imdaeinId}
+		and   imdaein_name = #{imdaeinName}
+	
+	</select>
 	
 	<!-- 비번 변경 -->
 	<update id="updatePw">
