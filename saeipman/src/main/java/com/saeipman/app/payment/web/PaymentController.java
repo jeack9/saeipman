@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.saeipman.app.commom.security.SecurityUtil;
-import com.saeipman.app.member.service.LoginInfoVO;
+import com.saeipman.app.gwanlibi.service.GwanlibiVO;
 import com.saeipman.app.payment.service.PaymentService;
 import com.saeipman.app.payment.service.PaymentVO;
 
@@ -36,6 +38,7 @@ public class PaymentController {
 	      //model.addAttribute("login", loginId);
 			
 		payVO.setPaymentYN(-1); 
+		payVO.setPaymentState(-1);
 		List<PaymentVO> payInfo = paymentService.selectMonthInfo(payVO);
 		model.addAttribute("payInfo", payInfo);
 		
@@ -56,6 +59,17 @@ public class PaymentController {
 			return null;
 		}
 		return payM;
+	}
+	
+	//납부 처리
+	@PostMapping("updateAjax")
+	@ResponseBody
+	public String updateAjax(@RequestBody List<PaymentVO> payments){
+		for(PaymentVO payment : payments) {
+//			System.out.println(payment.getGaguPaymentHistoryNo() + "가구히스토리");
+			paymentService.updatePaymentStatus(payment);
+		}
+		return "OK";
 	}
 	
 	

@@ -19,3 +19,8 @@ function dateToYM(date){
 function dateToYMD(date){
 	return date.getFullYear() + '-' + ((date.getMonth() + 1)+'').padStart(2, '0') + '-' + (date.getDate()+'').padStart(2, '0');
 }
+
+// form 데이터 직렬화
+function frmToJson(frm){
+	let formObj = $(frm).serializeArray();
+}

@@ -5,39 +5,47 @@
 	<!-- 관리비 조회 -->
 	<select id="selectMonthPay" resultType="PaymentVO">
 		SELECT c.room_id
-		     , g.payment_yn
-		     , m.month_gwanlibi_no
-		     , m.payment_month  
-		     , m.gagu_gwanlibi
-        FROM IMCHAIN i join constract_info c
-                         ON i.imchain_id = c.imchain_phone
-               join gagu_gwanlibi_history g
-                         ON  c.room_id = g.room_id 
-               JOIN MONTH_GWANLIBI m
-                         ON g.month_gwanlibi_no =  m.month_gwanlibi_no
-        <choose>
-        	<when test="paymentYN != 1">
-        		where g.payment_yn <![CDATA[ <> ]]> 1
-				AND   c.imchain_phone = #{imchainPhone}      		
-        	</when>
-        	<otherwise>
-		        WHERE TO_CHAR(payment_month,'yyyy-MM') = #{paymentMonth}
-		        AND g.payment_yn = 1
-        	</otherwise>
-        </choose>                 
+			 , g.payment_yn
+		  	 , m.month_gwanlibi_no
+			 , m.payment_month
+			 , m.gagu_gwanlibi
+			 , g.gagu_payment_history_no
+			 , mph.m_rent_history_no
+			 , mph.real_payment_date
+			 , mph.real_payment_money
+			 , mph.payment_state
+		FROM IMCHAIN i join constract_info c
+						ON i.imchain_id = c.imchain_phone
+					   join gagu_gwanlibi_history g
+						ON c.room_id = g.room_id
+					   JOIN MONTH_GWANLIBI m
+						ON g.month_gwanlibi_no = m.month_gwanlibi_no
+					   JOIN m_rent_payment_history mph
+					    ON c.room_id = mph.room_id
+		<choose>
+			<when test="paymentYN != 1 and paymentState != 1">
+				WHERE g.payment_yn <![CDATA[ <> ]]> 1
+ 				AND c.imchain_phone = #{imchainPhone}
+ 				AND   mph.payment_state <![CDATA[ <> ]]> 1
+			</when>
+			<otherwise>
+				WHERE TO_CHAR(payment_month,'yyyy-MM') = #{paymentMonth}
+				AND g.payment_yn = 1
+				AND mph.payment_state = 1
+			</otherwise>
+		</choose>
 	</select>
 
-	<!-- 납부한 결제건 납부상태 변경  -->
-	<!-- plsql문으로 update문이 동시에 2개가 되는지 확인해보기.. -->
-	<update id="updatePayment">
-	BEGIN	
-		UPDATE gagu_gwanlibi_history 
-		SET    payment_yn = 1
-		WHERE  month_gwanlibi_no = #{monthGwanlibiNo}
-		
-		UPDATE m_rent_payment_history	
-		SET    payment_state = 1
-		WHERE  m_rent_history_no = #{mRentHistoryNo}
-		END
+	<!-- 납부한 결제건 납부상태 변경 -->
+	<update id="updateGwanlibiStatus">
+		UPDATE gagu_gwanlibi_history
+		SET payment_yn = 1
+		WHERE GAGU_PAYMENT_HISTORY_NO = #{gaguPaymentHistoryNo}
+	</update>
+	
+	<update id="updateMonthRentStatus">
+		UPDATE m_rent_payment_history
+		SET payment_state = 1
+		WHERE m_rent_history_no = #{mRentHistoryNo}
 	</update>
 </mapper>

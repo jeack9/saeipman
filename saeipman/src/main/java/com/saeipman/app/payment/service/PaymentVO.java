@@ -5,7 +5,8 @@ import lombok.Data;
 @Data
 public class PaymentVO {
 
-	private String paymentMonth;
+	private String paymentMonth;// 납부일자 - 관리비
+	private String paymentDate; //납부일자 - 월세
 	private int totalMoney;
 	private int gaguGwanlibi;
 	private String monthGwanlibiNo; //월별 관리비 번호
@@ -17,7 +18,7 @@ public class PaymentVO {
 	
 	private String mRentHistoryNo; //납부 내역 번호(월세)
 	private int paymentState; //월세 납부 여부
-	
+	private String gaguPaymentHistoryNo; //가구 납부 내역 번호
 	
 	
 
