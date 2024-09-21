@@ -1,5 +1,6 @@
 package com.saeipman.app.payment.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,28 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
-	public List<PaymentVO> selectMonthInfo(PaymentVO payVO) {
-		return paymentMapper.selectMonthPay(payVO);
+	public List<PaymentVO> selectPayInfo(PaymentVO payVO) {
+		
+		List<PaymentVO> payList = new ArrayList<>();
+		
+		List<PaymentVO> gw = paymentMapper.selectGwanlibiPay(payVO);
+		List<PaymentVO> mr = paymentMapper.selectMonthlyRentPay(payVO);
+		
+		payList.addAll(gw);
+		payList.addAll(mr);
+		
+		System.out.println("관리비!!!!!!!!!!!!!!! " + gw); // 로그 추가
+	    System.out.println("월세!!!!!!!!!!!!!!!!!!!!!!: " + mr); // 로그 추가
+		
+		
+		return payList;
+
 	}
 
+	/*
+	 * @Override public List<PaymentVO> selectMonthlyRentPay(PaymentVO payVO) {
+	 * return paymentMapper.selectMonthlyRentPay(payVO); }
+	 */
 
 	@Override
 	@Transactional
@@ -32,7 +51,5 @@ public class PaymentServiceImpl implements PaymentService {
 		//paymentMapper.updateMonthRentStatus(payVO);
 		return 1;
 	}
-
-
 
 }
