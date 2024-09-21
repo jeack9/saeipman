@@ -12,53 +12,51 @@
 	justify-content: center;
 }
 
-/* thead {
-	background-color: lightgrey;
-} */
-th, td {
+table {
 	text-align: center;
 }
 
 .form-check {
 	justify-content: center;
 }
-/* 
-.button {
-	justify-content: center;
-}
- */</style>
+
+</style>
 </head>
 <body>
 	<div layout:fragment="Main" id="container">
-		<form id="updateForm">
+
+		<!-- <form id="updateForm">
 			<select class="form-select mb-6" aria-label="Default select example"
 				id="option">
 				<option selected>조회할 기간 선택(최근 3개월)</option>
 			</select>
 
-
-			<div>
-				<div class="bg-light rounded h-100 p-4">
-					<h6 class="mb-4" style="text-align: center;">납부내역</h6>
-					<div class="container text-center">
-						<div class="row">
-							<div class="col-12 col-sm-6">월세</div>
-							<div class="col-12 col-sm-6">관리비</div>
-							<!-- Ajax에서 받아온 내용을 append 활용해서 데이터 출력하는 부분 -->
-							<div class="col-12 col-sm-3 delete" id="rentMonth"></div>
-							<div class="col-12 col-sm-3 delete" id="Rentpay"></div>
-							<div class="col-12 col-sm-3 delete" id="gwanlibiMonth"></div>
-							<div class="col-12 col-sm-3 delete" id="Gwanlibi"></div>
-						</div>
+		<div>
+			<div class="bg-light rounded h-100 p-4">
+				<h6 class="mb-4" style="text-align: center;">납부내역</h6>
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-12 col-sm-6">월세</div>
+						<div class="col-12 col-sm-6">관리비</div>
+						Ajax에서 받아온 내용을 append 활용해서 데이터 출력하는 부분
+						<div class="col-12 col-sm-3 delete" id="rentMonth"></div>
+						<div class="col-12 col-sm-3 delete" id="Rentpay"></div>
+						<div class="col-12 col-sm-3 delete" id="gwanlibiMonth"></div>
+						<div class="col-12 col-sm-3 delete" id="Gwanlibi"></div>
 					</div>
 				</div>
 			</div>
+		</div> -->
 
+		<form id="updateForm">
 			<div>
 				<table class="table table-bordered">
 					<thead>
 						<tr>
-							<th colspan="2">납부 예정</th>
+							<th colspan="2">납부 내역 &nbsp; &nbsp;<select
+								aria-label="Default select example" id="option">
+									<option selected>조회기간(최근 3개월)</option>
+							</select></th>
 						</tr>
 						<tr>
 							<th>월세</th>
@@ -71,6 +69,44 @@ th, td {
 							<td>
 								<table>
 									<tbody>
+										<tr>
+											<td class="delete" id="rentMonth"></td>
+											<td>&nbsp; &nbsp;</td>
+											<td class="delete" id="Rentpay"></td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+							<td>
+								<table>
+									<tbody>
+										<tr>
+											<td class="delete" id="gwanlibiMonth"></td>
+											<td>&nbsp; &nbsp;</td>
+											<td class="delete" id="Gwanlibi"></td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+				</table>
+
+
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th colspan="2">납부 예정</th>
+						</tr>
+						<tr>
+							<th>월세</th>
+							<th>관리비</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<!-- 월세 출력 -->
+								<table>
+									<tbody>
 										<th:block th:each="payInF : ${payInfo}">
 											<tr>
 												<td>
@@ -80,8 +116,8 @@ th, td {
 															class="form-check-label" for="flexCheckDefault"></label>
 													</div>
 												</td>
-												<td>월세 납입예정일</td>
-												<td>월세 납입예정 금액</td>
+												<td></td>
+												<td></td>
 											</tr>
 										</th:block>
 									</tbody>
@@ -96,15 +132,17 @@ th, td {
 												<td><div class="form-check">
 														<input class="form-check-input check" type="checkbox"
 															th:value="${payInF.gaguPaymentHistoryNo}" id="checkbox"
-															name="gaguPaymentHistoryNo"><label class="form-check-label"
-															for="flexCheckDefault"></label>
+															name="gaguPaymentHistoryNo"><label
+															class="form-check-label" for="flexCheckDefault"></label>
 													</div></td>
 												<td>[[${#strings.substring(payInF.paymentMonth, 0,
 													11)}]]</td>
 												<td>[[${#numbers.formatInteger(payInF.gaguGwanlibi, 3,
 													'COMMA')}]]</td>
-													<td th:if="${payInF.paymentYN == -1}"><button type="button" class="btn btn-outline-danger" >연체</button></td>
-													<td th:if="${payInF.paymentYN != -1}"><button type="button" class="btn btn-outline-warning">예정</button></td>
+												<td th:if="${payInF.paymentYN == -1}"><font color="red">
+														연체</font></td>
+												<td th:if="${payInF.paymentYN != -1}"><font
+													color="green"> 예정</font></td>
 											</tr>
 										</th:block>
 									</tbody>
@@ -143,42 +181,57 @@ th, td {
 								+ '월 </option>');
 			}
 
-			//납부조회 날짜를 클릭했을 때 해당 월의 납부 조회기록을 받아오기 위해 Ajax 사용
+			//납부조회 날짜를 클릭했을 때 해당 월의 납부 조회기록 출력을 위해 Ajax 사용
 
-			$('#option').on('change', payMonth)
+			$('#option').on('change', selectMonth)
 
-			function payMonth(event) {
-				let paymentMonth = event.target.value;
-
+			function selectMonth(event) {
+				let payDate = event.target.value;
+				
+				console.log(payDate);
+				
 				$.ajax(ctxPath + "/paymentAjax", {
 					type : "GET",
 					//contentType : "application/json",
 					data : {
-						pay : paymentMonth
+						 payDate: payDate
 					},
 				}).done(
-						function(pay) {
-
+						function(payDate) {
+							console.log("ddddddddd : ", payDate);
+							
 							//현재 다른 결제월의 test데이터는 없는데, 다른 결제월을 선택해도 기존의 결제일에 출력된 데이터가 계속 남아있어서 작성함.
-							if (pay == null || pay == '') {
 								$('.delete').html('');
-							} else {
-								//.html로 한 이유는 기존의 값을 지우고 새로 선택한 값만 출력하기 위해서임.
-								let paymentMonth = pay[0].paymentMonth; //2024-07-07 00:00:00()
-								let year = paymentMonth.substring(0, 4); //2024
-								let month = paymentMonth.substring(5, 7); //07
-								let day = paymentMonth.substring(8, 10)//07
-								let payM = `${year}/${month}/${day}`;
-
-								$('#gwanlibiMonth').html(payM);
-								$('#Gwanlibi').html(
-										pay[0].gaguGwanlibi.toString().replace(
-												/\B(?=(\d{3})+(?!\d))/g, ","));
-
+								
+								for(let i = 0; i < payDate.length; i++) {
+									if(i == 0){
+									let paymentMonth = payDate[i].paymentMonth; //2024-07-07 00:00:00()
+									let yearG = paymentMonth.substring(0, 4); //2024
+									let monthG = paymentMonth.substring(5, 7); //07
+									let dayG = paymentMonth.substring(8, 10); //07
+									let payG = `${yearG}/${monthG}/${dayG}`; //2024/07/07
+											
+									$('#gwanlibiMonth').html(payG);
+									$('#Gwanlibi').html(
+											payDate[i].gaguGwanlibi.toString().replace(
+													/\B(?=(\d{3})+(?!\d))/g, ","));
+									} else {
+											
+									let realPaymentDate = payDate[i].realPaymentDate;
+									let yearM = realPaymentDate.substring(0, 4); //2024
+									let monthM = realPaymentDate.substring(5, 7); //07
+									let dayM = realPaymentDate.substring(8, 10); //07
+									let payM = `${yearM}/${monthM}/${dayM}`;	
+									
+									$('#rentMonth').html(payM);
+									$('#Rentpay').html(
+											payDate[i].realPaymentMoney.toString().replace(
+													/\B(?=(\d{3})+(?!\d))/g, ","));
+									}
 							}
-						})
-			}
-		
+						}
+					)
+				}						
 			//체크한 달의 관리비 값 합산
 						
 			$(".check").click(
@@ -204,8 +257,6 @@ th, td {
 			
 		 	//console.log(updateInfo.getAll());
 			
-		 	// 
-
 			function updateAjax(){
 			 	let listFormObj = [];
 			 	let formObjArr = $(updateForm).serializeArray();
