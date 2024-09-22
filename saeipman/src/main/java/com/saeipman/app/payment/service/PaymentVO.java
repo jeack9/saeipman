@@ -6,7 +6,6 @@ import lombok.Data;
 public class PaymentVO {
 
 	private String paymentMonth;// 납부일자 - 관리비
-	//private int totalMoney;
 	private int gaguGwanlibi;
 	private String monthGwanlibiNo; //월별 관리비 번호
 	private String buildingId;
