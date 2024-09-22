@@ -2,8 +2,7 @@ package com.saeipman.app.building.service;
 
 import java.util.List;
 
-
-
+import com.saeipman.app.gwanlibi.service.GwanlibiPaymentVO;
 import com.saeipman.app.room.service.RoomVO;
 
 import lombok.Data;
@@ -34,5 +33,8 @@ public class BuildingVO {
 	private List<String> fileName;
 	
 	private List<RoomVO> rooms;
+	
+	// 경민
+	private List<GwanlibiPaymentVO> roomList;
 
 }
