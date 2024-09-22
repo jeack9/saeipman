@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +26,6 @@ import com.saeipman.app.building.service.BuildingService;
 import com.saeipman.app.building.service.BuildingVO;
 import com.saeipman.app.commom.security.SecurityUtil;
 import com.saeipman.app.file.service.FileService;
-import com.saeipman.app.file.service.FileVO;
 import com.saeipman.app.member.service.LoginInfoVO;
 import com.saeipman.app.ocrTest.config.OcrApi;
 import com.saeipman.app.ocrTest.config.OcrUtil;
@@ -32,7 +33,6 @@ import com.saeipman.app.room.service.RoomVO;
 import com.saeipman.app.upload.config.FileUtility;
 
 import lombok.RequiredArgsConstructor;
-import retrofit2.http.Multipart;
 
 @Controller
 @RequiredArgsConstructor
@@ -203,30 +203,61 @@ public class BuildingController {
 	public Map<String, Object> updateBuilding(BuildingVO buildingVO, RoomVO roomVO,
 			@RequestPart(name = "newFiles", required = false) MultipartFile[] newFiles,
 			@RequestParam(name = "deleteFileNames", required = false) List<String> deleteFileNames,
-			@RequestParam(name = "updateRoomList", required = false) List<String> updateRoomList) {
-		System.out.println("삭제" + deleteFileNames);
+			@RequestParam(name = "updateRoomList", required = false) List<String> updateRoomList,
+			@RequestParam(name = "deleteRoomList", required = false) List<String> deleteRoomList) {
+		// System.out.println("삭제" + updateRoomList);
 
 		fileUtill.setFolder("건물");
-		
-		//json object 파싱
-		JSONArray jsonArr = (JSONArray) updateRoomList;
-		if(jsonArr.size() > 0 ) {
-			for(int i=0; i<jsonArr.size(); i++){
-		    	JSONObject jsonObj = (JSONObject)jsonArr.get(i);
-		    	
-		    	String name = (String)jsonObj.get("roomNo");
-		    	System.out.println(name + "방아이디");
-		    }
+		// 방번호 수정
+		if(updateRoomList!=null) {
+			
+			for (String updateRoom : updateRoomList) {
+				// json 문자열을 파싱
+				JSONParser parser = new JSONParser();
+				try {
+					JSONObject updateListArr = (JSONObject) parser.parse(updateRoom); // JSON 배열로 변환
+					// JSONArray에서 RoomVO 객체로 변환하거나 원하는 방식으로 데이터를 사용
+					String roomId = (String) updateListArr.get("roomId");
+					String roomString = (String) updateListArr.get("roomNo");
+					Integer roomNo = Integer.valueOf(roomString);
+					// (roomId와 roomNo를 RoomVO에 매핑 등)
+					// System.out.println(roomId+"룸Id");
+					// System.out.println(roomNo+"룸No");
+					roomVO.setRoomId(roomId);
+					roomVO.setRoomNo(roomNo);
+					buildingService.roomUpdate(roomVO);
+					
+				} catch (ParseException e) {
+					e.printStackTrace(); // 예외 처리
+				}
+				
+			}
 		}
-		
-//		for(List<String> updateRoom : jsonObject) {
-//			System.out.println(updateRoom + "방이다");
-//			
-//		}
+		// 방번호 삭제
+		if(deleteRoomList!=null) {
+			
+			for (String deleteRoom : deleteRoomList) {
+				// json 문자열을 파싱
+				JSONParser parser = new JSONParser();
+				try {
+					JSONObject deleteListArr = (JSONObject) parser.parse(deleteRoom); // JSON 배열로 변환
+					// JSONArray에서 RoomVO 객체로 변환하거나 원하는 방식으로 데이터를 사용
+					String roomId = (String) deleteListArr.get("roomId");
+					roomVO.setRoomId(roomId);
+					buildingService.roomInfoDelete(roomVO);
+					
+				} catch (ParseException e) {
+					e.printStackTrace(); // 예외 처리
+				}
+				
+			}
+		}
 		// 파일 삭제 처리
 		if (deleteFileNames != null && !deleteFileNames.isEmpty()) {
 			buildingService.fileDelete(deleteFileNames);
-			for (String fileName : deleteFileNames) {
+			for (
+
+			String fileName : deleteFileNames) {
 				fileUtill.deleteFile(fileName); // 실제 파일 삭제
 				// buildingService.fileDelete(fileName);
 			}

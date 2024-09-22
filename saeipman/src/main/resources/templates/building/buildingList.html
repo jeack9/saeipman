@@ -16,15 +16,12 @@
 	width: 1100px;
 	display: inline;
 }
-
+#roomUpdate{
+	display:none;
+}
 .deletedImg {
 	display: none;
 }
-
-#roomUpdate {
-	display: none;
-}
-
 input {
 	border-width: 0 0 1px;
 }
@@ -211,7 +208,12 @@ input {
 		<script>
 	
 		let updateRoomList = [];
+		let delRoomList = [];
 			$(document).ready(function() {
+				let isRoomUpdateVisible = $('#roomUpdate').css('display') !== 'none';
+				$('#roomUpdateBtn').on('click', function() {
+				    $('#roomUpdate').toggle();
+				});
 				
 				let firstBuilding = $('li[data-index="1"]').attr('id');
 				if (firstBuilding) {
@@ -274,23 +276,15 @@ input {
 								$('#tb').append(tr);
 							}
 							
-							//let floorBtn = `<button type ="button" id="floorInsert">+</button>`;
-							//$('#tb').append(floorBtn);
-							//행 선택 checkbox
-							
-							
-							/*   $("#tb").delegate(".hoSel","keyup", function(event) {
-								   var keyVal = event.keyCode;         
-								  if(((keyVal >= 48) && (keyVal <= 57))){      
-									        return true;     
-									     }
-								 else{
-							            alert('숫자만 입력해주세요.');
-							            $(this).val($(this).val().replace(/[^0-9]/g,""));
-							        }
-							    }); */
-							
 						}
+						  // 방 정보가 갱신된 후에도 roomUpdate의 상태를 유지
+				        if (isRoomUpdateVisible) {
+				            $('#roomUpdate').show();
+				        } else {
+				            $('#roomUpdate').hide();
+				        }
+
+						
 						//방번호 수정
 						$('.hoSel').on('change',function(e){
 							let roomNo = $(e.target).val();
@@ -298,7 +292,7 @@ input {
 						
 							updateRoomList[roomId]=roomNo;
 							
-							console.log(updateRoomList);
+							//console.log(updateRoomList);
 						})
 						if(data.fileName != null) {
 							//$('#groupId').val(data.groupId);
@@ -317,17 +311,24 @@ input {
 								
 							} 
 						} 
+						
+						
 						//이미지 삭제
 						$('.imageDel').on('click', imgaeDelFunc);
 						
 						checkFunc($("#liftYn"));
 						$(".bid").val(data.buildingId);
+						
+						
+
+						
 					})
 				}
 
 			})
-			$('#tb').delegate('.selectRoom','click',function(e){
-				$('#tb').html("");
+			
+			//전체선택 및 선택해제
+		 	$('#tb').delegate('.selectRoom','click',function(e){
 				let parent = $(e.target).closest('tr');
 				if($(e.target).is(":checked")){
 					parent.find('input[name="chk"]').prop("checked",true);
@@ -365,21 +366,29 @@ input {
 			//호실 추가
 			$('#tb').delegate('.addRoom','click',function(e){
 				let addSel = $(e.target).closest('tr');
-				console.log(addSel);
+				//console.log(addSel);
 				addSel.find('.addRoom').parent().before(`<td><input type="checkbox" name="chk"><input type="text" name='roomNo' class = "hoSel"></td>`);
 				
 			});
 			//호실 삭제
-			$('#tb').delegate('.delRoom','click',function(e){
+		 	$('#tb').delegate('.delRoom','click',function(e){
 				let delSel = $(e.target).closest('tr');
+				// 체크된 모든 항목에 대해 반복 
+				delSel.find("input[name=chk]:checked").each(function() { 
+					let roomId =  delSel.find("input[name=chk]:checked").next().attr('id'); // 각 체크된 항목의 ID 가져오기 
+					delRoomList.push({
+						roomId
+					}); // 삭제 리스트에 추가
+				});
+				console.log(delRoomList);
 				if(delSel.find('.selectRoom').is(':checked')){
 					delSel.find('input[name=chk]').closest('tr').remove();
-				}
-				else {
+
+				}else{
 					delSel.find("input[name=chk]:checked").parent().remove();
+					
 				}
-			
-			});
+			}); 
 			//행 선택 checkbox
 			$('.selectRoom').click(function(e){
 			
@@ -398,15 +407,16 @@ input {
 				let checked = tr.find("input[name=chk]:checked").length;
 				
 				if(total != checked) {
-					tr.find(".selectRoom").prop("checked", false);
+					tr.find(".").prop("checked", false);
 				}
 				else {
-					tr.find(".selectRoom").prop("checked", true); 
+					tr.find(".").prop("checked", true); 
 				}
 			});
 			//end of $(document).ready
 			
 			let delList = [];
+			
 			function imgaeDelFunc(e){
 				//console.log($(e.target).parent());
 				$(e.target).parent().addClass("deletedImg"); //remove();
@@ -437,19 +447,20 @@ input {
 			    delList.forEach((fileName) => {
 			        formData.append("deleteFileNames", fileName.dImg);
 			    }); 
-			    //console.log(updateRoomList);
+			  
 			    //방 번호 수정
 		     	for(roomId in updateRoomList){
 		     		roomList.push({ roomId, roomNo: updateRoomList[roomId] });
-			     	
 			   	}  
 			    roomList.forEach(room=>{
-			    	
 			    	formData.append("updateRoomList", JSON.stringify(room));
 			    })
-		     		
+		     	//방 삭제 리스트
+		     	delRoomList.forEach(delRoom =>{
+					formData.append("deleteRoomList", JSON.stringify(delRoom));
+		     	})
 				
-			   	console.log(roomList, " ROOMLIST");
+			   	//console.log(roomList, " ROOMLIST");
 
 			    $.ajax({
 			        url: ctxPath+'/buildingUpdate',
@@ -491,14 +502,14 @@ input {
 				}
 			})
 		//방 수정 및 생성
-		$('#roomUpdateBtn').on('click', function(){
+		/* $('#roomUpdateBtn').on('click', function(){
 			  if($('#roomUpdate').css('display') == 'none') {
 				  $('#roomUpdate').show();
 				  }else {
 					  $('#roomUpdate').hide();
 				  }
 		});
-		
+		 */
 		</script>
 		<script
 			src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>

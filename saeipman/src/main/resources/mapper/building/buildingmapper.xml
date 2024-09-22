@@ -119,18 +119,20 @@
 	</select>
 
 	<insert id="selectRoomInsert" parameterType="RoomVO">
-		insert into
-					room_info(room_id,
-					room_no,
-					floor,
-					ipju_state,
-					building_id)
-					values (#{buildingId}||#{roomNo},
+		insert into room_info(	
+								room_id,
+								room_no,
+								floor,
+								ipju_state,
+								building_id
+								)	
+		VALUES 		(
+					#{buildingId}||#{roomNo},
 					#{roomNo},
 					#{floor},
 					-1,
 					#{buildingId}
-		)
+					)
 	</insert>
 
 	<!-- 파일 삭제 -->
@@ -178,4 +180,9 @@
 			floor=#{floor}
 		WHERE room_id =#{roomId}
 	</update>
+	<delete id="selectRoomInfoDelete" parameterType="RoomVO">
+		DELETE FROM room_info
+		WHERE room_id = #{roomId}
+	</delete>
+
 </mapper>

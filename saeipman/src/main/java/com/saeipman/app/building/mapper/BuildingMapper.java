@@ -25,7 +25,6 @@ public interface BuildingMapper {
 	
 	//방삭제
 	public int selectRoomDelete(String buildingId);
-	
 
 	//파일
 	public int selectDeleteFileName(String fileName);
@@ -37,6 +36,8 @@ public interface BuildingMapper {
 	//방 수정
 	public List<RoomVO> selectRoom(RoomVO roomVO);
 	public int selectRoomUpdate(RoomVO roomVO);
+	public int selectRoomInfoDelete(RoomVO roomVO);
+
 	
 
 }

@@ -35,4 +35,6 @@ public interface BuildingService {
 	//방 수정
 	public List<RoomVO> roomSelect(RoomVO roomVO);
 	public int roomUpdate(RoomVO roomVO);
+	public int roomInfoDelete(RoomVO roomVO);
+
 }
