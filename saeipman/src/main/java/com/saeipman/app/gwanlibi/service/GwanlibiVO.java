@@ -15,6 +15,7 @@ public class GwanlibiVO {
 	@DateTimeFormat(pattern = "yyyy-MM")
 	private Date paymentMonth;  		  // 관리비 납부 월
 	private String buildingName; 		  // 건물 이름
+	private String doroAddr;
 	private int previousMonth;			  // 전월 관리 비용
 	private int thisMonth;				  // 금월 관리 비용
 	private String gwanlibiName;		  // 관리비 이름

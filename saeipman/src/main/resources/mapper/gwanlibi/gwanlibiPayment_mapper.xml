@@ -5,7 +5,8 @@
 	
 	<!-- 호실별 관리비 납부 상태 조회 -->
 	<select id="selectGwanlibiPaymentStateList" resultType="com.saeipman.app.gwanlibi.service.GwanlibiPaymentVO" parameterType="String">
-		SELECT r.room_no,
+		SELECT r.building_id,
+			   r.room_no,
 		       g.payment_yn
 		FROM   room_info r JOIN gagu_gwanlibi_history g
 		                   ON (r.room_id = g.room_id)

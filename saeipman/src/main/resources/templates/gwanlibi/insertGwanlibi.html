@@ -11,6 +11,7 @@
 			color: #000000;
 			font-size: 20px;
 			font-weight: bold;
+			font-family: monospace;
 		}
 
 		.btnDiv {
@@ -182,7 +183,7 @@
 				// 관리비 저장 버튼 클릭 이벤트
 				console.log(grid.getData());
 				$('.saveBtn').on('click', function () {
-
+					console.log(toastDate.getDate().getDate());
 					// 유효성 검사
 					if(!buildingId) return;
 					
@@ -206,7 +207,7 @@
 						return;
 					}
 
-					$.ajax({
+ 					$.ajax({
 						url: `${ctxPath}/insertGwanlibi?paymentDate=${paymentDate}`,
 						method: 'post',
 						contentType: 'application/json',

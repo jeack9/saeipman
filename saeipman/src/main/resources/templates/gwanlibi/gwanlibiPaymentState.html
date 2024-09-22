@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{common/layouts/default_layout}">
+
+<head>
+	<meta charset="UTF-8">
+	<link th:href="@{/css/gwanlibiPayment.css}" rel="stylesheet">
+	<style>
+		.page-link {
+			color: tomato;
+			border-color: tomato;
+		}
+
+		.page-link:hover {
+			background-color: tomato;
+			color: white;
+		}
+	</style>
+</head>
+
+<body>
+	<div layout:fragment="Main" class="container">
+		<br/>
+		<table class="fold-table">
+			<!-- column name of building information list -->
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>Building Name</th>
+					<th>Address</th>
+				</tr>
+			</thead>
+			<!-- building information list -->
+			<tbody>
+				<th:block th:each="building, buildingStat : ${buildingList}">
+					<tr class="view">
+						<td th:text="${buildingStat.index+1}"></td>
+						<td th:text="${building.buildingName}"></td>
+						<td>[[${building.doroAddr}]]</td>
+					</tr>
+
+					<!-- folding tables -->
+					<tr class="fold">
+						<td colspan="7">
+							<div class="fold-content">
+								<h3 style="font-family: monospace">Room List.</h3>
+								<p style="font-family: monospace">관리비가 연체된 세입자에게 문자를 전송할 수 있습니다. [건당 20원]</p>
+								<table class="small-friendly">
+									<!-- column name of room information list -->
+									<thead>
+										<tr>
+											<th><span class="visible-big">Building Name</span></th>
+											<th><span class="visible-big">Room Number</span></th>
+											<th><span class="visible-big">Payment State</span></th>
+											<th><span class="visible-big">Send a Message</span></th>
+										</tr>
+									</thead>
+									<!-- room information list -->
+									<tbody>
+										<th:block th:each="rooms : ${rooms}">
+											<th:block th:if="${rooms.buildingId == building.buildingId}">
+												<tr>
+													<td>[[${building.buildingName}]]</td>
+													<td>[[${rooms.roomNo}]]호</td>
+													<td th:text="${rooms.paymentYn == 1} ? '완납' : '미납'"></td>
+													<td th:text="${rooms.paymentYn == 1} ? '-' : '전송'"></td>
+												</tr>
+											</th:block>
+										</th:block>
+									</tbody>
+
+								</table>
+							</div>
+						</td>
+					</tr>
+				</th:block>
+
+
+			</tbody>
+		</table>
+
+		<br />
+
+		<!-- pagination -->
+		<nav aria-label="Page navigation example">
+			<ul class="pagination justify-content-center" style="margin: 0;">
+				<!-- 맨 첫 페이지로 이동 : 시작 페이지(startPage)가 1보다 크면 이전 버튼 출력 -->
+				<th:block th:if="${page.startPage > 1}">
+					<li class="page-item"><a class="page-link" th:href="@{/gwanlibiPaymentState?pageNum=1}"
+							aria-label="Previous">
+							<span aria-hidden="true">&laquo;</span>
+						</a></li>
+				</th:block>
+
+				<!-- 이전 페이지 버튼 (Previous) -->
+				<th:block th:if="${page.prev}">
+					<li class="page-item"><a class="page-link"
+							th:href="@{/gwanlibiPaymentState?pageNum={page}(page = ${page.startPage - 1})}"
+							aria-label="Previous"> <span aria-hidden="false">&lt;</span>
+						</a></li>
+				</th:block>
+
+				<!-- 페이지 버튼 생성 -->
+				<th:block th:with="start=${page.startPage}, end=${page.endPage}">
+					<li class="page-item" th:with="start=${page.startPage}, end=${page.endPage}"
+						th:each="pageButton : ${#numbers.sequence(start, end)}"><a class="page-link"
+							th:href="@{/gwanlibiPaymentState?pageNum={page} (page=${pageButton})}"
+							th:text=${pageButton}></a></li>
+				</th:block>
+
+				<!-- 다음 페이지 버튼 (Next) -->
+				<li class="page-item" th:if="${page.next}"><a class="page-link"
+						th:href="@{/gwanlibiPaymentState?pageNum={page} (page = ${page.endPage +1})}" aria-label="Next">
+						<span aria-hidden="true">&gt;</span>
+					</a></li>
+
+				<!-- 끝 페이지(endPage)-->
+				<th:block th:if="${page.endPage < page.realEnd}">
+					<li class="page-item"><a class="page-link"
+							th:href="@{/gwanlibiPaymentState?pageNum={page}(page = ${page.realEnd})}"
+							aria-label="Previous"> <span aria-hidden="false">&raquo;</span>
+						</a></li>
+				</th:block>
+			</ul>
+		</nav>
+
+		<script>
+			$(".fold-table .view").on(
+				"click",
+				function () {
+					console.log(this);
+					if ($(this).hasClass("open")) {
+						$(this).removeClass("open").next(".fold")
+							.removeClass("open");
+					} else {
+						$(".fold-table tr.view").removeClass("open").next(
+							".fold").removeClass("open");
+						$(this).addClass("open").next(".fold").addClass(
+							"open");
+					}
+				});
+		</script>
+	</div>
+</body>
+
+</html>

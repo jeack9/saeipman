@@ -4,8 +4,20 @@
 
 <head>
 	<meta charset="UTF-8">
-
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<style>
+/* 		.container{
+			font-family: monospace;
+		} */
+		#bName {
+			float: left;
+			color: rgb(35, 35, 35);
+			font-size: 20px;
+			font-weight: bold;
+			font-family: monospace;
+			padding-left: 5px;
+		}
+		
 		.table {
 			margin-left: auto;
 			margin-right: auto;
@@ -20,34 +32,35 @@
 		}
 
 		.btnDiv {
-			text-align: center;
+			/* text-align: center; */
+			display: flex;
+			justify-content: center;
 		}
 
-		.claimBtn,
-		.settlingBtn {
-			margin: auto;
+		.btn {
+			margin: 2px;
 			display: none;
-			/* background: #6CBEC7;
-			color: rgb(56, 53, 53); */
 		}
 
-		#bName {
-			float: left;
-			color: #323f5d;
-			font-size: 20px;
-			font-weight: bold;
+		.btn:hover{
+			/* background: #009CFF; */
+			background: #385d61;
+			color: white;
 		}
+		
+
+
 	</style>
 
 </head>
 
 <body>
-	<div layout:fragment="Main">
+	<div layout:fragment="Main" class="container">
 		<div>
 			<br> <br>
 
 			<!-- 건물명 -->
-			<p id="bName"></p>
+			<p id="bName"><i class="fa-solid fa-house" style="color: #009CFF;"></i> [[${buildingInfo.buildingName}]]</p>			
 
 			<!-- Toast UI - Date Picker -->
 			<div class="inputDiv" style="position: relative; z-index: 2; float: right;">
@@ -77,8 +90,8 @@
 			<hr style="color: black">
 
 			<div class="btnDiv">
-				<button class="btn btn-primary settlingBtn">관리비 정산</button>
-				<button class="btn btn-primary claimBtn">관리비 청구</button>
+				<button type="button" class="btn btn-outline-primary m-2  settlingBtn">관리비 정산</button>
+				<button type="button" class="btn btn-outline-primary m-2  claimBtn">관리비 청구</button>
 			</div>
 
 			<br>
@@ -91,7 +104,7 @@
 
 			// 건물명 출력
 			let building = /*[[${ buildingInfo }]]*/'기본값';
-			$('#bName').text(building.buildingName);
+			//$('#bName').text(building.buildingName);
 
 			let detailsList = /*[[${ detailsList }]]*/'기본값';
 
@@ -191,7 +204,7 @@
 					//console.log(calMonthKo);
 					let paymentMonth = dateToYM(calMonthKo.getDate());
 					let buildingId = building.buildingId;
-					//console.log(paymentMonth);
+					console.log(paymentMonth);
 					//console.log(paymentMonth + "-15"); // 관리비 날짜
 					//console.log(buildingId);
 
@@ -231,6 +244,13 @@
 					contentType: 'application/json',
 					data: JSON.stringify(detailsList)
 				}).done(function (result) {
+					// 예외 처리 - 방 없을 때,
+					if(result.roomListSize <= 0) {
+						alert('등록된 방이 없습니다. 방 등록 페이지로 이동합니다.');
+						location.href = ctxPath + '/buildingList?buildingId=' + building.buildingId;
+						return;
+					}
+					
 					if (result.gwanlibiItmeListSize <= 0) {
 						alert('관리비 항목이 미등록되어있습니다. 관리비 항목을 등록해주세요.');
 						location.href = ctxPath + '/gwanlibiItemList?buildingId=' + building.buildingId;
@@ -252,6 +272,7 @@
 				let year = ymd[0];
 				let month = ymd[1];
 				let date = ymd[2].split('T', 1);
+				date = date + 1;
 				let paymentDate = `${year}년 ${month}월 ${date}일`;
 				Swal.fire({
 					title: "관리비 청구 메시지를 전송하시겠습니까?",

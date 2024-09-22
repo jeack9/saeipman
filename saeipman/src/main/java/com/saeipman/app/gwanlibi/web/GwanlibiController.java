@@ -1,8 +1,10 @@
 package com.saeipman.app.gwanlibi.web;
 
+import java.io.PrintWriter;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,6 +27,8 @@ import com.saeipman.app.commom.security.SecurityUtil;
 import com.saeipman.app.gwanlibi.service.GaguGwanlibiHistoryVO;
 import com.saeipman.app.gwanlibi.service.GwanlibiMsgService;
 import com.saeipman.app.gwanlibi.service.GwanlibiMsgVO;
+import com.saeipman.app.gwanlibi.service.GwanlibiPaymentService;
+import com.saeipman.app.gwanlibi.service.GwanlibiPaymentVO;
 import com.saeipman.app.gwanlibi.service.GwanlibiService;
 import com.saeipman.app.gwanlibi.service.GwanlibiVO;
 import com.saeipman.app.member.service.LoginInfoVO;
@@ -41,6 +45,7 @@ public class GwanlibiController {
 	private GwanlibiService gwanlibiService;
 	private BuildingService buildingService;
 	private GwanlibiMsgService gwanlibiMsgService;
+	private GwanlibiPaymentService gwanlibiPaymentService;
 	private MsgService msgService;
 
 	public String getYM() {
@@ -183,9 +188,14 @@ public class GwanlibiController {
 	@PostMapping("gwanlibiCalculationForm")
 	@ResponseBody
 	public Map<String, Object> insertGwanlibi(@RequestParam(name = "buildingId") String buildingId,
-			GwanlibiVO gwanlibiVO, BuildingVO buildingVO, HttpServletResponse response, Model model) {
+			GwanlibiVO gwanlibiVO, BuildingVO buildingVO, Model model) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
+
+		// 예외 처리
+		List<GaguGwanlibiHistoryVO> roomList = gwanlibiService.roomIdList(buildingId);
+		int roomListSize = roomList.size();
+		map.put("roomListSize", roomListSize);
 
 		// 설정된 관리비 항목 리스트의 데이터 개수
 		List<GwanlibiVO> gwanlibiItmeList = gwanlibiService.itemList(buildingId);
@@ -229,20 +239,21 @@ public class GwanlibiController {
 	@PostMapping("insertGwanlibi")
 	@ResponseBody
 	public String insertGwanlibi(@RequestParam(name = "paymentDate") String paymentDate,
-								 @RequestBody List<GwanlibiVO> gridDatalist) throws ParseException {
-		
+			@RequestBody List<GwanlibiVO> gridDatalist) throws ParseException {
+
+		String buildingId = gridDatalist.get(0).getBuildingId();
+		// 방 리스트
+		List<GaguGwanlibiHistoryVO> roomIdList = gwanlibiService.roomIdList(buildingId);
+
 		String ym = preYM();
 		String date = ym + "-" + paymentDate;
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date paymentMonth = formatter.parse(date);
-
+		System.err.println(paymentDate + "/" + date);
+		System.err.println("결과 = " + paymentMonth);
 		gridDatalist.get(0).setPaymentMonth(paymentMonth);
 
-		String buildingId = gridDatalist.get(0).getBuildingId();
-		
-		// 방 리스트
-		List<GaguGwanlibiHistoryVO> roomIdList = gwanlibiService.roomIdList(buildingId);
 		gwanlibiService.addGwanlibi(gridDatalist, roomIdList);
 
 		return "/gwanlibiDetailsBillList?buildingId=" + buildingId + "&paymentMonth=" + ym;
@@ -274,9 +285,8 @@ public class GwanlibiController {
 	// 문자 /sendSMSMsg 요청 -> sendSMSMessage()
 	@GetMapping("sendSMSMsg")
 	@ResponseBody
-	public String sendSMSMessage(@RequestParam String buildingId,
-								 @RequestParam String total,
-								 @RequestParam String paymentDate) {
+	public String sendSMSMessage(@RequestParam(name = "buildingId") String buildingId,
+			@RequestParam(name = "total") String total, @RequestParam(name = "paymentDate") String paymentDate) {
 		// 해당 건물에 거주하고 있는 임차인의 연락처 조회.
 		List<GwanlibiMsgVO> imdeainList = gwanlibiMsgService.getImchainPhoneNumber(buildingId);
 
@@ -300,6 +310,34 @@ public class GwanlibiController {
 
 		// console 확인 용도.
 		return msg;
+	}
+
+	// TODO
+	@GetMapping("gwanlibiPaymentState")
+	public String gwanlibiPaymentStateList(BuildingVO buildingVO, BuildingPageDTO pageDTO, Model model) {
+
+		LoginInfoVO login = SecurityUtil.getLoginInfo();
+
+		// 한 페이지당 출력할 건물 개수 - 페이징
+		pageDTO.setAmount(5);
+
+		// 출력할 건물의 총 개수
+		int total = gwanlibiService.buildingTotalCount(login.getLoginId());
+		pageDTO.setTotal(total);
+
+		List<BuildingVO> buildingList = buildingService.buildingList(pageDTO, login.getLoginId());
+		
+		// add roomList
+		for (BuildingVO building : buildingList) {			
+			List<GwanlibiPaymentVO> rooms = gwanlibiPaymentService.getGwanlibiPaymentStateList(building.getBuildingId());
+			model.addAttribute("rooms", rooms);
+		}
+		
+		System.err.println(buildingList);
+		model.addAttribute("buildingList", buildingList);
+		model.addAttribute("page", pageDTO);
+
+		return "gwanlibi/gwanlibiPaymentState";
 	}
 
 }

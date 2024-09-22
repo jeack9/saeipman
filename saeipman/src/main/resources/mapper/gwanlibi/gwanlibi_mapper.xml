@@ -10,6 +10,7 @@
 		                a.*
 		         FROM  ( SELECT   b.building_id,
 		                          b.building_name,
+		                          b.doro_addr,
 		                          p.total_money previous_month,
 		                          t.total_money this_month,
 		                          t.payment_month

@@ -11,6 +11,7 @@
 			color: #323f5d;
 			font-size: 20px;
 			font-weight: bold;
+			font-family: monospace;
 		}
 
 		.btnDiv,
@@ -23,10 +24,10 @@
 		}
 
 		#appendBtn,
-		#deleteBtn {
+		#deleteBtn,
+		.goBtn,
+		.saveBtn {
 			display: inline-block;
-			background: #6CBEC7;
-			color: rgb(56, 53, 53);
 		}
 	</style>
 </head>
@@ -48,13 +49,11 @@
 			<br>
 
 			<div class="btnDiv">
-				<button class="btn btn-light" id="appendBtn">추가</button>
-				<button class="btn btn-light" id="deleteBtn">삭제</button>
-			</div>
+				<button class="btn btn-outline-primary m-1 " id="appendBtn">추가</button>
+				<button class="btn btn-outline-primary m-1 " id="deleteBtn">삭제</button>
 
-			<div class="btnDiv2">
-				<button class="btn btn-primary saveBtn">저장</button>
-				<button class="btn btn-primary" th:onclick="|location.href='@{/gwanlibiDetailsBillList(buildingId=${buildingInfo.buildingId})}'|">정산</button>
+				<button class="btn btn-primary m-1 saveBtn">저장</button>
+				<button class="btn btn-primary m-1 goBtn" th:onclick="|location.href='@{/gwanlibiDetailsBillList(buildingId=${buildingInfo.buildingId})}'|">정산</button>
 			</div>
 
 			<br>

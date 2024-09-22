@@ -8,7 +8,7 @@
 		       , ri.ipju_state
 		       , ci.imchain_phone
 		FROM     building_info bi JOIN room_info ri
-		         				  ON   (bi.building_id = bi.building_id AND bi.building_id = #{buildingId} AND ri.ipju_state = 1)
+		         				  ON   (bi.building_id = ri.building_id AND ri.building_id = #{buildingId} AND ri.ipju_state = 1)
 								  JOIN constract_info ci
 								  ON   (ci.room_id = ri.room_id)
 	</select>
