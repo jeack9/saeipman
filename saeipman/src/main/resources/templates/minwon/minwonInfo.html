@@ -1,166 +1,168 @@
 <!DOCTYPE html>
-<html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{common/layouts/default_layout}"
-  layout:fragment="Main"
->
-  <head>
-    <meta charset="UTF-8" />
-    <title>Insert title here</title>
-  </head>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Main">
+<head>
+<meta charset="UTF-8" />
+<title>Insert title here</title>
+</head>
 <style>
 /* 댓글 섹션 스타일 */
 #comments-section {
-margin-top: 30px;
-padding: 10px;
-background-color: #f9f9f9;
-border: 1px solid #ddd;
+	margin-top: 30px;
+	padding: 10px;
+	background-color: #f9f9f9;
+	border: 1px solid #ddd;
 }
 
 .form-group {
-margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 /* 댓글 영역 */
 .ply {
-padding-left: 50px;
- }
+	padding-left: 50px;
+}
 
 .fw-bold {
-font-weight: bold;
+	font-weight: bold;
 }
 
 #textarea {
-white-space: pre-line;
+	white-space: pre-line;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.comment-content {
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+  
+.comment-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9em;
+    color: #666;
+}
+.delete-comment-btn{
+background-color:transparent;
+border-width: thin;
 }
 
 /* 댓글 작성 폼 스타일 */
 textarea {
-width: 100%;
-resize: vertical;
+	width: 100%;
+	resize: vertical;
 }
 
 .group {
-margin-bottom: 15px;
+	margin-bottom: 15px;
 }
 
 /* 버튼 중앙 정렬 */
 .button-container {
-display: flex;
-justify-content: center;
-margin-top: 20px;
+	display: flex;
+	justify-content: center;
+	margin-top: 20px;
 }
-    
 </style>
-  <body>
-    <div>
-      <input type="hidden" id="postNo" th:value="${minwon.postNo}" />
-      <input type="hidden" id="loginId" th:value="${loginId}">
-    </div>
-    <div>
-      <table class="table">
-        <tr class="col-md-12">
-          <th style="width: 5%">제목</th>
-          <td style="width: 30%">[[${minwon.title}]]</td>
-          <th>작성자</th>
-          <td>[[${minwon.roomNo}]]</td>
-        </tr>
-        <tr>
-          <th>카테고리</th>
-          <td>[[${minwon.categoryType}]]</td>
-        </tr>
-        <tr>
-          <th>방문날짜</th>
-          <td>[[${minwon.visitsDate1}]]</td>
-          
-          <td>또는[[${minwon.visitsDate2}]]</td>
-        </tr>
-        <tr>
-          <th>내용</th>
-          <td id="textarea">[[${minwon.content}]]</td>
-        </tr>
-        <tr>
-          <th style="width: 10%">첨부파일</th>
-          <td>
-            <img style="width: 75%"
-              th:each=" img : ${minwon.fileName}"
-              th:src="@{/images/민원/{f}(f=${img})}"
-            />
-          </td>
-        </tr>
-      </table>
-    </div>
-    <div class="button-container" th:if="${cri.auth == 2}">
-      <button
-        type="button"
-        th:onClick="|location.href = '@{/minwonUpdate(postNo=${minwon.postNo})}'|"
-      	class="btn btn-outline-warning m-2"
-      >
-        수정
-      </button>
-      <button
-        type="button"
-        th:onClick="|location.href = '@{/minwonList(pageNum=${cri.pageNum}, type=${param.type}, keyword=${param.keyword})}'|"
-      	class="btn btn-outline-success m-2"
-      >
-        목록
-      </button>
-      <button
-        type="button"
-        th:onClick="|location.href = '@{/minwonDelete(postNo=${minwon.postNo})}'|"
-      	class="btn btn-outline-danger m-2"
-      >
-        삭제
-      </button>
-    </div>
-    
-    <div class="button-container" th:if="${cri.auth == 1}">
-   	   <button
-        type="button"
-        th:onClick="|location.href = '@{/minwonList(pageNum=${cri.pageNum}, type=${param.type}, keyword=${param.keyword})}'|"
-      	class="btn btn-outline-success m-2"
-      >
-        목록
-      </button>
-   	  
-      <!-- 접수 버튼 -->
-      <form th:action="@{/updateMinwonState}" method="post">
-        <input type="hidden" name="postNo" th:value="${minwon.postNo}" />
-        <input type="hidden" name="state" th:value="1" />
-        <!-- 접수중은 숫자 1로 전송 -->
-        <button type="submit" class="btn btn-outline-warning m-2">접수</button>
-      </form>
+<body>
+	<div>
+		<input type="hidden" id="postNo" th:value="${minwon.postNo}" /> <input
+			type="hidden" id="loginId" th:value="${loginId}">
+	</div>
+	<div>
+		<table class="table">
+			<tr class="col-md-12">
+				<th style="width: 5%">제목</th>
+				<td style="width: 30%">[[${minwon.title}]]</td>
+				<th>작성자</th>
+				<td>[[${minwon.roomNo}]]</td>
+			</tr>
+			<tr>
+				<th>카테고리</th>
+				<td>[[${minwon.categoryType}]]</td>
+			</tr>
+			<tr>
+				<th>방문날짜</th>
+				<td>[[${minwon.visitsDate1}]]</td>
 
-      <!-- 완료 버튼 -->
-      <form th:action="@{/updateMinwonState}" method="post">
-        <input type="hidden" name="postNo" th:value="${minwon.postNo}" />
-        <input type="hidden" name="state" th:value="2" />
-        <!-- 처리 완료는 숫자 2로 전송 -->
-        <button type="submit" class="btn btn-outline-danger m-2">완료</button>
-      </form>
-    </div>
+				<td>또는[[${minwon.visitsDate2}]]</td>
+			</tr>
+			<tr>
+				<th>내용</th>
+				<td id="textarea">[[${minwon.content}]]</td>
+			</tr>
+			<tr>
+				<th style="width: 10%">첨부파일</th>
+				<td><img style="width: 75%" th:each=" img : ${minwon.fileName}"
+					th:src="@{/images/민원/{f}(f=${img})}" /></td>
+			</tr>
+		</table>
+	</div>
+	<div class="button-container" th:if="${cri.auth == 2}">
+		<button type="button"
+			th:onClick="|location.href = '@{/minwonUpdate(postNo=${minwon.postNo})}'|"
+			class="btn btn-outline-warning m-2">수정</button>
+		<button type="button"
+			th:onClick="|location.href = '@{/minwonList(pageNum=${cri.pageNum}, type=${param.type}, keyword=${param.keyword})}'|"
+			class="btn btn-outline-success m-2">목록</button>
+		<button type="button"
+			th:onClick="|location.href = '@{/minwonDelete(postNo=${minwon.postNo})}'|"
+			class="btn btn-outline-danger m-2">삭제</button>
+	</div>
 
-    <div>
-      <section id="comments-section" th:style="'margin-top: 20px;'">
-        <div id="comments-container">
-          <!-- 댓글 목록이 여기에 동적으로 추가될 것입니다. -->
-          <div class="ms-3" id="cmtContainer"></div>
-        </div>
-        <!-- 댓글 작성 폼 -->
-        <form id="comment-form">
-          <div class="form-group">
-            <label for="comment">댓글 추가:</label>
-            <textarea class="form-control" id="comment" rows="3"></textarea>
-          </div>
-          <button type="button" class="btn btn-primary" id="create-comment-btn">
-            댓글 작성
-          </button>
-        </form>
-      </section>
+	<div class="button-container" th:if="${cri.auth == 1}">
+		<button type="button"
+			th:onClick="|location.href = '@{/minwonList(pageNum=${cri.pageNum}, type=${param.type}, keyword=${param.keyword})}'|"
+			class="btn btn-outline-success m-2">목록</button>
 
-      <!-- 대댓글 작성 폼 -->
-      <!-- 	<form id="comment-form">
+		<!-- 접수 버튼 -->
+		<form th:action="@{/updateMinwonState}" method="post">
+			<input type="hidden" name="postNo" th:value="${minwon.postNo}" /> <input
+				type="hidden" name="state" th:value="1" />
+			<!-- 접수중은 숫자 1로 전송 -->
+			<button type="submit" class="btn btn-outline-warning m-2">접수</button>
+		</form>
+
+		<!-- 완료 버튼 -->
+		<form th:action="@{/updateMinwonState}" method="post">
+			<input type="hidden" name="postNo" th:value="${minwon.postNo}" /> <input
+				type="hidden" name="state" th:value="2" />
+			<!-- 처리 완료는 숫자 2로 전송 -->
+			<button type="submit" class="btn btn-outline-danger m-2">완료</button>
+		</form>
+	</div>
+
+	<div>
+		<section id="comments-section" th:style="'margin-top: 20px;'">
+		
+			<h4>comment</h4>
+			<div id="comments-container">
+				<!-- 댓글 목록이 여기에 동적으로 추가될 것입니다. -->
+				<div class="ms-3" id="cmtContainer"></div>
+			</div>
+			<!-- 댓글 작성 폼 -->
+			<form id="comment-form">
+				<div class="form-group">
+					<label for="comment">댓글 추가:</label>
+					<textarea class="form-control" id="comment" rows="3"></textarea>
+				</div>
+				<button type="button" class="btn btn-primary"
+					id="create-comment-btn">댓글 작성</button>
+			</form>
+		</section>
+
+		<!-- 대댓글 작성 폼 -->
+		<!-- 	<form id="comment-form">
 			<div class="form-group">
 				<label for="reply">대댓글 추가:</label>
 				<textarea class="form-control" id="reply" rows="3"></textarea>
@@ -168,9 +170,9 @@ margin-top: 20px;
 			<button type="button" class="btn btn-primary" id="reply-comment-btn">댓글
 				작성</button>
 		</form> -->
-    </div>
+	</div>
 
-    <script>
+	<script>
       var str = $("#textarea").html();
       let postNo = $("#postNo").val();
 
@@ -199,21 +201,27 @@ margin-top: 20px;
                 ).slice(-2)}-${("0" + formattedDate.getDate()).slice(-2)} ${(
                   "0" + formattedDate.getHours()
                 ).slice(-2)}:${("0" + formattedDate.getMinutes()).slice(-2)}`;
-
-                let deleteButton = `<button class="delete-comment-btn" data-id="${comment.minwonCmtNo}">삭제</button>`;
-
+				
+                let deleteButton = "";
+                if (comment.writer === $("#loginId").val()) {
+                deleteButton = `<button class="delete-comment-btn" data-id="${comment.minwonCmtNo}">삭제</button>`;
+                }
+                
                 let ply = comment.cmtRep == "1" ? "class='ply'" : "";
                 let onkey = comment.cmtRep == "0" ? "id='onkey'" : "";
                 if (comment.cmtRep == "0") {
                   let groupDiv = `
                     	   <div id='group${comment.cmtGroup}' class="group" data-group="${comment.cmtGroup}">
 	                    	   <div ${ply} ${onkey}>
+	                    	   <div class="comment-header">
 		                           <div class="fw-bold">${comment.writer}</div> <!-- 작성자 -->
-		                           <div>${comment.content}</div> <!-- 댓글 내용 -->
-		                           <div>${dateString}</div> <!-- 작성일 -->
-		                           
-		                           <input type="hidden" value=${comment.cmtGroup}>
 		                           ${deleteButton}
+		                       </div>
+		                           <div class="comment-content">${comment.content}</div> <!-- 댓글 내용 -->
+		                           <div class="comment-footer">
+		                           <div>${dateString}</div> <!-- 작성일 -->
+		                           <input type="hidden" value=${comment.cmtGroup}>
+		                           </div>
 	                       	   </div>
                     	   </div>`;
                   commentsContainer.append(groupDiv);
@@ -221,11 +229,15 @@ margin-top: 20px;
                   let $groupDiv = $(`#group${comment.cmtGroup}`);
                   let commentElement = `
 	                           <div ${ply}>
+	                           <div class="comment-header">
 	                               <div class="fw-bold">${comment.writer}</div> <!-- 작성자 -->
-	                               <div>${comment.content}</div> <!-- 댓글 내용 -->
+	                               ${deleteButton}
+	                           </div>
+	                           <div class="comment-content">${comment.content}</div> <!-- 댓글 내용 -->
+	                           <div class="comment-footer">
 	                               <div>${dateString}</div> <!-- 작성일 -->
 	                               <input type="hidden" value=${comment.cmtGroup}>
-	                               ${deleteButton}
+	                               </div>
 	                           </div>
 	                       `;
                   $groupDiv.append(commentElement);
@@ -359,5 +371,5 @@ margin-top: 20px;
 
       
     </script>
-  </body>
+</body>
 </html>

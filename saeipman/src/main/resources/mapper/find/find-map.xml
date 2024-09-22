@@ -10,21 +10,36 @@
 		and imdaein_name = #{imdaeinName}
 	</select>
 	
-	<!-- 비번 조회 -->
+	<!-- 임대인 비번 조회 -->
 	<select id="selectPw" resultType="FindVO">
-		select imdaein_id,
-		       imdaein_name,
-		       phone
-		from imdaein
-		where imdaein_id = #{imdaeinId}
-		and   imdaein_name = #{imdaeinName}
-	
+		select imd.imdaein_id,
+	           imd.imdaein_name,
+	           imd.phone,
+	           login.pw
+	    from imdaein imd
+	    join login_info login on imd.imdaein_id = login.login_id
+		where imd.imdaein_id = #{imdaeinId}
+		and   imd.imdaein_name = #{imdaeinName}
 	</select>
+	
+	
+	<!-- 임차인 비번 조회 -->
+	<select id="imchainPw" resultType="FindVO">
+		select imc.imchain_id,
+	           imc.imchain_name,
+	           login.pw  
+	    from imchain imc
+	    join login_info login on imc.imchain_id = login.login_id
+	    where imc.imchain_id = #{imchainId}
+	    and imc.imchain_name = #{imchainName}
+	</select>
+	
+	
 	
 	<!-- 비번 변경 -->
 	<update id="updatePw">
 		update login_info
 		set pw = #{pw}
-		where login_id = #{imdaeinId}
+		where login_id = #{loginId}
 	</update>
 </mapper>

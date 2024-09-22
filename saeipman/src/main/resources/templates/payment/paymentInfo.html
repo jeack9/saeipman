@@ -23,30 +23,6 @@ table {
 </head>
 <body>
 	<div layout:fragment="Main" id="container">
-
-		<!-- <form id="updateForm">
-			<select class="form-select mb-6" aria-label="Default select example"
-				id="option">
-				<option selected>조회할 기간 선택(최근 3개월)</option>
-			</select>
-
-		<div>
-			<div class="bg-light rounded h-100 p-4">
-				<h6 class="mb-4" style="text-align: center;">납부내역</h6>
-				<div class="container text-center">
-					<div class="row">
-						<div class="col-12 col-sm-6">월세</div>
-						<div class="col-12 col-sm-6">관리비</div>
-						Ajax에서 받아온 내용을 append 활용해서 데이터 출력하는 부분
-						<div class="col-12 col-sm-3 delete" id="rentMonth"></div>
-						<div class="col-12 col-sm-3 delete" id="Rentpay"></div>
-						<div class="col-12 col-sm-3 delete" id="gwanlibiMonth"></div>
-						<div class="col-12 col-sm-3 delete" id="Gwanlibi"></div>
-					</div>
-				</div>
-			</div>
-		</div> -->
-
 		<form id="updateForm">
 			<div>
 				<table class="table table-bordered">
@@ -105,25 +81,23 @@ table {
 							<td>
 								<!-- 월세 출력 -->
 								<table>
-									<tbody>
+									<tbody id="mRentTotal">
 										<th:block th:each="payInF : ${payInfo}">
 											<tr>
-												<td>
-													<div class="form-check">
-														<input class="form-check-input" type="checkbox"
-															th:value="${payInF.mRentHistoryNo}" id="checkbox" name="mRentHistoryNo"><label
-															class="form-check-label" for="flexCheckDefault"></label>
-
+												<td><div class="form-check">
 														<input class="form-check-input check" type="checkbox"
-															th:value="${payInF.gaguPaymentHistoryNo}" id="checkbox"
-															name="gaguPaymentHistoryNo"><label
+															th:value="${payInF.mRentHistoryNo}" id="mRentCheck"
+															name="mRentHistoryNo"><label
 															class="form-check-label" for="flexCheckDefault"></label>
-
-
-													</div>
-												</td>
-												<td></td>
-												<td></td>
+													</div></td>
+												<td>[[${#strings.substring(payInF.realPaymentDate, 0,
+													11)}]]</td>
+												<td>[[${#numbers.formatInteger(payInF.realPaymentMoney,
+													3, 'COMMA')}]]</td>
+												<td th:if="${payInF.paymentState == -1}"><font
+													color="red"> 연체</font></td>
+												<td th:if="${payInF.paymentState != -1}"><font
+													color="green"> 예정</font></td>
 											</tr>
 										</th:block>
 									</tbody>
@@ -133,13 +107,13 @@ table {
 							<!-- 관리비 출력 -->
 							<td>
 								<table class="table table-bordered">
-									<tbody id="paytotal">
+									<tbody id="gwanlibiTotal">
 										<th:block th:each="payInF : ${payInfo}">
 											<tr>
 												<td><div class="form-check">
 														<input class="form-check-input check" type="checkbox"
-															th:value="${payInF.gaguPaymentHistoryNo}" id="checkbox"
-															name="gaguPaymentHistoryNo"><label
+															th:value="${payInF.gaguPaymentHistoryNo}"
+															id="gwanlibiCheck" name="gaguPaymentHistoryNo"><label
 															class="form-check-label" for="flexCheckDefault"></label>
 													</div></td>
 												<td>[[${#strings.substring(payInF.paymentMonth, 0,
@@ -174,6 +148,9 @@ table {
 			src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 
 		<script>
+		
+//		<<<<<<<<< 완납내역 >>>>>>>>>>>
+		
 			let date = new Date();
 			let nowMonth = dateToM(date);
 			let startMonth = nowMonth - 4;
@@ -241,22 +218,32 @@ table {
 				}			
 			
 			
-//			<<<<<<<<< 관리비 >>>>>>>>>>>
+//			<<<<<<<<< 미납내역 >>>>>>>>>>>
 
 			//체크한 달의 관리비 값 합산
 						
 			$(".check").click(
 			
 					function(e) {
-						//console.log($(e.target).closest('tr').children().eq(2).text());
-						let payMoney = $('#paytotal').find('tr');
+						
 						let total = 0;
-						for (let i = 0; i < payMoney.length; i++) {
+						
+						//관리비 체크박스
+						let GwanlibiCheck = $('#gwanlibiTotal').find('tr');
+						for (let i = 0; i < GwanlibiCheck.length; i++) {
 							//find(배열 내에서 특정 요소(id가 checkbox)를 찾아냄), prop() : 체크여부에 따라 true, false 반환
-							if (payMoney.eq(i).find('#checkbox').prop("checked")) {
-								total += Number(payMoney.eq(i).children().eq(2).text().replace(",",""));
+							if (GwanlibiCheck.eq(i).find('.check').prop("checked")) {
+								total += Number(GwanlibiCheck.eq(i).children().eq(2).text().replace(",",""));
 							}
 						}
+						
+						//월세 체크박스
+						let mRentCheck = $('#mRentTotal').find('tr');
+						for (let i = 0; i < mRentCheck.length; i++) {
+							if (mRentCheck.eq(i).find('.check').prop("checked")) {
+								total += Number(mRentCheck.eq(i).children().eq(2).text().replace(",",""));
+							}
+						} 
 						$('#total').text(total);
 					})
 			
@@ -288,31 +275,6 @@ table {
 			} 
 			
 			
-			function getList(){
-				let checks =$('.check:checked');
-				let checkList = [];
-				for(chk of checks){
-					let gaguPaymentHistoryNo = chk.value;
-					checkList.push({gaguPaymentHistoryNo});
-				}
-				return checkList;
-			} 
-			
-			
-//			<<<<<<<<< 월세 >>>>>>>>>>>						
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-
 			/* //결제 api
 			 $('#payBtn').on('click', payImp)
 			

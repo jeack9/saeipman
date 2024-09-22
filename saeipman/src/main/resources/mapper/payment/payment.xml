@@ -65,6 +65,6 @@
 	<update id="updateMonthRentStatus">
 		UPDATE m_rent_payment_history
 		SET payment_state = 1
-		WHERE m_rent_history_no = #{mRentHistoryNo}
+		WHERE M_RENT_HISTORY_NO = #{mRentHistoryNo}
 	</update>
 </mapper>

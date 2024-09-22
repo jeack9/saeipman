@@ -9,5 +9,8 @@ public class FindVO {
 	private String imdaeinEmail; //임대인 이메일
 	private int phone; //폰번호
 	private String pw;
+	private String imchainId;
+	private String imchainName;
+	private String loginId;
 	
 }
