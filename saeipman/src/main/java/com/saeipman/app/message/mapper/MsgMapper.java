@@ -7,4 +7,6 @@ public interface MsgMapper {
 	public String selectMinwonMsg(int msgType);
 	
 	public String selectPhone(String roomId); //임대인 연락처(민원)
+	
+	public String selectMinwonAlertYn(String buildingId);
 }

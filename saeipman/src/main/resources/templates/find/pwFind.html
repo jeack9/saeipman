@@ -16,112 +16,188 @@
 							<h3 style="font-size: 20px">비밀번호 찾기</h3>
 						</div>
 
+						<!-- 사용자 유형 선택 -->
+						<div class="form-check mb-3">
+							<input class="form-check-input" type="radio" name="userType"
+								id="landlord" value="landlord" checked> <label
+								class="form-check-label" for="landlord">임대인</label>
+						</div>
+						<div class="form-check mb-3">
+							<input class="form-check-input" type="radio" name="userType"
+								id="tenant" value="tenant"> <label
+								class="form-check-label" for="tenant">임차인</label>
+						</div>
 
+						<!-- 이름 입력 -->
 						<div class="form-floating mb-3">
 							<input type="text" class="form-control" id="name"
-								name="imdaeinName"> <label for="floatingInput">이름</label>
+								name="imdaeinName" placeholder="이름"> <label
+								for="floatingInput">이름</label>
 						</div>
+
+						<!-- 아이디 입력 -->
 						<div class="form-floating mb-4">
-							<input type="text" class="form-control" name="text"
-								id="imdaeinId"> <label for="floatingInput">아이디</label>
+							<input type="text" class="form-control" id="imdaeinId"
+								name="imdaeinId" placeholder="아이디"> <label
+								for="floatingInput">아이디</label>
 						</div>
 
-
+						<!-- 전화번호 입력 및 인증요청 버튼 -->
 						<div class="form-floating mb-3">
 							<div class="d-flex form-floating">
-								<input type="text" class="form-control" id="tel"> <label
-									for="phone">전화번호</label>
-
+								<input type="text" class="form-control" id="tel"
+									placeholder="전화번호"> <label for="phone">전화번호</label>
 								<button type="button" class="btn btn-primary" id="sendPhone"
 									style="min-width: 90px;">인증요청</button>
 							</div>
-
-
-							<div class="form-floating mb-4">
-								<div class="d-flex form-floating">
-									<input type="tel" class="form-control" name="phoneCheck">
-									<label for="">인증번호</label>
-									<button type="button" class="btn btn-primary"
-										onclick="verifyCode()" style="min-width: 90px;">인증하기</button>
-								</div>
-							</div>
-
-
-							<div
-								class="d-flex align-items-center justify-content-between mb-4">
-
-								<button type="submit" class="btn btn-primary py-3 w-100 mb-4"
-									id="checkBtn">비밀번호 찾기</button>
-
-							</div>
-							<p class="text-center mb-0">
-								<a th:href="@{/all/login}">로그인하기</a>
-							</p>
 						</div>
+
+						<!-- 인증번호 입력 및 인증 확인 버튼 -->
+						<div class="form-floating mb-4">
+							<div class="d-flex form-floating">
+								<input type="tel" class="form-control" name="phoneCheck"
+									id="phoneCheck" placeholder="인증번호"> <label
+									for="phoneCheck">인증번호</label>
+								<button type="button" class="btn btn-primary" id="verifyCodeBtn"
+									style="min-width: 90px;">인증하기</button>
+							</div>
+						</div>
+
+						<!-- 비밀번호 찾기 버튼 -->
+						<div
+							class="d-flex align-items-center justify-content-between mb-4">
+							<button type="button" class="btn btn-primary py-3 w-100 mb-4"
+								id="checkBtn" disabled>비밀번호 찾기</button>
+						</div>
+
+						<!-- 로그인 링크 -->
+						<p class="text-center mb-0">
+							<a th:href="@{/all/login}">로그인하기</a>
+						</p>
 					</div>
 				</div>
 			</div>
-			<!-- Sign In End -->
 		</div>
 	</div>
 </div>
 
 <script>
-//인증번호 발송
- $('#sendPhone').click(function(){
-	 let phoneNum = $('#tel').val();
-	 alert('인증번호 발송')
-	 
-	 $.ajax({
-		 type: "POST",
-		 url: ctxPath + "/all/sendSMS",
-		 data: {
-			 "phone" : phoneNum
-		 },
-		 success: function(data){
-			 let checkNum = data
-			 console.log(checkNum)
-				 },
-				 error : function(i){
-					 console.log(i)
-				 }
-			 })
-		 })
-		 
-		function verifyCode(){
- 		 let phoneNum = $('#tel').val();
-		 let inputCode = $('input[name="phoneCheck"]').val();
-		 if(!inputCode || inputCode.trim() === ''){ //인증번호입력없이 확인하기를 눌렀을 경우
-			 alert("인증번호를 입력해주세요");
-		 	 return;
-		 }
-		 
-		 //인증번호 확인 ajax 요청
-		 $.ajax({
-			 url: ctxPath + "/all/smsCheck",
-			 type: "POST",
-			 data: {
-				 "inputCode": inputCode,
-				 "phone" : phoneNum
-			 },
-			 success: function(isCodeCorrect){
-				 if(isCodeCorrect){
-					 alert("인증번호가 일치합니다.");
-				 }else {
-					 alert("인증번호가 일치하지 않습니다.")
-					 $('input[name="phoneCheck"]').focus()
-				 }
-				
-			 },
-			 error: function(){
-				 alert("확인 실패.")
-			 }
-				 
-		 })
+	// 인증 완료 여부를 저장하는 변수
+	let isCodeVerified = false;
 
-		 
-		 //
-}
-		
-	
+	// 인증번호 발송
+	$('#sendPhone').click(function() {
+		let phoneNum = $('#tel').val();
+		if (!phoneNum) {
+			alert('전화번호를 입력해주세요.');
+			return;
+		}
+
+		// 인증번호 발송 요청
+		$.ajax({
+			type : "POST",
+			url : ctxPath + "/all/sendSMS", // 서버의 SMS 발송 요청 URL
+			data : {
+				"phone" : phoneNum
+			},
+			success : function(data) {
+				alert("인증번호가 발송되었습니다.");
+				console.log(data); // 인증번호 출력
+			},
+			error : function() {
+				alert("인증번호 발송에 실패했습니다. 다시 시도해주세요.");
+			}
+		});
+	});
+
+	// 인증번호 확인
+	$('#verifyCodeBtn').click(function() {
+		let phoneNum = $('#tel').val();
+		let inputCode = $('#phoneCheck').val(); // 인증번호 입력 필드
+
+		if (!inputCode || inputCode.trim() === '') { // 인증번호를 입력하지 않았을 경우
+			alert("인증번호를 입력해주세요");
+			return;
+		}
+
+		// 인증번호 확인 ajax 요청
+		$.ajax({
+			url : ctxPath + "/all/smsCheck",
+			type : "POST",
+			data : {
+				"inputCode" : inputCode,
+				"phone" : phoneNum
+			},
+			success : function(isCodeCorrect) {
+				if (isCodeCorrect) {
+					alert("인증번호가 일치합니다.");
+					isCodeVerified = true; // 인증 성공 상태 저장
+					$('#checkBtn').prop('disabled', false); // 비밀번호 찾기 버튼 활성화
+				} else {
+					alert("인증번호가 일치하지 않습니다.");
+					$('#phoneCheck').focus();
+				}
+			},
+			error : function() {
+				alert("인증 확인에 실패했습니다.");
+			}
+		});
+	});
+
+	// 비밀번호 찾기 버튼 클릭
+	$('#checkBtn').click(
+			function() {
+				let name = $('#name').val();
+				let id = $('#imdaeinId').val();
+				let phone = $('#tel').val();
+				let userType = $('input[name="userType"]:checked').val(); // 임대인 or 임차인 구분
+
+				// 모든 필드가 입력되었는지 확인
+				if (!name || !id || !phone) {
+					alert("모든 필드를 입력해주세요.");
+					return;
+				}
+
+				// 인증번호가 확인되었는지 확인
+				if (!isCodeVerified) {
+					alert("인증을 완료해주세요.");
+					return;
+				}
+
+				// 사용자 유형에 따라 전송할 데이터의 이름을 다르게 설정
+				let data = {};
+				if (userType === "landlord") {
+					data = {
+						"imdaeinName" : name,
+						"imdaeinId" : id
+					};
+				} else if (userType === "tenant") {
+					data = {
+						"imchainName" : name,
+						"imchainId" : id
+					};
+				}
+
+				// 임대인 또는 임차인에 따라 다른 URL로 요청 보냄
+				let url = (userType === "landlord") ? ctxPath + "/all/pwUpform"
+						: ctxPath + "/all/tenantPwUpform";
+
+				// 회원 정보 확인 요청
+				$.ajax({
+					type : "POST",
+					url : url, // 사용자 유형에 따라 분기된 URL로 요청
+					data : data,
+					success : function(response) {
+						// 성공적으로 회원 정보가 확인되면 비밀번호 변경 페이지로 이동
+						if (response === "ok") {
+							window.location.href = ctxPath + "/all/pwUpdate";
+						} else {
+							alert("비밀번호 찾기에 실패했습니다. 다시 시도해주세요.");
+						}
+					},
+					error : function(xhr) {
+						alert("입력한 정보를 확인하고 다시 시도해주세요.");
+					}
+				});
+			});
 </script>

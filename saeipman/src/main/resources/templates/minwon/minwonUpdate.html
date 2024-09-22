@@ -1,84 +1,151 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{common/layouts/default_layout}"
-	  layout:fragment="Main">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Main">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
-	<form  name="updateForm" th:object="${minwon}">
-	<input name="postNo" th:value="${minwon.postNo}" type="hidden">
+	<form name="updateForm" th:object="${minwon}">
+		<input name="postNo" th:value="${minwon.postNo}" type="hidden">
 		<div class="mb-3">
-			<label for="">제목</label>
-			<input class="form-control" type="text" th:field="*{title}">
+			<label for="">제목</label> <input class="form-control" type="text"
+				th:field="*{title}">
 		</div>
 		<div class="mb-3">
-			<label for="roomNo">작성자</label>
-			<input class="form-control" type="text" th:field="*{roomNo}" readonly/>
+			<label for="roomNo">작성자</label> <input class="form-control"
+				type="text" th:field="*{roomNo}" readonly />
 		</div>
-		
-		<div class="mb-3">
-		<label for="category">카테고리</label>
-		<select class="form-select" th:field="*{category}" >
-			 <option value="" selected >카테고리를 선택하세요</option>
-			 	<option th:each="category : ${categories}"
-                    	th:text="${category.categoryType}" th:value="${category.categoryNo}">
-             	</option>
-		</select>
-		</div>
-		
-		<div class="mb-3">
-		    <label for="visitsDate">방문날짜</label>
-		    <input type="datetime-local" class="form-control" name="visitsDate1" th:value="${#temporals.format(minwon.visitsDate1, 'yyyy-MM-dd HH:mm')}">
-		</div>
-		
-		
-		<div class="mb-3">
-		    <label for="visitsDate">방문날짜(택2)</label>
-		    <input type="datetime-local" class="form-control" name="visitsDate2" th:value="${#temporals.format(minwon.visitsDate2, 'yyyy-MM-dd HH:mm')}">
-		</div>
-		
 
-		<div class="file-input">
-			 <label for="formFile" class="form-label">첨부파일</label>
-			 <input class="form-control" type="file" name="file" th:field="*{fileName}">
-		</div>
 		<div class="mb-3">
-  			<label for="content" class="form-label">내용</label>
-  			<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" th:field="*{content}"></textarea>
+			<label for="category">카테고리</label> <select class="form-select"
+				th:field="*{category}">
+				<option value="" selected>카테고리를 선택하세요</option>
+				<option th:each="category : ${categories}"
+					th:text="${category.categoryType}"
+					th:value="${category.categoryNo}"></option>
+			</select>
+		</div>
+
+		<div class="mb-3">
+			<label for="visitsDate">방문날짜</label> <input type="datetime-local"
+				class="form-control" name="visitsDate1"
+				th:value="${#temporals.format(minwon.visitsDate1, 'yyyy-MM-dd HH:mm')}">
+		</div>
+
+
+		<div class="mb-3">
+			<label for="visitsDate">방문날짜(택2)</label> <input type="datetime-local"
+				class="form-control" name="visitsDate2"
+				th:value="${#temporals.format(minwon.visitsDate2, 'yyyy-MM-dd HH:mm')}">
+		</div>
+
+
+		<!-- 기존 이미지 미리보기 -->
+		<div class="mb-3">
+			<label>기존 이미지</label>
+			<div id="existingImgFile">
+				<!-- 서버에서 제공된 기존 이미지 목록을 표시 -->
+				<div th:each="img : ${minwon.fileName}">
+					<div class="imgDiv" th:data-fileid="${img}" style="display:inline-block; margin:10px;">
+						<img th:src="@{/images/민원/{img}(img=${img})}" class="imgId" width="200" height="200">
+						<button type="button" class="imageDel">X</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- 새로운 이미지 추가 -->
+		<div class="file-input">
+			<label for="formFile" class="form-label">첨부파일</label>
+			<input class="form-control" type="file" id="file" name="files" multiple>
+		</div>
+		
+		<!-- 미리보기 이미지 -->
+		<div id="imgFile"></div>
+
+		<div class="mb-3">
+			<label for="content" class="form-label">내용</label>
+			<textarea class="form-control" id="exampleFormControlTextarea1"
+				rows="3" th:field="*{content}"></textarea>
 		</div>
 		<div>
-			<button type="button" id="updateBtn" class="btn btn-outline-warning m-2">수정</button>
+			<button type="button" id="updateBtn"
+				class="btn btn-outline-warning m-2">수정</button>
 		</div>
 	</form>
 	<script>
-		$('#updateBtn').on('click', update);
-		
-		function update(e){
-			let fromData = new FormData();
-			let inputFile = $("input[name='file']");
-			let files = inputFile[0].files;
-			console.log(files)
-			
-			for(let i=0; i<files.length; i++){
-				formData.append("file", files[i]);
+	let delList = [];  // 삭제할 기존 이미지 목록
+
+	// 기존 이미지 삭제 처리
+	$('#existingImgFile').on('click', '.imageDel', function() {
+		let fileId = $(this).parent().data('fileid');
+		delList.push(fileId);  // 삭제할 파일 목록에 추가
+		$(this).parent().remove();  // 이미지 미리보기에서 삭제
+	});
+
+	// 새로 선택한 파일 미리보기 처리
+	$('#file').on('change', function() {
+		let inputFile = $(this)[0].files;
+		$('#imgFile').html('');  // 새 파일 미리보기 초기화
+
+		for (let i = 0; i < inputFile.length; i++) {
+			let reader = new FileReader();
+			reader.onload = function(e) {
+				let div = $('<div>').attr({'class': 'imgDiv', 'data-fileid': inputFile[i].name});
+				let img = $('<img>').attr({
+					'src': e.target.result,
+					'class': 'imgId',
+					'width': '200px',
+					'height': '200px'
+				});
+				let delBtn = $('<button>').attr({'type': 'button', 'class': 'imageDel'}).html('X');
+				$('#imgFile').append(div);
+				$(div).append(img);
+				$(div).append(delBtn);
 			}
-			
-			
-			$.ajax({
-				url : '/minwonUpdate',
-				type : 'POST',
-				data : fromData,
-				processData: false,
-	            contentType: false,
-	            success : function(result){
-	            	alert("Uploaded")
-	            }
-			});
+			reader.readAsDataURL(inputFile[i]);
 		}
-		
+	});
+
+	// 수정 완료 버튼 클릭 시 서버로 데이터 전송
+	$('#updateBtn').on('click', function(e) {
+		e.preventDefault();  // 기본 제출 이벤트 방지
+
+		let formData = new FormData(document.updateForm);
+		let inputFile = $("input[name='files']")[0].files;
+
+		// 파일이 존재하는 경우에만 처리
+        if (inputFile && inputFile.files.length > 0) {
+            let files = inputFile.files;
+            for (let i = 0; i < files.length; i++) {
+                formData.append("newFiles", files[i]);
+            }
+        }
+
+		// 삭제된 기존 이미지 목록도 FormData에 추가
+		delList.forEach(fileName => {
+			formData.append("deleteFileNames", fileName);
+		});
+
+		// 서버에 AJAX로 데이터 전송
+		$.ajax({
+			url: ctxPath + '/minwonUpdate',
+			type: 'POST',
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function(result) {
+				alert("업로드 성공!");
+			},
+			error: function(error) {
+				alert("업로드 실패!");
+				console.error(error);
+			}
+		});
+	});
 	</script>
 </body>
 </html>
