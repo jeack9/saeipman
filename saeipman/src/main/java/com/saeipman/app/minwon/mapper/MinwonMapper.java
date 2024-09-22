@@ -35,6 +35,11 @@ public interface MinwonMapper {
 	//임대인별 건물 리스트
 	public List<MinwonVO> selectBuilding(Criteria cri);
 	
+	
 	public List<String> selectFileName(int postNo);
+	
+	//파일
+	public int selectDeleteFileName(String fileName);
+	public int selectFileNamesByGroupId(String groupId);
 	
 }

@@ -9,4 +9,5 @@ public class MessageVO {
 	
 	private String roomId;
 	
+	
 }

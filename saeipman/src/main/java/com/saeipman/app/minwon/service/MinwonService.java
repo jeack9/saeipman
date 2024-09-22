@@ -36,5 +36,9 @@ public interface MinwonService {
 	//파일업로드
 	public List<String> getFileName(int postNo);
 	
+	//파일관련
+	public int fileDelete(List<String> fileNames);
+	public int fileNamesByGroupId(String groupId);
+	
 
 }

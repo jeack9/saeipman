@@ -3,7 +3,9 @@ package com.saeipman.app.find.web;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.saeipman.app.find.mapper.FindMapper;
 import com.saeipman.app.find.service.FindService;
 import com.saeipman.app.find.service.FindVO;
 import com.saeipman.app.message.MsgService;
 
 import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.Session;
 
 
 
@@ -103,15 +105,87 @@ public class findController {
 	}
 	
 	
-	//비밀번호 찾기 요청시 입력받은 값 넘기기
+	//비밀번호 찾기 요청시 입력받은 값 넘기기(임대인)
 	@PostMapping("/all/pwUpform")
 	@ResponseBody
-	public FindVO pwUpform(@ModelAttribute FindVO findVO) {
-		
+	public ResponseEntity<String> pwUpform(@ModelAttribute FindVO findVO, HttpSession session) {
+		//입력된 정보로 회원 정보 조회
 		FindVO check = findService.pwSelect(findVO);
 		System.out.println(check);
 		
-		return check;
+		//회원 정보가 존재하는 경우 세션에 저장
+		if(check != null) {
+			session.setAttribute("imdaeinId", check.getImdaeinId());
+			session.setAttribute("imdaeinName", check.getImdaeinName());
+			//session.setAttribute("pw", check.getPw());
+			// 성공 메시지로 "ok" 반환
+	        return ResponseEntity.ok("ok");
+		}else {
+	        // 회원 정보를 찾을 수 없는 경우
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("일치하는 회원 정보를 찾을 수 없습니다.");
+	    }
+		
+		
+	}
+	
+	//비밀번호 찾기 요청시 입력받은 값 넘기기(임차인)
+	@PostMapping("/all/tenantPwUpform")
+	@ResponseBody
+	public ResponseEntity<String> tenantPwUpform(@ModelAttribute FindVO findVO, HttpSession session) {
+	    // 입력된 정보로 임차인 정보 조회
+	    FindVO check = findService.imchainPw(findVO);  // 임차인 정보 조회 서비스 호출
+	    System.out.println(check);
+
+	    // 임차인 정보가 존재하는 경우 세션에 저장
+	    if (check != null) {
+	        session.setAttribute("imchainId", check.getImchainId());  // 임차인 ID 저장
+	        session.setAttribute("imchainName", check.getImchainName());  // 임차인 이름 저장
+	        session.setAttribute("pw", check.getPw());
+	        // 성공 메시지로 "ok" 반환
+	        return ResponseEntity.ok("ok");
+	    } else {
+	        // 임차인 정보를 찾을 수 없는 경우
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("일치하는 회원 정보를 찾을 수 없습니다.");
+	    }
+	}
+
+	
+	
+	//비번 변경 페이지
+	@GetMapping("all/pwUpdate")
+	public String pwUpdate(){
+		return "find/pwUpdate";
+	}
+	
+	//비번 변경 처리
+	@PostMapping("/all/changePw")
+	@ResponseBody
+	public ResponseEntity<String> changePassword(@RequestParam("newPassword") String newPassword,
+	                                             HttpSession session) {
+		
+	    // 세션에서 loginId 가져오기
+	    String loginId = (String) session.getAttribute("imdaeinId");
+	    if (loginId == null) {
+	        loginId = (String) session.getAttribute("imchainId");
+	    }
+	    
+	    System.out.println("로그인 ID: " + loginId);  // 로그로 ID 확인
+	    
+	    if (loginId == null) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인된 사용자가 없습니다.");
+	    }
+	    
+	    // 비밀번호 변경 요청 처리
+	    FindVO findVO = new FindVO();
+	    findVO.setLoginId(loginId);  // 로그인 ID 설정
+	    findVO.setPw(newPassword);  // 새 비밀번호 설정
+
+	    int rowsUpdated = findService.pwUpdate(findVO);  // Service 계층에서 처리
+	    if (rowsUpdated > 0) {
+	        return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+	    } else {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 변경에 실패했습니다.");
+	    }
 	}
 	
 }

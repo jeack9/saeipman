@@ -41,7 +41,11 @@
     
     <if test="buildingId != null and buildingId != ''">
        AND R.BUILDING_ID = #{buildingId}
-   </if>
+    </if>
+   
+    <if test="acceptState != null">
+       AND M.ACCEPT_STATE = #{acceptState}
+    </if>
   
 </sql>
 
