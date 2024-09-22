@@ -14,8 +14,8 @@
 </head>
 <body>
 	<div layout:fragment="Main">
-		<div class="container">
-			<div class="row">
+		<div class="container mt-4">
+			<div class="row mb-3">
 				<!-- 상단 버튼 -->
 				<div class="col-md-6">
 					<button type="button" class="btn btn-outline-primary"
@@ -50,54 +50,89 @@
 					</div>
 					<!-- 건물선택 모달창 END -->
 				</div>
-				<!-- 상단 우측 -->
-				<div class="col-md-6"></div>
 				<!-- 상단 버튼 영역 END -->
-				<!-- 계약목록 -->
-				<div>
-				<table class="table">
-					<thead>
-						<tr>
-							<th scope="col" rowspan="2" class="align-middle">호실</th>
-							<th scope="col">계약유형</th>
-							<th scope="col">계약일</th>
-							<th scope="col">월세</th>
-							<th scope="col">임차인명</th>
-							<th scope="col" rowspan="2" class="align-middle">계약서 파일</th>
-							<th scope="col" rowspan="2" class="align-middle">내역보기</th>
-							<th scope="col" rowspan="2" class="align-middle">보증금반환</th>
-						</tr>
-						<tr>
-						 <th scope="col">보증금</th>
-						 <th scope="col">만료일</th>
-						 <th scope="col">선후불/납입일</th>
-						 <th scope="col">연락처</th>
-						</tr>
-					</thead>
-					<tbody>
-						<th:block th:each="constract : ${constractList}">
-						<tr>
-							<td rowspan="2" class="align-middle">[[${constract.get("ROOM_NO")}]]</td>
-							<td>[[${constract.get("CONSTRACT_TYPE")}]]</td>
-							<td>[[${#dates.format(constract.get("CONSTRACT_DATE"), 'yyyy-MM-dd')}]]</td>
-							<td>[[${constract.get("M_RENT")}]]</td>
-							<td>[[${constract.get("IMCHAIN_NAME")}]]</td>
-							<td rowspan="2" class="align-middle">파일</td>
-							<td rowspan="2" class="align-middle">내역보기</td>
-							<td rowspan="2" class="align-middle">보증금반환</td>
-						</tr>
-						<tr>
-							<td>보증금</td>
-							<td>만료일</td>
-							<td>선후불/납입일</td>
-							<td>연락처</td>
-						</tr>
-						</th:block>
-					</tbody>
-				</table>
-				</div>
-				<!-- 계약목록 END -->
 			</div>
+			<!-- 테이블 영역 -->
+			<table class="table table-bordered text-center align-middle">
+				<thead class="table-dark">
+					<tr>
+						<th rowspan="2">호실</th>
+						<th>계약유형</th>
+						<th>계약일</th>
+						<th>월세</th>
+						<th>임차인명</th>
+						<th rowspan="2">계약서 파일</th>
+						<th rowspan="2">내역보기</th>
+					</tr>
+					<tr>
+						<th>보증금</th>
+						<th>만료일</th>
+						<th>선후불/납입일</th>
+						<th>연락처</th>
+					</tr>
+				</thead>
+				<tbody>
+					<th:block th:each="constract : ${constractList}"
+						th:if="${constractList.size() > 0}">
+						<tr>
+							<td rowspan="2">[[${constract.get('ROOM_NO')}]]</td>
+							<td>[[${constract.get('CONSTRACT_TYPE')}]]</td>
+							<td>[[${#dates.format(constract.get('CONSTRACT_DATE'),
+								'yyyy-MM-dd')}]]</td>
+							<td>[[${constract.get('M_RENT')}]]</td>
+							<td>[[${constract.get('IMCHAIN_NAME')}]]</td>
+							<td rowspan="2">
+								<button class="btn btn-outline-dark"
+									th:if="${constract.get('CONSTRACT_FILE') !=null}">파일
+									보기</button>
+							</td>
+							<td rowspan="2">
+								<button class="btn btn-outline-primary">내역 보기</button>
+							</td>
+						</tr>
+						<tr>
+							<td>[[${constract.get('DEPOSIT')}]]</td>
+							<td>[[${#dates.format(constract.get('EXP_DATE'),
+								'yyyy-MM-dd')}]]</td>
+							<td>[[${constract.get('PAY_TYPE')}]] /
+								[[${constract.get('M_RENT_DATE')}]]일</td>
+							<td>[[${constract.get('IMCHAIN_PHONE')}]]</td>
+						</tr>
+					</th:block>
+				</tbody>
+			</table>
+			<th:block th:unless="${constractList.size() > 0}">
+				<h3 class="text-center">정보가 없습니다.</h3>
+			</th:block>
+			<th:block th:if="${buildingVO.buildingId == null}">
+				<h3 class="text-center">건물을 선택하세요.</h3>
+			</th:block>
+			<!-- 페이지네이션 -->
+			<nav aria-label="Page navigation" th:if="${paging.total > 0}">
+				<ul class="pagination justify-content-center mt-3">
+					<!-- 이전페이지 -->
+					<li class="page-item"
+						th:classappend="${paging.prev ? '' : 'disabled'}"><a
+						class="page-link"
+						th:href="@{/room/constractList(page=${paging.startPage - paging.viewPage}, buildingId=${buildingVO.buildingId})}"
+						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+					</a></li>
+					<!-- 페이지번호 매기기 -->
+					<li class="page-item"
+						th:classappend="${pageNum == paging.page ? 'active' : ''}"
+						th:each="pageNum : ${#numbers.sequence(paging.startPage, paging.endPage)}">
+						<a class="page-link"
+						th:href="@{/room/constractList(page=${pageNum}, buildingId=${buildingVO.buildingId})}">[[${pageNum}]]</a>
+					</li>
+					<!-- 다음페이지 -->
+					<li class="page-item"
+						th:classappend="${paging.next ? '' : 'disabled'}"><a
+						class="page-link"
+						th:href="@{/room/constractList(page=${paging.endPage + 1}, buildingId=${buildingVO.buildingId})}"
+						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+					</a></li>
+				</ul>
+			</nav>
 		</div>
 		<!-- div.container END -->
 		<script type="text/javascript">
@@ -122,13 +157,13 @@
 			// 건물선택 이벤트
 			function selectBuilding(target) {
 				let buildingId = $(target).data("buildingid");
-				//location.href = `${ctxPath}/room/roomListBackup?buildingId=${buildingId}`;
+				location.href = `${ctxPath}/room/constractList?buildingId=${buildingId}`;
 			}
 			// 건물선택 초기화버튼
 			let $resetBuildingBtn = $("#resetBuildingBtn");
 			$resetBuildingBtn.on('click', resetBuilding);
 			function resetBuilding() {
-				//location.href = `${ctxPath}/room/roomListBackup`;
+				location.href = `${ctxPath}/room/constractList`;
 			}
 		</script>
 	</div>

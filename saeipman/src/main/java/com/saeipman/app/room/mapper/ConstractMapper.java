@@ -3,6 +3,9 @@ package com.saeipman.app.room.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
+import com.saeipman.app.commom.paging.PagingDTO;
 import com.saeipman.app.room.service.ConstractVO;
 
 public interface ConstractMapper {
@@ -24,5 +27,8 @@ public interface ConstractMapper {
 	public int updateConstractInfo(ConstractVO constractVO);
 	
 	// 건물선택 - 건물의 현재계약 목록
-	public List<Map<String,Object>> selectRoomConstract(String buildingId);
+	public List<Map<String,Object>> selectRoomConstract(@Param("buildingId")String buildingId, @Param("paging") PagingDTO paging);
+	
+	// 건물선택 - 건물의 현재계약 목록 토탈
+	public int roomConstractTotal(String buildingId);
 }

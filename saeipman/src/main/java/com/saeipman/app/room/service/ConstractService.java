@@ -3,6 +3,8 @@ package com.saeipman.app.room.service;
 import java.util.List;
 import java.util.Map;
 
+import com.saeipman.app.commom.paging.PagingDTO;
+
 public interface ConstractService {
 	// 임차인아이디 - 계약단건 조회
 	public ConstractVO constractInfoImchain(String imcahinId);
@@ -23,6 +25,9 @@ public interface ConstractService {
 	public ConstractVO modiConstract(ConstractVO constractVO);
 	
 	// 건물선택 - 방들의 현재계약 리스트
-	public List<Map<String, Object>> roomConstractList(String buildingId);
+	public List<Map<String, Object>> roomConstractList(String buildingId, PagingDTO paging);
+	
+	// 건물선택 - 방계약 목록 totla
+	public int roomConstractTotal(String buildingId);
 	
 }

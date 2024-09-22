@@ -190,7 +190,7 @@
     		let constractNo = $(e.target).data("cno") + "";
     		let roomId = $(e.target).data("roomid") + "";
     		let buildingName = $(e.target).data("bname") + "";
-    		buildingId = $(e.target).data("buildingid") == undefined ? '' : $(e.target).data("buildingid") + "";
+    		buildingId = $(e.target).data("buildingid") + "";
     		page = $(e.target).data("page") + "";
     		let dataObj = {constractNo, roomId, buildingName, page, buildingId};
     		$.ajax({
@@ -211,7 +211,7 @@
     		isUpdateMode = false;
     		let roomId = $(e.target).data("roomid") + "";
     		let buildingName = $(e.target).data("bname") + "";
-    		buildingId = $(e.target).data("buildingid") == undefined ? '' : $(e.target).data("buildingid") + "";
+    		buildingId = $(e.target).data("buildingid") +"";
     		page = $(e.target).data("page") + "";
     		let dataObj = {roomId, buildingName, page, buildingId};
     		$.ajax({
@@ -259,36 +259,37 @@
     	}
     	
     	// 모달창 동적 생성 -> 그룹이벤트로 이벤트 연결
-    	$(document).on("click", "#saveConstractBtn", (e) => {
-    	    e.preventDefault();
-    	    let formData = new FormData($('#contractForm')[0]);  // FormData 생성 (파일 포함)
-    	    // 계약 만료 여부 체크
-    	    if (formData.get("constractState") == -1) {
-    	        if (!confirm("계약만료를 진행하시겠습니까?")) {
-    	            return;
-    	        }
-    	    }
-    	    // 계약정보 추가, 수정 구분
-    	    let url = !formData.get("constractNo") ? `${ctxPath}/room/insertConstract` : `${ctxPath}/room/updateConstract`;
-    	    handleConstract(url, formData, page, buildingId);
+    	// 계약정보 저장
+    	$(document).on("click", "#saveConstractBtn", (e)=>{
+    		let formDataArr = $('#contractForm').serializeArray(); // 폼 데이터 가져오기
+    		let formObj = {};
+    		$.each(formDataArr, (idx, field)=>{
+    			formObj[field.name] = field.value;
+    		});
+    		// 계약만료할건지 체크
+    		if(formObj.constractState == -1){
+    			if(!confirm("계약만료를 진행하시겠습니까?")){
+    				return;
+    			}
+    		}
+    		// 계약정보 추가, 수정 구분
+    		if (!formObj.constractNo) {
+    		    handleConstract(`${ctxPath}/room/insertConstract`, formObj, page, buildingId);
+    		} else {
+    		    handleConstract(`${ctxPath}/room/updateConstract`, formObj, page, buildingId);
+    		}
     	});
-
     	// 계약정보 ajax 추가,수정 처리함수
-    	function handleConstract(url, formData, page = 1, buildingId = "") {
+    	function handleConstract(url, formObj, page=1, buildingId="") {
     	    $.ajax({
     	        url: url,
     	        method: 'POST',
-    	        data: formData,
-    	        contentType: false,  // 반드시 false로 설정
-    	        processData: false,  // 반드시 false로 설정
+    	        contentType: 'application/json',
+    	        data: JSON.stringify(formObj),
     	        success: function(response) {
     	            switch(response.retCode) {
     	                case "fail3":
-    	                	alert("유효성 검사 오류: " + response.error);
-    	                    //alert("(비고란, 파일 제외) 모든 값을 입력해주세요.");
-    	                    break;
-    	                case "fail_file_type":
-    	                    alert("PDF 파일만 업로드 가능합니다.");
+    	                    alert("(비고란,파일 제외) 모든 값을 입력해주세요.");
     	                    break;
     	                case "fail1":
     	                    alert("대기계약이 존재합니다.");
@@ -296,9 +297,6 @@
     	                case "fail2":
     	                    alert("현재 진행중인 계약정보가 있습니다.");
     	                    break;
-    	                case "fail_file":
-    	                	alert("파일 오류");
-    	                	break;
     	                case "ok":
     	                    alert("계약정보가 저장되었습니다.");
     	                    $('#contractModal').modal('hide');

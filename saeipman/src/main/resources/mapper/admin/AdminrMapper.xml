@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saeipman.app.admin.mapper.AdminMapper">
+	<select id="selectImdaeinList">
+		SELECT li.login_id, i.imdaein_name, i.imdaein_email, i.birth, i.phone, li.auth 
+		FROM imdaein i JOIN login_info li
+		                ON i.imdaein_id = li.login_id 
+		WHERE li.auth = 1
+	</select>
+	<select id="selectImchainList">
+	SELECT li.login_id, ic.imchain_name, li.auth 
+	FROM imchain ic JOIN login_info li
+	                ON ic.imchain_id= li.login_id 
+	WHERE li.auth = 2
+	</select>
+	<!-- 공지목록 조회 제목or내용 검색 -->
+	<select id="selectNoticeList">
+		 SELECT * FROM (
+            SELECT 
+                ROWNUM AS rnum, n.*
+            FROM (
+                SELECT post_no, title, content, reg_date, mod_date, group_id, views, writer, mod_writer
+                FROM site_notice
+                WHERE (title LIKE '%' || #{keyword} || '%' 
+                   OR content LIKE '%' || #{keyword} || '%')
+                ORDER BY post_no DESC
+            ) n
+            WHERE <![CDATA[ROWNUM <= (#{paging.page} - 1) * #{paging.recordSize} + #{paging.recordSize} ]]>
+        )
+        WHERE rnum BETWEEN (#{paging.page} - 1) * #{paging.recordSize} + 1 AND #{paging.page} * #{paging.recordSize}
+	</select>
+
+    <!-- 공지사항 총 개수 조회 (검색어 포함) -->
+    <select id="totalNotice">
+        SELECT COUNT(*)
+        FROM site_notice
+        WHERE (title LIKE '%' || #{keyword} || '%' 
+           OR content LIKE '%' || #{keyword} || '%')
+    </select>
+    
+    <!-- 공지사항 단건조회 -->
+    <select id="selectNoticeInfo">
+    	SELECT   post_no 
+		    	,title 
+		    	,content 
+		    	,reg_date 
+		    	,mod_date 
+		    	,group_id 
+		    	,views 
+		    	,writer 
+		    	,mod_writer
+    	FROM site_notice
+    	WHERE post_no = #{postNo}
+    </select>
+    
+    <!-- 공지사항 조회수 증가 -->
+    <update id="updateNoticeViews">
+    	UPDATE site_notice
+		SET views = views + 1
+		WHERE post_no = #{postNo}
+    </update>
+	<!-- 공지 단건삭제 -->
+	<delete id="deleteNotice">
+		DELETE FROM site_notice
+		WHERE post_no = #{postNo}
+	</delete>
+</mapper>
