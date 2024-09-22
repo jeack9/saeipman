@@ -1,114 +1,143 @@
 <!-- Modal -->
-
-		<div class="modal-content" xmlns:th="http://www.thymeleaf.org" th:fragment="modalContent">
-			<div class="modal-header">
-				<h5 class="modal-title" id="contractModalLabel">계약 정보: [[${buildingName}]] [[${roomVo.roomNo}]]호</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal"
-					aria-label="Close"></button>
+<div class="modal-content" xmlns:th="http://www.thymeleaf.org" th:fragment="modalContent">
+	<div class="modal-header">
+		<h5 class="modal-title" id="contractModalLabel">계약 정보: [[${buildingName}]] [[${roomVo.roomNo}]]호</h5>
+		<button type="button" class="btn-close" data-bs-dismiss="modal"
+			aria-label="Close"></button>
+	</div>
+	<div class="modal-body" th:object="${constractVo}">
+		<form id="contractForm" method="post" enctype="multipart/form-data">
+			<div class="row mb-3">
+				<input type="text" hidden="true" th:field="*{constractNo}">
+				<input type="text" hidden="true" th:field="${roomVo.roomId}">
+				<input type="text" hidden="true" th:value="${page}" name="page">
+				<input type="text" hidden="true" th:value="${buildingId}" name="buildingId">
+				<input type="text" hidden="true" th:field="*{constractFile}" th:value="*{constractFile}">
+				<label class="col-sm-2 col-form-label">계약유형</label>
+				<div class="col-sm-4">
+					<select class="form-select" th:field="*{constractType}">
+					    <option value="월세" th:selected="*{constractType == '월세'}">월세</option>
+					    <option value="전세" th:selected="*{constractType == '전세'}">전세</option>
+					</select>
+				</div>
+				<label class="col-sm-2 col-form-label">보증금</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" th:field="*{deposit}">
+				</div>
 			</div>
-			<div class="modal-body" th:object="${constractVo}">
-				<form id="contractForm">
-					<div class="row mb-3">
-						<input type="text" hidden="true" th:field="*{constractNo}">
-						<input type="text" hidden="true" th:field="${roomVo.roomId}">
-						<input type="text" hidden="true" th:value="${page}" name="page">
-						<input type="text" hidden="true" th:value="${buildingId}" name="buildingId">
-						<label class="col-sm-2 col-form-label">계약유형</label>
-						<div class="col-sm-4">
-							<select class="form-select" th:field="*{constractType}">
-							    <option value="월세" th:selected="*{constractType == '월세'}">월세</option>
-							    <option value="전세" th:selected="*{constractType == '전세'}">전세</option>
-							</select>
-						</div>
-						<label class="col-sm-2 col-form-label">보증금</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" th:field="*{deposit}">
-						</div>
-					</div>
-					<div class="row mb-3">
-						<label class="col-sm-2 col-form-label">선후불</label>
-						<div class="col-sm-4">
-							<select class="form-select" th:field="*{payType}">
-								<option value="선불" th:selected="*{payType == '선불'}">선불</option>
-								<option value="후불" th:selected="*{payType == '후불'}">후불</option>
-							</select>
-						</div>
-						<label class="col-sm-2 col-form-label">월세</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" th:field="*{mRent}">
-						</div>
-					</div>
-					<div class="row mb-3">
-						<label class="col-sm-2 col-form-label">임차인명</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" th:field="*{imchainName}">
-						</div>
-						<label class="col-sm-2 col-form-label">연락처</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" placeholder="ex) 01051649974" th:field="*{imchainPhone}">
-						</div>
-					</div>
-					<div class="row mb-3">
-						<label class="col-sm-2 col-form-label">계약일</label>
-						<div class="col-sm-4">
-							<input type="date" class="form-control" th:field="*{constractDate}">
-						</div>
-						<label class="col-sm-2 col-form-label">만료일</label>
-						<div class="col-sm-4">
-							<input type="date" class="form-control" th:field="*{expDate}">
-						</div>
-					</div>
-					<div class="row mb-3">
-						<div class="col-sm-3">만료일 계산기:</div>
-						<div class="col-sm-6 text-center">
-							<button type="button" class="btn btn-outline-secondary">12개월</button>
-							<button type="button" class="btn btn-outline-secondary">24개월</button>
-						</div>
-						<div class="col-sm-3"></div>
-					</div>
-					<div class="row mb-3">
-						<label class="col-sm-2 col-form-label">납부일</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" placeholder="ex) 납부일은 1 ~ 30 중 입력해주세요" th:field="*{mRentDate}">
-						</div>
-						<label class="col-sm-2 col-form-label">계약 상태</label>
-					    <div class="col-sm-4">
-					        <select class="form-select" th:field="*{constractState}">
-					            <option value="0" th:selected="*{constractState == 0}">대기</option>
-					            <option value="1" th:selected="*{constractState == 1}">확정</option>
-					            <option value="-1" th:selected="*{constractState == -1}">만료</option>
-					        </select>
-					    </div>
-					</div>
-					<div class="row mb-3">
-						<label class="col-sm-2 col-form-label">임대인 계좌</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" placeholder="숫자만 입력하세요" th:field="*{imdaeinAccount}">
-						</div>
-						<label class="col-sm-2 col-form-label">임차인 계좌</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" placeholder="숫자만 입력하세요" th:field="*{imchainAccount}">
-						</div>
-					</div>
-					<!-- 파일 업로드 -->
-					<div class="row mb-3">
-						<label class="col-sm-2 col-form-label">파일</label>
-						<div class="col-sm-10">
-							<input type="file" class="form-control">
-						</div>
-					</div>
-					<!-- 비고 -->
-					<div class="row mb-3">
-						<label class="col-sm-2 col-form-label">비고</label>
-						<div class="col-sm-10">
-							<textarea class="form-control" th:field="*{memo}"></textarea>
-						</div>
-					</div>
-				</form>
+			<div class="row mb-3">
+				<label class="col-sm-2 col-form-label">선후불</label>
+				<div class="col-sm-4">
+					<select class="form-select" th:field="*{payType}">
+						<option value="선불" th:selected="*{payType == '선불'}">선불</option>
+						<option value="후불" th:selected="*{payType == '후불'}">후불</option>
+					</select>
+				</div>
+				<label class="col-sm-2 col-form-label">월세</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" th:field="*{mRent}">
+				</div>
 			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" th:if="${constractVo.constractNo == null}">이전 정보 불러오기</button>
-				<button type="button" class="btn btn-primary" id="saveConstractBtn">저장</button>
+			<div class="row mb-3">
+				<label class="col-sm-2 col-form-label">임차인명</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" th:field="*{imchainName}">
+				</div>
+				<label class="col-sm-2 col-form-label">연락처</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" placeholder="ex) 01051649974" th:field="*{imchainPhone}">
+				</div>
+			</div>
+			<div class="row mb-3">
+				<label class="col-sm-2 col-form-label">계약일</label>
+				<div class="col-sm-4">
+					<input type="date" class="form-control" th:field="*{constractDate}">
+				</div>
+				<label class="col-sm-2 col-form-label">만료일</label>
+				<div class="col-sm-4">
+					<input type="date" class="form-control" th:field="*{expDate}">
+				</div>
+			</div>
+			<div class="row mb-3">
+				<div class="col-sm-3">만료일 계산기:</div>
+				<div class="col-sm-6 text-center">
+					<button type="button" class="btn btn-outline-secondary" id="set12Months">12개월</button>
+					<button type="button" class="btn btn-outline-secondary" id="set24Months">24개월</button>
+				</div>
+				<div class="col-sm-3"></div>
+			</div>
+			<div class="row mb-3">
+				<label class="col-sm-2 col-form-label">납부일</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" placeholder="ex) 납부일은 1 ~ 30 중 입력해주세요" th:field="*{mRentDate}">
+				</div>
+				<label class="col-sm-2 col-form-label">계약 상태</label>
+			    <div class="col-sm-4">
+			        <select class="form-select" th:field="*{constractState}">
+			            <option value="0" th:selected="*{constractState == 0}">대기</option>
+			            <option value="1" th:selected="*{constractState == 1}">확정</option>
+			            <option value="-1" th:selected="*{constractState == -1}">만료</option>
+			        </select>
+			    </div>
+			</div>
+			<div class="row mb-3">
+				<label class="col-sm-2 col-form-label">임대인 계좌</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" placeholder="숫자만 입력하세요" th:field="*{imdaeinAccount}">
+				</div>
+				<label class="col-sm-2 col-form-label">임차인 계좌</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" placeholder="숫자만 입력하세요" th:field="*{imchainAccount}">
+				</div>
+			</div>
+			<!-- 파일 업로드 -->
+		<div class="row mb-3">
+			<label class="col-sm-2 col-form-label" for="file">파일</label>
+			<div class="col-sm-10">
+				<input type="file" class="form-control" name="file" id="file" accept=".pdf">
 			</div>
 		</div>
+		<!-- 비고 -->
+			<div class="row mb-3">
+				<label class="col-sm-2 col-form-label">비고</label>
+				<div class="col-sm-10">
+					<textarea class="form-control" th:field="*{memo}"></textarea>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" th:if="${constractVo.constractNo == null}">이전 정보 불러오기</button>
+		<button type="button" class="btn btn-primary" id="saveConstractBtn">저장</button>
+	</div>
+	<script>
+		$("#set12Months").on('click', function () {
+	        setExpDate(12);
+	    });
+		$("#set24Months").on('click', function () {
+	        setExpDate(24);
+	    });
+		// 만료일 계산 함수
+        function setExpDate(months) {
+        	let $contractDateInput = $("#constractDate");
+            let contractDateValue = $contractDateInput.val();
+            if (!contractDateValue) {
+                alert('먼저 계약일을 선택하세요.');
+                return;
+            }
+
+            let contractDate = new Date(contractDateValue);
+            contractDate.setMonth(contractDate.getMonth() + months);
+
+            // 만료일을 yyyy-mm-dd 형식으로 변환
+            const year = contractDate.getFullYear();
+            const month = ('0' + (contractDate.getMonth() + 1)).slice(-2);
+            const day = ('0' + contractDate.getDate()).slice(-2);
+            const formattedDate = `${year}-${month}-${day}`;
+
+            let $expDateInput = $("#expDate");
+            $expDateInput.val(formattedDate);
+        }
+    </script>
+</div>
 <!-- Modal END -->

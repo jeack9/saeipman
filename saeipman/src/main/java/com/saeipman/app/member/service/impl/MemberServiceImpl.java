@@ -114,6 +114,7 @@ public class MemberServiceImpl implements MemberService {
 	public boolean addImchain(ConstractVO constractVO) {
 		String id = constractVO.getImchainPhone();
 		int duplicateLogin = lmapper.existsByLogin(id);
+		System.out.println("duplicateLogin" + duplicateLogin);
 		if(duplicateLogin == 1) {
 			lmapper.deleteImchain(id);
 			lmapper.deleteLogin(id);

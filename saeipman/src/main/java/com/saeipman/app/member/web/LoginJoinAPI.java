@@ -20,10 +20,10 @@ public class LoginJoinAPI {
 
 	private final MemberService loginService;
 
-	@PostMapping("join")
-	public String joinProc(MemberRequestDTO memberRequestDTO) {
-		loginService.addLogin(memberRequestDTO);
-		return "ok";
-	}
+//	@PostMapping("join")
+//	public String joinProc(MemberRequestDTO memberRequestDTO) {
+//		loginService.addLogin(memberRequestDTO);
+//		return "ok";
+//	}
 
 }

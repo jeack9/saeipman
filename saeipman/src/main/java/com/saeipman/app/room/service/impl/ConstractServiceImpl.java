@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.saeipman.app.commom.paging.PagingDTO;
 import com.saeipman.app.room.mapper.ConstractMapper;
 import com.saeipman.app.room.mapper.RoomMapper;
 import com.saeipman.app.room.service.ConstractService;
@@ -75,8 +76,14 @@ public class ConstractServiceImpl implements ConstractService{
 		return null;
 	}
 	@Override
-	public List<Map<String, Object>> roomConstractList(String buildingId) {
-		return cmapper.selectRoomConstract(buildingId);
+	public List<Map<String, Object>> roomConstractList(String buildingId, PagingDTO paging) {
+		return cmapper.selectRoomConstract(buildingId, paging);
+	}
+	
+	
+	@Override
+	public int roomConstractTotal(String buildingId) {
+		return cmapper.roomConstractTotal(buildingId);
 	}
 
 }

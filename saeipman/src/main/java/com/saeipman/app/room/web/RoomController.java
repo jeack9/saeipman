@@ -1,5 +1,6 @@
 package com.saeipman.app.room.web;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.saeipman.app.building.service.BuildingService;
 import com.saeipman.app.building.service.BuildingVO;
@@ -26,6 +29,7 @@ import com.saeipman.app.room.service.ConstractVO;
 import com.saeipman.app.room.service.RentPayService;
 import com.saeipman.app.room.service.RoomService;
 import com.saeipman.app.room.service.RoomVO;
+import com.saeipman.app.upload.config.FileUtility;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +43,7 @@ public class RoomController {
 	private final BuildingService bsvc;
 	private final MemberService msvc;
 	private final RentPayService rentPaySvc;
+	private final FileUtility fileUtill;
 
 	// 방목록 페이지이동
 	@GetMapping("roomListBackup")
@@ -168,18 +173,45 @@ public class RoomController {
 		return "room/fragments/buildingList :: buildingListFrg";
 	}
 
-	// 방 계약정보 등록
-	@PostMapping("insertConstract")
+	// 방 계약정보 등록 multipart
+	@PostMapping("/insertConstract")
 	@ResponseBody
-	public Map<String, Object> insertConstract(@Valid @RequestBody ConstractVO constractVO, BindingResult bindingResult,
-			Model model) {
-		Map<String, Object> map = new HashMap<String, Object>();
+	public Map<String, Object> insertConstract(@Valid ConstractVO constractVO, BindingResult bindingResult,
+			@RequestParam(name = "file") MultipartFile file) {
+		Map<String, Object> map = new HashMap<>();
+		// 업로드 경로 폴더명
+		fileUtill.setFolder("계약서");
+		// 유효성 검사
 		if (bindingResult.hasErrors()) {
 			map.put("retCode", "fail3");
-			return map; // 유효성 오류 발생 시 다시 폼 페이지로 이동
+			return map;
 		}
 		String roomId = constractVO.getRoomId();
 		int newState = constractVO.getConstractState();
+		if (newState == -1) {
+			map.put("retCode", "fail5");
+			return map;
+		}
+
+		// 파일 저장 로직
+		if (file != null && !file.isEmpty()) {
+			if (!file.getContentType().equals("application/pdf")) {
+	            map.put("retCode", "fail_file_type");
+	            return map;
+	        }
+			try {
+				// 파일을 저장하고 경로를 반환
+				String filePath = fileUtill.singleUpload(file);
+				constractVO.setConstractFile(filePath); // 파일 경로를 VO에 저장
+			} catch (Exception e) {
+				e.printStackTrace();
+				map.put("retCode", "fail_file");
+				return map;
+			}
+		} else {
+			System.out.println("파일이 비어있습니다.");
+		}
+
 		// 대기계약 정보 확인
 		if (newState == 0) {
 			ConstractVO nextConstract = csvc.nextConstractInfoByRoomId(roomId);
@@ -189,6 +221,7 @@ public class RoomController {
 				return map;
 			}
 		}
+
 		// 현재계약 정보 확인
 		if (newState == 1) {
 			ConstractVO currentConstract = csvc.currentConstractInfoByRoomId(roomId);
@@ -198,32 +231,69 @@ public class RoomController {
 				return map;
 			}
 		}
-		// 계약정보 insert -- 방의 입주상태 변경
+
+		// 계약 정보 insert 후 방의 입주상태 변경
 		String newConstractNo = csvc.addConstract(constractVO);
-		// 계약확정 -> 계약정보를 이용하여 임차인 정보, 로그인 정보 단건등록
-		// 이미 등록된 임차인 정보가 있으면 삭제 후 등록
+
+		// 계약 확정 시 임차인 정보 및 로그인 정보 단건 등록, 월세 첫 납부내역 등록
 		if (newState == 1) {
+			// 임차인 정보 추가
 			msvc.addImchain(constractVO);
 			// 월세 첫 납부내역 등록 (납부상태 1)
 			rentPaySvc.addRentPayAfterConstract(constractVO);
 		}
+
+		// 성공적으로 저장되었을 경우
 		map.put("retCode", "ok");
 		map.put("newConstractNo", newConstractNo);
 		return map;
 	}
 
-	// 방 계약정보 수정
-	@PostMapping("updateConstract")
+	// 방 계약정보 수정 multipart
+	@PostMapping("/updateConstract")
 	@ResponseBody
-	public Map<String, Object> updateConstract(@Valid @RequestBody ConstractVO constractVO, BindingResult bindingResult,
-			Model model) {
-		Map<String, Object> map = new HashMap<String, Object>();
+	public Map<String, Object> updateConstract(@Valid ConstractVO constractVO, BindingResult bindingResult,
+			@RequestParam(name = "file", required = false) MultipartFile file) {
+		Map<String, Object> map = new HashMap<>();
+		fileUtill.setFolder("계약서");
+		// 유효성 검사
 		if (bindingResult.hasErrors()) {
+			// 첫 번째 유효성 검사 오류만 추출
+			FieldError firstError = bindingResult.getFieldError(); // 가장 첫 번째 오류 추출
+			String errorMessage = firstError.getField() + ": " + firstError.getDefaultMessage();
+
+			// 오류 메시지를 클라이언트로 반환
 			map.put("retCode", "fail3");
-			return map; // 유효성 오류 발생 시 다시 폼 페이지로 이동
+			map.put("error", errorMessage); // 단일 오류 메시지 반환
+			return map;
 		}
+
 		String roomId = constractVO.getRoomId();
 		int newState = constractVO.getConstractState();
+
+		if (file != null && !file.isEmpty()) {
+			if (!file.getContentType().equals("application/pdf")) {
+	            map.put("retCode", "fail_file_type");
+	            map.put("error", "PDF 파일만 업로드 가능합니다.");
+	            return map;
+	        }
+	        // 새 파일이 업로드되면 기존 파일 삭제 후 새 파일 저장
+	        try {
+	            if (constractVO.getConstractFile() != null) {
+	                fileUtill.deleteFile(constractVO.getConstractFile());
+	            }
+	            String filePath = fileUtill.singleUpload(file);
+	            constractVO.setConstractFile(filePath);  // 새 파일 경로 설정
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            map.put("retCode", "fail_file");
+	            return map;
+	        }
+	    } else {
+	        // 파일이 비어있으면 기존 파일 경로 유지
+	        constractVO.setConstractFile(constractVO.getConstractFile());
+	    }
+
 		// 대기계약 정보 확인
 		if (newState == 0) {
 			ConstractVO nextConstract = csvc.nextConstractInfoByRoomId(roomId);
@@ -233,21 +303,23 @@ public class RoomController {
 				return map;
 			}
 		}
+
 		// 현재계약 정보 확인
 		if (newState == 1) {
 			ConstractVO currentConstract = csvc.currentConstractInfoByRoomId(roomId);
 			if (currentConstract != null && !currentConstract.getConstractNo().equals(constractVO.getConstractNo())) {
 				map.put("retCode", "fail2");
-				System.err.println("엄데이트: 현재계약 있음");
+				System.err.println("업데이트: 현재계약 있음.");
 				return map;
 			}
 		}
+
 		// 계약정보 update -- 방의 입주상태 변경
 		map.put("modiConstract", csvc.modiConstract(constractVO));
+
 		// 계약확정 -> 계약정보를 이용하여 임차인 정보, 로그인 정보 단건등록
 		// 이미 등록된 임차인 정보가 있으면 삭제 후 등록
 		if (newState == 1) {
-			msvc.addImchain(constractVO);
 			msvc.addImchain(constractVO);
 			// 월세 첫 납부내역 등록 (납부상태 1)
 			rentPaySvc.addRentPayAfterConstract(constractVO);
@@ -256,13 +328,106 @@ public class RoomController {
 			msvc.removeImchain(constractVO.getImchainPhone());
 			msvc.removeLogin(constractVO.getImchainPhone());
 		}
+		// 성공적으로 저장되었을 경우
 		map.put("retCode", "ok");
 		return map;
 	}
 
+	// 방 계약정보 등록
+//	@PostMapping("insertConstract")
+//	@ResponseBody
+//	public Map<String, Object> insertConstract(@Valid @RequestBody ConstractVO constractVO, BindingResult bindingResult,
+//			Model model) {
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		if (bindingResult.hasErrors()) {
+//			map.put("retCode", "fail3");
+//			return map; // 유효성 오류 발생 시 다시 폼 페이지로 이동
+//		}
+//		String roomId = constractVO.getRoomId();
+//		int newState = constractVO.getConstractState();
+//		// 대기계약 정보 확인
+//		if (newState == 0) {
+//			ConstractVO nextConstract = csvc.nextConstractInfoByRoomId(roomId);
+//			if (nextConstract != null && !nextConstract.getConstractNo().equals(constractVO.getConstractNo())) {
+//				map.put("retCode", "fail1");
+//				System.err.println("인서트: 대기계약 있음.");
+//				return map;
+//			}
+//		}
+//		// 현재계약 정보 확인
+//		if (newState == 1) {
+//			ConstractVO currentConstract = csvc.currentConstractInfoByRoomId(roomId);
+//			if (currentConstract != null && !currentConstract.getConstractNo().equals(constractVO.getConstractNo())) {
+//				map.put("retCode", "fail2");
+//				System.err.println("인서트: 현재계약 있음.");
+//				return map;
+//			}
+//		}
+//		// 계약정보 insert -- 방의 입주상태 변경
+//		String newConstractNo = csvc.addConstract(constractVO);
+//		// 계약확정 -> 계약정보를 이용하여 임차인 정보, 로그인 정보 단건등록
+//		// 이미 등록된 임차인 정보가 있으면 삭제 후 등록
+//		if (newState == 1) {
+//			msvc.addImchain(constractVO);
+//			// 월세 첫 납부내역 등록 (납부상태 1)
+//			rentPaySvc.addRentPayAfterConstract(constractVO);
+//		}
+//		map.put("retCode", "ok");
+//		map.put("newConstractNo", newConstractNo);
+//		return map;
+//	}
+
+	// 방 계약정보 수정
+//	@PostMapping("updateConstract")
+//	@ResponseBody
+//	public Map<String, Object> updateConstract(@Valid @RequestBody ConstractVO constractVO, BindingResult bindingResult,
+//			Model model) {
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		if (bindingResult.hasErrors()) {
+//			map.put("retCode", "fail3");
+//			return map; // 유효성 오류 발생 시 다시 폼 페이지로 이동
+//		}
+//		String roomId = constractVO.getRoomId();
+//		int newState = constractVO.getConstractState();
+//		// 대기계약 정보 확인
+//		if (newState == 0) {
+//			ConstractVO nextConstract = csvc.nextConstractInfoByRoomId(roomId);
+//			if (nextConstract != null && !nextConstract.getConstractNo().equals(constractVO.getConstractNo())) {
+//				map.put("retCode", "fail1");
+//				System.err.println("업데이트: 대기계약 있음.");
+//				return map;
+//			}
+//		}
+//		// 현재계약 정보 확인
+//		if (newState == 1) {
+//			ConstractVO currentConstract = csvc.currentConstractInfoByRoomId(roomId);
+//			if (currentConstract != null && !currentConstract.getConstractNo().equals(constractVO.getConstractNo())) {
+//				map.put("retCode", "fail2");
+//				System.err.println("엄데이트: 현재계약 있음");
+//				return map;
+//			}
+//		}
+//		// 계약정보 update -- 방의 입주상태 변경
+//		map.put("modiConstract", csvc.modiConstract(constractVO));
+//		// 계약확정 -> 계약정보를 이용하여 임차인 정보, 로그인 정보 단건등록
+//		// 이미 등록된 임차인 정보가 있으면 삭제 후 등록
+//		if (newState == 1) {
+//			msvc.addImchain(constractVO);
+//			msvc.addImchain(constractVO);
+//			// 월세 첫 납부내역 등록 (납부상태 1)
+//			rentPaySvc.addRentPayAfterConstract(constractVO);
+//		} else {
+//			// 계약만료 or 대기 -> 임차인 정보 삭제
+//			msvc.removeImchain(constractVO.getImchainPhone());
+//			msvc.removeLogin(constractVO.getImchainPhone());
+//		}
+//		map.put("retCode", "ok");
+//		return map;
+//	}
+
 	// 계약관리 페이지 이동
 	@GetMapping("constractList")
-	public void constractListP(@RequestParam(name = "buildingId", defaultValue = "ZIP000392") String buildingId,
+	public void constractListP(@RequestParam(name = "page", required = false) Integer page, @RequestParam(name = "buildingId", defaultValue = "", required = false) String buildingId,
 			Model model) {
 		String imdaeinId = SecurityUtil.getLoginId();
 
@@ -275,10 +440,19 @@ public class RoomController {
 		model.addAttribute("bPaging", buildingPaging);
 
 		BuildingVO buildingVO = new BuildingVO();
-		model.addAttribute("buildingVO", buildingVO);
+		buildingVO.setBuildingId(buildingId);
+		BuildingVO findBuildingVO = bsvc.buildingInfo(buildingVO);
+		findBuildingVO = findBuildingVO == null ? new BuildingVO() : findBuildingVO;
+		model.addAttribute("buildingVO", findBuildingVO);
 
+		// 계약 목록 페이지네이션
+		page = page == null ? 1 : page;
+		int total = csvc.roomConstractTotal(buildingId);
+		PagingDTO paging = new PagingDTO(page, 10, total, 10);
+		model.addAttribute("paging", paging);
+		
 		// 건물선택 - 방계약 목록
-		List<Map<String, Object>> constractList = csvc.roomConstractList(buildingId);
+		List<Map<String, Object>> constractList = csvc.roomConstractList(buildingId, paging);
 		model.addAttribute("constractList", constractList);
 	}
 
