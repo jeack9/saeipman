@@ -38,6 +38,7 @@ public class PaymentController {
 
 		payVO.setPaymentYN(-1);
 		payVO.setPaymentState(-1);
+		
 
 		List<PaymentVO> payInfo = paymentService.selectPayInfo(payVO);
 		model.addAttribute("payInfo", payInfo);
