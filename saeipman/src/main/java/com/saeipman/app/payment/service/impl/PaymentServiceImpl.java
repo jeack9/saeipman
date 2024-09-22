@@ -32,23 +32,18 @@ public class PaymentServiceImpl implements PaymentService {
 		payList.addAll(mr);
 		
 		System.out.println("관리비!!!!!!!!!!!!!!! " + gw); // 로그 추가
-	    System.out.println("월세!!!!!!!!!!!!!!!!!!!!!!: " + mr); // 로그 추가
+	    System.out.println("월세!!!!!!!!!!!!!!!!! " + mr); // 로그 추가
 		
 		
 		return payList;
 
 	}
 
-	/*
-	 * @Override public List<PaymentVO> selectMonthlyRentPay(PaymentVO payVO) {
-	 * return paymentMapper.selectMonthlyRentPay(payVO); }
-	 */
-
 	@Override
 	@Transactional
 	public int updatePaymentStatus(PaymentVO payVO) {
 		paymentMapper.updateGwanlibiStatus(payVO);
-		//paymentMapper.updateMonthRentStatus(payVO);
+		paymentMapper.updateMonthRentStatus(payVO);
 		return 1;
 	}
 
