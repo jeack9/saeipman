@@ -19,7 +19,6 @@ table {
 .form-check {
 	justify-content: center;
 }
-
 </style>
 </head>
 <body>
@@ -111,9 +110,16 @@ table {
 											<tr>
 												<td>
 													<div class="form-check">
-														<input class="form-check-input" type="checkbox" value=""
-															id="flexCheckDefault"><label
+														<input class="form-check-input" type="checkbox"
+															th:value="${payInF.mRentHistoryNo}" id="checkbox" name="mRentHistoryNo"><label
 															class="form-check-label" for="flexCheckDefault"></label>
+
+														<input class="form-check-input check" type="checkbox"
+															th:value="${payInF.gaguPaymentHistoryNo}" id="checkbox"
+															name="gaguPaymentHistoryNo"><label
+															class="form-check-label" for="flexCheckDefault"></label>
+
+
 													</div>
 												</td>
 												<td></td>
@@ -123,6 +129,7 @@ table {
 									</tbody>
 								</table>
 							</td>
+
 							<!-- 관리비 출력 -->
 							<td>
 								<table class="table table-bordered">
@@ -231,13 +238,16 @@ table {
 							}
 						}
 					)
-				}						
+				}			
+			
+			
+//			<<<<<<<<< 관리비 >>>>>>>>>>>
+
 			//체크한 달의 관리비 값 합산
 						
 			$(".check").click(
 			
 					function(e) {
-					
 						//console.log($(e.target).closest('tr').children().eq(2).text());
 						let payMoney = $('#paytotal').find('tr');
 						let total = 0;
@@ -248,8 +258,6 @@ table {
 							}
 						}
 						$('#total').text(total);
-
-
 					})
 			
 			//결제 여부 ajax로 갱신
@@ -289,6 +297,21 @@ table {
 				}
 				return checkList;
 			} 
+			
+			
+//			<<<<<<<<< 월세 >>>>>>>>>>>						
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 
 			/* //결제 api
 			 $('#payBtn').on('click', payImp)
