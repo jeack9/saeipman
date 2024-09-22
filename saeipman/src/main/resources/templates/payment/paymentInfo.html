@@ -105,25 +105,23 @@ table {
 							<td>
 								<!-- 월세 출력 -->
 								<table>
-									<tbody>
+									<tbody id="payTotal">
 										<th:block th:each="payInF : ${payInfo}">
 											<tr>
-												<td>
-													<div class="form-check">
-														<input class="form-check-input" type="checkbox"
-															th:value="${payInF.mRentHistoryNo}" id="checkbox" name="mRentHistoryNo"><label
-															class="form-check-label" for="flexCheckDefault"></label>
-
+												<td><div class="form-check">
 														<input class="form-check-input check" type="checkbox"
-															th:value="${payInF.gaguPaymentHistoryNo}" id="checkbox"
-															name="gaguPaymentHistoryNo"><label
+															th:value="${payInF.mRentHistoryNo}" id="checkbox"
+															name="mRentHistoryNo"><label
 															class="form-check-label" for="flexCheckDefault"></label>
-
-
-													</div>
-												</td>
-												<td></td>
-												<td></td>
+													</div></td>
+												<td>[[${#strings.substring(payInF.realPaymentDate, 0,
+													11)}]]</td>
+												<td>[[${#numbers.formatInteger(payInF.realPaymentMoney, 3,
+													'COMMA')}]]</td>
+												<td th:if="${payInF.paymentState == -1}"><font color="red">
+														연체</font></td>
+												<td th:if="${payInF.paymentState != -1}"><font
+													color="green"> 예정</font></td>
 											</tr>
 										</th:block>
 									</tbody>
@@ -258,6 +256,7 @@ table {
 							}
 						}
 						$('#total').text(total);
+						console.log(payMoney)
 					})
 			
 			//결제 여부 ajax로 갱신
