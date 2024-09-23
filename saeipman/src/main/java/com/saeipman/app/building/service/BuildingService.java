@@ -7,8 +7,6 @@ import com.saeipman.app.commom.paging.PagingDTO;
 import com.saeipman.app.room.service.RoomVO;
 
 
-
-
 public interface BuildingService {
 	public List<BuildingVO> buildingList(BuildingPageDTO pageDTO, String id);
 	public BuildingVO buildingInfo(BuildingVO buildingVO);
@@ -36,5 +34,6 @@ public interface BuildingService {
 	public List<RoomVO> roomSelect(RoomVO roomVO);
 	public int roomUpdate(RoomVO roomVO);
 	public int roomInfoDelete(RoomVO roomVO);
+	public int roomInfoInsert(RoomVO roomVO);
 
 }

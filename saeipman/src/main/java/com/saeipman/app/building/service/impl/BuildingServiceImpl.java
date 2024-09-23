@@ -121,6 +121,10 @@ public class BuildingServiceImpl implements BuildingService{
 	public int roomInfoDelete(RoomVO roomVO) {
 		return buildingMapper.selectRoomInfoDelete(roomVO);
 	}
+	@Override
+	public int roomInfoInsert(RoomVO roomVO) {
+		return buildingMapper.selectRoomInfoInsert(roomVO);
+	}
 	
 	
 }

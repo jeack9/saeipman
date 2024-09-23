@@ -37,6 +37,7 @@ public interface BuildingMapper {
 	public List<RoomVO> selectRoom(RoomVO roomVO);
 	public int selectRoomUpdate(RoomVO roomVO);
 	public int selectRoomInfoDelete(RoomVO roomVO);
+	public int selectRoomInfoInsert(RoomVO roomVO);
 
 	
 

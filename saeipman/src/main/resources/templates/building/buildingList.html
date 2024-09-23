@@ -26,7 +26,7 @@ input {
 	border-width: 0 0 1px;
 }
 
-.hoSel, .fl {
+.hoSel,.fl, .newRoom {
 	width: 65px;
 }
 </style>
@@ -290,25 +290,19 @@ input {
 						//방번호 수정
 						$('.hoSel').on('change',function(e){
 							//호실 추가 리스트 
-							$('.hoSel').each((idx,ele)=>{
+							/* $('.hoSel').each((idx,ele)=>{
 								console.log(ele);
-							})
-							if($('.hoSel').attr('id') === ''){
-								let roomNo = $(e.target).val();
-								let floor = $(e.target).closest('tr');
-								insertRoomList.push({floor, roomNo});
-								console.log(insertRoomList ,'insertRoomList');
-							}else{
-								
-								let roomNo = $(e.target).val();
-								let roomId = $(e.target).attr('id');
-							
-								updateRoomList[roomId]=roomNo;
-								console.log(updateRoomList ,'updateRoomList');
-							}
-							
-							
+							}) */
+							let roomNo = $(e.target).val();
+							let roomId = $(e.target).attr('id');
+						
+							updateRoomList[roomId]=roomNo;
+							console.log(updateRoomList ,'updateRoomList');
+						
 						})
+						
+						
+						//이미지 파일
 						if(data.fileName != null) {
 							//$('#groupId').val(data.groupId);
 							let images = data.fileName;
@@ -370,7 +364,7 @@ input {
 				let newFloor;
 			
 				newFloor += `<tr>`;
-				newFloor += `<td><input type="checkbox" class='selectRoom'><input type='text' name = 'fl' class='hoSel' placeholder='숫자입력'></td>`;
+				newFloor += `<td><input type="checkbox" class='selectRoom'><input type='text' name = 'floor' class="fl" placeholder='숫자입력'></td>`;
 				newFloor +=`<td><button type='button' class='addRoom'>추가</button>
 					<button type='button' class='delRoom'>삭제</button></td>`;
 				newFloor+=`</tr>`;
@@ -381,9 +375,18 @@ input {
 			$('#tb').delegate('.addRoom','click',function(e){
 				let addSel = $(e.target).closest('tr');
 				//console.log(addSel);
-				addSel.find('.addRoom').parent().before(`<td><input type="checkbox" name="chk"><input type="text" name='roomNo' class = "hoSel"></td>`);
+				addSel.find('.addRoom').parent().before(`<td><input type="checkbox" name="chk"><input type="text" name='roomNo' class = "newRoom"></td>`);
 				
 			});
+			
+			//호실 번호 추가
+			$('#tb').delegate('.newRoom','change',function(e){
+				let roomNo = $(e.target).val();
+				let floor = $(e.target).closest('tr').find('input[name=floor]').val();
+				insertRoomList.push({floor,roomNo});
+				console.log(insertRoomList,"방추가");
+			})
+			
 			//호실 삭제
 		 	$('#tb').delegate('.delRoom','click',function(e){
 				let delSel = $(e.target).closest('tr');
@@ -468,18 +471,13 @@ input {
 		     	for(roomId in updateRoomList){
 		     		roomList.push({ roomId, roomNo: updateRoomList[roomId] });
 			   	}  
-			    roomList.forEach(room=>{
-			    	formData.append("updateRoomList", JSON.stringify(room));
-			    })
+			    formData.append("updateRoomList", JSON.stringify(roomList));
+			 
 		     	//방 삭제 리스트
-		     	delRoomList.forEach(delRoom =>{
-					formData.append("deleteRoomList", JSON.stringify(delRoom));
-		     	})
-		     	/* if($('input[name=newFiles]').val()=="null"){
-		     
-		     	}
-		     	console.log($('input[name=newFiles]').val()); */
-			   	//console.log(roomList, " ROOMLIST");
+				formData.append("deleteRoomList", JSON.stringify(delRoomList));
+		     	
+		     	//방 추가 리스트
+				formData.append("insertRoomList", JSON.stringify(insertRoomList));
 
 			    $.ajax({
 			        url: ctxPath+'/buildingUpdate',
