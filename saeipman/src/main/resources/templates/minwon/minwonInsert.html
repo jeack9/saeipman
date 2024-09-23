@@ -69,11 +69,11 @@
 		
 		const dataTransfer = new DataTransfer(); // 파일 관리 객체 생성
 
-		// 파일 선택 시 미리보기 생성
-		$('#file').on('change', function() {
+		// 파일 이미지 미리보기
+		$('#file').on('change', function() { //파일 선택되었을때 발생
 		let files = $(this)[0].files;
 
-		// 새로 선택한 파일들을 미리보기 영역에 추가 (기존 미리보기 유지)
+		// 새로 선택한 파일들을 미리보기 영역에 추가
 		for (let i = 0; i < files.length; i++) {
 			// 이미 추가된 파일은 중복 방지
 			if (!Array.from(dataTransfer.files).some(file => file.name === files[i].name)) {
@@ -99,24 +99,24 @@
 
 		// 미리보기 이미지 삭제 시 첨부 파일 목록에서 제거
 		$('#preview').on('click', '.imageDel', function() {
-			let fileId = $(this).parent().data('fileid');  // 삭제할 파일 ID
+			let fileId = $(this).parent().data('fileid'); 
 			$(this).closest('.imgDiv').remove();  // 미리보기에서 삭제
 	
-			// DataTransfer에서 해당 파일 제거
-			const updatedDataTransfer = new DataTransfer(); // 새로운 DataTransfer 객체 생성
+			// 삭제되지 않은 파일 담기
+			const updatedDT = new DataTransfer(); 
 			let files = dataTransfer.files;
 	
-			// 기존 파일 목록을 초기화하고 남은 파일들만 새로운 DataTransfer에 추가
+			// 삭제되지 않은 파일들만 새로운 DataTransfer에 추가
 			for (let i = 0; i < files.length; i++) {
-				if (files[i].name !== fileId) {  // 삭제할 파일을 제외한 나머지 파일 추가
-					updatedDataTransfer.items.add(files[i]);
+				if (files[i].name !== fileId) {  // 삭제 파일 이름과 일치하지 않을때만 추가
+					updatedDT.items.add(files[i]);
 				}
 			}
 	
-			// 기존 DataTransfer 초기화 후, 새로운 파일 목록으로 대체
+			// 기존 DataTransfer 비우고 새로운 파일 목록으로 대체
 			dataTransfer.items.clear();  // 이전 파일 목록 비우기
-			for (let i = 0; i < updatedDataTransfer.files.length; i++) {
-				dataTransfer.items.add(updatedDataTransfer.files[i]);
+			for (let i = 0; i < updatedDT.files.length; i++) { //updatedDT에 저장된 파일들을 다시 기존 dataTransfer에 추가
+				dataTransfer.items.add(updatedDT.files[i]);
 			}
 	
 			// 갱신된 파일 목록을 input에 적용
