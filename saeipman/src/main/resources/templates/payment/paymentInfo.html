@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{common/layouts/default_layout}">
 <head>
 <meta charset="UTF-8">
 <style>
@@ -28,8 +26,7 @@ table {
 				<table class="table table-bordered">
 					<thead>
 						<tr>
-							<th colspan="2">납부 내역 &nbsp; &nbsp;<select
-								aria-label="Default select example" id="option">
+							<th colspan="2">납부 내역 &nbsp; &nbsp;<select aria-label="Default select example" id="option">
 									<option selected>조회기간(최근 3개월)</option>
 							</select></th>
 						</tr>
@@ -85,20 +82,13 @@ table {
 										<th:block th:each="payInF : ${payInfo}">
 											<tr th:if="${payInF.realPaymentMoney > 0}">
 												<td><div class="form-check">
-														<input class="form-check-input check" type="checkbox"
-															th:value="${payInF.mRentHistoryNo}" id="mRentCheck"
-															name="mRentHistoryNo"><label
-															class="form-check-label" for="flexCheckDefault"></label>
+														<input class="form-check-input check" type="checkbox" th:value="${payInF.mRentHistoryNo}" id="mRentCheck" name="mRentHistoryNo"><label class="form-check-label" for="flexCheckDefault"></label>
 													</div></td>
-												<td>[[${#strings.substring(payInF.realPaymentDate, 0,
-													11)}]]</td>
+												<td>[[${#strings.substring(payInF.realPaymentDate, 0, 11)}]]</td>
 
-												<td>[[${#numbers.formatInteger(payInF.realPaymentMoney,
-													3, 'COMMA')}]]</td>
-												<td th:if="${payInF.paymentState == -1}"><font
-													color="red"> 연체</font></td>
-												<td th:if="${payInF.paymentState != -1}"><font
-													color="green"> 예정</font></td>
+												<td>[[${#numbers.formatInteger(payInF.realPaymentMoney, 3, 'COMMA')}]]</td>
+												<td th:if="${payInF.paymentState == -1}"><font color="red"> 연체</font></td>
+												<td th:if="${payInF.paymentState != -1}"><font color="green"> 예정</font></td>
 											</tr>
 										</th:block>
 									</tbody>
@@ -112,19 +102,12 @@ table {
 										<th:block th:each="payInF : ${payInfo}">
 											<tr th:if="${payInF.gaguGwanlibi > 0}">
 												<td><div class="form-check">
-														<input class="form-check-input check" type="checkbox"
-															th:value="${payInF.gaguPaymentHistoryNo}"
-															id="gwanlibiCheck" name="gaguPaymentHistoryNo"><label
-															class="form-check-label" for="flexCheckDefault"></label>
+														<input class="form-check-input check" type="checkbox" th:value="${payInF.gaguPaymentHistoryNo}" id="gwanlibiCheck" name="gaguPaymentHistoryNo"><label class="form-check-label" for="flexCheckDefault"></label>
 													</div></td>
-												<td>[[${#strings.substring(payInF.paymentMonth, 0,
-													11)}]]</td>
-												<td>[[${#numbers.formatInteger(payInF.gaguGwanlibi, 3,
-													'COMMA')}]]</td>
-												<td th:if="${payInF.paymentYN == -1}"><font color="red">
-														연체</font></td>
-												<td th:if="${payInF.paymentYN != -1}"><font
-													color="green"> 예정</font></td>
+												<td>[[${#strings.substring(payInF.paymentMonth, 0, 11)}]]</td>
+												<td>[[${#numbers.formatInteger(payInF.gaguGwanlibi, 3, 'COMMA')}]]</td>
+												<td th:if="${payInF.paymentYN == -1}"><font color="red"> 연체</font></td>
+												<td th:if="${payInF.paymentYN != -1}"><font color="green"> 예정</font></td>
 											</tr>
 										</th:block>
 									</tbody>
@@ -145,12 +128,11 @@ table {
 			</div>
 		</form>
 
-		 <script src="https://cdn.bootpay.co.kr/js/bootpay-3.3.6.min.js" type="application/javascript"></script>
+		<script src="https://cdn.bootpay.co.kr/js/bootpay-3.3.6.min.js" type="application/javascript"></script>
 
 		<script>
-		
-//		<<<<<<<<< 완납내역 >>>>>>>>>>>
-		
+			//		<<<<<<<<< 완납내역 >>>>>>>>>>>
+
 			let date = new Date();
 			let nowMonth = dateToM(date);
 			let startMonth = nowMonth - 4;
@@ -171,167 +153,160 @@ table {
 
 			function selectMonth(event) {
 				let payDate = event.target.value;
-				
+
 				console.log(payDate);
-				
+
 				$.ajax(ctxPath + "/paymentAjax", {
-					type : "GET",
-					//contentType : "application/json",
-					data : {
-						 payDate: payDate
-					},
-				}).done(
-						function(payDate) {
-							console.log("ddddddddd : ", payDate);
-							
-							//현재 다른 결제월의 test데이터는 없는데, 다른 결제월을 선택해도 기존의 결제일에 출력된 데이터가 계속 남아있어서 작성함.
-								$('.delete').html('');
-								
-								for(let i = 0; i < payDate.length; i++) {
-									if(payDate[i].realPaymentDate == null){
-									let paymentMonth = payDate[i].paymentMonth; //2024-07-07 00:00:00()
-									let yearG = paymentMonth.substring(0, 4); //2024
-									let monthG = paymentMonth.substring(5, 7); //07
-									let dayG = paymentMonth.substring(8, 10); //07
-									let payG = `${yearG}/${monthG}/${dayG}`; //2024/07/07
-									let loginI
-											
-									$('#gwanlibiMonth').html(payG);
-									$('#Gwanlibi').html(
-											payDate[i].gaguGwanlibi.toString().replace(
-													/\B(?=(\d{3})+(?!\d))/g, ","));
-									} else {
-											
-									let realPaymentDate = payDate[i].realPaymentDate;
-									let yearM = realPaymentDate.substring(0, 4); //2024
-									let monthM = realPaymentDate.substring(5, 7); //07
-									let dayM = realPaymentDate.substring(8, 10); //07
-									let payM = `${yearM}/${monthM}/${dayM}`;	
-									
-									$('#rentMonth').html(payM);
-									$('#Rentpay').html(
-											payDate[i].realPaymentMoney.toString().replace(
-													/\B(?=(\d{3})+(?!\d))/g, ","));
+							type : "GET",
+							//contentType : "application/json",
+							data : {
+								payDate : payDate
+							},
+						})
+						.done(
+								function(payDate) {
+									console.log("ddddddddd : ", payDate);
+
+									//현재 다른 결제월의 test데이터는 없는데, 다른 결제월을 선택해도 기존의 결제일에 출력된 데이터가 계속 남아있어서 작성함.
+									$('.delete').html('');
+
+									for (let i = 0; i < payDate.length; i++) {
+										if (payDate[i].realPaymentDate == null) {
+											let paymentMonth = payDate[i].paymentMonth; //2024-07-07 00:00:00()
+											let yearG = paymentMonth.substring(
+													0, 4); //2024
+											let monthG = paymentMonth
+													.substring(5, 7); //07
+											let dayG = paymentMonth.substring(
+													8, 10); //07
+											let payG = `${yearG}/${monthG}/${dayG}`; //2024/07/07
+											let loginI
+
+											$('#gwanlibiMonth').html(payG);
+											$('#Gwanlibi')
+													.html(
+															payDate[i].gaguGwanlibi
+																	.toString()
+																	.replace(
+																			/\B(?=(\d{3})+(?!\d))/g,
+																			","));
+										} else {
+
+											let realPaymentDate = payDate[i].realPaymentDate;
+											let yearM = realPaymentDate
+													.substring(0, 4); //2024
+											let monthM = realPaymentDate
+													.substring(5, 7); //07
+											let dayM = realPaymentDate
+													.substring(8, 10); //07e
+											let payM = `${yearM}/${monthM}/${dayM}`;
+
+											$('#rentMonth').html(payM);
+											$('#Rentpay')
+													.html(
+															payDate[i].realPaymentMoney
+																	.toString()
+																	.replace(
+																			/\B(?=(\d{3})+(?!\d))/g,
+																			","));
+										}
 									}
-							}
-						}
-					)
-				}			
-			
+								})
+			}
+
 			
 //			<<<<<<<<< 미납내역 >>>>>>>>>>>
 
-			//체크한 달의 관리비 값 합산
-						
-			$(".check").click(
-			
-					function(e) {
-						
-						let total = 0;
-						
-						//관리비 체크박스
-						let GwanlibiCheck = $('#gwanlibiTotal').find('tr');
-						for (let i = 0; i < GwanlibiCheck.length; i++) {
-							//find(배열 내에서 특정 요소(id가 checkbox)를 찾아냄), prop() : 체크여부에 따라 true, false 반환
-							if (GwanlibiCheck.eq(i).find('.check').prop("checked")) {
-								total += Number(GwanlibiCheck.eq(i).children().eq(2).text().replace(",",""));
-							}
-						}
-						
-						//월세 체크박스
-						let mRentCheck = $('#mRentTotal').find('tr');
-						for (let i = 0; i < mRentCheck.length; i++) {
-							if (mRentCheck.eq(i).find('.check').prop("checked")) {
-								total += Number(mRentCheck.eq(i).children().eq(2).text().replace(",",""));
-							}
-						} 
-						$('#total').text(total);
-					})
-			
-			//결제 여부 ajax로 갱신
-			/*$("#payBtn").on("click", updateAjax);
-			
-		 	console.log(updateInfo.getAll());
-			
-			 function updateAjax(){
-			 	let listFormObj = [];
-			 	let formObjArr = $(updateForm).serializeArray();
-			 	formObjArr.forEach(obj => {
-			 		let paymentResult = {}; 
-			 		paymentResult[obj.name] = obj.value;
-			 		listFormObj.push(paymentResult);
-		 		});
-			 	console.log(JSON.stringify(listFormObj));
-				//return;
-				$.ajax(ctxPath + "/updateAjax", {
-					type : "post",
-					contentType : "application/json",
-					data : JSON.stringify(listFormObj),
-				})
-				.done((result) => {
-					alert("납부 성공");
-					location.href = ctxPath + "/paymentInfo";
-				})
-				.fail((err) => alert("결제 오류"));
-			}  */
-			
-			
-			//let price = $('#total').val();
-			
-			
-			 //결제 api
-			 $('#payBtn').on('click', requestPay)
-			 
-			 /* let IMP = window.IMP;
-			 IMP.init("imp04648344"); //가맹점 식별코드
-			 
-			 function requestPay() {
-			 
-			 IMP.request_pay({
-			 pg : 'html5_inicis',
-			 pay_method : "kakaopay.TC0ONETIME",
-			 merchant_uid: this.email + '_' + new Date().getTime(), // 주문번호(메일+날짜+시간)
-			 name : '결제테스트',
-			 amount : $('#total').text(),
-			 buyer_email : this.email,
-			 //buyer_name : this.email,
-			 buyer_tel : this.email,
-			 	}, 
-			 	function(payYN) { 
-			 		console.log(payYN);
-			 		if(payYN.success){
-			 			function updateAjax(){
-						 	let listFormObj = [];
-						 	let formObjArr = $(updateForm).serializeArray();
-						 	formObjArr.forEach(obj => {
-						 		let paymentResult = {}; 
-						 		paymentResult[obj.name] = obj.value;
-						 		listFormObj.push(paymentResult);
-					 		});
-						 	console.log(JSON.stringify(listFormObj));
-							//return;
-							$.ajax(ctxPath + "/updateAjax", {
-								type : "post",
-								contentType : "application/json",
-								data : JSON.stringify(listFormObj),
-							})
-							.done((result) => {
-								alert("납부 성공");
-								location.href = ctxPath + "/paymentInfo";
-							})
-							.fail((err) => alert("결제 오류"));
-						}
-			 		} 
-			 });
 
-			 } */
-			 
-			 
-			 
-			 
-			 
+			//체크한 달의 관리비 값 합산
+
+			$(".check")
+					.click(
+
+							function(e) {
+
+								let total = 0;
+
+								//관리비 체크박스
+								let GwanlibiCheck = $('#gwanlibiTotal').find(
+										'tr');
+								for (let i = 0; i < GwanlibiCheck.length; i++) {
+									//find(배열 내에서 특정 요소(id가 checkbox)를 찾아냄), prop() : 체크여부에 따라 true, false 반환
+									if (GwanlibiCheck.eq(i).find('.check')
+											.prop("checked")) {
+										total += Number(GwanlibiCheck.eq(i)
+												.children().eq(2).text()
+												.replace(",", ""));
+									}
+								}
+
+								//월세 체크박스
+								let mRentCheck = $('#mRentTotal').find('tr');
+								for (let i = 0; i < mRentCheck.length; i++) {
+									if (mRentCheck.eq(i).find('.check').prop(
+											"checked")) {
+										total += Number(mRentCheck.eq(i)
+												.children().eq(2).text()
+												.replace(",", ""));
+									}
+								}
+								$('#total').text(total);
+							})
+
+			//결제 api
+			$('#payBtn').on('click', requestPay)
 			
-			
+			 function requestPay() {
+			BootPay.request({
+				price : $('#total').text(),
+				application_id : "66f133da3aa7c4faf96e4c06",
+				name : '월세/관리비', 
+				pg : '',
+				method : '', 
+				show_agree_window : 0, 
+				order_id : new Date().getTime(),
+				account_expire_at: new Date()+1,
+				extra: {
+			        vbank_result: 1, 
+				}
+			}).error(function(data) {
+				//결제 진행시 에러가 발생하면 수행됩니다.
+				console.log(data);
+			}).cancel(function(data) {
+				//결제가 취소되면 수행됩니다.
+				console.log(data);
+			}).close(function(data) {
+				// 결제창이 닫힐때 수행됩니다. (성공,실패,취소에 상관없이 모두 수행됨)
+				console.log(data);
+			}).done(function (data) {
+				//결제가 정상적으로 완료되면 수행됩니다
+				//비즈니스 로직을 수행하기 전에 결제 유효성 검증을 하시길 추천합니다.
+				console.log(data);
+		 			function updateAjax(){
+					 	
+		 				let listFormObj = [];
+					 	let formObjArr = $(updateForm).serializeArray();
+					 	formObjArr.forEach(obj => {
+					 		let paymentResult = {}; 
+					 		paymentResult[obj.name] = obj.value;
+					 		listFormObj.push(paymentResult);
+				 		});
+					 	
+					 	console.log(JSON.stringify(listFormObj));
+					 	
+						$.ajax(ctxPath + "/updateAjax", {
+							type : "post",
+							contentType : "application/json",
+							data : JSON.stringify(listFormObj),
+						})
+						.done((result) => {
+							alert("납부 성공");
+							location.href = ctxPath + "/paymentInfo";
+						})
+						.fail((err) => alert("결제 오류"));
+						}
+				});	
+			} 		
 		</script>
 	</div>
 </body>
