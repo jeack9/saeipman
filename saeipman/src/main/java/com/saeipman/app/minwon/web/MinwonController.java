@@ -118,6 +118,7 @@ public class MinwonController {
 	public String minwonInsertForm(Model model) {
 		List<MinwonVO> category = minwonService.categoryList();
 		model.addAttribute("categories", category);
+		//ㅇㅇ
 		return "minwon/minwonInsert";
 	}
 
