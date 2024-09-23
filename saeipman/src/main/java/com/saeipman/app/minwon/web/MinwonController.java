@@ -162,7 +162,8 @@ public class MinwonController {
 	public Map<String, Object> updateList(@ModelAttribute  MinwonVO minwonVO,
 			@RequestPart(name = "newFiles", required = false) MultipartFile[] newFiles,
 			@RequestParam(name = "deleteFileNames", required = false) List<String> deleteFileNames) {
-
+		fileUtill.setFolder("민원");
+		
 		// 파일 삭제 처리
 		if (deleteFileNames != null && !deleteFileNames.isEmpty()) {
 			minwonService.fileDelete(deleteFileNames);
@@ -180,10 +181,11 @@ public class MinwonController {
 
 		// 새 파일 업로드 처리
 		String groupId = minwonVO.getGroupId(); // 기존 그룹 ID 가져오기
-
+		System.out.println(groupId + "groupId 11111111111111");
 		// group_id가 없으면 새로 생성
 		groupId = fileUtill.multiUpload(newFiles, groupId);
 		minwonVO.setGroupId(groupId);
+		System.out.println(groupId + "groupId 22222222222");
 
 		return minwonService.minwonUpdate(minwonVO);
 	}

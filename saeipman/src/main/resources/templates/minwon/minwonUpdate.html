@@ -60,9 +60,9 @@
 		<!-- 새로운 이미지 추가 -->
 		<div class="file-input">
 			<label for="formFile" class="form-label">첨부파일</label>
-			<input class="form-control" type="file" id="file" name="files" multiple>
+			<input class="form-control" type="file" id="file" name="newFiles" multiple>
 		</div>
-		
+		<input type="hidden" name = "groupId" th:field=*{groupId}>
 		<!-- 미리보기 이미지 -->
 		<div id="imgFile"></div>
 
@@ -109,19 +109,23 @@
 			reader.readAsDataURL(inputFile[i]);
 		}
 	});
-
+	//let updateImageList= [];
 	// 수정 완료 버튼 클릭 시 서버로 데이터 전송
 	$('#updateBtn').on('click', function(e) {
 		e.preventDefault();  // 기본 제출 이벤트 방지
 
 		let formData = new FormData(document.updateForm);
-		let inputFile = $("input[name='files']")[0].files;
+		let inputFile = $("input[name='newFiles']")[0].files;
 
 		// 파일이 존재하는 경우에만 처리
-        if (inputFile && inputFile.files.length > 0) {
-            let files = inputFile.files;
-            for (let i = 0; i < files.length; i++) {
-                formData.append("newFiles", files[i]);
+        if (inputFile && inputFile.length > 0) {
+            let files = inputFile[0].name;
+            //console.log(inputFile[0].name);
+            //console.log(inputFile.length);
+            for (let i = 0; i < inputFile.length; i++) {
+            	console.log(inputFile[i].name);
+            	formData.append("newFiles", inputFile[i].name);
+                //formData.append("newFiles", files[i]);
             }
         }
 
