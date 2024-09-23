@@ -163,7 +163,7 @@ public class MinwonController {
 			@RequestPart(name = "newFiles", required = false) MultipartFile[] newFiles,
 			@RequestParam(name = "deleteFileNames", required = false) List<String> deleteFileNames) {
 		fileUtill.setFolder("민원");
-		
+		System.out.println(deleteFileNames + "삭제 파일이름");
 		// 파일 삭제 처리
 		if (deleteFileNames != null && !deleteFileNames.isEmpty()) {
 			minwonService.fileDelete(deleteFileNames);

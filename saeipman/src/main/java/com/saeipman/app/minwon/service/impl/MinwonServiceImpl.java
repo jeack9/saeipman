@@ -119,6 +119,7 @@ public class MinwonServiceImpl implements MinwonService {
 	public int fileDelete(List<String> fileNames) {
 		int result = 0;
 		for (String fileName : fileNames) {
+			System.out.println(fileName + "mapper 파일이름");
 			result = buildingMapper.selectDeleteFileName(fileName);
 		}
 

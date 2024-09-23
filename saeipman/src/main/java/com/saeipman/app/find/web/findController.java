@@ -82,7 +82,7 @@ public class findController {
 		session.setAttribute(phone, numStr);
 		
 		String msg = "아래의 인증번호를 입력해주세요\n " + numStr;
-		//msgService.sendOne(phone, msg);
+		msgService.sendOne(phone, msg);
 		return numStr;
 		
 	}
