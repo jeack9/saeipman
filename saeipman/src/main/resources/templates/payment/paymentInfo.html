@@ -188,7 +188,7 @@ table {
 								$('.delete').html('');
 								
 								for(let i = 0; i < payDate.length; i++) {
-									if(i == 0){
+									if(payDate[i].realPaymentDate == null){
 									let paymentMonth = payDate[i].paymentMonth; //2024-07-07 00:00:00()
 									let yearG = paymentMonth.substring(0, 4); //2024
 									let monthG = paymentMonth.substring(5, 7); //07
