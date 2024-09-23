@@ -50,18 +50,17 @@ public class MinwonServiceImpl implements MinwonService {
 			//빌딩 문자 여부 확인
 			String alertYn = msgMapper.selectMinwonAlertYn(minwonVO.getBuildingId());
 			
-			if("y".equalsIgnoreCase(alertYn)) {
+			if("Y".equalsIgnoreCase(alertYn)) {
+				
 				// 메세지
 				String msg = msgMapper.selectMinwonMsg(1);
 				// String msg = "새로운 민원이 등록되었습니다.";
 				// 전화번호 조회
 				String phone = msgMapper.selectPhone(minwonVO.getRoomId());
 				// 문자전송
-				 msgService.sendOne(phone, msg);
+				//msgService.sendOne(phone, msg);
 			}
-
 		}
-
 		return result == 1 ? minwonVO.getPostNo() : -1;
 	}
 
@@ -119,6 +118,7 @@ public class MinwonServiceImpl implements MinwonService {
 	public int fileDelete(List<String> fileNames) {
 		int result = 0;
 		for (String fileName : fileNames) {
+			System.out.println(fileName + "mapper 파일이름");
 			result = buildingMapper.selectDeleteFileName(fileName);
 		}
 

@@ -83,23 +83,38 @@
 	</form>
 	<script>
 	let delList = [];  // 삭제할 기존 이미지 목록
+	const dataTransfer = new DataTransfer();
 	
 	// 기존 이미지 삭제 처리
 	$('#existingImgFile').on('click', '.imageDel', function() {
 		let fileId = $(this).parent().data('fileid');
 		console.log(fileId)
-		let ke = $(this).closest('.imgDiv').remove(fileId);  // 이미지 미리보기에서 삭제
+		let ke = $(this).closest('.imgDiv').remove();  // 이미지 미리보기에서 삭제
 		console.log(ke)
 		delList.push(fileId);  // 삭제할 파일 목록에 추가
+
 	});
 	
 	//미리보기 이미지 삭제
 	$('#imgFile').on('click', '.imageDel', function() {
 		let fileId = $(this).parent().data('fileid');
+		
+		$(this).closest('.imgDiv').remove();  // 이미지 미리보기에서 삭제
 		delList.push(fileId);  // 삭제할 파일 목록에 추가
-		$(this).parent().remove();  // 이미지 미리보기에서 삭제
 	});
 	
+	
+	
+	Arry.from(files)
+		.filter(file => file.lastModified != removeTargetId)
+		.forEach(file => {
+			dataTranster.items.add(file)
+		})
+	
+	document.querySelector('#imgFile').files = dataTranster.files;
+	
+	handler.init()
+	handler.removeFile()
 	
 
 	// 새로 선택한 파일 미리보기 처리
@@ -144,7 +159,8 @@
                 //formData.append("newFiles", files[i]);
             }
         }
-
+		
+		
 		// 삭제된 기존 이미지 목록도 FormData에 추가
 		delList.forEach(fileName => {
 			formData.append("deleteFileNames", fileName);
