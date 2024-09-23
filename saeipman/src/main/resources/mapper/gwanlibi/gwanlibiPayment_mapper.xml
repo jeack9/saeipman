@@ -7,6 +7,7 @@
 	<select id="selectGwanlibiPaymentStateList" resultType="com.saeipman.app.gwanlibi.service.GwanlibiPaymentVO" parameterType="String">
 		SELECT r.building_id,
 			   r.room_no,
+			   r.ipju_state,
 		       g.payment_yn
 		FROM   room_info r JOIN gagu_gwanlibi_history g
 		                   ON (r.room_id = g.room_id)

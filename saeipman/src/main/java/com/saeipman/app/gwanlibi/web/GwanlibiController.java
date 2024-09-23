@@ -282,13 +282,13 @@ public class GwanlibiController {
 		gwanlibiService.modifyGwanlibi(gridDatalist);
 	}
 
-	// 문자 /sendSMSMsg 요청 -> sendSMSMessage()
+	// 관리비 청구 문자 /sendSMSMsg 요청 -> sendSMSMessage()
 	@GetMapping("sendSMSMsg")
 	@ResponseBody
 	public String sendSMSMessage(@RequestParam(name = "buildingId") String buildingId,
 			@RequestParam(name = "total") String total, @RequestParam(name = "paymentDate") String paymentDate) {
 		// 해당 건물에 거주하고 있는 임차인의 연락처 조회.
-		List<GwanlibiMsgVO> imdeainList = gwanlibiMsgService.getImchainPhoneNumber(buildingId);
+		List<GwanlibiMsgVO> imchain = gwanlibiMsgService.getImchainPhoneNumber(buildingId);
 
 		// 현재 로그인한 임대인 ID 조회 -> 임대인의 연락처.
 		LoginInfoVO loginInfoVO = SecurityUtil.getLoginInfo();
@@ -306,7 +306,32 @@ public class GwanlibiController {
 		// 메시지 내용.
 		String msg = year + "년 " + month + "월 관리비는 " + total + "원입니다.\n납부 기한은 " + paymentDate + "까지입니다.";
 
-		msgService.sendGroup(imdeainList, imdaeinPhoneNumber, msg);
+		msgService.sendGroup(imchain, imdaeinPhoneNumber, msg);
+
+		// console 확인 용도.
+		return msg;
+	}
+
+	// 관리비 연체 문자
+	@GetMapping("sendOverdueNotice")
+	@ResponseBody
+	public String sendOverdueNotice(@RequestParam(name = "buildingId") String buildingId) {		
+		// 해당 건물에 거주하고 있는 임차인의 연락처.
+		List<GwanlibiMsgVO> imchainPhoneNumber = gwanlibiMsgService.getGwanlibiOverdueImchainList(buildingId);
+
+		// 현재 로그인한 임대인 ID 조회.
+		LoginInfoVO loginInfoVO = SecurityUtil.getLoginInfo();
+
+		// 임대인의 연락처.
+		String imdaeinPhoneNumber = gwanlibiMsgService.getImdaeinPhoneNumber(loginInfoVO.getLoginId());
+		
+		// 건물 이름
+		String buildingName = imchainPhoneNumber.get(0).getBuildingName();
+		
+		// 메시지 내용.
+		String msg = "⚠️ 관리비 연체 고지 ⚠️\n" + "안녕하세요. " + buildingName + " 임대인입니다.\n빠른 시일 내에 연체된 관리비 납부를 해주세요.\n좋은 하루 되세요.";
+
+		msgService.sendGroup(imchainPhoneNumber, imdaeinPhoneNumber, msg);
 
 		// console 확인 용도.
 		return msg;
@@ -326,13 +351,23 @@ public class GwanlibiController {
 		pageDTO.setTotal(total);
 
 		List<BuildingVO> buildingList = buildingService.buildingList(pageDTO, login.getLoginId());
-		
+
 		// add roomList
-		for (BuildingVO building : buildingList) {			
-			List<GwanlibiPaymentVO> rooms = gwanlibiPaymentService.getGwanlibiPaymentStateList(building.getBuildingId());
+		for (BuildingVO building : buildingList) {
+			List<GwanlibiPaymentVO> rooms = gwanlibiPaymentService
+					.getGwanlibiPaymentStateList(building.getBuildingId());
+			rooms.forEach(ele -> {
+				if (ele.getPaymentYn() == 1) {
+					ele.setStrPaymentState("완납");
+				} else if (ele.getPaymentYn() == 0) {
+					ele.setStrPaymentState("미납");
+				} else {
+					ele.setStrPaymentState("연체");
+				}
+			});
 			model.addAttribute("rooms", rooms);
 		}
-		
+
 		System.err.println(buildingList);
 		model.addAttribute("buildingList", buildingList);
 		model.addAttribute("page", pageDTO);
