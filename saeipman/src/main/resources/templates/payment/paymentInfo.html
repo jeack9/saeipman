@@ -41,7 +41,7 @@ table {
 					<tbody>
 						<tr>
 							<!-- 월세 출력 -->
-							<td>
+							<td class="col-md-6">
 								<table>
 									<tbody>
 										<tr>
@@ -52,7 +52,7 @@ table {
 									</tbody>
 								</table>
 							</td>
-							<td>
+							<td class="col-md-6">
 								<table>
 									<tbody>
 										<tr>
@@ -83,7 +83,7 @@ table {
 								<table>
 									<tbody id="mRentTotal">
 										<th:block th:each="payInF : ${payInfo}">
-											<tr>
+											<tr th:if="${payInF.realPaymentMoney > 0}">
 												<td><div class="form-check">
 														<input class="form-check-input check" type="checkbox"
 															th:value="${payInF.mRentHistoryNo}" id="mRentCheck"
@@ -92,6 +92,7 @@ table {
 													</div></td>
 												<td>[[${#strings.substring(payInF.realPaymentDate, 0,
 													11)}]]</td>
+
 												<td>[[${#numbers.formatInteger(payInF.realPaymentMoney,
 													3, 'COMMA')}]]</td>
 												<td th:if="${payInF.paymentState == -1}"><font
@@ -109,7 +110,7 @@ table {
 								<table class="table table-bordered">
 									<tbody id="gwanlibiTotal">
 										<th:block th:each="payInF : ${payInfo}">
-											<tr>
+											<tr th:if="${payInF.gaguGwanlibi > 0}">
 												<td><div class="form-check">
 														<input class="form-check-input check" type="checkbox"
 															th:value="${payInF.gaguPaymentHistoryNo}"
@@ -144,8 +145,7 @@ table {
 			</div>
 		</form>
 
-		<script type="text/javascript"
-			src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+		 <script src="https://cdn.bootpay.co.kr/js/bootpay-3.3.6.min.js" type="application/javascript"></script>
 
 		<script>
 		
@@ -188,12 +188,13 @@ table {
 								$('.delete').html('');
 								
 								for(let i = 0; i < payDate.length; i++) {
-									if(i == 0){
+									if(payDate[i].realPaymentDate == null){
 									let paymentMonth = payDate[i].paymentMonth; //2024-07-07 00:00:00()
 									let yearG = paymentMonth.substring(0, 4); //2024
 									let monthG = paymentMonth.substring(5, 7); //07
 									let dayG = paymentMonth.substring(8, 10); //07
 									let payG = `${yearG}/${monthG}/${dayG}`; //2024/07/07
+									let loginI
 											
 									$('#gwanlibiMonth').html(payG);
 									$('#Gwanlibi').html(
@@ -248,11 +249,11 @@ table {
 					})
 			
 			//결제 여부 ajax로 갱신
-			$("#payBtn").on("click", updateAjax);
+			/*$("#payBtn").on("click", updateAjax);
 			
-		 	//console.log(updateInfo.getAll());
+		 	console.log(updateInfo.getAll());
 			
-			function updateAjax(){
+			 function updateAjax(){
 			 	let listFormObj = [];
 			 	let formObjArr = $(updateForm).serializeArray();
 			 	formObjArr.forEach(obj => {
@@ -272,30 +273,63 @@ table {
 					location.href = ctxPath + "/paymentInfo";
 				})
 				.fail((err) => alert("결제 오류"));
-			} 
+			}  */
 			
 			
-			/* //결제 api
-			 $('#payBtn').on('click', payImp)
+			//let price = $('#total').val();
 			
-			 function payImp() {
-			 let imp = window.IMP;
-			 imp.init('imp04648344'); //가맹점 식별코드
+			
+			 //결제 api
+			 $('#payBtn').on('click', requestPay)
+			 
+			 /* let IMP = window.IMP;
+			 IMP.init("imp04648344"); //가맹점 식별코드
+			 
+			 function requestPay() {
+			 
 			 IMP.request_pay({
 			 pg : 'html5_inicis',
-			 pay_method : 'vbank',
+			 pay_method : "kakaopay.TC0ONETIME",
 			 merchant_uid: this.email + '_' + new Date().getTime(), // 주문번호(메일+날짜+시간)
 			 name : '결제테스트',
-			 amount : this.price,
+			 amount : $('#total').text(),
 			 buyer_email : this.email,
-			 buyer_name : this.email,
-			 buyer_tel : this.phone,
-			 //buyer_addr : '주소',
-			 //buyer_postcode : '우편번호'
-			 }, function(rsp) { 
+			 //buyer_name : this.email,
+			 buyer_tel : this.email,
+			 	}, 
+			 	function(payYN) { 
+			 		console.log(payYN);
+			 		if(payYN.success){
+			 			function updateAjax(){
+						 	let listFormObj = [];
+						 	let formObjArr = $(updateForm).serializeArray();
+						 	formObjArr.forEach(obj => {
+						 		let paymentResult = {}; 
+						 		paymentResult[obj.name] = obj.value;
+						 		listFormObj.push(paymentResult);
+					 		});
+						 	console.log(JSON.stringify(listFormObj));
+							//return;
+							$.ajax(ctxPath + "/updateAjax", {
+								type : "post",
+								contentType : "application/json",
+								data : JSON.stringify(listFormObj),
+							})
+							.done((result) => {
+								alert("납부 성공");
+								location.href = ctxPath + "/paymentInfo";
+							})
+							.fail((err) => alert("결제 오류"));
+						}
+			 		} 
 			 });
 
-			 }  */
+			 } */
+			 
+			 
+			 
+			 
+			 
 			
 			
 		</script>

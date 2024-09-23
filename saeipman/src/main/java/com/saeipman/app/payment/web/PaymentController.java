@@ -75,6 +75,7 @@ public class PaymentController {
 	public String updateAjax(@RequestBody List<PaymentVO> payments) {
 		for (PaymentVO payment : payments) {
 //			System.out.println(payment.getGaguPaymentHistoryNo() + "가구히스토리");
+//			System.out.println(payment.getmRentHistoryNo() + "월세 히스토리!!!!");
 			paymentService.updatePaymentStatus(payment);
 		}
 		return "OK";

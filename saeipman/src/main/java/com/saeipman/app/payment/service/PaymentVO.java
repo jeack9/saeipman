@@ -19,6 +19,14 @@ public class PaymentVO {
 	private int realPaymentMoney; //월세 납부액
 	
 	private String imchainPhone; //임차인 아이디(연락처)
+
+	public String getmRentHistoryNo() {
+		return mRentHistoryNo;
+	}
+
+	public void setmRentHistoryNo(String mRentHistoryNo) {
+		this.mRentHistoryNo = mRentHistoryNo;
+	}
 	
 	
 	
