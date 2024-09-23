@@ -63,15 +63,21 @@ public class FileUtility {
 			group = fileService.fileGroupId(fileVO);
 			System.out.println("파일 그룹" + groupId);
 		}
+//		if(group != "-1") {
+//			
+//			if (files.getOriginalFilename() == "") {
+//				return "-1";
+//			}
+//		}
 		fileVO.setGroupId(group);
-		
 		for (MultipartFile file : files) {
+			if(file.getSize()<=0) {
+				break;
+			}
 			log.info(file.getContentType());
 			log.info(file.getOriginalFilename());
 			log.info(String.valueOf(file.getSize()));
-			if (file.getOriginalFilename() == "") {
-				return "-1";
-			}
+			
 
 			String fileName = file.getOriginalFilename();
 			String uuid = UUID.randomUUID().toString();
