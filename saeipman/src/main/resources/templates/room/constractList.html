@@ -52,6 +52,34 @@
 				</div>
 				<!-- 상단 버튼 영역 END -->
 			</div>
+			<!-- 내역 모달 -->
+			<div class="modal fade" id="historyModal" tabindex="-1"
+				aria-labelledby="historyModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="historyModalLabel">[[${buildingVO.buildingName}]]
+								계약내역</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<!-- modal body -->
+						<div class="modal-body">
+							<div id="roomConstracts">
+								<th:block
+									th:replace="~{room/fragments/constractHistory :: constractHistoryFrg}">
+									</th:replace>
+							</div>
+						</div>
+						<!-- modal body -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">닫기</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 내역 모달 -->
 			<!-- 테이블 영역 -->
 			<table class="table table-bordered text-center align-middle">
 				<thead class="table-dark">
@@ -87,7 +115,9 @@
 									보기</button>
 							</td>
 							<td rowspan="2">
-								<button class="btn btn-outline-primary">내역 보기</button>
+								<button class="btn btn-outline-primary historyBtn" type="button"
+									th:data-roomid="${constract.get('ROOM_ID')}"
+									th:data-bname="${buildingVO.buildingName}">내역 보기</button>
 							</td>
 						</tr>
 						<tr>
@@ -136,6 +166,43 @@
 		</div>
 		<!-- div.container END -->
 		<script type="text/javascript">
+		// 계약 내역보기 모달창 프래그먼트 교체
+		$(".historyBtn").on("click", (e)=>{
+			let roomId = $(e.target).data("roomid");
+			let buildingName = $(e.target).data("bname");
+			$.ajax({
+				url: `${ctxPath}/room/getConstrastHistorys`,
+				type: "GET",
+				data: {roomId, buildingName},
+				success: function(data){
+					$("#roomConstracts").html(data);
+					$('#historyModal').modal('show');
+				},
+				error: function(err){
+					console.log(err);
+				}
+			})
+		});
+		// 계약 내역보기 모달창 페이징 프레그먼트 교체
+		$(document).on('click', '.constractHistory a', function(e) {
+		    e.preventDefault();
+		    let page = $(this).data("page");
+		    let roomId = $(this).data("roomid");
+		    if(!page) return;	
+		    $.ajax({
+		        url: `${ctxPath}/room/getConstrastHistorys`,
+		        type: 'GET',
+		        data: { page, roomId },
+		        success: function(response) {
+		            // 받아온 프래그먼트를 HTML로 교체
+		            $('#roomConstracts').html(response);
+		        },
+		        error: function(err) {
+		            console.log(err);
+		        }
+		    });
+			});
+		
 		// 건물목록 모달창 프래그먼트 교체
     	$(document).on('click', '.buildingPagination a', function(e) {
 		    e.preventDefault();

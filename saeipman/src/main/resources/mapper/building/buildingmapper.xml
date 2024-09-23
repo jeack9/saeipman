@@ -127,7 +127,7 @@
 								building_id
 								)	
 		VALUES 		(
-					#{buildingId}||#{roomNo},
+					#{buildingId}||#{roomNo}||room_info_seq.nextval,
 					#{roomNo},
 					#{floor},
 					-1,
@@ -184,5 +184,21 @@
 		DELETE FROM room_info
 		WHERE room_id = #{roomId}
 	</delete>
+	<insert id="selectRoomInfoInsert" parameterType="RoomVO">
+		INSERT INTO room_info(	
+								room_id,
+								room_no,
+								floor,
+								ipju_state,
+								building_id
+								)	
+		VALUES 		(
+					#{buildingId}||#{roomNo}||room_info_seq.nextval,
+					#{roomNo},
+					#{floor},
+					-1,
+					#{buildingId}
+					)
+	</insert>
 
 </mapper>

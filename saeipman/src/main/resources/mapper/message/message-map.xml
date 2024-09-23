@@ -12,7 +12,7 @@
 	</select>
 
 	<!-- 민원 문자 알림 여부 -->
-	<select id="selectMinwonAlertYn" parameterType="int" resultType="String">
+	<select id="selectMinwonAlertYn" parameterType="string" resultType="String">
         SELECT minwon_alert_yn 
         FROM Building_info
         WHERE building_id = #{buildingId}

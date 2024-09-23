@@ -6,10 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.building.service.BuildingService;
 import com.saeipman.app.building.service.BuildingVO;
@@ -104,6 +104,7 @@ public class BuildingController {
 	public String insertBuilding(@RequestPart(name = "files") MultipartFile[] files,
 			@RequestPart(name = "ocrFile") MultipartFile ocrFile, BuildingVO buildingVO, RoomVO roomVO)
 			throws IOException {
+		System.out.println(files + "파일명");
 		// 업로드 경로 폴더명
 		fileUtill.setFolder("건물");
 
@@ -203,58 +204,96 @@ public class BuildingController {
 	public Map<String, Object> updateBuilding(BuildingVO buildingVO, RoomVO roomVO,
 			@RequestPart(name = "newFiles", required = false) MultipartFile[] newFiles,
 			@RequestParam(name = "deleteFileNames", required = false) List<String> deleteFileNames,
-			@RequestParam(name = "updateRoomList", required = false) List<String> updateRoomList,
-			@RequestParam(name = "deleteRoomList", required = false) List<String> deleteRoomList) {
-		// System.out.println("삭제" + updateRoomList);
+			@RequestParam(name = "updateRoomList", required = false) String updateRoomList,
+			@RequestParam(name = "deleteRoomList", required = false) String deleteRoomList,
+			@RequestParam(name = "insertRoomList", required = false) String insertRoomList) {
+		System.out.println("새파일" + newFiles);
 
 		fileUtill.setFolder("건물");
 		// 방번호 수정
-		if(updateRoomList!=null) {
-			
-			for (String updateRoom : updateRoomList) {
-				// json 문자열을 파싱
-				JSONParser parser = new JSONParser();
-				try {
-					JSONObject updateListArr = (JSONObject) parser.parse(updateRoom); // JSON 배열로 변환
-					// JSONArray에서 RoomVO 객체로 변환하거나 원하는 방식으로 데이터를 사용
-					String roomId = (String) updateListArr.get("roomId");
-					String roomString = (String) updateListArr.get("roomNo");
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		if (updateRoomList != null) {
+
+			List<Map<String, Object>> updateListArr;
+			try {
+				updateListArr = objectMapper.readValue(updateRoomList, new TypeReference<>() {
+				});
+				for (Map<String, Object> updateRoom : updateListArr) {
+					String roomId = (String) updateRoom.get("roomId");
+					String roomString = (String) updateRoom.get("roomNo");
 					Integer roomNo = Integer.valueOf(roomString);
-					// (roomId와 roomNo를 RoomVO에 매핑 등)
-					// System.out.println(roomId+"룸Id");
-					// System.out.println(roomNo+"룸No");
+
 					roomVO.setRoomId(roomId);
 					roomVO.setRoomNo(roomNo);
 					buildingService.roomUpdate(roomVO);
-					
-				} catch (ParseException e) {
-					e.printStackTrace(); // 예외 처리
 				}
-				
+
+			} catch (JsonMappingException e) {
+
+				e.printStackTrace();
+			} catch (JsonProcessingException e) {
+
+				e.printStackTrace();
+
 			}
 		}
 		// 방번호 삭제
-		if(deleteRoomList!=null) {
-			
-			for (String deleteRoom : deleteRoomList) {
-				// json 문자열을 파싱
-				JSONParser parser = new JSONParser();
-				try {
-					JSONObject deleteListArr = (JSONObject) parser.parse(deleteRoom); // JSON 배열로 변환
-					// JSONArray에서 RoomVO 객체로 변환하거나 원하는 방식으로 데이터를 사용
-					String roomId = (String) deleteListArr.get("roomId");
+		// System.out.println(deleteRoomList.);
+		if (deleteRoomList != null) {
+			List<Map<String, Object>> deleteListArr;
+			try {
+				deleteListArr = objectMapper.readValue(deleteRoomList, new TypeReference<>() {
+				});
+				for (Map<String, Object> deleteRoom : deleteListArr) {
+					String roomId = (String) deleteRoom.get("roomId");
 					roomVO.setRoomId(roomId);
+					System.out.println("방삭제" + roomId);
 					buildingService.roomInfoDelete(roomVO);
-					
-				} catch (ParseException e) {
-					e.printStackTrace(); // 예외 처리
 				}
-				
+			} catch (JsonMappingException e) {
+
+				e.printStackTrace();
+			} catch (JsonProcessingException e) {
+
+				e.printStackTrace();
 			}
 		}
+		System.out.println(insertRoomList + "방추가");
+		// 방번호 추가
+		if (insertRoomList != null) {
+
+			List<Map<String, Object>> insertListArr;
+			try {
+				insertListArr = objectMapper.readValue(insertRoomList, new TypeReference<>() {
+				});
+				for (Map<String, Object> insertRoom : insertListArr) {
+					String roomString = (String) insertRoom.get("roomNo");
+					Integer roomNo = Integer.valueOf(roomString);
+
+					roomVO.setRoomNo(roomNo);
+					
+					String floorString = (String) insertRoom.get("floor");
+					Integer floor = Integer.valueOf(floorString);
+					roomVO.setFloor(floor);
+
+					buildingService.roomInfoInsert(roomVO);
+				}
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
 		// 파일 삭제 처리
 		if (deleteFileNames != null && !deleteFileNames.isEmpty()) {
+			System.out.println("여길 삭제");
 			buildingService.fileDelete(deleteFileNames);
+			System.out.println(deleteFileNames + "삭제 파일 확인1");
 			for (
 
 			String fileName : deleteFileNames) {
@@ -262,16 +301,18 @@ public class BuildingController {
 				// buildingService.fileDelete(fileName);
 			}
 		}
-		for (MultipartFile file : newFiles) {
-			System.out.println(file + "dssf");
-		}
 
 		// 새 파일 업로드 처리
-		String groupId = buildingVO.getGroupId(); // 기존 그룹 ID 가져오기
+		if (newFiles != null && newFiles.length > 0) {
+			System.out.println("여길 수정");
+			String groupId = buildingVO.getGroupId(); // 기존 그룹 ID 가져오기
 
-		// group_id가 없으면 새로 생성
-		groupId = fileUtill.multiUpload(newFiles, groupId);
-		buildingVO.setGroupId(groupId);
+			// group_id가 없으면 새로 생성
+			groupId = fileUtill.multiUpload(newFiles, groupId);
+			buildingVO.setGroupId(groupId);
+
+			return buildingService.buildingUpdate(buildingVO);
+		}
 
 		// 방정보 수정
 

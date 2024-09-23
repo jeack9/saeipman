@@ -56,18 +56,9 @@ dependencies {
 	//sms
 	implementation 'net.nurigo:sdk:4.3.0'
 	
-	//
-	implementation 'com.github.iamport:iamport-rest-client-java:0.2.21'
-	
-	// https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
-	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
-	
-
-	allprojects {
-	    repositories {
-	        maven { url 'https://jitpack.io' }
-	    }
-	}
+	//bootpay
+	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '+'
+	compile group: 'com.google.code.gson', name: 'gson', version: '+'
 }
 
 

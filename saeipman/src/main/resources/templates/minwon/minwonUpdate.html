@@ -5,7 +5,12 @@
 	layout:fragment="Main">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>title</title>
+<style>
+.deleteImg{
+	display:none;
+}
+</style>
 </head>
 <body>
 	<form name="updateForm" th:object="${minwon}">
@@ -60,9 +65,9 @@
 		<!-- 새로운 이미지 추가 -->
 		<div class="file-input">
 			<label for="formFile" class="form-label">첨부파일</label>
-			<input class="form-control" type="file" id="file" name="files" multiple>
+			<input class="form-control" type="file" id="file" name="newFiles" multiple>
 		</div>
-		
+		<input type="hidden" name = "groupId" th:field=*{groupId}>
 		<!-- 미리보기 이미지 -->
 		<div id="imgFile"></div>
 
@@ -78,13 +83,39 @@
 	</form>
 	<script>
 	let delList = [];  // 삭제할 기존 이미지 목록
-
+	const dataTransfer = new DataTransfer();
+	
 	// 기존 이미지 삭제 처리
 	$('#existingImgFile').on('click', '.imageDel', function() {
 		let fileId = $(this).parent().data('fileid');
+		console.log(fileId)
+		let ke = $(this).closest('.imgDiv').remove();  // 이미지 미리보기에서 삭제
+		console.log(ke)
 		delList.push(fileId);  // 삭제할 파일 목록에 추가
-		$(this).parent().remove();  // 이미지 미리보기에서 삭제
+
 	});
+	
+	//미리보기 이미지 삭제
+	$('#imgFile').on('click', '.imageDel', function() {
+		let fileId = $(this).parent().data('fileid');
+		
+		$(this).closest('.imgDiv').remove();  // 이미지 미리보기에서 삭제
+		delList.push(fileId);  // 삭제할 파일 목록에 추가
+	});
+	
+	
+	
+	Arry.from(files)
+		.filter(file => file.lastModified != removeTargetId)
+		.forEach(file => {
+			dataTranster.items.add(file)
+		})
+	
+	document.querySelector('#imgFile').files = dataTranster.files;
+	
+	handler.init()
+	handler.removeFile()
+	
 
 	// 새로 선택한 파일 미리보기 처리
 	$('#file').on('change', function() {
@@ -109,22 +140,27 @@
 			reader.readAsDataURL(inputFile[i]);
 		}
 	});
-
+	//let updateImageList= [];
 	// 수정 완료 버튼 클릭 시 서버로 데이터 전송
 	$('#updateBtn').on('click', function(e) {
 		e.preventDefault();  // 기본 제출 이벤트 방지
 
 		let formData = new FormData(document.updateForm);
-		let inputFile = $("input[name='files']")[0].files;
+		let inputFile = $("input[name='newFiles']")[0].files;
 
 		// 파일이 존재하는 경우에만 처리
-        if (inputFile && inputFile.files.length > 0) {
-            let files = inputFile.files;
-            for (let i = 0; i < files.length; i++) {
-                formData.append("newFiles", files[i]);
+        if (inputFile && inputFile.length > 0) {
+            let files = inputFile[0].name;
+            //console.log(inputFile[0].name);
+            //console.log(inputFile.length);
+            for (let i = 0; i < inputFile.length; i++) {
+            	console.log(inputFile[i].name);
+            	formData.append("newFiles", inputFile[i].name);
+                //formData.append("newFiles", files[i]);
             }
         }
-
+		
+		
 		// 삭제된 기존 이미지 목록도 FormData에 추가
 		delList.forEach(fileName => {
 			formData.append("deleteFileNames", fileName);
@@ -139,6 +175,7 @@
 			contentType: false,
 			success: function(result) {
 				alert("업로드 성공!");
+				window.location.replace(ctxPath + "/minwonList");
 			},
 			error: function(error) {
 				alert("업로드 실패!");

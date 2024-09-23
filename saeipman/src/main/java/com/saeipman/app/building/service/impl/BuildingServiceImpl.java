@@ -91,7 +91,9 @@ public class BuildingServiceImpl implements BuildingService {
 	@Override
 	public int fileDelete(List<String> fileNames) {
 		int result = 0;
-		for (String fileName : fileNames) {
+		for(String fileName : fileNames) {
+			System.out.println(fileName + "삭제 파일 확인2");
+
 			result = buildingMapper.selectDeleteFileName(fileName);
 		}
 
@@ -126,4 +128,9 @@ public class BuildingServiceImpl implements BuildingService {
 		return buildingMapper.selectRoomInfoDelete(roomVO);
 	}
 
+	@Override
+	public int roomInfoInsert(RoomVO roomVO) {
+		return buildingMapper.selectRoomInfoInsert(roomVO);
+	}
+	
 }
