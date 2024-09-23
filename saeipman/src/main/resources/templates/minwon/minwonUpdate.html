@@ -83,7 +83,6 @@
 	</form>
 	<script>
 	let delList = [];  // 삭제할 기존 이미지 목록
-	const dataTransfer = new DataTransfer();
 	
 	// 기존 이미지 삭제 처리
 	$('#existingImgFile').on('click', '.imageDel', function() {
@@ -98,23 +97,21 @@
 	//미리보기 이미지 삭제
 	$('#imgFile').on('click', '.imageDel', function() {
 		let fileId = $(this).parent().data('fileid');
-		
 		$(this).closest('.imgDiv').remove();  // 이미지 미리보기에서 삭제
-		delList.push(fileId);  // 삭제할 파일 목록에 추가
+		
+		//실제 첨부 파일 목록에서 해당 파일 삭제
+		let files = document.querySelector("#file").files;
+		let dataTransfer = new DataTransfer(); // 새 DataTransfer 객체 생성
+		
+		// 첨부된 파일 중에서 삭제할 파일을 제외한 나머지를 다시 추가
+	    Array.from(files).forEach(file => { //파일 배열을 Array로 변환
+	        if (file.name !== fileId) { //삭제할 파일이 아닌 경우에만 추가
+	            dataTransfer.items.add(file); //dataTransfer 객체를 사용하여 새로운 파일 목록을 구성
+	        }
+	    });
+	    document.querySelector("#file").files = dataTransfer.files; //input에 새로운 파일 목록을 적용
 	});
 	
-	
-	
-	Arry.from(files)
-		.filter(file => file.lastModified != removeTargetId)
-		.forEach(file => {
-			dataTranster.items.add(file)
-		})
-	
-	document.querySelector('#imgFile').files = dataTranster.files;
-	
-	handler.init()
-	handler.removeFile()
 	
 
 	// 새로 선택한 파일 미리보기 처리
