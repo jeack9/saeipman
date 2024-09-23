@@ -209,6 +209,7 @@ input {
 	
 		let updateRoomList = [];
 		let delRoomList = [];
+		let insertRoomList = [];
 			$(document).ready(function() {
 				let isRoomUpdateVisible = $('#roomUpdate').css('display') !== 'none';
 				$('#roomUpdateBtn').on('click', function() {
@@ -287,11 +288,18 @@ input {
 						
 						//방번호 수정
 						$('.hoSel').on('change',function(e){
-							let roomNo = $(e.target).val();
-							let roomId = $(e.target).attr('id');
-						
-							updateRoomList[roomId]=roomNo;
+							if($('.hoSel').attr('id') === null){
+								let roomNo = $(e.target).val();
+								let floor = $(e.target).closest('tr');
+								insertRoomList.push
+							}else{
+								
+								let roomNo = $(e.target).val();
+								let roomId = $(e.target).attr('id');
 							
+								updateRoomList[roomId]=roomNo;
+							}
+							//호실 추가 리스트
 							//console.log(updateRoomList);
 						})
 						if(data.fileName != null) {
@@ -389,6 +397,8 @@ input {
 					
 				}
 			}); 
+			
+			
 			//행 선택 checkbox
 			$('.selectRoom').click(function(e){
 			
