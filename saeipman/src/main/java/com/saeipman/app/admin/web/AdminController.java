@@ -24,9 +24,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminController {
 	private final AdminService adminService;
+	
+	@GetMapping("/api/testc")
+	public String getMethodName() {
+		return "ok";
+	}
+	
 
 	@GetMapping("/api/memberList/{auth}")
-	public List<Member> memberList(@PathVariable int auth) {
+	public List<Member> memberList(@PathVariable(name = "auth") int auth) {
 		System.out.println("auth" + auth);
 		if(auth == 1) {
 			return adminService.imdaeinList();
@@ -36,14 +42,13 @@ public class AdminController {
 	}
 	@DeleteMapping("/api/membersRemove")
 	public String membersRemove() {
-		
 		return "ok";
 	}
 	
 	
 	// 공지사항 목록 조회 (페이징 및 검색)
     @GetMapping("/api/notice")
-    public Map<String, Object> getNotices(@RequestParam(name="keyword", defaultValue = "") String keyword,
+    public Map<String, Object> getNotices(@RequestParam(defaultValue = "", name="keyword", required = false) String keyword,
                                           @RequestParam(defaultValue = "1", name = "page") int page,
                                           @RequestParam(defaultValue = "10", name = "recordSize") int recordSize) {
         int total = adminService.countNotices(keyword);

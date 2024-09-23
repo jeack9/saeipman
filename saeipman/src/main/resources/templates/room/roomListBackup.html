@@ -38,7 +38,7 @@
 								<div id="buildingList">
 									<th:block
 										th:replace="~{room/fragments/buildingList :: buildingListFrg}">
-										</th:replace>
+									</th:replace>
 								</div>
 								<div class="modal-footer">
 									<button type="button" class="btn btn-secondary"
@@ -107,7 +107,7 @@
 						</div>
 						<h4 class="row gx-0">(보)[[${room.deposit == 0 ? '없음' :
 							(room.deposit / 10000) + '만원'}]] (월) [[${room.mRent == 0 ? '없음' :
-							(room.mRent / 10000) + '만원'}]] (관)1만원</h4>
+							(room.mRent / 10000) + '만원'}]] </h4>
 						<div class="row gx-0">[[${room.constractDate != null ?
 							'계약기간: ' + #dates.format(room.constractDate, 'yyyy.MM.dd') + ' ~
 							' + #dates.format(room.expDate, 'yyyy.MM.dd') : '계약 정보가 없습니다.'}]]</div>
