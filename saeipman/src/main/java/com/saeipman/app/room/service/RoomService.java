@@ -16,6 +16,12 @@ public interface RoomService {
 	public int buildingIpjuCount(BuildingRoom buildingRoom);
 	// 방 단건조회 방아이디 -> 방 조회
 	public RoomVO roomInfo(String roomId);
+	
+	// 방 아이디 -> 계약목록 페이징
+	public List<ConstractVO> roomConstractsPaging(String roomId, PagingDTO paging);
+	// 방 아이디 -> 계약목록 토탈
+	public int roomConstractTotal(String roomId);
+	
 	// 방 입주상태 변경
 	public boolean modiIpjuState(RoomVO roomVO);
 }

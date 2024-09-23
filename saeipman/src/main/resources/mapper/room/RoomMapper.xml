@@ -104,6 +104,42 @@
 		    constract_date
 	</select>
 	
+	<!-- 방아이디 - 계약목록 페이징 조회 -->
+	<select id="roomConstractsPaging">
+	SELECT * FROM
+	  (SELECT
+	    constract_no,
+	    constract_type,
+	    deposit,
+	    m_rent,
+	    pay_type,
+	    imchain_name,
+	    imchain_phone,
+	    imchain_account,
+	    imdaein_account,
+	    constract_date,
+	    exp_date,
+	    constract_state,
+	    constract_file,
+	    m_rent_date,
+	    memo,
+	    room_id
+	    ,ROW_NUMBER() OVER (ORDER BY constract_date desc) AS row_num
+		FROM
+		    constract_info
+		WHERE
+		    room_id = #{roomId}
+		)
+	WHERE row_num BETWEEN (#{paging.page} - 1) * #{paging.recordSize} + 1 AND #{paging.page} * #{paging.recordSize}
+	</select>
+	
+	<!-- 방 아이디 -> 계약 토탈 -->
+	<select id="roomConstractTotal">
+		SELECT COUNT(*)
+		FROM constract_info
+		WHERE room_id = #{roomId}
+	</select>
+	
 	<!-- 건물선택 -> 방목록 조회 -->
 	<select id="selectBuildingRoom">
 	 SELECT * FROM (

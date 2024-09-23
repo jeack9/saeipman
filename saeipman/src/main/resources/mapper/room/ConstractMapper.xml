@@ -181,7 +181,7 @@
 			    ci.constract_file constract_file,
 			    ci.m_rent_date m_rent_date,
 			    ci.memo memo,
-			    ci.room_id room_id
+			    ri.room_id room_id
 			    ,ROW_NUMBER() OVER (ORDER BY ri.room_no ASC) AS row_num
 			FROM constract_info ci RIGHT OUTER JOIN room_info ri 
 			                        ON ri.room_id = ci.room_id AND ci.constract_state = 1

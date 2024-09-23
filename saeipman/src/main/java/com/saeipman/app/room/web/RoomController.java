@@ -196,9 +196,9 @@ public class RoomController {
 		// 파일 저장 로직
 		if (file != null && !file.isEmpty()) {
 			if (!file.getContentType().equals("application/pdf")) {
-	            map.put("retCode", "fail_file_type");
-	            return map;
-	        }
+				map.put("retCode", "fail_file_type");
+				return map;
+			}
 			try {
 				// 파일을 저장하고 경로를 반환
 				String filePath = fileUtill.singleUpload(file);
@@ -273,26 +273,26 @@ public class RoomController {
 
 		if (file != null && !file.isEmpty()) {
 			if (!file.getContentType().equals("application/pdf")) {
-	            map.put("retCode", "fail_file_type");
-	            map.put("error", "PDF 파일만 업로드 가능합니다.");
-	            return map;
-	        }
-	        // 새 파일이 업로드되면 기존 파일 삭제 후 새 파일 저장
-	        try {
-	            if (constractVO.getConstractFile() != null) {
-	                fileUtill.deleteFile(constractVO.getConstractFile());
-	            }
-	            String filePath = fileUtill.singleUpload(file);
-	            constractVO.setConstractFile(filePath);  // 새 파일 경로 설정
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            map.put("retCode", "fail_file");
-	            return map;
-	        }
-	    } else {
-	        // 파일이 비어있으면 기존 파일 경로 유지
-	        constractVO.setConstractFile(constractVO.getConstractFile());
-	    }
+				map.put("retCode", "fail_file_type");
+				map.put("error", "PDF 파일만 업로드 가능합니다.");
+				return map;
+			}
+			// 새 파일이 업로드되면 기존 파일 삭제 후 새 파일 저장
+			try {
+				if (constractVO.getConstractFile() != null) {
+					fileUtill.deleteFile(constractVO.getConstractFile());
+				}
+				String filePath = fileUtill.singleUpload(file);
+				constractVO.setConstractFile(filePath); // 새 파일 경로 설정
+			} catch (Exception e) {
+				e.printStackTrace();
+				map.put("retCode", "fail_file");
+				return map;
+			}
+		} else {
+			// 파일이 비어있으면 기존 파일 경로 유지
+			constractVO.setConstractFile(constractVO.getConstractFile());
+		}
 
 		// 대기계약 정보 확인
 		if (newState == 0) {
@@ -427,8 +427,8 @@ public class RoomController {
 
 	// 계약관리 페이지 이동
 	@GetMapping("constractList")
-	public void constractListP(@RequestParam(name = "page", required = false) Integer page, @RequestParam(name = "buildingId", defaultValue = "", required = false) String buildingId,
-			Model model) {
+	public void constractListP(@RequestParam(name = "page", required = false) Integer page,
+			@RequestParam(name = "buildingId", defaultValue = "", required = false) String buildingId, Model model) {
 		String imdaeinId = SecurityUtil.getLoginId();
 
 		// 임대인의 건물리스트 모달창용 페이지네이션
@@ -450,10 +450,38 @@ public class RoomController {
 		int total = csvc.roomConstractTotal(buildingId);
 		PagingDTO paging = new PagingDTO(page, 10, total, 10);
 		model.addAttribute("paging", paging);
-		
+
 		// 건물선택 - 방계약 목록
 		List<Map<String, Object>> constractList = csvc.roomConstractList(buildingId, paging);
 		model.addAttribute("constractList", constractList);
+
+		// 방 계약내역 첫 세팅(null 오류 방지용)
+		RoomVO roomVO = new RoomVO();
+		model.addAttribute("roomVO", roomVO);
+		PagingDTO cPaging = new PagingDTO(1, 10, 0, 10);
+		model.addAttribute("cPaging", cPaging);
+
 	}
 
+	// 방의 계약내역 모달창Frg
+	@GetMapping("getConstrastHistorys")
+	public String getConstrastHistorys(@RequestParam(name = "roomId") String roomId,
+			@RequestParam(name = "page", required = false) Integer page, Model model) {
+		// 계약 목록 페이지네이션
+		page = page == null ? 1 : page;
+		int total = rsvc.roomConstractTotal(roomId);
+		System.out.println("total" + total);
+		PagingDTO cPaging = new PagingDTO(page, 10, total, 10);
+		model.addAttribute("cPaging", cPaging);
+
+		// 계약목록
+		List<ConstractVO> constracts = rsvc.roomConstractsPaging(roomId, cPaging);
+		model.addAttribute("constracts", constracts);
+
+		// 방 정보
+		RoomVO roomVO = rsvc.roomInfo(roomId);
+		model.addAttribute("roomVO", roomVO);
+
+		return "room/fragments/constractHistory :: constractHistoryFrg";
+	}
 }
