@@ -91,6 +91,7 @@ public class BuildingServiceImpl implements BuildingService{
 	public int fileDelete(List<String> fileNames) {
 		int result = 0;
 		for(String fileName : fileNames) {
+			System.out.println(fileName + "삭제 파일 확인2");
 			result = buildingMapper.selectDeleteFileName(fileName);
 		}
 		

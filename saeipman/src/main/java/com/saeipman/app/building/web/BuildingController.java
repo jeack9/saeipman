@@ -104,6 +104,7 @@ public class BuildingController {
 	public String insertBuilding(@RequestPart(name = "files") MultipartFile[] files,
 			@RequestPart(name = "ocrFile") MultipartFile ocrFile, BuildingVO buildingVO, RoomVO roomVO)
 			throws IOException {
+		System.out.println(files +"파일명");
 		// 업로드 경로 폴더명
 		fileUtill.setFolder("건물");
 
@@ -205,8 +206,8 @@ public class BuildingController {
 			@RequestParam(name = "deleteFileNames", required = false) List<String> deleteFileNames,
 			@RequestParam(name = "updateRoomList", required = false) List<String> updateRoomList,
 			@RequestParam(name = "deleteRoomList", required = false) List<String> deleteRoomList) {
-		// System.out.println("삭제" + updateRoomList);
-
+		 System.out.println("새파일" + newFiles);
+		
 		fileUtill.setFolder("건물");
 		// 방번호 수정
 		if(updateRoomList!=null) {
@@ -254,7 +255,9 @@ public class BuildingController {
 		}
 		// 파일 삭제 처리
 		if (deleteFileNames != null && !deleteFileNames.isEmpty()) {
+			System.out.println("여길 삭제");
 			buildingService.fileDelete(deleteFileNames);
+			System.out.println(deleteFileNames + "삭제 파일 확인1");
 			for (
 
 			String fileName : deleteFileNames) {
@@ -262,19 +265,21 @@ public class BuildingController {
 				// buildingService.fileDelete(fileName);
 			}
 		}
-		for (MultipartFile file : newFiles) {
-			System.out.println(file + "dssf");
-		}
 
 		// 새 파일 업로드 처리
-		String groupId = buildingVO.getGroupId(); // 기존 그룹 ID 가져오기
-
-		// group_id가 없으면 새로 생성
-		groupId = fileUtill.multiUpload(newFiles, groupId);
-		buildingVO.setGroupId(groupId);
+		if(newFiles!= null && newFiles.length > 0) {
+			System.out.println("여길 수정");
+			String groupId = buildingVO.getGroupId(); // 기존 그룹 ID 가져오기
+			
+			// group_id가 없으면 새로 생성
+			groupId = fileUtill.multiUpload(newFiles, groupId);
+			buildingVO.setGroupId(groupId);
+			
+			return buildingService.buildingUpdate(buildingVO);
+		}
 
 		// 방정보 수정
-
+		
 		return buildingService.buildingUpdate(buildingVO);
 	}
 
