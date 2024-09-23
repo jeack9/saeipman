@@ -30,4 +30,9 @@ public class GwanlibiMsgServiceImpl implements GwanlibiMsgService {
 		return gwanlibiMsgMapper.selectImdaeinPhoneNumber(imdaeinId);
 	}
 
+	@Override
+	public List<GwanlibiMsgVO> getGwanlibiOverdueImchainList(String buildingId) {		
+		return gwanlibiMsgMapper.selectGwanlibiOverdueImchainList(buildingId);
+	}
+
 }

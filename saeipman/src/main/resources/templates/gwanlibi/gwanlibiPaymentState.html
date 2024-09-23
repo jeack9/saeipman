@@ -1,12 +1,32 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-				layout:decorate="~{common/layouts/default_layout}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}">
 
 <head>
 	<meta charset="UTF-8">
 	<link th:href="@{/css/gwanlibiPayment.css}" rel="stylesheet">
 	<style>
+		.title {
+			font-family: monospace;
+			margin: 30px 0;
+		}
+
+		.fold-content {
+			margin-bottom: 30px;
+		}
+
+		.btn {
+			border-color: black;
+			color: black;
+			margin-left: 10px;
+		}
+
+		.btn:hover {
+			border-color: black;
+			background: tomato;
+			color: black;
+		}
+
 		.page-link {
 			color: tomato;
 			border-color: tomato;
@@ -16,19 +36,27 @@
 			background-color: tomato;
 			color: white;
 		}
+
+		.swal2-html-container {
+			color: black !important;
+			font-family: monospace;
+		}
 	</style>
 </head>
 
 <body>
+	<!-- html -->
 	<div layout:fragment="Main" class="container">
-		<br/>
+		<br />
+		<h3 class="title">Building List.</h3>
+		<br />
 		<table class="fold-table">
 			<!-- column name of building information list -->
 			<thead>
 				<tr>
-					<th>No.</th>
-					<th>Building Name</th>
-					<th>Address</th>
+					<th><span class="visible-big">No.</span></th>
+					<th><span class="visible-big">Building Name</span></th>
+					<th><span class="visible-big">Address</span></th>
 				</tr>
 			</thead>
 			<!-- building information list -->
@@ -44,33 +72,48 @@
 					<tr class="fold">
 						<td colspan="7">
 							<div class="fold-content">
-								<h3 style="font-family: monospace">Room List.</h3>
+								<h4 style="font-family: monospace">Room List.</h4>
 								<p style="font-family: monospace">관리비가 연체된 세입자에게 문자를 전송할 수 있습니다. [건당 20원]</p>
 								<table class="small-friendly">
 									<!-- column name of room information list -->
 									<thead>
 										<tr>
+											<th><span class="visible-big">No.</span></th>
 											<th><span class="visible-big">Building Name</span></th>
 											<th><span class="visible-big">Room Number</span></th>
+											<th><span class="visible-big">Occupancy Status</span></th>
 											<th><span class="visible-big">Payment State</span></th>
-											<th><span class="visible-big">Send a Message</span></th>
+											<th><input type="checkbox" onclick="checkAllBtn(event)"></th>
 										</tr>
 									</thead>
 									<!-- room information list -->
 									<tbody>
-										<th:block th:each="rooms : ${rooms}">
-											<th:block th:if="${rooms.buildingId == building.buildingId}">
-												<tr>
-													<td>[[${building.buildingName}]]</td>
-													<td>[[${rooms.roomNo}]]호</td>
-													<td th:text="${rooms.paymentYn == 1} ? '완납' : '미납'"></td>
-													<td th:text="${rooms.paymentYn == 1} ? '-' : '전송'"></td>
-												</tr>
-											</th:block>
+										<th:block th:each="room, roomSatate : ${rooms}">
+											<tr th:if="${room.buildingId == building.buildingId}">
+												<td>[[${roomSatate.index+1}]]</td>
+												<td>[[${building.buildingName}]]</td>
+												<td>[[${room.roomNo}]]</td>												
+												<td th:text="${room.ipjuState == 1} ? '입주' : '공실'"></td>
+												
+												<!-- 공실 여부에 따른 출력 -->
+												<td th:switch="${room.ipjuState}">													
+													<span th:case="1">[[${room.strPaymentState}]]</span>
+													<span th:case="*">-</span>
+												</td>
+												
+												<!-- 공실이거나 완납했으면 체크박스 disabled -->
+												<td><input type="checkbox" name="chkbox" id="chkbox"
+														th:value="${building.buildingId}"
+														th:disabled="${room.paymentYn != -1 || room.ipjuState == -1}">
+												</td>
+											</tr>
 										</th:block>
 									</tbody>
 
 								</table>
+							</div>
+							<div style="text-align: center; margin-right: 10px">
+								<button type="button" class="btn btn-outline-primary msgBtn">연체 안내 문자 전송</button>
 							</div>
 						</td>
 					</tr>
@@ -125,21 +168,121 @@
 			</ul>
 		</nav>
 
-		<script>
-			$(".fold-table .view").on(
-				"click",
-				function () {
-					console.log(this);
-					if ($(this).hasClass("open")) {
-						$(this).removeClass("open").next(".fold")
-							.removeClass("open");
-					} else {
-						$(".fold-table tr.view").removeClass("open").next(
-							".fold").removeClass("open");
-						$(this).addClass("open").next(".fold").addClass(
-							"open");
-					}
+		<!-- java script -->
+		<script th:inline="javascript">
+		
+			
+
+			// folde tables
+			$('.fold-table .view').on("click", function () {
+				if ($(this).hasClass("open")) {
+					$(this).removeClass("open").next(".fold").removeClass("open");
+				} else {
+					$(".fold-table tr.view").removeClass("open").next(".fold").removeClass("open");
+					$(this).addClass("open").next(".fold").addClass("open");
+				}
+			});
+
+			// rooms
+			let rooms = /* [[${rooms}]] */'기본값';
+			
+			// 조건에 따른 텍스트 강조 출력 - todo
+			$('.fold-content tr td').each((idx, ele) => {
+				//console.log(ele);
+				if ($(ele).text() == '미납') {
+					$(ele).css('style', 'color: blue !important');
+				}
+				
+				if ($(ele).text() == '연체') {
+					$(ele).css('color', 'tomato');
+				}
+				
+				if ($(ele).text() == '입주') {
+					$(ele).css('font-weight', 'bold');
+					$(ele).css('color', 'black');
+				}
+			})
+
+			// 체크박스 전체 선택
+			function checkAllBtn(event) {
+				console.log(event.target.checked)
+				let chkboxs = document.querySelectorAll('#chkbox'); // 배열
+				for (i = 0; i < chkboxs.length; i++) {
+					//console.log(chkboxs[i].getAttributeNames());
+					// 속성이 disabled 이면 건너뛰기
+					if (chkboxs[i].disabled) continue;
+					chkboxs[i].checked = event.target.checked;
+				}
+			}
+
+			// 단건 메세지 버튼
+			$('.msgBtn').click(function () {
+
+				// 선택된 목록 가져오기
+				let chkboxs = 'input[name="chkbox"]:checked';
+				let checkedBoxs = document.querySelectorAll(chkboxs);
+				// 선택된 목록의 개수 세기
+				const checkedBoxsCnt = checkedBoxs.length;
+				// 출력
+				console.log(checkedBoxsCnt);				
+				// 체크된 항목이 없을 떄
+				if(checkedBoxsCnt <= 0) {
+					Swal.fire({
+						text: "체크된 항목이 없습니다.",
+						icon: "warning",
+						confirmButtonColor: "#3085d6",
+						confirmButtonText: "OK",
+					})
+					return;
+				}
+
+
+				// buildingId
+				console.log(checkedBoxs[0].value);
+				let buildingId = checkedBoxs[0].value;
+				//console.log($(this).closest('tr').children('td:eq(0)').children('input').val());
+				//let buildingId = $(this).closest('tr').children('td:eq(0)').children('input').val();
+				// TODO
+				Swal.fire({
+					text: "관리비 연체 고지 문자를 발송하시겠습니까?",
+					icon: "question",
+					showCancelButton: true,
+					confirmButtonColor: "#3085d6",
+					cancelButtonColor: "tomato",
+					confirmButtonText: "Yes",
+					cancelButtonText: "Cancel"
+				}).then(result => {
+					if (result.isConfirmed) {
+						$.ajax({
+							url: `${ctxPath}/sendOverdueNotice?buildingId=${buildingId}`,
+							type: 'get',
+							success: function (result) {
+								console.log('성공');
+								console.log(result);
+								Swal.fire({
+									icon: "success",
+									title: "전송 완료",
+									text: "Success !"
+								});
+							},
+							error: function (err) {
+								console.log('실패');
+								console.log(err);
+								Swal.fire({
+									icon: "error",
+									title: "전송 실패",
+									text: "관리자에게 문의하세요."
+								});
+							}
+						}); // end of ajax
+					} // end of if
 				});
+			})
+
+			// 체크된 메세지 전송 버튼
+
+
+
 		</script>
 	</div>
 </body>
