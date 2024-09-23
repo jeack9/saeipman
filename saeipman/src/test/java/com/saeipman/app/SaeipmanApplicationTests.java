@@ -3,8 +3,6 @@ package com.saeipman.app;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.saeipman.app.room.mapper.ConstractMapper;
 import com.saeipman.app.room.mapper.RoomMapper;
+import com.saeipman.app.room.service.RoomVO;
 
 @SpringBootTest
 class SaeipmanApplicationTests {
@@ -32,10 +31,15 @@ class SaeipmanApplicationTests {
 		System.out.println(nextPayDate);
 	}
 	
-	@Test
+	//@Test
 	public void passEncrypt() {
 		String s = passwordEncoder.encode("1234");
 		System.out.println(s);
+	}
+	@Test
+	public void test2() {
+		RoomVO vo = roomMapper.selectRoomInfo("ZIP000392101");
+		System.out.println(vo.getConstractList());
 	}
 
 }

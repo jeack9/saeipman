@@ -50,7 +50,6 @@ public class MinwonController {
 		if (acceptState != null) {
 			cri.setAcceptState(acceptState);
 		}
-
 		System.out.println("zjsxmfhffj");
 		if (auth == 1) {
 			System.out.println(buildingId + "buildingId");
@@ -123,12 +122,12 @@ public class MinwonController {
 
 	// 등록(처리)
 	@PostMapping("minwonInsert")
-	public String minwonInsert(@RequestPart(name = "files") MultipartFile[] files,@RequestParam(name = "buildingId", required = false) String buildingId, MinwonVO minwonVO) {
-
+	public String minwonInsert(@RequestPart(name = "files") MultipartFile[] files, MinwonVO minwonVO) {
 		fileUtill.setFolder("민원");// 폴더명
 		String groupId = fileUtill.multiUpload(files, "-1");
 		String login = SecurityUtil.getLoginId();
 		String roomId = SecurityUtil.getRoomId();
+		String buildingId = SecurityUtil.getBuildingId();
 		minwonVO.setRoomId(roomId);
 		minwonVO.setImchainId(login);
 		minwonVO.setGroupId(login);
@@ -136,6 +135,7 @@ public class MinwonController {
 		minwonVO.setBuildingId(buildingId);
 
 		minwonService.minwonInsert(minwonVO);
+
 		return "redirect:minwonList";
 
 	}
@@ -163,7 +163,7 @@ public class MinwonController {
 			@RequestPart(name = "newFiles", required = false) MultipartFile[] newFiles,
 			@RequestParam(name = "deleteFileNames", required = false) List<String> deleteFileNames) {
 		fileUtill.setFolder("민원");
-		
+		System.out.println(deleteFileNames + "삭제 파일이름");
 		// 파일 삭제 처리
 		if (deleteFileNames != null && !deleteFileNames.isEmpty()) {
 			minwonService.fileDelete(deleteFileNames);
@@ -181,11 +181,10 @@ public class MinwonController {
 
 		// 새 파일 업로드 처리
 		String groupId = minwonVO.getGroupId(); // 기존 그룹 ID 가져오기
-		System.out.println(groupId + "groupId 11111111111111");
+	
 		// group_id가 없으면 새로 생성
 		groupId = fileUtill.multiUpload(newFiles, groupId);
 		minwonVO.setGroupId(groupId);
-		System.out.println(groupId + "groupId 22222222222");
 
 		return minwonService.minwonUpdate(minwonVO);
 	}

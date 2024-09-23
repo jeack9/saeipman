@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.saeipman.app.commom.paging.PagingDTO;
 import com.saeipman.app.room.mapper.RoomMapper;
 import com.saeipman.app.room.service.BuildingRoom;
+import com.saeipman.app.room.service.ConstractVO;
 import com.saeipman.app.room.service.RoomService;
 import com.saeipman.app.room.service.RoomVO;
 
@@ -39,6 +40,14 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public boolean modiIpjuState(RoomVO roomVO) {
 		return roomMapper.updateIpjuState(roomVO) == 1;
+	}
+	@Override
+	public int roomConstractTotal(String roomId) {
+		return roomMapper.roomConstractTotal(roomId);
+	}
+	@Override
+	public List<ConstractVO> roomConstractsPaging(String roomId, PagingDTO paging) {
+		return roomMapper.roomConstractsPaging(roomId, paging);
 	}
 
 }

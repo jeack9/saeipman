@@ -1,0 +1,72 @@
+<div xmlns:th="http://www.thymeleaf.org"
+	th:fragment="constractHistoryFrg">
+	<table class="table table-bordered text-center align-middle">
+		<thead class="table-dark">
+			<tr>
+				<th rowspan="2">호실</th>
+				<th>계약유형</th>
+				<th rowspan="2">계약일</th>
+				<th rowspan="2">만료일</th>
+				<th>월세</th>
+				<th>임차인명</th>
+				<th rowspan="2">임차인 계좌</th>
+				<th rowspan="2">임대인 계좌</th>
+			</tr>
+			<tr>
+				<th>보증금</th>
+				<th>선후불/납입일</th>
+				<th>연락처</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="constract : ${constracts}">
+				<tr>
+					<td rowspan="2">[[${roomVO.roomNo}]]</td>
+					<td>[[${constract.constractType}]]</td>
+					<td rowspan="2">[[${#dates.format(constract.constractDate,
+						'yyyy-MM-dd')}]]</td>
+					<td rowspan="2">[[${#dates.format(constract.expDate,
+						'yyyy-MM-dd')}]]</td>
+					<td>[[${#numbers.formatInteger(constract.mRent, 3, 'COMMA')}]]</td>
+					<td>[[${constract.imchainName}]]</td>
+					<td rowspan="2">[[${constract.imchainAccount}]]</td>
+					<td rowspan="2">[[${constract.imdaeinAccount}]]</td>
+				</tr>
+				<tr>
+					<td>[[${#numbers.formatInteger(constract.deposit, 3,
+						'COMMA')}]]</td>
+					<td>[[${constract.payType}]]/[[${constract.mRentDate}]]일</td>
+					<td>[[${constract.imchainPhone}]]</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<!-- 계약목록 페이징 -->
+	<nav aria-label="Page navigation" th:if="${cPaging.total > 0}">
+		<ul class="pagination justify-content-center constractHistory">
+			<!-- 이전 페이지 링크 -->
+			<li class="page-item" th:classappend="${!cPaging.prev} ? 'disabled'">
+				<a class="page-link" th:data-roomid="${roomVO.roomId}"
+				th:href="@{/room/getConstrastHistorys(page=${cPaging.startPage - 1})}"
+				th:data-page="${cPaging.prev} ? ${cPaging.startPage - 1}"
+				aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+			</a>
+			</li>
+			<!-- 페이지 번호 링크 -->
+			<li class="page-item"
+				th:each="pageNum : ${#numbers.sequence(cPaging.startPage, cPaging.endPage)}"
+				th:classappend="${pageNum == cPaging.page} ? 'active'"><a
+				class="page-link" th:data-page="${pageNum}" th:data-roomid="${roomVO.roomId}"
+				th:href="@{/room/getConstrastHistorys(page=${pageNum})}">[[${pageNum}]]</a></li>
+			<!-- 다음 페이지 링크 -->
+			<li class="page-item" th:classappend="${!cPaging.next} ? 'disabled'">
+				<a class="page-link"
+				th:data-page="${cPaging.next} ? ${cPaging.endPage + 1}" th:data-roomid="${roomVO.roomId}"
+				th:href="@{/room/getConstrastHistorys(page=${cPaging.endPage + 1})}"
+				aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+			</a>
+			</li>
+		</ul>
+	</nav>
+	<!-- 계약목록 페이징 -->
+</div>
