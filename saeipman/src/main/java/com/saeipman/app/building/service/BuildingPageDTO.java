@@ -15,6 +15,8 @@ public class BuildingPageDTO {
 
 	private int total;
 	
+	private String buildingId;
+	
 	public BuildingPageDTO() {
 		this.pageNum = 1;
 		this.amount = 5;

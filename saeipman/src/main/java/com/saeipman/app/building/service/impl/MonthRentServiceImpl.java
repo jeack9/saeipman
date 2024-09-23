@@ -18,7 +18,15 @@ public class MonthRentServiceImpl implements MonthRentService{
 	private final MRentHistoryMapper mRentHistoryMapper;
 	@Override
 	public List<RentPayVO> mRentList(BuildingPageDTO pageDTO, String imdaeinId) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return mRentHistoryMapper.selectMRentList(pageDTO, imdaeinId);
+	}
+	@Override
+	public int totalPage(String imdaeinId) {
+		return mRentHistoryMapper.getTotalPageCount(imdaeinId);
+	}
+	@Override
+	public List<RentPayVO> buildingNameList(String imdaeinId) {
+		return mRentHistoryMapper.selectBuildingNameInfo(imdaeinId);
 	}
 }
