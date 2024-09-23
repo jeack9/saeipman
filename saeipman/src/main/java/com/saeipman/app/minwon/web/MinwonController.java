@@ -181,11 +181,10 @@ public class MinwonController {
 
 		// 새 파일 업로드 처리
 		String groupId = minwonVO.getGroupId(); // 기존 그룹 ID 가져오기
-		System.out.println(groupId + "groupId 11111111111111");
+	
 		// group_id가 없으면 새로 생성
 		groupId = fileUtill.multiUpload(newFiles, groupId);
 		minwonVO.setGroupId(groupId);
-		System.out.println(groupId + "groupId 22222222222");
 
 		return minwonService.minwonUpdate(minwonVO);
 	}

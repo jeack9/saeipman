@@ -223,6 +223,7 @@ input {
 				$('li').on('click', function(e) {
 					$('#imgFile').html('');
 					let buildingId = e.currentTarget.id;
+					let a = 
 					getBuildingInfo(buildingId);
 				});
 				function getBuildingInfo(buildingId) {
@@ -231,7 +232,7 @@ input {
 						url : ctxPath+ '/buildingDetails',
 						type : 'GET',
 						data : {
-							id : buildingId
+							id : buildingId,
 						},
 						dataType : 'json',
 
@@ -288,19 +289,25 @@ input {
 						
 						//방번호 수정
 						$('.hoSel').on('change',function(e){
-							if($('.hoSel').attr('id') === null){
+							//호실 추가 리스트 
+							$('.hoSel').each((idx,ele)=>{
+								console.log(ele);
+							})
+							if($('.hoSel').attr('id') === ''){
 								let roomNo = $(e.target).val();
 								let floor = $(e.target).closest('tr');
-								insertRoomList.push
+								insertRoomList.push({floor, roomNo});
+								console.log(insertRoomList ,'insertRoomList');
 							}else{
 								
 								let roomNo = $(e.target).val();
 								let roomId = $(e.target).attr('id');
 							
 								updateRoomList[roomId]=roomNo;
+								console.log(updateRoomList ,'updateRoomList');
 							}
-							//호실 추가 리스트
-							//console.log(updateRoomList);
+							
+							
 						})
 						if(data.fileName != null) {
 							//$('#groupId').val(data.groupId);
@@ -310,13 +317,12 @@ input {
 								let div = $('<div>').attr({'class':'imgDiv',  'data-fildid':img} );
 								let imgName = $("<img>").attr({'src':ctxPath+'/images/'+'건물/'+img});
 								let imgDel = $("<button>").attr('class','imageDel');
-								imgName.attr("class",'imgId')
+								imgName.attr("class",'imgId');
 								imgDel.attr('type','button');
 								imgDel.html('X');
 								$("#imgFile").append(div);
 								$(div).append(imgName);
 								$(div).append(imgDel);
-								
 							} 
 						} 
 						
@@ -469,17 +475,18 @@ input {
 		     	delRoomList.forEach(delRoom =>{
 					formData.append("deleteRoomList", JSON.stringify(delRoom));
 		     	})
-				
+		     	/* if($('input[name=newFiles]').val()=="null"){
+		     
+		     	}
+		     	console.log($('input[name=newFiles]').val()); */
 			   	//console.log(roomList, " ROOMLIST");
 
 			    $.ajax({
 			        url: ctxPath+'/buildingUpdate',
 			        type: 'POST',
 			        data: formData,
-			        //data: JSON.stringify(roomList),
 			        processData: false,
 			        contentType: false,
-			        //contentType: "application/json",
 			        success: function(response) {
 			            alert("업데이트 성공");
 			          
