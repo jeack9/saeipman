@@ -13,4 +13,9 @@ public interface FileService {
 	
 	//업데이트시 그룹아이디
 	public int getUpdateGroupId(BuildingVO buildingVO);
+	
+	// 파일 단건삭제
+	public void removeFile(int fileId);
+	// 파일 단건조회
+	public FileVO getFileInfo(int fileId);
 }

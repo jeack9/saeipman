@@ -118,8 +118,10 @@ public class FileUtility {
 		log.info(uploadPath);
 
 		String uuid = UUID.randomUUID().toString();
-		String fileName = uuid + ocrFile.getOriginalFilename();
-		String uploadFolder = folderPath + "/" + uuid + "_" + fileName;
+//		String fileName = uuid + ocrFile.getOriginalFilename();
+//		String uploadFolder = folderPath + "/" + uuid + "_" + fileName;
+		String fileName = uuid + "_" + ocrFile.getOriginalFilename();
+		String uploadFolder = folderPath + "/" + fileName;
 		String saveName = uploadPath + uploadFolder; // separator = 자바가 인식하는 경로
 
 		log.debug("saveName : " + saveName);
@@ -131,7 +133,6 @@ public class FileUtility {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		return fileName;
 
 	}
