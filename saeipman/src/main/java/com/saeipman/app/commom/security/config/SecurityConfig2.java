@@ -83,10 +83,9 @@ public class SecurityConfig2 {
 //		 Form 로그인 방식 disable
 		http.formLogin((auth) -> auth.disable());
         http
-        	.securityMatcher("/admin/**", "/api/**")
+        	.securityMatcher("/api/admin/**")
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/admin/**").hasRole("0")
-                .requestMatchers("/api/**").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("0")
                 .anyRequest().authenticated()
     		);
 
@@ -94,7 +93,7 @@ public class SecurityConfig2 {
 		http
 	    	.addFilterBefore(new JwtFilter(jwtUtill), LoginFilter.class);
 		LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtill);
-		loginFilter.setFilterProcessesUrl("/api/login");
+		loginFilter.setFilterProcessesUrl("/api/admin/login");
 		http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
 //		http
 //		    .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtill), UsernamePasswordAuthenticationFilter.class);

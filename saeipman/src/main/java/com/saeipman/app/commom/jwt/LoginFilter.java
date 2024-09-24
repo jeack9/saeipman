@@ -78,10 +78,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 		Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
 		GrantedAuthority auth = iterator.next();
 
+		// 어드민 권한이 아니면 토큰발급 x
 		String role = auth.getAuthority();
-
+		if(!role.equals("ROLE_0")) {
+			return;
+		}
 		String token = jwtUtil.createJwt(username, role, 60 * 60 * 1000000L);
-
 		response.addHeader("Authorization", "Bearer " + token);
 	}
 

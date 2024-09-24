@@ -112,11 +112,11 @@
 							<td rowspan="2">
 								<button class="btn btn-outline-dark"
 									th:if="${constract.get('CONSTRACT_FILE') !=null}">
-									파일 보기 <a target="blank"
-										th:href="${constract.get('CONSTRACT_FILE')}">파일</a>
-								</button>  <a
-								th:if="${constract.get('CONSTRACT_FILE') != null}"
-								th:href="@{/contract/pdf(fileName=${constract.get('CONSTRACT_FILE')})}"
+									파일 보기 
+								</button>  
+								<a
+								th:if="${constract.get('CONSTRACT_FILE') !=null}"
+								th:href="@{/pdfs/계약서/{fileName}(fileName=${constract.CONSTRACT_FILE})}"
 								target="_blank">PDF 보기</a>
 							</td>
 							<td rowspan="2">

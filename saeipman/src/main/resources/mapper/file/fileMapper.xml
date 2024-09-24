@@ -37,4 +37,17 @@
 		FROM building_info
 		WHERE building_id = #{buildingId}
 	</select> 
+	
+	<!-- 파일 단건삭제 -->
+	<delete id="deleteFile">
+		DELETE FROM file_info
+		WHERE file_id = #{fileId}
+	</delete>
+	
+	<!-- 파일 단건조회 -->
+	<select id="selectFileInfo">
+		SELECT *
+		FROM file_info
+		WHERE file_id = #{fileId}
+	</select>
 </mapper>
