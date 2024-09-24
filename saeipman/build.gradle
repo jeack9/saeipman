@@ -6,6 +6,7 @@ plugins {
 
 group = 'com.saeipman'
 version = '0.0.1'
+sourceCompatibility = '21'
 
 java {
 	toolchain {
@@ -57,10 +58,9 @@ dependencies {
 	implementation 'net.nurigo:sdk:4.3.0'
 	
 	//bootpay
-	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '+'
-	compile group: 'com.google.code.gson', name: 'gson', version: '+'
+	//compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '+'
+	//compile group: 'com.google.code.gson', name: 'gson', version: '+'
 }
-
 
 tasks.named('test') {
 	useJUnitPlatform()

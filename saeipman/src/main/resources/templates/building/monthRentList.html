@@ -12,12 +12,20 @@
 	<div layout:fragment="Main" class="row">
 		<div class="col-sm-12 col-xl-12">
 			<div class="bg-light rounded h-100 p-4">
-				<h6 class="mb-4">Hoverable Table</h6>
+				<h6 class="mb-4">월세 납부내역</h6>
+			<div class ="col-md-6">
+					<select class="form-select mb-6"
+						aria-label="Default select example" id="option" name="buildingId">
+						<option selected value="">건물 목록</option>
+						<option th:each="list : ${buildingNameList}"
+							th:value="${list.buildingId}">[[${list.buildingName}]]</option>
+					</select>
+				</div>
 				<table class="table table-hover">
 					<thead>
 						<tr>
+							<th>건물명</th>
 							<th>호실</th>
-							<th>납부상태</th>
 							<th>납부상태</th>
 							<th>입금자명</th>
 							<th>임차인명</th>
@@ -27,11 +35,58 @@
 						</tr>
 					</thead>
 					<tbody>
-
+						<th:block th:each="list:${monthRentList}">
+							<tr>
+								<td>[[${list.buildingName}]]</td>
+								<td>[[${list.roomNo}]]</td>
+								<td th:if="${list.paymentState==-1}">연체</td>
+								<td th:if="${list.paymentState==0}">예정</td>
+								<td th:if="${list.paymentState==1}">납부완료</td>
+								<td>[[${list.imchainName}]]</td>
+								<td>[[${list.depositorName}]]</td>
+								<td>[[${list.mRent}]]/[[${#dates.format(list.paymentDate,'yy년MM월dd일')}]]</td>
+								<td>[[${list.realPaymentMoney}]]/[[${#dates.format(list.realPaymentDate,'yy년MM월dd일')}]]</td>
+								<td></td>
+							</tr>
+						</th:block>
 					</tbody>
 				</table>
+				<!-- 페이징 -->
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-center">
+						<li class="page-item" th:if="${page.startPage > 1}"><a
+							class="page-link"
+							th:href="@{/monthPaymentHistory?pageNum={page}(page = ${page.startPage -1})}"
+							aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+						</a></li>
+
+						<th:block
+							th:with="start = ${page.startPage}, end = ${page.endPage}">
+							<li class="page-item"
+								th:with="start = ${page.startPage}, end = ${page.endPage}"
+								th:each="pageButton : ${#numbers.sequence(start, end)}"><a
+								class="page-link"
+								th:href="@{/monthPaymentHistory?pageNum={page} (page = ${pageButton})}"
+								th:text=${pageButton}></a></li>
+						</th:block>
+
+
+						<li class="page-item" th:if="${page.next}"><a
+							class="page-link"
+							th:href="@{/monthPaymentHistory?pageNum={page}(page = ${page.endPage +1})}"
+							aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+						</a></li>
+					</ul>
+				</nav>
 			</div>
 		</div>
+	<script>
+	
+	$('#option').on('change', function(e) {
+		console.log(e.target.value);
+		location.href = ctxPath+'/monthPaymentHistory?buildingId=' + e.target.value;
+	})
+	</script>
 	</div>
-
 </body>
+</html>
