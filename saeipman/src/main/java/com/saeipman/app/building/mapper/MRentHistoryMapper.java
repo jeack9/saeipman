@@ -11,7 +11,7 @@ public interface MRentHistoryMapper {
 	public List<RentPayVO> selectMRentList(@Param("pageDTO") BuildingPageDTO pageDTO,@Param("imdaeinId") String imdaeinId);
 	
 	//리스트 총수
-	public int getTotalPageCount(String imdaeinId);
+	public int getTotalPageCount(@Param("imdaeinId") String imdaeinId,@Param("pageDTO") BuildingPageDTO pageDTO);
 	
 	//건물 이름가져오기
 	public List<RentPayVO> selectBuildingNameInfo(String imdaeinId);
