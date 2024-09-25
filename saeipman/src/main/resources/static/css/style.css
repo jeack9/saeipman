@@ -80,7 +80,7 @@
 }
 
 .content {
-    margin-left: 250px;
+    margin: auto;
     min-height: 100vh;
     background: #FFFFFF;
     transition: 0.5s;
@@ -171,6 +171,14 @@
 .sidebar .navbar .dropdown-item {
     padding-left: 25px;
     border-radius: 0 30px 30px 0;
+}
+
+.content {
+	width: 100% !important;
+}
+
+.buildingBox{
+	padding: 30px 30px;	
 }
 
 .content .navbar .navbar-nav .nav-link {
