@@ -210,8 +210,9 @@
 		// 라디오 버튼 클릭 시 자동으로 필터링
 		$('input[name="acceptState"]').on('change', function() {
 			let acceptState = $(this).val(); // 선택된 acceptState 값 가져오기
-			let buildingId = $("")
-			location.href = `minwonList?acceptState=${acceptState}`; // URL에 acceptState 값 추가
+			let buildingId = $("select[name='buildingId']").val();
+
+			location.href = `minwonList?buildingId=${buildingId}&acceptState=${acceptState}`; // URL에 acceptState 값 추가
 		});
 
 		$('tbody > tr')

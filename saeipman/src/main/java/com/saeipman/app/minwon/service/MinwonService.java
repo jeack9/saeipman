@@ -40,5 +40,7 @@ public interface MinwonService {
 	public int fileDelete(List<String> fileNames);
 	public int fileNamesByGroupId(String groupId);
 	
+	public String imchainIdSearch(int postNo);
+	
 
 }

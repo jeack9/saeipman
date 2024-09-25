@@ -42,4 +42,5 @@ public interface MinwonMapper {
 	public int selectDeleteFileName(String fileName);
 	public int selectFileNamesByGroupId(String groupId);
 	
+	public String selectimchainId(int postNo);	
 }
