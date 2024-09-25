@@ -86,7 +86,7 @@ table {
 													</div></td>
 												<td>[[${#strings.substring(payInF.realPaymentDate, 0, 11)}]]</td>
 
-												<td>[[${#numbers.formatInteger(payInF.realPaymentMoney, 3, 'COMMA')}]]</td>
+												<td>[[${#numbers.formatInteger(payInF.paymentMoney, 3, 'COMMA')}]]</td>
 												<td th:if="${payInF.paymentState == -1}"><font color="red"> 연체</font></td>
 												<td th:if="${payInF.paymentState != -1}"><font color="green"> 예정</font></td>
 											</tr>
