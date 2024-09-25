@@ -22,9 +22,9 @@ public class MonthRentListController {
 	@GetMapping("/monthPaymentHistory")
 	public String monthRentList(BuildingPageDTO buildingPageDTO, Model model) {
 		String loginId = SecurityUtil.getLoginId();
-		buildingPageDTO.setBuildingId(loginId);
+		//buildingPageDTO.setBuildingId(loginId);
 		//리스트 총수
-		int totalPage = monthService.totalPage(loginId);
+		int totalPage = monthService.totalPage(loginId,buildingPageDTO );
 		buildingPageDTO.setTotal(totalPage);
 		model.addAttribute("page", buildingPageDTO);
 		//건물 명 리스트

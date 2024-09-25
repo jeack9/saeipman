@@ -43,7 +43,7 @@ public class PaymentController {
 		List<PaymentVO> payInfo = paymentService.selectPayInfo(payVO);
 		model.addAttribute("payInfo", payInfo);
 
-		return "Payment/paymentInfo";
+		return "payment/paymentInfo";
 	}
 
 	// 기간에 따른 납부 조회

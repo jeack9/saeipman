@@ -131,7 +131,7 @@ public class BuildingController {
 
 	@PostMapping("/ocrUpload")
 	@ResponseBody
-	public Map<String, Object> insertOcr(@RequestPart(name = "ocrFile") MultipartFile ocrFile, Model model,
+	public Map<String, Object> insertOcr(@RequestPart(name = "ocrFile", required = false) MultipartFile ocrFile, Model model,
 			BuildingVO buildingVO) throws IOException {
 //		if (ocrFile.isEmpty()) {
 //			return "error"; // 파일이 비어있을 경우 에러를 처리하는 HTML 템플릿으로 이동
@@ -311,7 +311,7 @@ public class BuildingController {
 			groupId = fileUtill.multiUpload(newFiles, groupId);
 			buildingVO.setGroupId(groupId);
 
-			return buildingService.buildingUpdate(buildingVO);
+			//return buildingService.buildingUpdate(buildingVO);
 		}
 
 		// 방정보 수정

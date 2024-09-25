@@ -99,13 +99,13 @@ input {
 				<div>
 					<div class="form-check form-switch" style="display: inline-block;">
 						<label class="form-label"><span>연체 알림</span> </label><input
-							role="switch" type="checkbox" class="form-check-input text-end"
+							role="switch" id="delayAlertYn" type="checkbox" class="form-check-input text-end"
 							name="delayAlertYn" />
 					</div>
 					<div class="form-check form-switch" style="display: inline-block;">
 						<label class="form-label"><span>민원 알림</span> </label><input
 							role="switch" type="checkbox" class="form-check-input text-end"
-							name="minwonAlertYn" />
+							name="minwonAlertYn" id="minwonAlertYn"/>
 					</div>
 				</div>
 
@@ -182,7 +182,7 @@ input {
 				<button type="button" id="roomUpdateBtn">▼</button>
 				<div id="roomUpdate">
 					<div>
-						<input type="text" name="buildingId" id="bid">
+						<input type="hidden" name="buildingId" id="bid">
 						<h5 id="staticBackdropLabel">방 수정</h5>
 					</div>
 					<div>
@@ -242,6 +242,8 @@ input {
 						$(".addr").val(data.doroAddr);
 						$(".dAddr").val(data.detailsAddr);
 						$("#gunchookArea").val(data.gunchookArea);
+						$('#delayAlertYn').val(data.delayAlertYn);
+						$('#minwonAlertYn').val(data.minwonAlertYn);
 						$("#liftYn").val(data.liftYn);
 						$("#totalFloor").val(data.totalFloor);
 						$("#floorGaguCount").val(data.floorGaguCount);

@@ -17,6 +17,7 @@ public class PaymentVO {
 	private String mRentHistoryNo; //납부 내역 번호(월세)
 	private int paymentState; //월세 납부 여부
 	private int realPaymentMoney; //월세 납부액
+	private int paymentMoney; //월세 납부액
 	
 	private int constractState; //계약현황
 	
