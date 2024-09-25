@@ -1,9 +1,9 @@
 package com.saeipman.app.admin.Service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.saeipman.app.commom.paging.PagingDTO;
-import com.saeipman.app.member.service.ImdaeinVO;
 
 public interface AdminService {
 	public List<Member> imdaeinList();
@@ -17,4 +17,8 @@ public interface AdminService {
 	NoticeVO noticeInfo(int postNo);
 	// 공지사항 단건삭제
 	void removeNotice(int postNo);
+	// 공지사항 단건등록 -- postNo 반환
+	Map<String, Object> addNotice(NoticeVO noticeVO);
+	// 공지사항 단건수정 -- postNo 반환
+	Map<String, Object> modiNotice(NoticeVO noticeVO);
 }

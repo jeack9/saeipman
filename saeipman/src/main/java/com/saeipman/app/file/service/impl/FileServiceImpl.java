@@ -33,4 +33,15 @@ public class FileServiceImpl implements FileService{
 	public int getUpdateGroupId(BuildingVO buildingVO) {
 		return fileMapper.selectFileUpdateGroupId(buildingVO);
 	}
+
+	// 파일 단건삭제
+	@Override
+	public void removeFile(int fileId) {
+		fileMapper.deleteFile(fileId);
+	}
+
+	@Override
+	public FileVO getFileInfo(int fileId) {
+		return fileMapper.selectFileInfo(fileId);
+	}
 }

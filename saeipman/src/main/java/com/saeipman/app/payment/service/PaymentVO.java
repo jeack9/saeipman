@@ -18,7 +18,12 @@ public class PaymentVO {
 	private int paymentState; //월세 납부 여부
 	private int realPaymentMoney; //월세 납부액
 	
+	private int constractState; //계약현황
+	
+	private String imdaeinId; // 임대인 아이디
 	private String imchainPhone; //임차인 아이디(연락처)
+	
+	
 
 	public String getmRentHistoryNo() {
 		return mRentHistoryNo;

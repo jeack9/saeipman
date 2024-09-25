@@ -156,7 +156,8 @@ table {
 
 				console.log(payDate);
 
-				$.ajax(ctxPath + "/paymentAjax", {
+				$
+						.ajax(ctxPath + "/paymentAjax", {
 							type : "GET",
 							//contentType : "application/json",
 							data : {
@@ -214,9 +215,7 @@ table {
 								})
 			}
 
-			
-//			<<<<<<<<< 미납내역 >>>>>>>>>>>
-
+			//			<<<<<<<<< 미납내역 >>>>>>>>>>>
 
 			//체크한 달의 관리비 값 합산
 
@@ -252,61 +251,67 @@ table {
 								}
 								$('#total').text(total);
 							})
-
+							
+			//<<부트페이 결제>>		
+						
+			// 납부상태 변경
+			function updateAjax(){
+			 	
+ 				let listFormObj = [];
+			 	let formObjArr = $(updateForm).serializeArray();
+			 	formObjArr.forEach(obj => {
+			 		let paymentResult = {}; 
+			 		paymentResult[obj.name] = obj.value;
+			 		listFormObj.push(paymentResult);
+		 		});
+			 	
+			 	console.log(JSON.stringify(listFormObj));
+			 	
+				$.ajax(ctxPath + "/updateAjax", {
+					type : "post",
+					contentType : "application/json",
+					data : JSON.stringify(listFormObj),
+				})
+				.done((result) => {
+					alert("납부 성공");
+					location.href = ctxPath + "/paymentInfo";
+				})
+				.fail((err) => alert("결제 오류"));
+				}
+					
+					
 			//결제 api
 			$('#payBtn').on('click', requestPay)
-			
-			 function requestPay() {
-			BootPay.request({
-				price : $('#total').text(),
-				application_id : "66f133da3aa7c4faf96e4c06",
-				name : '월세/관리비', 
-				pg : '',
-				method : '', 
-				show_agree_window : 0, 
-				order_id : new Date().getTime(),
-				account_expire_at: new Date()+1,
-				extra: {
-			        vbank_result: 1, 
-				}
-			}).error(function(data) {
-				//결제 진행시 에러가 발생하면 수행됩니다.
-				console.log(data);
-			}).cancel(function(data) {
-				//결제가 취소되면 수행됩니다.
-				console.log(data);
-			}).close(function(data) {
-				// 결제창이 닫힐때 수행됩니다. (성공,실패,취소에 상관없이 모두 수행됨)
-				console.log(data);
-			}).done(function (data) {
-				//결제가 정상적으로 완료되면 수행됩니다
-				//비즈니스 로직을 수행하기 전에 결제 유효성 검증을 하시길 추천합니다.
-				console.log(data);
-		 			function updateAjax(){
-					 	
-		 				let listFormObj = [];
-					 	let formObjArr = $(updateForm).serializeArray();
-					 	formObjArr.forEach(obj => {
-					 		let paymentResult = {}; 
-					 		paymentResult[obj.name] = obj.value;
-					 		listFormObj.push(paymentResult);
-				 		});
-					 	
-					 	console.log(JSON.stringify(listFormObj));
-					 	
-						$.ajax(ctxPath + "/updateAjax", {
-							type : "post",
-							contentType : "application/json",
-							data : JSON.stringify(listFormObj),
-						})
-						.done((result) => {
-							alert("납부 성공");
-							location.href = ctxPath + "/paymentInfo";
-						})
-						.fail((err) => alert("결제 오류"));
-						}
-				});	
-			} 		
+
+			function requestPay() {
+				BootPay.request({
+					price : $('#total').text(),
+					application_id : "66f133da3aa7c4faf96e4c06",
+					name : '월세/관리비',
+					pg : '',
+					method : '',
+					show_agree_window : 0,
+					order_id : new Date().getTime(),
+					account_expire_at : new Date() + 1,
+					extra : {
+						vbank_result : 1,
+					}
+				}).error(function(data) {
+					//결제 진행시 에러가 발생하면 수행됩니다.
+					console.log(data);
+				}).cancel(function(data) {
+					//결제가 취소되면 수행됩니다.
+					console.log(data);
+				}).close(function(data) {
+					// 결제창이 닫힐때 수행됩니다. (성공,실패,취소에 상관없이 모두 수행됨)
+					console.log(data);
+				}).done(function(data) {
+					//결제가 정상적으로 완료되면 수행됩니다
+					//비즈니스 로직을 수행하기 전에 결제 유효성 검증을 하시길 추천합니다.
+					console.log(data);
+					updateAjax();
+				});
+			}
 		</script>
 	</div>
 </body>
