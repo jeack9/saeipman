@@ -97,7 +97,7 @@ textarea {
 				<td
 					th:text="${#temporals.format(minwon.visitsDate2, 'yyyy-MM-dd HH:mm')}"></td>
 
-				<th th:if="${minwon.visitsDate2 != null}">or</th>
+				<th th:if="${minwon.visitsDate2 != null}">또는</th>
 				<td
 					th:text="${#temporals.format(minwon.visitsDate2, 'yyyy-MM-dd HH:mm')}"></td>
 			</tr>
@@ -151,7 +151,7 @@ textarea {
 
 			<h4>comment</h4>
 			<div id="comments-container">
-				<!-- 댓글 목록이 여기에 동적으로 추가될 것입니다. -->
+				<!-- 댓글 목록 -->
 				<div class="ms-3" id="cmtContainer"></div>
 			</div>
 			<!-- 댓글 작성 폼 -->

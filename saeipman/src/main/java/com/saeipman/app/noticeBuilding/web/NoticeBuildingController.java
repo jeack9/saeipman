@@ -131,9 +131,9 @@ public class NoticeBuildingController {
 		fileUtility.setFolder("공지사항");
 		
 		
-		//String groupId = fileUtility.multiUpload(files);
+		String groupId = fileUtility.multiUpload(files, "-1");
 		
-		//noticeBuildingVO.setGroupId(groupId);
+		noticeBuildingVO.setGroupId(groupId);
 		int no = noticeBuildingService.noticeBuildingInsert(noticeBuildingVO);
 		
 		return "redirect:noticeBuildingInfo?postNo=" + no;
