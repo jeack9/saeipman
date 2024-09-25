@@ -3,7 +3,7 @@
 <mapper namespace="com.saeipman.app.main.mapper.MainMapper">
 
 <!-- 계약자 카운팅 -->
-	<select id="selectConstract" resultType="PaymentVO">
+	<select id="selectConstract">
 		SELECT count(constract_state)
 		FROM constract_info c join room_info r
 		                       on c.room_id = r.room_id
@@ -14,7 +14,7 @@
 	</select>
 
 <!-- 미납자 카운팅 -->
-	<select id="selectUnPayment" resultType="PaymentVO">
+	<select id="selectUnPayment">
 		SELECT count(payment_state)
 		FROM m_rent_payment_history m join room_info r
 		                               on m.room_id = r.room_id

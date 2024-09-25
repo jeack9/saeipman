@@ -142,6 +142,14 @@ public class NoticeBuildingController {
 	// 수정(페이지)
 	@GetMapping("noticeBuildingUpdate")
 	public String noticeBuildingUpdateForm(NoticeBuildingVO noticeBuildingVO, Model model) {
+		
+		String loginId = SecurityUtil.getLoginId();
+		
+		BuildingVO buildingVO = new BuildingVO();
+		buildingVO.setImdaeinId(loginId);
+		List<BuildingVO> name = noticeBuildingService.imdaeinBuilding(buildingVO);
+		model.addAttribute("Bname", name);
+		
 		NoticeBuildingVO selectVO = noticeBuildingService.noticeBuildingSelect(noticeBuildingVO);
 		model.addAttribute("BNotice", selectVO);
 		return "noticeBuilding/noticeBuildingUpdate";
@@ -153,6 +161,11 @@ public class NoticeBuildingController {
 	public Map<String, Object> noticeBuildingUpdate(@RequestBody NoticeBuildingVO noticeBuildingVO) {
 		
 		//fileUtill.set
+		String loginId = SecurityUtil.getLoginId();
+
+		BuildingVO buildingVO = new BuildingVO();
+		buildingVO.setImdaeinId(loginId);
+		
 		
 		return noticeBuildingService.noticeBuildingUpdate(noticeBuildingVO);
 			

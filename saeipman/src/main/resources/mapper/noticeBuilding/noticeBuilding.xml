@@ -138,6 +138,7 @@
 		SET title = #{title}
 		, content = #{content}
 		, mod_date = SYSDATE
+		, building_id = #{buildingId}
 		WHERE post_no = #{postNo}
 	</update>
 
