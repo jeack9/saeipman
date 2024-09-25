@@ -288,8 +288,9 @@ input {
 		$('#fileImg').on('click', function(){
 			let url = ctxPath + "/ocrUpload";
 			let fileName = $("input[name='ocrFile']")[0].files[0];
+			console.log(fileName);
 			var formData = new FormData();
-			formData.append("file",fileName);
+			formData.append("ocrFile",fileName);
 			
 			$.ajax(url,{
 				type:"post",

@@ -105,6 +105,7 @@ public class BuildingController {
 			@RequestPart(name = "ocrFile") MultipartFile ocrFile, BuildingVO buildingVO, RoomVO roomVO)
 			throws IOException {
 		System.out.println(files + "파일명");
+		System.out.println(ocrFile + "ocrFile입니다");
 		// 업로드 경로 폴더명
 		fileUtill.setFolder("건물");
 
@@ -131,12 +132,12 @@ public class BuildingController {
 
 	@PostMapping("/ocrUpload")
 	@ResponseBody
-	public Map<String, Object> insertOcr(@RequestPart(name = "ocrFile") MultipartFile ocrFile, Model model,
-			BuildingVO buildingVO) throws IOException {
+	public Map<String, Object> insertOcr(@RequestPart(name = "ocrFile", required = false) MultipartFile ocrFile, Model model,
+										BuildingVO buildingVO) throws IOException {
 //		if (ocrFile.isEmpty()) {
 //			return "error"; // 파일이 비어있을 경우 에러를 처리하는 HTML 템플릿으로 이동
 //		}
-
+		System.out.println(ocrFile+"asdfasdf");
 		String naverSecretKey = secretKey; // 본인의 네이버 Clova OCR 시크릿 키로 대체
 
 		File tempFile = File.createTempFile("temp", ocrFile.getOriginalFilename());
