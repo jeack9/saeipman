@@ -32,4 +32,9 @@ public interface MemberService {
 	
 	// 로그인 단건삭제
 	public void removeLogin(String imchainId);
+	
+	// 로그인한 멤버이름 조회
+	public String getMemberName(String loginId, int auth);
+	
+	
 }

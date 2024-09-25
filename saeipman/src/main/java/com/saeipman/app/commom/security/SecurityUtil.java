@@ -1,7 +1,5 @@
 package com.saeipman.app.commom.security;
 
-import java.util.List;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 

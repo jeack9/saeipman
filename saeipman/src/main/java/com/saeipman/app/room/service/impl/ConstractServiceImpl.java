@@ -85,5 +85,15 @@ public class ConstractServiceImpl implements ConstractService{
 	public int roomConstractTotal(String buildingId) {
 		return cmapper.roomConstractTotal(buildingId);
 	}
+	
+	// 활성화된 계약서 중 임차인 연락처 중복조회
+	@Override
+	public boolean existsByPhoneActive(String imchainPhone) {
+		return cmapper.existsByPhoneActive(imchainPhone) >= 1;
+	}
+	@Override
+	public ConstractVO prevConstractByRoomId(String roomId) {
+		return cmapper.selectPrevConstractByRoomId(roomId);
+	}
 
 }

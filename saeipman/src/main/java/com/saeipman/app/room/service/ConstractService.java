@@ -30,4 +30,10 @@ public interface ConstractService {
 	// 건물선택 - 방계약 목록 totla
 	public int roomConstractTotal(String buildingId);
 	
+	// 활성화된 계약 중 연락처으로 중복검색
+	public boolean existsByPhoneActive(String imchainPhone);
+	
+	// 방의 이전 계약정보 조회
+	public ConstractVO prevConstractByRoomId(String roomId);
+	
 }

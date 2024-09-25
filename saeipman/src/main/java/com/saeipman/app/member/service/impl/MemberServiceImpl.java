@@ -14,6 +14,7 @@ import com.saeipman.app.member.service.ImchainVO;
 import com.saeipman.app.member.service.ImdaeinVO;
 import com.saeipman.app.member.service.LoginInfoVO;
 import com.saeipman.app.member.service.MemberService;
+import com.saeipman.app.room.mapper.ConstractMapper;
 import com.saeipman.app.room.mapper.RoomMapper;
 import com.saeipman.app.room.service.ConstractVO;
 import com.saeipman.app.room.service.RoomVO;
@@ -28,6 +29,7 @@ public class MemberServiceImpl implements MemberService {
 	private final MemberMapper lmapper;
 	private final BCryptPasswordEncoder passwordEncoder;
 	private final RoomMapper rmapper;
+	private final ConstractMapper cmapper;
 
 	@Override
 	public LoginInfoVO loginInfo(LoginInfoVO loginVO) {
@@ -112,24 +114,24 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	@Transactional
 	public boolean addImchain(ConstractVO constractVO) {
-		String id = constractVO.getImchainPhone();
-		int duplicateLogin = lmapper.existsByLogin(id);
-		System.out.println("duplicateLogin" + duplicateLogin);
-		if(duplicateLogin == 1) {
-			lmapper.deleteImchain(id);
-			lmapper.deleteLogin(id);
+		String imchainPhone = "";
+		imchainPhone = constractVO.getImchainPhone();
+		// 임차인의 연락처로 계약중인 정보가 있을때 등록불가
+		int checkResult = cmapper.existsByPhoneActive(imchainPhone);
+		if(checkResult == 1) {
+			return false;
 		}
 		// 임차인 단건추가
 		ImchainVO imchainVO = new ImchainVO();
-		RoomVO roomVO = rmapper.selectRoomInfo(constractVO.getRoomId()); 
-		imchainVO.setImchainId(id);
+		imchainVO.setImchainId(imchainPhone);
 		imchainVO.setImchainName(constractVO.getImchainName());
+		RoomVO roomVO = rmapper.selectRoomInfo(constractVO.getRoomId()); 
 		imchainVO.setRoomNo(roomVO.getRoomNo());
 		int result = lmapper.insertImchain(imchainVO);
 		if(result == 1) {
 			// 임차인 단건추가 성공 - 로그인정보 단건추가
 			LoginInfoVO loginVO = new LoginInfoVO();
-			loginVO.setLoginId(id);
+			loginVO.setLoginId(imchainPhone);
 			loginVO.setPw(passwordEncoder.encode(constractVO.getImchainAccount()));
 			loginVO.setAuth(2);
 			lmapper.insertLogin(loginVO);
@@ -144,6 +146,18 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public void removeLogin(String id) {
 		lmapper.deleteLogin(id);
+	}
+	
+	// 로그인한 멤버이름 조회
+	@Override
+	public String getMemberName(String loginId, int auth) {
+		String memberName = "익명";
+		if(auth == 1) {
+			memberName = lmapper.selectImdaeinName(loginId);
+		}else if(auth == 2) {
+			memberName = lmapper.selectIchainName(loginId);
+		}
+		return memberName;
 	}
 	
 	

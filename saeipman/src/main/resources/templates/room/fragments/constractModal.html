@@ -1,7 +1,7 @@
 <!-- Modal -->
 <div class="modal-content" xmlns:th="http://www.thymeleaf.org" th:fragment="modalContent">
 	<div class="modal-header">
-		<h5 class="modal-title" id="contractModalLabel">계약 정보: [[${buildingName}]] 호</h5>
+		<h5 class="modal-title" id="contractModalLabel">계약 정보: [[${buildingName}]] [[${roomVo.roomNo}]]호</h5>
 		<button type="button" class="btn-close" data-bs-dismiss="modal"
 			aria-label="Close"></button>
 	</div>
@@ -107,7 +107,7 @@
 		</form>
 	</div>
 	<div class="modal-footer">
-		<button type="button" class="btn btn-secondary" th:if="${constractVo.constractNo == null}">이전 정보 불러오기</button>
+		<button type="button" class="btn btn-secondary" id="prevConstractBtn" th:if="${constractVo.constractNo == null}">이전 정보 불러오기</button>
 		<button type="button" class="btn btn-primary" id="saveConstractBtn">저장</button>
 	</div>
 	<script>
@@ -138,6 +138,42 @@
             let $expDateInput = $("#expDate");
             $expDateInput.val(formattedDate);
         }
+		
+		// 이전 계약정보 조회 함수
+		let getPrevConstract = () =>{
+			let contractNo = $("input[name='constractNo']").val();
+			$.ajax({
+				url: `${ctxPath}/room/prevConstract`,
+				method: "GET",
+				data: {roomId: $("#roomId").val()},
+				success: function(data) {
+                    if (data.retCode) {
+                    	let prevConstract = data.prevConstract;
+                        // 이전 계약 정보를 두 번째 모달의 폼 필드에 설정
+                        $("#constractType").val(prevConstract.constractType);
+                        $("#deposit").val(prevConstract.deposit);
+                        $("#payType").val(prevConstract.payType);
+                        $("#mRent").val(prevConstract.mRent);
+                        $("#imchainName").val(prevConstract.imchainName);
+                        $("#imchainPhone").val(prevConstract.imchainPhone);
+                        $("#constractDate").val(data.expDate);
+                        $("#mRentDate").val(prevConstract.mRentDate);
+                        $("#constractState").val(0);
+                        $("#imdaeinAccount").val(prevConstract.imdaeinAccount);
+                        $("#imchainAccount").val(prevConstract.imchainAccount);
+                        $("#memo").val(prevConstract.memo);
+                        $("#constractNo").val(prevConstract.constractNo);
+                    }else{
+                    	alert('이전 계약정보가 없습니다.');
+                    }
+                },
+                error: function() {
+                    alert('이전 계약정보를 불러오는 중에 오류가 발생했습니다.');
+                }
+			});
+		}
+		$("#prevConstractBtn").on("click", getPrevConstract);
+		
     </script>
 </div>
 <!-- Modal END -->

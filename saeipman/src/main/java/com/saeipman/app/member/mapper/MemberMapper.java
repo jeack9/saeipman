@@ -34,6 +34,13 @@ public interface MemberMapper {
 	// 임차인 단건삭제
 	public int deleteImchain(String imchainId);
 	
+	// 임차인 이름조회
+	public String selectIchainName(String imchainId);
+	
+	// 임대인 이름조회
+	public String selectImdaeinName(String imdaeinId);
+	
 	// 로그인정보 삭제
 	public int deleteLogin(String imchainId);
+	
 }
