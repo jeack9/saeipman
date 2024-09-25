@@ -100,10 +100,8 @@
 
 		</div>
 
-		<div th:if="${pageMaker.total == 0}"
-			style="text-align: center;">
-			<br>
-			<br>검색결과가 없습니다.
+		<div th:if="${pageMaker.total == 0}" style="text-align: center;">
+			<br> <br>검색결과가 없습니다.
 		</div>
 
 		<table class="table" th:if="${pageMaker.total > 0}">
@@ -135,10 +133,11 @@
 				th:onClick="|location.href = '@{/minwonInsert}'|"
 				class="btn btn-outline-success m-2">등록</button>
 		</div>
-		
-		
-		
-		<nav aria-label="Page navigation example" th:if="${pageMaker.total > 0}">
+
+
+
+		<nav aria-label="Page navigation example"
+			th:if="${pageMaker.total > 0}">
 			<ul class="pagination justify-content-center">
 				<li class="page-item">
 					<!-- 타임리프에서는 조건이 참일 때 'selected'라는 문자열을 반환할 필요가 없음. 대신 조건이 참이면 selected 속성이 추가되고, 거짓이면 속성이 추가되지 않음 -->
@@ -181,10 +180,10 @@
 		$("#searchFrom button").on("click", function(e) {
 
 			// 검색 종류가 선택되지 않았을 때 경고 메시지
-			if (!searchFrom.find("option:selected").val()) {
-				alert("검색종류를 선택하세요");
-				return false;
-			}
+			//if (!searchFrom.find("option:selected").val()) {
+				//alert("검색종류를 선택하세요");
+				//return false;
+			//}
 
 			// 키워드가 입력되지 않았을 때 경고 메시지
 			if (!searchFrom.find("input[name='keyword']").val()) {
@@ -212,8 +211,7 @@
 			var acceptState = $(this).val(); // 선택된 acceptState 값 가져오기
 			location.href = `minwonList?acceptState=${acceptState}`; // URL에 acceptState 값 추가
 		});
-		
-		
+
 		$('tbody > tr')
 				.on(
 						'click',
