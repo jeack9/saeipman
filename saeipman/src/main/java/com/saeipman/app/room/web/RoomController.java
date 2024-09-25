@@ -1,6 +1,7 @@
 package com.saeipman.app.room.web;
 
 import java.io.IOException;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -186,6 +187,7 @@ public class RoomController {
 			map.put("retCode", "fail3");
 			return map;
 		}
+		
 		String roomId = constractVO.getRoomId();
 		int newState = constractVO.getConstractState();
 		if (newState == -1) {
@@ -224,6 +226,11 @@ public class RoomController {
 
 		// 현재계약 정보 확인
 		if (newState == 1) {
+			// 계약 확정 등록시 임차인 연락처로 확정된 계약조회
+			if(csvc.existsByPhoneActive(constractVO.getImchainPhone())) {
+				map.put("retCode", "failExist");
+				return map;
+			}
 			ConstractVO currentConstract = csvc.currentConstractInfoByRoomId(roomId);
 			if (currentConstract != null && !currentConstract.getConstractNo().equals(constractVO.getConstractNo())) {
 				map.put("retCode", "fail2");
@@ -306,6 +313,10 @@ public class RoomController {
 
 		// 현재계약 정보 확인
 		if (newState == 1) {
+			if(csvc.existsByPhoneActive(constractVO.getImchainPhone())) {
+				map.put("retCode", "failExist");
+				return map;
+			}
 			ConstractVO currentConstract = csvc.currentConstractInfoByRoomId(roomId);
 			if (currentConstract != null && !currentConstract.getConstractNo().equals(constractVO.getConstractNo())) {
 				map.put("retCode", "fail2");
@@ -484,4 +495,20 @@ public class RoomController {
 
 		return "room/fragments/constractHistory :: constractHistoryFrg";
 	}
+	
+	// 이전 계약정보 조회
+	@GetMapping("/prevConstract")
+	@ResponseBody
+	public Map<String, Object> getPrevConstract(@RequestParam(name = "roomId") String roomId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("retCode", false);
+		ConstractVO prevConstract = csvc.prevConstractByRoomId(roomId);
+		if(prevConstract != null) {
+			map.put("retCode", true);
+			map.put("prevConstract", prevConstract);
+			map.put("expDate", prevConstract.getExpDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+		}
+		return map;
+	}
+	
 }

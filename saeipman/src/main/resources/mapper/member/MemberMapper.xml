@@ -94,4 +94,18 @@
 		DELETE FROM login_info
 		WHERE login_id = #{login_id}
 	</delete>
+	
+	<!-- 임대인 이름조회 -->
+	<select id="selectImdaeinName">
+		SELECT imdaein_name
+		FROM imdaein
+		WHERE imdaein_id = #{imdaeinId}
+	</select>
+	
+	<!-- 임차인 이름조회 -->
+	<select id="selectIchainName">
+		SELECT imchain_name
+		FROM imchain
+		WHERE imchain_id = #{imchainId}
+	</select>
 </mapper>

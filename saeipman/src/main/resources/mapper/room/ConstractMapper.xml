@@ -196,4 +196,38 @@
 			                        ON ri.room_id = ci.room_id AND ci.constract_state = 1
 			WHERE ri.building_id = #{buildingId}
 	</select>
+	
+	<!-- 임차인 중복체크 - 활성화된 계약서 중 임차인 연락처 체크 -->
+	<select id="existsByPhoneActive">
+	SELECT COUNT(*)
+	FROM constract_info
+	WHERE imchain_phone = #{imchainPhone} AND constract_state = 1
+	</select>
+	
+	<!-- 방의 이전 계약정보 조회 -->
+	<select id="selectPrevConstractByRoomId">
+	SELECT *
+	FROM
+	    (SELECT
+	        constract_no,
+	        constract_type,
+	        deposit,
+	        m_rent,
+	        pay_type,
+	        imchain_name,
+	        imchain_phone,
+	        imchain_account,
+	        imdaein_account,
+	        constract_date,
+	        exp_date,
+	        constract_state,
+	        constract_file,
+	        m_rent_date,
+	        memo,
+	        room_id,
+	        ROW_NUMBER() OVER(ORDER BY exp_date DESC) AS rn
+	    FROM constract_info
+	    WHERE room_id = #{roomId})
+	WHERE rn = 1
+	</select>
 </mapper>

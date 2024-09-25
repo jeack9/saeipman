@@ -31,4 +31,10 @@ public interface ConstractMapper {
 	
 	// 건물선택 - 건물의 현재계약 목록 토탈
 	public int roomConstractTotal(String buildingId);
+	
+	// 임차인 중복체크 -- 활성화된 계약서 중 임차인 연락처 체크
+	public int existsByPhoneActive(String imchainPhone);
+	
+	// 방의 이전 계약정보 조회
+	public ConstractVO selectPrevConstractByRoomId(String roomId);
 }
