@@ -1,6 +1,8 @@
 package com.saeipman.app.admin.Service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +56,34 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public void removeNotice(int postNo) {
 		adminMapper.deleteNotice(postNo);
+	}
+
+	// 단건등록 -- postNo 반환
+	@Override
+	public Map<String, Object> addNotice(NoticeVO noticeVO) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		int result = adminMapper.insertNotice(noticeVO);
+		if(result == 1) {
+			map.put("retCode", true);
+			map.put("postNo", noticeVO.getPostNo());
+			return map;
+		}
+		map.put("retCode", false);
+		return map;
+	}
+
+	// 단건수정 -- postNo 반환
+	@Override
+	public Map<String, Object> modiNotice(NoticeVO noticeVO) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		int result = adminMapper.updateNotice(noticeVO);
+		if(result == 1) {
+			map.put("retCode", true);
+			map.put("postNo", noticeVO.getPostNo());
+			return map;
+		}
+		map.put("retCode", false);
+		return map;
 	}
 
 }

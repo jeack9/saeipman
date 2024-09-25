@@ -7,8 +7,8 @@
 <meta charset="UTF-8">
 <title>title</title>
 <style>
-.deleteImg{
-	display:none;
+.deleteImg {
+	display: none;
 }
 </style>
 </head>
@@ -54,20 +54,22 @@
 			<div id="existingImgFile">
 				<!-- 서버에서 제공된 기존 이미지 목록을 표시 -->
 				<div th:each="img : ${minwon.fileName}">
-					<div class="imgDiv" th:data-fileid="${img}" style="display:inline-block; margin:10px;">
-						<img th:src="@{/images/민원/{img}(img=${img})}" class="imgId" width="200" height="200">
+					<div class="imgDiv" th:data-fileid="${img}"
+						style="display: inline-block; margin: 10px;">
+						<img th:src="@{/images/민원/{img}(img=${img})}" class="imgId"
+							width="200" height="200">
 						<button type="button" class="imageDel">X</button>
 					</div>
 				</div>
 			</div>
 		</div>
-		
+
 		<!-- 새로운 이미지 추가 -->
 		<div class="file-input">
-			<label for="formFile" class="form-label">첨부파일</label>
-			<input class="form-control" type="file" id="file" name="newFiles" multiple>
+			<label for="formFile" class="form-label">첨부파일</label> <input
+				class="form-control" type="file" id="file" name="newFiles" multiple>
 		</div>
-		<input type="hidden" name = "groupId" th:field=*{groupId}>
+		<input type="hidden" name="groupId" th:field=*{groupId}>
 		<!-- 미리보기 이미지 -->
 		<div id="imgFile"></div>
 
