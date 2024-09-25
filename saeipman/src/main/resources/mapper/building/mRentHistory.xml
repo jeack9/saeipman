@@ -24,6 +24,9 @@
 				 	<if test="pageDTO.buildingId != null and pageDTO.buildingId != ''"> 
 						AND d.building_id = #{pageDTO.buildingId}
 					</if> 
+					<if test="pageDTO.paymentState != null">
+				       AND c.payment_state = #{pageDTO.paymentState}
+				    </if>
 								ORDER BY 1
 								)a
 		<![CDATA[     
@@ -44,6 +47,9 @@
 		<if test="pageDTO.buildingId != null and pageDTO.buildingId != ''"> 
 			AND d.building_id = #{pageDTO.buildingId}
 		</if> 
+		<if test="pageDTO.paymentState != null">
+	       AND c.payment_state = #{pageDTO.paymentState}
+	    </if>
 	</select>
 	<select id="selectBuildingNameInfo" resultType="RentPayVO">
 		SELECT building_name,

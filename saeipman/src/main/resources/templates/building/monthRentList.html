@@ -17,10 +17,22 @@
 					<div class="col-md-6">
 						<select class="form-select mb-6"
 							aria-label="Default select example" id="option" name="buildingId">
-							<option selected value="">건물 목록</option>
+							<option selected value="">건물 전체</option>
 							<option th:each="list : ${buildingNameList}"
-								th:value="${list.buildingId}">[[${list.buildingName}]]</option>
+								th:value="${list.buildingId}"
+								th:selected="${list.buildingId}==${page.buildingId}">[[${list.buildingName}]]</option>
 						</select>
+					</div>
+					<div class="radio-container">
+						<div class="radio-group">
+							<label><input type="radio" name="paymentState" value="" th:checked="${page.paymentState == null}">
+								전체 내역</label> <label><input type="radio" name="paymentState"
+								value="-1" th:checked="${page.paymentState == -1}"> 연체</label> <label><input
+								type="radio" name="paymentState" value="0"
+								th:checked="${page.paymentState == 0}"> 예정</label> <label><input
+								type="radio" name="paymentState" value="1"
+								th:checked="${page.paymentState == 1}"> 납부완료</label>
+						</div>
 					</div>
 					<table class="table table-hover">
 						<thead>
@@ -55,44 +67,56 @@
 					<!-- 페이징 -->
 					<nav aria-label="Page navigation example">
 						<ul class="pagination justify-content-center">
+
 							<li class="page-item" th:if="${page.startPage > 1}"><a
 								class="page-link"
-								th:href="@{/monthPaymentHistory?pageNum={page}(page = ${page.startPage -1})}"
+								th:href="@{/monthPaymentHistory(pageNum=${page.startPage - 1}, buildingId=${page.buildingId})}"
 								aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 							</a></li>
 
-							<th:block
-								th:with="start = ${page.startPage}, end = ${page.endPage}">
+							<th:block th:with="start=${page.startPage}, end=${page.endPage}">
 								<li class="page-item"
-									th:with="start = ${page.startPage}, end = ${page.endPage}"
 									th:each="pageButton : ${#numbers.sequence(start, end)}"><a
 									class="page-link"
-									th:href="@{/monthPaymentHistory?pageNum={page} (page = ${pageButton})}"
-									th:text=${pageButton}></a></li>
+									th:href="@{/monthPaymentHistory(pageNum=${pageButton}, buildingId=${page.buildingId})}"
+									th:text="${pageButton}"></a></li>
 							</th:block>
-
 
 							<li class="page-item" th:if="${page.next}"><a
 								class="page-link"
-								th:href="@{/monthPaymentHistory?pageNum={page}(page = ${page.endPage +1})}"
+								th:href="@{/monthPaymentHistory(pageNum=${page.endPage + 1}, buildingId=${page.buildingId})}"
 								aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 							</a></li>
 						</ul>
 					</nav>
+
 				</div>
 			</div>
 		</form>
-	<script>
-	
-		$('#option').on(
-				'change',
-				function(e) {
-					console.log(e.target.value);
-					location.href = ctxPath
-							+ '/monthPaymentHistory?buildingId='
-							+ e.target.value;
-				})
-	</script>
+		<script>
+			$('#option').on(
+					'change',
+					function(e) {
+						console.log(e.target.value);
+						location.href = ctxPath
+								+ '/monthPaymentHistory?buildingId='
+								+ e.target.value;
+					})
+			$('input[name="paymentState"]').on('change', function(e) {
+				let paymentState = $(e.target).val(); // 선택된 paymentState 값 가져오기 (전체 선택 시 값은 "")
+
+				let buildingId = $("select[name='buildingId']").val();
+
+				// paymentState가 빈 문자열이면 전체 조회를 위해 URL에서 제외
+				let url = `monthPaymentHistory?buildingId=${buildingId}`;
+				if (paymentState !== "") {
+					url += `&paymentState=${paymentState}`;
+				}
+
+				// 새로운 URL로 페이지 이동
+				location.href = url;
+			});
+		</script>
 	</div>
 </body>
 </html>

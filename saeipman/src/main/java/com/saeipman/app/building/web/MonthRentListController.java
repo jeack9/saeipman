@@ -26,6 +26,7 @@ public class MonthRentListController {
 		//리스트 총수
 		int totalPage = monthService.totalPage(loginId,buildingPageDTO );
 		buildingPageDTO.setTotal(totalPage);
+		
 		model.addAttribute("page", buildingPageDTO);
 		//건물 명 리스트
 		List<RentPayVO> buildingNameList = monthService.buildingNameList(loginId);
