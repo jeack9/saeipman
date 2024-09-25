@@ -18,5 +18,5 @@ public class NoticeVO {
     private int views;
     private String writer;
     private String modWriter;
-    private List<FileVO> files;
+    private List<FileVO> noticeFiles;
 }

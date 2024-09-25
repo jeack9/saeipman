@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saeipman.app.main.mapper.MainMapper">
+
+<!-- 계약자 카운팅 -->
+	<select id="selectConstract" resultType="PaymentVO">
+		SELECT count(constract_state)
+		FROM constract_info c join room_info r
+		                       on c.room_id = r.room_id
+		                       join building_info b
+		                       on r.building_id = b.building_id
+		WHERE b.imdaein_id = #{imdaeinId}
+		AND c.constract_state = 1
+	</select>
+
+<!-- 미납자 카운팅 -->
+	<select id="selectUnPayment" resultType="PaymentVO">
+		SELECT count(payment_state)
+		FROM m_rent_payment_history m join room_info r
+		                               on m.room_id = r.room_id
+		                              join building_info b
+		                               on r.building_id = b.building_id
+		WHERE b.imdaein_id = #{imdaeinId}
+		AND payment_state = -1
+	</select>
+
+</mapper>
