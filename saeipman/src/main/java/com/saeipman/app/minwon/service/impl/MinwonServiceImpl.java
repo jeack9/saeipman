@@ -129,5 +129,8 @@ public class MinwonServiceImpl implements MinwonService {
 	public int fileNamesByGroupId(String groupId) {
 		return buildingMapper.selectFileNamesByGroupId(groupId);
 	}
-
+	@Override
+	public String imchainIdSearch(int postNo) {
+		return minwonMapper.selectimchainId(postNo);
+	}
 }

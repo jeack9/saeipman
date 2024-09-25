@@ -66,9 +66,8 @@
 	        M.REG_DATE,
 	        R.ROOM_NO,
 	        R.BUILDING_ID
-	      FROM room_info R 
-	      JOIN constract_info C ON C.room_id = R.room_id  
-	      JOIN minwon M ON M.room_id = C.room_id
+	      FROM room_info R  
+	      JOIN minwon M ON M.room_id = R.room_id
 	      <where>
 	      <include refid="criteria"/>
 	      </where>
@@ -104,7 +103,7 @@
 		    m.post_no,
 		    m.title,
 		    m.content,
-		    c.category_type AS categoryType, <!-- 카테고리 이름을 가져옴 -->
+		    ci.category_type AS categoryType, <!-- 카테고리 이름을 가져옴 -->
 		    m.GROUP_ID,
 		    r.room_no,
 		    m.accept_state,
@@ -115,15 +114,19 @@
 		    m.alert_type,
 		    m.room_id
 		FROM 
-		    minwon m LEFT JOIN minwon_category c
+		    minwon m LEFT JOIN minwon_category ci
 		ON 
-		    m.category = c.category_no  <!-- category 번호를 기준으로 조인 -->
+		    m.category = ci.category_no  <!-- category 번호를 기준으로 조인 -->
 		JOIN
-    		constract_info ci ON m.room_id = ci.room_id  
+    		constract_info c ON m.room_id = c.room_id AND c.imchain_phone  = #{imchainId}
 		JOIN
-    		room_info r ON ci.room_id = r.room_id     
+    		room_info r ON c.room_id = r.room_id     
 		WHERE 
 		    m.post_no = #{postNo}
+		
+	      
+	         
+		
 	</select>
 
 	<!-- 민원처리 업로드 -->
@@ -132,7 +135,11 @@
 	    SET ACCEPT_STATE = #{acceptState}
 	    WHERE POST_NO = #{postNo}
 	</update>
-	
+	<select id="selectimchainId">
+		select imchain_id
+		from minwon
+		where post_no = #{postNo}
+	</select>
 	<!-- 등록 -->
 	<insert id="insertMinwon" parameterType="MinwonVO">
 		<selectKey keyProperty="postNo" resultType="int" order="BEFORE"><!-- selectKey는 자동생성된 id값을 삽입하기 위해, BEFORE는 삽입 전에 키 값을 생성하는 것을 의미(실제 삽입 작업 전에 실행됨)-->

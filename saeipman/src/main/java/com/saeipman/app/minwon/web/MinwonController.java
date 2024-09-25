@@ -87,7 +87,17 @@ public class MinwonController {
 
 		cri.setAuth(auth);
 		cri.setLoginId(loginId);
-
+		if(auth == 2) {
+			System.out.println(loginId + "dddddd");
+			minwonVO.setImchainId(loginId);
+		}else if(auth == 1) {
+			minwonVO.setImdaeinId(loginId);
+			int postNo = minwonVO.getPostNo();
+			System.out.println(postNo+"민원 번호");
+			String imchainId = minwonService.imchainIdSearch(postNo);
+			System.out.println("임차인 아이디" + imchainId);
+			minwonVO.setImchainId(imchainId);
+		}
 		MinwonVO findVO = minwonService.minwonSelect(minwonVO);
 
 		List<String> fileName = minwonService.getFileName(minwonVO.getPostNo());
