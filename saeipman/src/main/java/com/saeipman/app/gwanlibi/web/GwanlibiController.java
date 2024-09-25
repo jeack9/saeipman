@@ -1,10 +1,8 @@
 package com.saeipman.app.gwanlibi.web;
 
-import java.io.PrintWriter;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,7 +32,6 @@ import com.saeipman.app.gwanlibi.service.GwanlibiVO;
 import com.saeipman.app.member.service.LoginInfoVO;
 import com.saeipman.app.message.MsgService;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 
 @Controller
@@ -47,12 +44,6 @@ public class GwanlibiController {
 	private GwanlibiMsgService gwanlibiMsgService;
 	private GwanlibiPaymentService gwanlibiPaymentService;
 	private MsgService msgService;
-
-	public String getYM() {
-		Date date = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
-		return dateFormat.format(date);
-	}
 
 	// 전월 구하기
 	public String preYM() {
@@ -209,13 +200,14 @@ public class GwanlibiController {
 			map.put("url", url);
 		} else {
 			// paymentMont -> 전월
-			Date now = new Date();
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(now);
-			// cal.add(Calendar.MONTH, -1);
-			int year = cal.get(Calendar.YEAR);
-			int month = cal.get(Calendar.MONTH);
-			String paymentMonth = year + "-" + month;
+//			Date now = new Date();
+//			Calendar cal = Calendar.getInstance();
+//			cal.setTime(now);
+//			// cal.add(Calendar.MONTH, -1);
+//			int year = cal.get(Calendar.YEAR);
+//			int month = cal.get(Calendar.MONTH);
+//			String paymentMonth = year + "-" + month;			
+			String paymentMonth = preYM();		
 
 			String url = "/updateGwanlibi?buildingId=" + buildingId + "&paymentMonth=" + paymentMonth;
 			map.put("url", url);
@@ -302,7 +294,7 @@ public class GwanlibiController {
 		cal.setTime(now);
 		int year = cal.get(Calendar.YEAR);
 		int month = cal.get(Calendar.MONTH);
-
+        
 		// 메시지 내용.
 		String msg = year + "년 " + month + "월 관리비는 " + total + "원입니다.\n납부 기한은 " + paymentDate + "까지입니다.";
 
@@ -329,7 +321,7 @@ public class GwanlibiController {
 		String buildingName = imchainPhoneNumber.get(0).getBuildingName();
 		
 		// 메시지 내용.
-		String msg = "⚠️ 관리비 연체 고지 ⚠️\n" + "안녕하세요. " + buildingName + " 임대인입니다.\n빠른 시일 내에 연체된 관리비 납부를 해주세요.\n좋은 하루 되세요.";
+		String msg = "⚠️ 관리비 연체 고지 ⚠️\n" + "안녕하세요. " + buildingName + " 임대인입니다.\n빠른 시일 내에 연체된 관리비를 입금해 주세요.\n좋은 하루 보내세요.";
 
 		msgService.sendGroup(imchainPhoneNumber, imdaeinPhoneNumber, msg);
 

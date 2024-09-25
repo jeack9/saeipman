@@ -34,27 +34,28 @@
 }
 
 .comment-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10px;
 }
 
 .comment-content {
-    margin-bottom: 10px;
-    line-height: 1.5;
+	margin-bottom: 10px;
+	line-height: 1.5;
 }
-  
+
 .comment-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.9em;
-    color: #666;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 0.9em;
+	color: #666;
 }
-.delete-comment-btn{
-background-color:transparent;
-border-width: thin;
+
+.delete-comment-btn {
+	background-color: transparent;
+	border-width: thin;
 }
 
 /* 댓글 작성 폼 스타일 */
@@ -93,10 +94,12 @@ textarea {
 			</tr>
 			<tr>
 				<th>방문날짜</th>
-				<td th:text="${#temporals.format(minwon.visitsDate2, 'yyyy-MM-dd HH:mm')}"></td>
-	
-				<th th:if="${minwon.visitsDate2 != null}">or</th>
-				<td th:text="${#temporals.format(minwon.visitsDate2, 'yyyy-MM-dd HH:mm')}"></td>
+				<td
+					th:text="${#temporals.format(minwon.visitsDate2, 'yyyy-MM-dd HH:mm')}"></td>
+
+				<th th:if="${minwon.visitsDate2 != null}">또는</th>
+				<td
+					th:text="${#temporals.format(minwon.visitsDate2, 'yyyy-MM-dd HH:mm')}"></td>
 			</tr>
 			<tr>
 				<th>내용</th>
@@ -145,10 +148,10 @@ textarea {
 
 	<div>
 		<section id="comments-section" th:style="'margin-top: 20px;'">
-		
+
 			<h4>comment</h4>
 			<div id="comments-container">
-				<!-- 댓글 목록이 여기에 동적으로 추가될 것입니다. -->
+				<!-- 댓글 목록 -->
 				<div class="ms-3" id="cmtContainer"></div>
 			</div>
 			<!-- 댓글 작성 폼 -->

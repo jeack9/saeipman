@@ -133,8 +133,7 @@ public class BuildingController {
 	@PostMapping("/ocrUpload")
 	@ResponseBody
 	public Map<String, Object> insertOcr(@RequestPart(name = "ocrFile", required = false) MultipartFile ocrFile, Model model,
-										BuildingVO buildingVO) throws IOException {
-//		if (ocrFile.isEmpty()) {
+			BuildingVO buildingVO) throws IOException {
 //			return "error"; // 파일이 비어있을 경우 에러를 처리하는 HTML 템플릿으로 이동
 //		}
 		System.out.println(ocrFile+"asdfasdf");

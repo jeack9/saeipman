@@ -11,8 +11,7 @@
 				th:action="@{/noticeBuildingList}" th:method='get' class="d-flex">
 				<input type="hidden" name="nowPage" value="1"> 
 				
-				<select
-					class="form-select mb-6" aria-label="Default select example"
+				<select th:if="${login.auth==1}" class="form-select mb-6" aria-label="Default select example"
 					id="option" name="buildingId">
 					<option selected value="">건물 목록</option>
 					<option th:each="list : ${Bname}" th:value="${list.buildingId}"
@@ -53,7 +52,7 @@
 				</tbody>
 			</table>
 			<div style="text-align: right">
-				<button type="button"
+				<button type="button" th:if="${login.auth==1}"
 					th:onclick="|location.href='@{/noticeBuildingInsert}'|"
 					class="btn btn-outline-success m-2">등록</button>
 			</div>

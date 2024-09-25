@@ -28,8 +28,10 @@ public class MainController {
 		payVO.setConstractState(1);
 		payVO.setPaymentState(-1);
 		
-		int constractInfo = mainService.selectConstractState(payVO);
-		int unPaymentInfo = mainService.unPaymentState(payVO);
+		
+		
+		Integer constractInfo = mainService.selectConstractState(payVO);
+		Integer unPaymentInfo = mainService.unPaymentState(payVO);
 		
 		model.addAttribute("constractInfo", constractInfo);
 		model.addAttribute("unPaymentInfo", unPaymentInfo);

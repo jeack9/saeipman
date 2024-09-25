@@ -36,6 +36,7 @@
 			 , mph.m_rent_history_no
 			 , mph.real_payment_date
 			 , mph.real_payment_money
+			 , mph.payment_money
 			 , mph.payment_state
 		FROM IMCHAIN i join constract_info c
 						ON i.imchain_id = c.imchain_phone
