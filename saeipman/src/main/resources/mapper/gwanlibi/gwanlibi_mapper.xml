@@ -38,7 +38,7 @@
 	
 	
 	
-	<!-- 월별 관리비 상세 내역 history -->	
+	<!-- 월별 관리비 상세 내역 history -->
 	<select id="selectGwanlibiDetailsBill">		
 	
 		SELECT   bi.building_id
