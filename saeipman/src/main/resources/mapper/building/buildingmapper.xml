@@ -99,7 +99,10 @@
 			total_gagu = #{totalGagu},
 			parking = #{parking},
 			memo = #{memo},
-			group_id=#{groupId}
+			group_id=#{groupId},
+			floor_area = #{floorArea},
+			building_heigh = #{buildingHeigh},
+			floor_area_ratio = #{floorAreaRatio}
 		WHERE building_id = #{buildingId}
 
 	</update>
