@@ -22,8 +22,8 @@ public class MonthRentServiceImpl implements MonthRentService{
 		return mRentHistoryMapper.selectMRentList(pageDTO, imdaeinId);
 	}
 	@Override
-	public int totalPage(String imdaeinId) {
-		return mRentHistoryMapper.getTotalPageCount(imdaeinId);
+	public int totalPage(String imdaeinId,BuildingPageDTO pageDTO) {
+		return mRentHistoryMapper.getTotalPageCount(imdaeinId, pageDTO);
 	}
 	@Override
 	public List<RentPayVO> buildingNameList(String imdaeinId) {

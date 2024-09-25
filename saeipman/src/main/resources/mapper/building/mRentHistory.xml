@@ -21,8 +21,8 @@
 							                JOIN building_info d 
 							                ON d.building_id = b.building_id
 					WHERE d.imdaein_id = #{imdaeinId}
-				 	<if test="buildingId != null and buildingId != ''"> 
-						AND d.building_id = #{buildingId}
+				 	<if test="pageDTO.buildingId != null and pageDTO.buildingId != ''"> 
+						AND d.building_id = #{pageDTO.buildingId}
 					</if> 
 								ORDER BY 1
 								)a
@@ -41,6 +41,9 @@
 				                JOIN building_info d 
 				                ON d.building_id = b.building_id
 		WHERE d.imdaein_id = #{imdaeinId}
+		<if test="pageDTO.buildingId != null and pageDTO.buildingId != ''"> 
+			AND d.building_id = #{pageDTO.buildingId}
+		</if> 
 	</select>
 	<select id="selectBuildingNameInfo" resultType="RentPayVO">
 		SELECT building_name,

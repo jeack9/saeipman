@@ -311,7 +311,7 @@ public class BuildingController {
 			groupId = fileUtill.multiUpload(newFiles, groupId);
 			buildingVO.setGroupId(groupId);
 
-			return buildingService.buildingUpdate(buildingVO);
+			//return buildingService.buildingUpdate(buildingVO);
 		}
 
 		// 방정보 수정
