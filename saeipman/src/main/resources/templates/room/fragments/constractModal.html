@@ -140,7 +140,7 @@
         }
 		
 		// 이전 계약정보 조회 함수
-		let getPrevConstract = () =>{
+		function getPrevConstract(){
 			let contractNo = $("input[name='constractNo']").val();
 			$.ajax({
 				url: `${ctxPath}/room/prevConstract`,
