@@ -65,7 +65,7 @@
 						<option selected value="">건물</option>
 						<option th:each="building : ${buildingList}"
 							th:value="${building.buildingId}"
-							th:selected="${building.buildingId}==${info?.buildingId}">
+							th:selected="${building.buildingId}==${cri.buildingId}">
 							[[${building.buildingName}]]</option>
 					</select>
 				</div>
@@ -191,10 +191,6 @@
 				//return false;
 			//}
 
-		$('#option').on('change', function(e) {
-			// 선택된 건물 id가 변경되면 폼을 자동으로 제출
-			location.href = 'minwonList?buildingId=' + e.target.value;
-		});
 		
 			// 검색 버튼 클릭 시 페이지 번호를 1로 설정
 			searchFrom.find("input[name='pageNum']").val("1");
@@ -206,6 +202,10 @@
 			searchFrom.submit();
 		});
 
+		$('#option').on('change', function(e) {
+			// 선택된 건물 id가 변경되면 폼을 자동으로 제출
+			location.href = 'minwonList?buildingId=' + e.target.value;
+		});
 		
 		// 라디오 버튼 클릭 시 자동으로 필터링
 		$('input[name="acceptState"]').on('change', function() {
