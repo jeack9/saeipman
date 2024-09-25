@@ -1,5 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.saeipman.app.building.mapper.MRentHistoryMapper">
-	
+	<select id="selectMRentList" resultType="RentPayVO">
+		SELECT *
+		FROM ( select rownum rn ,
+					  a.*
+			   FROM (SELECT b.room_no
+					      ,c.payment_state
+					      ,a.imchain_name
+					      ,c.depositor_name
+					      ,a.m_rent
+					      ,c.payment_date
+					      ,c.real_payment_money
+					      ,c.real_payment_date
+					      ,d.building_name
+					FROM constract_info a JOIN room_info b
+							                ON a.room_id = b.room_id
+							                JOIN m_rent_payment_history c
+							                ON a.constract_no = c.constract_no
+							                JOIN building_info d 
+							                ON d.building_id = b.building_id
+					WHERE d.imdaein_id = #{imdaeinId}
+				 	<if test="buildingId != null and buildingId != ''"> 
+						AND d.building_id = #{buildingId}
+					</if> 
+								ORDER BY 1
+								)a
+		<![CDATA[     
+		where rownum <= #{pageDTO.pageNum} * #{pageDTO.amount} )b   
+		
+		where rn > (#{pageDTO.pageNum} -1) * #{pageDTO.amount}
+		]]>
+	</select>
+	<select id="getTotalPageCount" resultType="int">
+		SELECT count(*)
+		FROM constract_info a JOIN room_info b
+				                ON a.room_id = b.room_id
+				                JOIN m_rent_payment_history c
+				                ON a.constract_no = c.constract_no
+				                JOIN building_info d 
+				                ON d.building_id = b.building_id
+		WHERE d.imdaein_id = #{imdaeinId}
+	</select>
+	<select id="selectBuildingNameInfo" resultType="RentPayVO">
+		SELECT building_name,
+			   building_id
+		FROM building_info
+		WHERE imdaein_id = #{imdaeinId}
+	</select>
 </mapper>

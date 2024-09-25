@@ -15,4 +15,10 @@ public interface FileMapper {
 	
 	//업데이트 시 그룹아이디
 	public int selectFileUpdateGroupId(BuildingVO buildingVO);
+	
+	// 파일 단건삭제
+	public int deleteFile(int fileId);
+	
+	// 파일 단건조회
+	public FileVO selectFileInfo(int fileId);
 }

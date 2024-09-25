@@ -1,60 +1,129 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{common/layouts/default_layout}"
-	  layout:fragment="Main">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Main">
 <head>
 <meta charset="UTF-8">
 <style>
-.container{
-    height: 50px;
-    float:left;
+.container {
+	height: 50px;
+	float: left;
 }
+
 </style>
 <title>Insert title here</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
-	<form  name="insertForm" th:action="@{/minwonInsert}" method="post" enctype="multipart/form-data">
+	<form name="insertForm" th:action="@{/minwonInsert}" method="post"
+		enctype="multipart/form-data">
 		<div class="mb-3">
-			<label for="">제목</label>
-			<input type="text" id="title" name="title">
+			<label for="">제목</label> <input type="text" id="title" name="title"
+				class="form-control">
+		</div>
+
+		<div class="mb-3">
+			<label for="category">카테고리</label> <select class="form-select"
+				id="category" name="category">
+				<option value="" selected>카테고리를 선택하세요</option>
+				<option th:each="category : ${categories}"
+					th:text="${category.categoryType}"
+					th:value="${category.categoryNo}"></option>
+			</select>
+		</div>
+
+		<div class="mb-3">
+			<label for="visitsDate">방문날짜</label> 
+			<div class="date-inputs">
+				<div class="date-input">
+					택1 <input type="datetime-local" id="visitsDate1" name="visitsDate1" class="form-control">
+					<input type="hidden" name="visitsDate1"> 
+				</div>
+				<div class="date-inputs">
+					택2 <input type="datetime-local" id="visitsDate2" name="visitsDate2" class="form-control"> 
+					<input type="hidden" name="visitsDate2">
+				</div>
+			</div>
 		</div>
 		
 		<div class="mb-3">
-		<label for="category">카테고리</label>
-		<select class="form-select" id="category" name="category">
-			 <option value="" selected>카테고리를 선택하세요</option>
-			 	<option th:each="category : ${categories}"
-                    	th:text="${category.categoryType}" th:value="${category.categoryNo}">
-             	</option>
-		</select>
+			<label for="formFile" class="form-label">첨부파일</label> <input
+				class="form-control" type="file" id="file" multiple name="files">
 		</div>
-		
+		<!-- 이미지 미리보기  -->
+		<div id="preview"></div>
+
 		<div class="mb-3">
-			<label for="visitsDate">방문날짜</label>
-			택1
-			<input type="datetime-local" id="visitsDate1" name="visitsDate1">
-			<input type="hidden" name="visitsDate1">
-			택2
-			<input type="datetime-local" id="visitsDate2" name="visitsDate2">
-			<input type="hidden" name="visitsDate2">
-			
-		</div>
-		<div class="mb-3">
-			 <label for="formFile" class="form-label">첨부파일</label>
-			 <input class="form-control" type="file" id="file" multiple name="files">
-		</div>
-		<div class="mb-3">
-  			<label for="exampleFormControlTextarea1" class="form-label">내용</label>
-  			<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="content"></textarea>
+			<label for="exampleFormControlTextarea1" class="form-label">내용</label>
+			<textarea class="form-control" id="exampleFormControlTextarea1"
+				rows="3" name="content"></textarea>
 		</div>
 		<div>
-			<button type="submit">등록</button>
+			<button type="submit" class="btn btn-outline-success m-2">등록</button>
 		</div>
 	</form>
 	<script>
 		//$('form[name="insertForm"]').on("submit", insertHandler);
+		
+		const dataTransfer = new DataTransfer(); // 파일 관리 객체 생성
+
+		// 파일 이미지 미리보기
+		$('#file').on('change', function() { //파일 선택되었을때 발생
+		let files = $(this)[0].files;
+
+		// 새로 선택한 파일들을 미리보기 영역에 추가
+		for (let i = 0; i < files.length; i++) {
+			// 이미 추가된 파일은 중복 방지
+			if (!Array.from(dataTransfer.files).some(file => file.name === files[i].name)) {
+				let reader = new FileReader();
+				reader.onload = function(e) {
+					let div = $('<div>').attr({'class': 'imgDiv', 'data-fileid': files[i].name});
+					let img = $('<img>').attr({'src': e.target.result, 'width': '200px', 'height': '200px'});
+					let delBtn = $('<button>').attr({'type': 'button', 'class': 'imageDel'}).html('X');
+					$('#preview').append(div);
+					$(div).append(img);
+					$(div).append(delBtn);
+				};
+				reader.readAsDataURL(files[i]);
+
+				// DataTransfer에 새로 선택한 파일을 추가
+				dataTransfer.items.add(files[i]);
+			}
+		}
+
+		// input에 업데이트된 파일 목록 적용
+		$(this)[0].files = dataTransfer.files;
+	});
+
+		// 미리보기 이미지 삭제 시 첨부 파일 목록에서 제거
+		$('#preview').on('click', '.imageDel', function() {
+			let fileId = $(this).parent().data('fileid'); 
+			$(this).closest('.imgDiv').remove();  // 미리보기에서 삭제
+	
+			// 삭제되지 않은 파일 담기
+			const updatedDT = new DataTransfer(); 
+			let files = dataTransfer.files;
+	
+			// 삭제되지 않은 파일들만 새로운 DataTransfer에 추가
+			for (let i = 0; i < files.length; i++) {
+				if (files[i].name !== fileId) {  // 삭제 파일 이름과 일치하지 않을때만 추가
+					updatedDT.items.add(files[i]);
+				}
+			}
+	
+			// 기존 DataTransfer 비우고 새로운 파일 목록으로 대체
+			dataTransfer.items.clear();  // 이전 파일 목록 비우기
+			for (let i = 0; i < updatedDT.files.length; i++) { //updatedDT에 저장된 파일들을 다시 기존 dataTransfer에 추가
+				dataTransfer.items.add(updatedDT.files[i]);
+			}
+	
+			// 갱신된 파일 목록을 input에 적용
+			document.querySelector("#file").files = dataTransfer.files;
+		});
+		
+		
 		
 		function insertHandler(e){
 			e.preventDefault()
