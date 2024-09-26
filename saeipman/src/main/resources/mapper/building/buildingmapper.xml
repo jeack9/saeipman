@@ -39,7 +39,8 @@
 				group_id,
 				floor_area,
 				building_heigh,
-				floor_area_ratio
+				floor_area_ratio,
+				memo
 		FROM building_info
 		WHERE building_id = #{buildingId}
 	</select>
@@ -173,7 +174,7 @@
 			   floor
 		FROM room_info
 		WHERE building_id = #{buildingId}
-		ORDER BY room_id
+		ORDER BY floor
 	</select>
 	
 	<!-- 방 수정시 방이 존재하면 업데이트 -->

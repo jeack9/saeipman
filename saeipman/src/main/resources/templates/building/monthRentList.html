@@ -65,6 +65,7 @@
 						</tbody>
 					</table>
 					<!-- 페이징 -->
+					<th:block th:if="${page.total!=0}">
 					<nav aria-label="Page navigation example">
 						<ul class="pagination justify-content-center">
 
@@ -89,7 +90,7 @@
 							</a></li>
 						</ul>
 					</nav>
-
+				</th:block>
 				</div>
 			</div>
 		</form>

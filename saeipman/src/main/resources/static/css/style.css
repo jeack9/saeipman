@@ -80,7 +80,7 @@
 }
 
 .content {
-    margin: auto;
+    margin-left: 250px;
     min-height: 100vh;
     background: #FFFFFF;
     transition: 0.5s;
@@ -173,9 +173,9 @@
     border-radius: 0 30px 30px 0;
 }
 
-.content {
+/* .content {
 	width: 100% !important;
-}
+} */
 
 .buildingBox{
 	padding: 30px 30px;	
