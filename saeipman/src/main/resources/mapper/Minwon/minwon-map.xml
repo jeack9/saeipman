@@ -30,7 +30,7 @@
     
     <if test="imchainId != null and imchainId != ''">
       AND m.imchain_id = #{imchainId}
-      AND c.imchain_phone  = #{imchainId}
+      
     </if>
     
     <if test="imdaeinId != null and imdaeinId != ''">
@@ -40,11 +40,11 @@
     </if>
     
     <if test="buildingId != null and buildingId != ''">
-       AND R.BUILDING_ID = #{buildingId}
+       AND r.BUILDING_ID = #{buildingId}
     </if>
    
     <if test="acceptState != null">
-       AND M.ACCEPT_STATE = #{acceptState}
+       AND m.ACCEPT_STATE = #{acceptState}
     </if>
   
 </sql>
@@ -52,28 +52,28 @@
 	<!-- 전체조회 -->
 	<select id="selectMinwonAll" resultType="MinwonVO">
 	  SELECT * FROM (
-	    SELECT ROWNUM RN, A.* FROM (
+	    SELECT ROWNUM RN, a.* FROM (
 	      SELECT 
-	        M.POST_NO, 
-	        M.TITLE, 
-	        M.CONTENT,
+	        m.POST_NO, 
+	        m.TITLE, 
+	        m.CONTENT,
 	        CASE 
-	          WHEN M.ACCEPT_STATE = 0 THEN '접수전'
-	          WHEN M.ACCEPT_STATE = 1 THEN '접수중'
-	          WHEN M.ACCEPT_STATE = 2 THEN '처리 완료'
-	        END AS ACCEPT_STATE,
-	        M.GROUP_ID,
-	        M.REG_DATE,
-	        R.ROOM_NO,
-	        R.BUILDING_ID
-	      FROM room_info R  
-	      JOIN minwon M ON M.room_id = R.room_id
+	          WHEN m.ACCEPT_STATE = 0 THEN '접수전'
+	          WHEN m.ACCEPT_STATE = 1 THEN '접수중'
+	          WHEN m.ACCEPT_STATE = 2 THEN '처리 완료'
+	        END as ACCEPT_STATE,
+	        m.GROUP_ID,
+	        m.REG_DATE,
+	        m.ROOM_NO,
+	        r.BUILDING_ID
+	      FROM room_info r  
+	      JOIN minwon m ON m.room_id = r.room_id
 	      <where>
 	      <include refid="criteria"/>
 	      </where>
-	      ORDER BY M.post_no DESC
-	    ) A WHERE ROWNUM <![CDATA[ <= ]]> #{pageNum} * #{amount}
-	  ) B WHERE RN > (#{pageNum} - 1) * #{amount}
+	      ORDER BY m.post_no DESC
+	    ) a WHERE ROWNUM <![CDATA[ <= ]]> #{pageNum} * #{amount}
+	  ) b WHERE RN > (#{pageNum} - 1) * #{amount}
 	</select>
 	
 	
@@ -114,9 +114,7 @@
 		    m.alert_type,
 		    m.room_id
 		FROM 
-		    minwon m LEFT JOIN minwon_category ci
-		ON 
-		    m.category = ci.category_no  <!-- category 번호를 기준으로 조인 -->
+		    minwon m LEFT JOIN minwon_category ci ON m.category = ci.category_no  <!-- category 번호를 기준으로 조인 -->
 		JOIN
     		constract_info c ON m.room_id = c.room_id AND c.imchain_phone  = #{imchainId}
 		JOIN
