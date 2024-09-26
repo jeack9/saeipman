@@ -78,7 +78,7 @@ textarea {
 <body>
 	<div>
 		<input type="hidden" id="postNo" th:value="${minwon.postNo}" />
-		<input type="hidden" id="loginId" th:value="${minwon.roomNo}">
+		<input type="hidden" id="loginId" th:value="${cri.loginId}">
 		
 		
 	</div>
@@ -88,7 +88,7 @@ textarea {
 				<th style="width: 5%">제목</th>
 				<td style="width: 30%">[[${minwon.title}]]</td>
 				<th>작성자</th>
-				<td>[[${minwon.roomNo}]]호</td>
+				<td style="width: 50%">[[${minwon.roomNo}]]호</td>
 			</tr>
 			<tr>
 				<th>카테고리</th>
@@ -317,7 +317,7 @@ textarea {
 	              let group = $(this).data("group");
 	              let content = $(`#reply${group}`).val();
 	              let writer = $("#loginId").val();
-	              let loginId = `${writer}호`
+	              let loginId = `${writer}호` //임대인은 임대인으로 임차인은 본인 방호수로
 	              let postNo = $("#postNo").val();
 
 	              let data = {
