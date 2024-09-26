@@ -32,23 +32,25 @@ input {
 .hoSel, .fl, .newRoom {
 	width: 65px;
 }
+
 </style>
 </head>
 <body>
 	<div layout:fragment="Main" class="row">
+		<h4 class="mb-4">빌딩목록</h4>
 		<!-- start 건물리스트 -->
 		<div class="col-md-3" id="buildList">
 			<th:block th:each="building, index:${buildings}">
-
-				<div class="card border-secondary mb-3" th:id="${building.buildingId}" th:data-index="${index.count}">
-					<div class="card-header" style="font-size: 18px; font-weight: bold;">[[${building.buildingName}]]</div>
+				<div class="card border-secondary mb-3"
+					th:id="${building.buildingId}" th:data-index="${index.count}">
+					<div class="card-header"
+						style="font-size: 18px; font-weight: bold;">[[${building.buildingName}]]</div>
 					<div class="card-body text-secondary" style="font-size: 14px;">
-						<p class="card-text">[[${building.doroAddr}]] [[${building.doroAddr}]]</p>
+						<p class="card-text">[[${building.doroAddr}]]
+							[[${building.doroAddr}]]</p>
 						<p class="card-text">[[${building.totalGagu}]]세대</p>
 					</div>
 				</div>
-
-				
 			</th:block>
 			<button type="button"
 				th:onclick="|location.href='@{/buildingInsert}'|"
@@ -186,6 +188,7 @@ input {
 						id="memo" name="memo" class="form-control">
 				</div>
 				<button type="button" id="roomUpdateBtn">▼</button>
+
 				<div id="roomUpdate">
 					<div>
 						<input type="hidden" name="buildingId" id="bid">
@@ -226,7 +229,7 @@ input {
 				if (firstBuilding) {
 					getBuildingInfo(firstBuilding);
 				}
-				$('li').on('click', function(e) {
+				$('div').on('click', function(e) {
 					$('#imgFile').html('');
 					let buildingId = e.currentTarget.id;
 					let a = 
@@ -553,14 +556,6 @@ input {
 			}).open();
 		}
 	</script>
-		<script>
-			
-			
-			
-		
-	</script>
-
-
 	</div>
 
 
