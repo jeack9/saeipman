@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}">
+<head>
+<meta charset="UTF-8">
+<title>세입만 QnA</title>
+</head>
+<body>
+	<div layout:fragment="Main">
+		<div class="container mt-5">
+			<h1>QnA 세부사항</h1>
+			<div class="card">
+				<div
+					class="d-flex justify-content-between align-items-center card-header">
+					<h2>[[${qna.title}]]</h2>
+				</div>
+				<div class="card-body">
+					<div class="mb-3 d-flex justify-content-between border-bottom">
+						<p>작성자: [[${qna.writer}]]</p>
+						<p class="bg-warning text-dark rounded-pill p-2">[[${qna.answerState
+							== 0 ? '답변대기' : '답변완료'}]]</p>
+					</div>
+					<img th:each="file : ${qna.qnaFiles}" alt="이미지 로딩"
+						th:src="@{/images/{filePath}(filePath=${file.filePath})}"
+						width="150" class="me-3">
+					<pre class="lead">[[${qna.content}]]</pre>
+					<p class="text-end">수정일: [[${#dates.format(qna.modDate,
+						'yyyy.MM.dd')}]]</p>
+					<p class="text-end">작성일: [[${#dates.format(qna.regDate,
+						'yyyy.MM.dd')}]]</p>
+				</div>
+			</div>
+
+			<!-- 페이지네이션 -->
+			<div id="paginationContainer">
+				<th:block
+					th:replace="~{support/fragments/qnaPagination :: qnaPaginationFrg}">
+				</th:replace>
+			</div>
+			<!-- 페이지네이션 END -->
+
+			<!-- 댓글 작성 폼 -->
+			<div class="mt-4">
+				<form name="pCommentFrm">
+					<div class="list-group-item bg-light">
+						<input type="hidden" th:field="${qna.postNo}" />
+						<div class="mb-3">
+							<label for="content" class="form-label">댓글 내용</label>
+							<textarea id="content" name="content" class="form-control parentCmtInput"
+								rows="3" required></textarea>
+						</div>
+						<button type="button" class="btn btn-primary" id="pCommentBtn">댓글
+							작성</button>
+					</div>
+				</form>
+			</div>
+
+			<!-- qna 목록 이동 -->
+			<div class="mt-3 row">
+				<div class="d-flex justify-content-end col">
+					<a th:href="@{/support/qnaList}"><button type="button"
+							class="me-2 btn btn-secondary">목록으로 돌아가기</button></a>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			// formObj 반환함수
+			function getFormObj(frm){
+				let formData = new FormData(frm);
+	            let formObj = {};
+	            formData.forEach((value, key) => {
+	            	formObj[key] = value;
+	            });
+	            return formObj;
+			}
+			
+			// 자식댓글(대댓글) 클릭 이벤트
+			$(document).on("click", "button.childCmtBtn", function(e){
+				let frm = e.target.closest("form");
+				let textArea = e.target.closest("textarea");
+		 		let formObj = getFormObj(frm);
+		 		
+		 		// 대댓글 등록 ajax 요청
+	            $.ajax({
+	                url: `${ctxPath}/support/qnaChildCmt`,
+	                method: 'POST',
+	                data : JSON.stringify(formObj),
+	                contentType : 'application/json',
+	                success: function (data, status) {
+	                	$('#paginationContainer').html(data);
+	                	$(textArea).val("");
+	                },
+	                error: function (err) {
+	                	console.log("err: " + err);
+	                	alert("댓글 처리 중 오류가 발생했습니다.");
+	                }
+	            });
+			});
+			
+			$("#pCommentBtn").on("click", pCommentHandler);
+			// 부모댓글 작성 핸들러
+			function pCommentHandler(e){
+				let frm = e.target.closest("form");
+		 		let formObj = getFormObj(frm);
+	            // 댓글 등록 ajax 요청
+	            $.ajax({
+	                url: `${ctxPath}/support/qnaParentCmt`,
+	                method: 'POST',
+	                data : JSON.stringify(formObj),
+	                contentType : 'application/json',
+	                success: function (data, status) {
+	                	$('#paginationContainer').html(data);
+	                	$(".parentCmtInput").val("");
+	                },
+	                error: function (err) {
+	                	console.log("err: " + err);
+	                	alert("댓글 처리 중 오류가 발생했습니다.");
+	                }
+	            });
+			}
+			
+			// 페이지클릭 - 페이지네이션 프래그먼트 교체
+	    	$(document).on('click', '.pagination a', function(e) {
+			    e.preventDefault();
+			    let page = $(this).data("page");
+			    let postNo = $("input#postNo").val();
+			    if(!page) return;
+			    $.ajax({
+			        url: `${ctxPath}/support/loadQnaCmtsFrg`,
+			        type: 'GET',
+			        data: { page, postNo },
+			        success: function(data) {
+			            // 받아온 프래그먼트를 HTML로 교체
+			            $('#paginationContainer').html(data);
+			        },
+			        error: function(err) {
+			            console.log(err);
+			        }
+			    });
+			});
+			
+			// 대댓글 버튼 토글
+			$(document).on("click", "div.parentCmt", function(e){
+				$(e.currentTarget).find("form").toggleClass("d-none");
+			});
+			</script>
+	</div>
+</body>
+</html>

@@ -1,6 +1,9 @@
 package com.saeipman.app.admin.Service;
 
 import java.util.Date;
+import java.util.List;
+
+import com.saeipman.app.file.service.FileVO;
 
 import lombok.Data;
 
@@ -13,6 +16,8 @@ public class QnaVO {
 	private Date regDate;
 	private Date modDate;
 	private String groupId;
-	private String answerState;
+	private int answerState;
 	private String writerId;
+	List<FileVO> qnaFiles;
+	List<QnaCmtVO> qnaCmts; 
 }

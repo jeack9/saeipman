@@ -13,17 +13,22 @@
 			<form name="qnafrm" th:action="@{/support/qnaInsert}" method="post" enctype="multipart/form-data">
 				<div class="mb-3">
 					<label class="form-label" for="title">제목</label><input
-						placeholder="제목을 입력하세요" required type="text" id="title"
+						placeholder="제목을 입력하세요" required type="text" id="title" name="title"
 						class="form-control" value="">
 				</div>
 				<div class="mb-3">
+					<label class="form-label" for="writer">작성자</label><input
+						placeholder="익명" type="text" id="writer" name="writer"
+						class="form-control">
+				</div>
+				<div class="mb-3">
 					<label class="form-label" for="content">내용</label>
-					<textarea rows="5" placeholder="내용을 입력하세요" required id="content"
+					<textarea rows="5" placeholder="내용을 입력하세요" required id="content" name="content"
 						class="form-control"></textarea>
 				</div>
 				<div class="mb-3">
-					<label class="form-label" for="file">파일 첨부</label><input
-						multiple accept=".jpg, .jpeg, .png" type="file" id="file"
+					<label class="form-label" for="files">파일 첨부</label><input
+						multiple accept=".jpg, .jpeg, .png" type="file" id="files" name="files"
 						class="form-control">
 				</div>
 				<button type="submit" class="btn btn-primary">등록하기</button>

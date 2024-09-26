@@ -35,7 +35,7 @@
 			<!-- 관리비 관리 -->
 			<div class="nav-item dropdown" th:if="${login.auth == 1}">
 				<a th:href="@{/buildingGwanlibiList}" class="nav-item nav-link">
-					<i class="fa-duotone fa-solid fa-cash-register me-2" style="color: #4183D7;"></i>관리비 관리
+					<i class="fa-duotone fa-solid fa-cash-register me-2"></i>관리비 관리
 				</a>
 			</div>
 			
@@ -43,7 +43,7 @@
 			<!-- 납부 내역 -->
 			<div class="nav-item dropdown" th:if="${login.auth == 1}">
 				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-					<i class="fa-solid fa-list-check me-2" style="color: #4183D7;"></i>납부내역
+					<i class="fa-solid fa-list-check me-2"></i>납부내역
 				</a>
 					<div class="dropdown-menu bg-transparent border-0">
 						<a th:href="@{/monthPaymentHistory}" class="dropdown-item ps-5">a. 월세 납부 내역</a>

@@ -1,6 +1,7 @@
 package com.saeipman.app.admin.Service;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.Data;
 
@@ -10,9 +11,11 @@ public class QnaCmtVO {
 	private int postNo;
 	private String content;
 	private String writerId;
-	private String auth;
-	private String cmtReg;
+	private int auth;
+	private String cmtRep;
 	private String cmtGroup;
 	private String cmtOrder;
 	private Date regDate;
+	private int state;
+	private List<QnaCmtVO> childCmts;
 }
