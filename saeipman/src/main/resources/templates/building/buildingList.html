@@ -16,17 +16,20 @@
 	width: 1100px;
 	display: inline;
 }
-#roomUpdate{
-	display:none;
+
+#roomUpdate {
+	display: none;
 }
+
 .deletedImg {
 	display: none;
 }
+
 input {
 	border-width: 0 0 1px;
 }
 
-.hoSel,.fl, .newRoom {
+.hoSel, .fl, .newRoom {
 	width: 65px;
 }
 </style>
@@ -36,56 +39,59 @@ input {
 		<!-- start 건물리스트 -->
 		<div class="col-md-3" id="buildList">
 			<th:block th:each="building, index:${buildings}">
-				<ul class="list-group">
-					<li th:id="${building.buildingId}" th:data-index="${index.count}"
-						class="list-group-item" style="font-size: 25px;">
-						<div>[[${building.buildingName}]]</div>
-						<div class="ps-4" style="font-size: 18px;">[[${building.doroAddr}]]
-							[[${building.detailsAddr}]]</div>
-						<div class="ps-4" style="font-size: 18px;">[[${building.totalGagu}]]세대</div>
-					</li>
-				</ul>
+
+				<div class="card border-secondary mb-3" th:id="${building.buildingId}" th:data-index="${index.count}">
+					<div class="card-header" style="font-size: 18px; font-weight: bold;">[[${building.buildingName}]]</div>
+					<div class="card-body text-secondary" style="font-size: 14px;">
+						<p class="card-text">[[${building.doroAddr}]] [[${building.doroAddr}]]</p>
+						<p class="card-text">[[${building.totalGagu}]]세대</p>
+					</div>
+				</div>
+
+				
 			</th:block>
 			<button type="button"
 				th:onclick="|location.href='@{/buildingInsert}'|"
 				class="btn btn-outline-primary m-2">건물추가</button>
 			<!-- 페이징 -->
-			<nav aria-label="Page navigation example">
-				<ul class="pagination justify-content-center">
-					<li class="page-item" th:if="${page.startPage > 1}"><a
-						class="page-link"
-						th:href="@{/buildingList?pageNum={page}(page = ${page.startPage -1})}"
-						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-					</a></li>
-
-					<th:block
-						th:with="start = ${page.startPage}, end = ${page.endPage}">
-						<li class="page-item"
-							th:with="start = ${page.startPage}, end = ${page.endPage}"
-							th:each="pageButton : ${#numbers.sequence(start, end)}"><a
+			<th:block th:if="${page.total!=0}">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-center">
+						<li class="page-item" th:if="${page.startPage > 1}"><a
 							class="page-link"
-							th:href="@{/buildingList?pageNum={page} (page = ${pageButton})}"
-							th:text=${pageButton}></a></li>
-					</th:block>
+							th:href="@{/buildingList?pageNum={page}(page = ${page.startPage -1})}"
+							aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+						</a></li>
+
+						<th:block
+							th:with="start = ${page.startPage}, end = ${page.endPage}">
+							<li class="page-item"
+								th:with="start = ${page.startPage}, end = ${page.endPage}"
+								th:each="pageButton : ${#numbers.sequence(start, end)}"><a
+								class="page-link"
+								th:href="@{/buildingList?pageNum={page} (page = ${pageButton})}"
+								th:text=${pageButton}></a></li>
+						</th:block>
 
 
-					<li class="page-item" th:if="${page.next}"><a
-						class="page-link"
-						th:href="@{/buildingList?pageNum={page}(page = ${page.endPage +1})}"
-						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-					</a></li>
-				</ul>
-			</nav>
+						<li class="page-item" th:if="${page.next}"><a
+							class="page-link"
+							th:href="@{/buildingList?pageNum={page}(page = ${page.endPage +1})}"
+							aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+						</a></li>
+					</ul>
+				</nav>
+			</th:block>
 		</div>
 		<!-- end 페이징 -->
 
 		<!-- End 건물리스트 -->
-		<div class="col-md-9">
+		<div class="col-md-7">
 			<form name="updateForm" class="row g-3 infoDetail"
 				enctype="multipart/form-data">
 				<input name="groupId" type="hidden" class="groupid" />
 				<!-- start 건물 정보 -->
-				<h1 id="bnameTitle"></h1>
+				<h3 id="bnameTitle"></h3>
 				<div style="text-align: center;">
 					<button type="button" class="btn btn-outline-primary m-2 "
 						id="updateBtn">수정완료</button>
@@ -99,13 +105,13 @@ input {
 				<div>
 					<div class="form-check form-switch" style="display: inline-block;">
 						<label class="form-label"><span>연체 알림</span> </label><input
-							role="switch" id="delayAlertYn" type="checkbox" class="form-check-input text-end"
-							name="delayAlertYn" />
+							role="switch" id="delayAlertYn" type="checkbox"
+							class="form-check-input text-end" name="delayAlertYn" />
 					</div>
 					<div class="form-check form-switch" style="display: inline-block;">
 						<label class="form-label"><span>민원 알림</span> </label><input
 							role="switch" type="checkbox" class="form-check-input text-end"
-							name="minwonAlertYn" id="minwonAlertYn"/>
+							name="minwonAlertYn" id="minwonAlertYn" />
 					</div>
 				</div>
 
@@ -216,7 +222,7 @@ input {
 				    $('#roomUpdate').toggle();
 				});
 				
-				let firstBuilding = $('li[data-index="1"]').attr('id');
+				let firstBuilding = $('div[data-index="1"]').attr('id');
 				if (firstBuilding) {
 					getBuildingInfo(firstBuilding);
 				}
@@ -254,9 +260,9 @@ input {
 						$("#floorAreaRatio").val(data.floorAreaRatio);
 						$('input[name="groupId"]').val(data.groupId);
 						$('#bid').val(data.buildingId);
-						//console.log(data.rooms);
-						//let td;
-						//let tr;
+						$('#memo').val(data.memo);
+						console.log(data.rooms,"방이다");
+					
 						if(data.rooms != null){
 							$('#tb').html("");
 							let floors = [];
@@ -286,7 +292,6 @@ input {
 				        } else {
 				            $('#roomUpdate').hide();
 				        }
-
 						
 						//방번호 수정
 						$('.hoSel').on('change',function(e){
@@ -301,7 +306,6 @@ input {
 							console.log(updateRoomList ,'updateRoomList');
 						
 						})
-						
 						
 						//이미지 파일
 						if(data.fileName != null) {
@@ -320,16 +324,11 @@ input {
 								$(div).append(imgDel);
 							} 
 						} 
-						
-						
 						//이미지 삭제
 						$('.imageDel').on('click', imgaeDelFunc);
 						
 						checkFunc($("#liftYn"));
 						$(".bid").val(data.buildingId);
-						
-						
-
 						
 					})
 				}
