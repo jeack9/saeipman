@@ -152,7 +152,17 @@ public class MinwonController {
 
 	// 수정(페이지)
 	@GetMapping("minwonUpdate")
-	public String minwonUpdateForm(MinwonVO minwonVO, Model model) {
+	public String minwonUpdateForm(MinwonVO minwonVO, Model model, Criteria cri) {
+		
+		int auth = SecurityUtil.getLoginAuth();
+		String loginId = SecurityUtil.getLoginId();
+
+		cri.setAuth(auth);
+		cri.setLoginId(loginId);
+		if(auth == 2) {
+			System.out.println(loginId + "dddddd");
+			minwonVO.setImchainId(loginId);
+		}
 		MinwonVO findVO = minwonService.minwonSelect(minwonVO);
 		
 		List<String> imageFiles = minwonService.getFileName((minwonVO.getPostNo()));
@@ -172,6 +182,8 @@ public class MinwonController {
 	public Map<String, Object> updateList(@ModelAttribute  MinwonVO minwonVO,
 			@RequestPart(name = "newFiles", required = false) MultipartFile[] newFiles,
 			@RequestParam(name = "deleteFileNames", required = false) List<String> deleteFileNames) {
+		
+		
 		fileUtill.setFolder("민원");
 		System.out.println(deleteFileNames + "삭제 파일이름");
 		// 파일 삭제 처리
