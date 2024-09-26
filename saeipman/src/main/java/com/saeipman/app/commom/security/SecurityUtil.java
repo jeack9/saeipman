@@ -9,7 +9,7 @@ import com.saeipman.app.member.service.LoginInfoVO;
 public class SecurityUtil {
 	public static LoginInfoVO getLoginInfo() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if(authentication.getPrincipal() == null) {
+		if(!authentication.isAuthenticated()) {
 			return null;
 		}
 		CustomUserDetails customUser = (CustomUserDetails)authentication.getPrincipal();
@@ -17,7 +17,7 @@ public class SecurityUtil {
 	}
 	public static String getLoginId() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if(authentication.getPrincipal() == null) {
+		if(!authentication.isAuthenticated()) {
 			return null;
 		}
 		CustomUserDetails customUser = (CustomUserDetails)authentication.getPrincipal();
@@ -25,7 +25,7 @@ public class SecurityUtil {
 	}
 	public static int getLoginAuth() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if(authentication.getPrincipal() == null) {
+		if(!authentication.isAuthenticated()) {
 			return -1;
 		}
 		CustomUserDetails customUser = (CustomUserDetails)authentication.getPrincipal();
@@ -34,7 +34,7 @@ public class SecurityUtil {
 	}
 	public static String getRoomId() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if(authentication.getPrincipal() == null) {
+		if(!authentication.isAuthenticated()) {
 			return null;
 		}
 		CustomUserDetails customUser = (CustomUserDetails)authentication.getPrincipal();
@@ -43,7 +43,7 @@ public class SecurityUtil {
 	}
 	public static String getBuildingId() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if(authentication.getPrincipal() == null) {
+		if(!authentication.isAuthenticated()) {
 			return null;
 		}
 		CustomUserDetails customUser = (CustomUserDetails)authentication.getPrincipal();
