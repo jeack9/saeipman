@@ -59,6 +59,7 @@
 			<form id="searchFrom" th:action="@{/minwonList}" th:method='get'>
 
 
+				<input type='hidden'name='buildingId' th:value='${cri.buildingId}'>
 				<div th:if="${cri.auth == 1}">
 					<select class="form-select" name="buildingId" style="width: 150px;"
 						id="option">
@@ -67,6 +68,7 @@
 							th:value="${building.buildingId}"
 							th:selected="${building.buildingId}==${cri.buildingId}">
 							[[${building.buildingName}]]</option>
+							
 					</select>
 				</div>
 
@@ -210,9 +212,10 @@
 		// 라디오 버튼 클릭 시 자동으로 필터링
 		$('input[name="acceptState"]').on('change', function() {
 			let acceptState = $(this).val(); // 선택된 acceptState 값 가져오기
-			let buildingId = $("select[name='buildingId']").val();
-
+			let buildingId = $("input[name='buildingId']").val();
+			
 			location.href = `minwonList?buildingId=${buildingId}&acceptState=${acceptState}`; // URL에 acceptState 값 추가
+			
 		});
 
 		$('tbody > tr')
