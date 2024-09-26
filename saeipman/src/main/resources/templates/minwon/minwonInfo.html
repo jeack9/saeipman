@@ -77,10 +77,14 @@ textarea {
 </style>
 <body>
 	<div>
-		<input type="hidden" id="postNo" th:value="${minwon.postNo}" />
+		<input type="hidden" id="postNo" th:value="${minwon.postNo}" /> 
 		<input type="hidden" id="loginId" th:value="${cri.loginId}">
-		
-		
+		<input type="hidden" id="isTenant" th:value="${cri.auth == 2 ? 'true' : 'false'}">
+		<input type="hidden" id="roomNo" th:value="${minwon.roomNo}">
+
+
+
+
 	</div>
 	<div>
 		<table class="table">
@@ -115,7 +119,7 @@ textarea {
 		</table>
 	</div>
 	<div class="button-container" th:if="${cri.auth == 2}">
-		<div>
+		<div th:if="${minwon.acceptState != '1' and minwon.acceptState != '2'}">
 			<button type="button"
 				th:onClick="|location.href = '@{/minwonUpdate(postNo=${minwon.postNo})}'|"
 				class="btn btn-outline-warning m-2">수정</button>
@@ -123,10 +127,10 @@ textarea {
 		<button type="button"
 			th:onClick="|location.href = '@{/minwonList(pageNum=${cri.pageNum}, type=${param.type}, keyword=${param.keyword})}'|"
 			class="btn btn-outline-success m-2">목록</button>
-		<div>
-		<button type="button"
-			th:onClick="|location.href = '@{/minwonDelete(postNo=${minwon.postNo})}'|"
-			class="btn btn-outline-danger m-2">삭제</button>
+		<div th:if="${minwon.acceptState != '1' and minwon.acceptState != '2'}">
+			<button type="button"
+				th:onClick="|location.href = '@{/minwonDelete(postNo=${minwon.postNo})}'|"
+				class="btn btn-outline-danger m-2">삭제</button>
 		</div>
 	</div>
 
@@ -137,16 +141,16 @@ textarea {
 
 		<!-- 접수 버튼 -->
 		<form th:action="@{/updateMinwonState}" method="post">
-			<input type="hidden" name="postNo" th:value="${minwon.postNo}" /> 
-			<input type="hidden" name="state" th:value="1" />
+			<input type="hidden" name="postNo" th:value="${minwon.postNo}" /> <input
+				type="hidden" name="state" th:value="1" />
 			<!-- 접수중은 숫자 1로 전송 -->
 			<button type="submit" class="btn btn-outline-warning m-2">접수</button>
 		</form>
 
 		<!-- 완료 버튼 -->
 		<form th:action="@{/updateMinwonState}" method="post">
-			<input type="hidden" name="postNo" th:value="${minwon.postNo}" />
-			<input type="hidden" name="state" th:value="2" />
+			<input type="hidden" name="postNo" th:value="${minwon.postNo}" /> <input
+				type="hidden" name="state" th:value="2" />
 			<!-- 처리 완료는 숫자 2로 전송 -->
 			<button type="submit" class="btn btn-outline-danger m-2">완료</button>
 		</form>
@@ -211,7 +215,11 @@ textarea {
 	            ).slice(-2)}:${("0" + formattedDate.getMinutes()).slice(-2)}`;
 
 	            let deleteButton = "";
-	            if (comment.writer === $("#loginId").val()) {
+	            let loginId = $("#loginId").val(); // 로그인 아이디
+	            let roomNo = $("#roomNo").val();   // 방번호 (임차인인 경우)
+
+	            // 댓글 작성자가 임대인인 경우 loginId와, 임차인인 경우 roomNo와 비교
+	            if (comment.writer === loginId || comment.writer === roomNo + "호") {
 	              deleteButton = `<button class="delete-comment-btn" data-id="${comment.minwonCmtNo}">삭제</button>`;
 	            }
 
@@ -266,15 +274,12 @@ textarea {
 	          });
 
 	          // 대댓글 form 보이기 이벤트 (이미 열려 있는지 확인)
-	          $("div#cmtContainer").on("click", "div.group > div#onkey", function (e) {
-	            if (!$(e.target).hasClass("delete-comment-btn")) {
-	              let replyForm = $(this).parent().children().last();
-	              // 폼이 보이지 않을 때만 열림
-	              if (!replyForm.is(":visible")) {
-	                replyForm.toggle();
-	              }
-	            }
-	          });
+	           $("div#cmtContainer").off("click", "div#onkey").on("click", "div#onkey", function (e) {
+		       if (!$(e.target).hasClass("delete-comment-btn")) {
+		            let replyForm = $(this).siblings("form"); // 대댓글 작성 폼 찾기
+		            replyForm.toggle(); // 토글 방식으로 대댓글 폼을 보였다가 숨김
+		        }
+		    });
 
 	          // 댓글 삭제 이벤트
 	          $(document)
@@ -307,26 +312,35 @@ textarea {
 	              }
 	            });
 
-	          // 대댓글 등록 이벤트 (이벤트 위임)
-	          $(document)
-	            .off("click", ".reply-comment-btn")
-	            .on("click", ".reply-comment-btn", function (e) {
-	              e.preventDefault();
-	              e.stopPropagation();
-
-	              let group = $(this).data("group");
-	              let content = $(`#reply${group}`).val();
-	              let writer = $("#loginId").val();
-	              let loginId = `${writer}호` //임대인은 임대인으로 임차인은 본인 방호수로
-	              let postNo = $("#postNo").val();
-
-	              let data = {
-	                content,
-	                loginId,
-	                postNo,
-	                cmtGroup: group,
-	                cmtRep: "1",
-	              }; // 대댓글은 cmtRep가 "1"
+	          	// 대댓글 등록 이벤트 (이벤트 위임)
+				$(document)
+				  .off("click", ".reply-comment-btn")
+				  .on("click", ".reply-comment-btn", function (e) {
+				    e.preventDefault();
+				    e.stopPropagation();
+				
+				    let group = $(this).data("group");
+				    let content = $(`#reply${group}`).val();
+				    let postNo = $("#postNo").val();
+				    let writer;
+				
+				    // 임차인 여부 확인 (이제 임차인이면 loginId 사용)
+				    if ($("#isTenant").val() === 'false') {
+				        // 임차인이면 로그인 아이디로 작성
+				        writer = $("#loginId").val();
+				    } else {
+				        // 임대인이면 방번호로 작성
+				        writer = $("#roomNo").val() + "호";
+				    }
+				
+				    let data = {
+				      content,
+				      writer,
+				      postNo,
+				      cmtGroup: group,
+				      cmtRep: "1", // 대댓글은 cmtRep가 "1"
+				    };
+	              
 	              $.ajax({
 	                url: ctxPath + "/replycomment/" + postNo,
 	                method: "POST",
@@ -352,14 +366,24 @@ textarea {
 	    });
 	  }
 
-	  // 댓글 등록 버튼 클릭 이벤트
-	  let cmtBtn = document.getElementById("create-comment-btn");
-	  cmtBtn.addEventListener("click", function (e) {
+	    // 댓글 등록 버튼 클릭 이벤트
+	 	let cmtBtn = document.getElementById("create-comment-btn");
+		cmtBtn.addEventListener("click", function (e) {
 	    let content = $("#comment").val();
-	    let writer = $("#loginId").val();
 	    let postNo = $("#postNo").val();
+	    let writer;
+	
+	    // 임차인 여부 확인 (이제 임차인이면 loginId 사용)
+	    if ($("#isTenant").val() === 'false') {
+	        // 임차인이면 로그인 아이디로 작성
+	        writer = $("#loginId").val();
+	    } else {
+	        // 임대인이면 방번호로 작성
+	        writer = $("#roomNo").val() + "호";
+	    }
 
-	    let data = { content, writer, postNo };
+   		let data = { content, writer, postNo };
+   		 
 	    $.ajax({
 	      url: ctxPath + "/comments/" + postNo,
 	      method: "POST",
