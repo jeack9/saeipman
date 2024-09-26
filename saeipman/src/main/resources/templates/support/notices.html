@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}">
+<head>
+<meta charset="UTF-8">
+<title>세입만 공지</title>
+</head>
+<body>
+	<div layout:fragment="Main">
+		<div class="col-sm-12 col-xl-11">
+			<div class="bg-light rounded p-4">
+				<h4 class="mb-4">세입만 공지사항</h4>
+				<!-- 답변상태 -->
+				<form id="searchFrom" class="d-flex justify-content-end">
+					<input type="text" name="keyword" class="form-control me-2 w-50">
+					<button class="btn btn-outline-success">Search</button>
+				</form>
+				<table class="table table-hover" style="text-align: center">
+					<thead>
+						<tr>
+							<th scope="col">번호</th>
+							<th scope="col">제목</th>
+							<th scope="col">작성자</th>
+							<th scope="col">등록일</th>
+							<th scope="col">조회수</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="notice : ${notices}" style="cursor: pointer;">
+							<th>[[${notice.postNo}]]</th>
+							<td class="text-truncate" style="max-width: 150px;">[[${notice.title}]]</td>
+							<td>[[${notice.writer}]]</td>
+							<td>[[${#dates.format(notice.modDate, 'yyyy-MM-dd')}]]</td>
+							<td>[[${notice.views}]]</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- 페이지네이션 -->
+			<nav aria-label="Page navigation">
+				<ul class="pagination justify-content-center mt-3">
+					<!-- 이전페이지 -->
+					<li class="page-item"
+						th:classappend="${paging.prev ? '' : 'disabled'}"><a
+						class="page-link"
+						th:href="@{/support/notices(page=${paging.startPage - paging.viewPage}, keyword=${keyword})}"
+						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+					</a></li>
+					<!-- 페이지번호 매기기 -->
+					<li class="page-item"
+						th:classappend="${pageNum == paging.page ? 'active' : ''}"
+						th:each="pageNum : ${#numbers.sequence(paging.startPage, paging.endPage)}">
+						<a class="page-link"
+						th:href="@{/support/notices(page=${pageNum}, keyword=${keyword})}">[[${pageNum}]]</a>
+					</li>
+					<!-- 다음페이지 -->
+					<li class="page-item"
+						th:classappend="${paging.next ? '' : 'disabled'}"><a
+						class="page-link"
+						th:href="@{/support/notices(page=${paging.endPage + 1}, keyword=${keyword})}"
+						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+					</a></li>
+				</ul>
+			</nav>
+			<!-- 페이지네이션 END -->
+		</div>
+		<script>
+		// 단건조회 이벤트
+			$("tr").on("click", (e) =>{
+				let postNO = $(e.currentTarget).find("th").text();
+				location.href = `${ctxPath}/support/noticeDetail?postNo=${postNO}`;
+			});
+		</script>
+	</div>
+</body>
+</html>
