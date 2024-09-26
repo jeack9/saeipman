@@ -82,13 +82,13 @@
 				<th:block th:if="${roomList.size() > 0}">
 
 
-					<div class="card border-secondary mb-5 col-5 me-5"
+					<div class="card border-secondary mb-4 col-3 me-4"
 						th:each="room : ${roomList}">
 						<div class="card-header row"
 							style="font-size: 18px; font-weight: bold;">
 							[[${room.buildingName}]] / 
 							<p class="col" style="font-size: 18px; font-weight: bold;">[[${room.constractType}]]</p>
-							<div class="col">
+							<div style="text-align: right;">
 								<button type="button" class="btn btn-outline-success">입주
 									예정</button>
 								<button type="button" class="btn btn-outline-success">[[${room.ipjuState
