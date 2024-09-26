@@ -124,7 +124,7 @@ public class SecurityConfig2 {
 		// 경로별 인가 작업
 		http.authorizeHttpRequests((auth) -> auth.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
 				// 정적 리소스 허용
-				.requestMatchers("/css/**", "/img/**", "/js/**", "/lib/**", "/scss/**", "/dashmin-1.0.0/**").permitAll()
+				.requestMatchers("/css/**", "/img/**", "/js/**", "/lib/**", "/scss/**", "/dashmin-1.0.0/**", "/images/**").permitAll()
 				.requestMatchers("/all/**").permitAll()
 				.requestMatchers("/member/**").hasAnyAuthority("ROLE_1", "ROLE_2")
 				.requestMatchers("/room/**").hasAnyAuthority("ROLE_1")

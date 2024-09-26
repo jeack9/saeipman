@@ -108,7 +108,6 @@ public class AdminController {
 		prevNotice.setTitle(noticeVO.getTitle());
 		prevNotice.setContent(noticeVO.getContent());
 		prevNotice.setModWriter(noticeVO.getModWriter());
-		System.err.println(prevNotice.getGroupId());
 		fileUtill.setFolder("관리자공지");
 		fileUtill.multiUpload(files, prevNotice.getGroupId());
 		return adminService.modiNotice(prevNotice);
