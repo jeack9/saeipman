@@ -64,7 +64,6 @@ public class FileUtility {
 			System.out.println("파일 그룹" + groupId);
 		}
 //		if(group != "-1") {
-//			
 //			if (files.getOriginalFilename() == "") {
 //				return "-1";
 //			}

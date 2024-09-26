@@ -32,12 +32,12 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<th></th>
-							<td class="text-truncate" style="max-width: 150px;">dsads</td>
-							<td>avwe evWA</td>
-							<td>2024-09-25</td>
-							<td>1</td>
+						<tr th:each="qna : ${qnaList}">
+							<th>[[${qna.postNo}]]</th>
+							<td class="text-truncate" style="max-width: 150px;">[[${qna.title}]]</td>
+							<td>[[${qna.writer}]]</td>
+							<td>[[${#dates.format(qna.regDate, 'yyyy-MM-dd')}]]</td>
+							<td>[[${qna.answerState == 0 ? '답변대기' : '답변완료'}]]</td>
 						</tr>
 					</tbody>
 				</table>
@@ -47,6 +47,14 @@
 				<!-- 페이지네이션 -->
 			</div>
 		</div>
+		
+		<script>
+		// 단건조회 이벤트
+		$("tr").on("click", (e) =>{
+			let postNO = $(e.currentTarget).find("th").text();
+			location.href = `${ctxPath}/support/qnaDetail?postNo=${postNO}`;
+		});
+		</script>
 	</div>
 </body>
 </html>

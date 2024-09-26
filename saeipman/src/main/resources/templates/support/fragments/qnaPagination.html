@@ -1,0 +1,79 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="qnaPaginationFrg">
+	<!-- 페이지네이션 -->
+	<!-- 댓글 목록 -->
+	<div class="mt-4 border p-3">
+		<p>댓글 목록</p>
+		<div class="list-group" th:each="commentParent : ${qna.qnaCmts}">
+			<!-- 댓글 -->
+			<div class="list-group-item parentCmt">
+				<div class="d-flex w-100 justify-content-between">
+					<h6 class="mb-1">[[${commentParent.writerId}]]</h6>
+					<small>3 days ago</small>
+				</div>
+				<p class="mb-1">[[${commentParent.content}]]</p>
+				<small>삭제</small>
+
+				<!-- 대댓글 작성 폼 -->
+				<form class="d-none">
+				<div class="ms-3 mt-3">
+					<div class="list-group-item bg-light">
+						<input type="hidden" name="postNo"
+							th:value="${commentParent.postNo}" /> 
+							<input type="hidden"
+							name="cmtGroup" th:value="${commentParent.cmtGroup}" />
+						<div class="mb-3">
+							<p>대댓글 내용</p>
+							<textarea name="content" class="form-control" rows="2" required></textarea>
+						</div>
+						<button type="button" class="btn btn-primary childCmtBtn">대댓글 작성</button>
+					</div>
+				</div>
+				</form>
+
+				<!-- 대댓글 -->
+				<div class="ms-3"
+					th:each="commentChild : ${commentParent.childCmts}">
+					<div class="list-group-item bg-light">
+						<div class="d-flex w-100 justify-content-between">
+							<h6 class="mb-1">[[${commentChild.writerId}]]</h6>
+							<small>3 days ago</small>
+						</div>
+						<p class="mb-1">[[${commentChild.content}]]</p>
+						<small>삭제</small>
+					</div>
+				</div>
+				<!-- 대댓글 END -->
+			</div>
+			<!-- 댓글 END -->
+		</div>
+	</div>
+	<nav aria-label="Page navigation" th:if="${paging.total} > 0">
+		<ul class="pagination justify-content-center mt-3">
+			<!-- 이전페이지 -->
+			<li class="page-item"
+				th:classappend="${paging.prev ? '' : 'disabled'}"><a
+				class="page-link"
+				th:href="@{/support/loadQnaCmtsFrg(page=${paging.startPage - paging.viewPage})}"
+				th:data-page="${paging.startPage - paging.viewPage}"
+				aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+			</a></li>
+			<!-- 페이지번호 매기기 -->
+			<li class="page-item"
+				th:classappend="${pageNum == paging.page ? 'active' : ''}"
+				th:each="pageNum : ${#numbers.sequence(paging.startPage, paging.endPage)}">
+				<a class="page-link"
+				th:data-page="${pageNum}"
+				th:href="@{/support/loadQnaCmtsFrg(page=${pageNum})}">[[${pageNum}]]</a>
+			</li>
+			<!-- 다음페이지 -->
+			<li class="page-item"
+				th:classappend="${paging.next ? '' : 'disabled'}"><a
+				class="page-link"
+				th:data-page="${paging.endPage + 1}"
+				th:href="@{/support/loadQnaCmtsFrg(page=${paging.endPage + 1})}"
+				aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+			</a></li>
+		</ul>
+	</nav>
+	<!-- 페이지네이션 END -->
+</div>

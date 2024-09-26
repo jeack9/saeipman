@@ -13,13 +13,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.saeipman.app.admin.Service.AdminService;
 import com.saeipman.app.admin.Service.NoticeVO;
+import com.saeipman.app.admin.Service.QnaCmtVO;
 import com.saeipman.app.admin.Service.QnaService;
 import com.saeipman.app.admin.Service.QnaVO;
 import com.saeipman.app.commom.paging.PagingDTO;
+import com.saeipman.app.commom.security.SecurityUtil;
 import com.saeipman.app.file.service.FileService;
 import com.saeipman.app.file.service.FileVO;
 import com.saeipman.app.upload.config.FileUtility;
@@ -36,10 +39,7 @@ public class SupportController {
 	private final FileUtility fileUtill;
 	private final FileService fileService;
 	private final AdminService adminService;
-
-	@GetMapping("/qnaList")
-	public void qnaList(Model model) {
-	}
+	private final QnaService qnaService;
 
 	// 공지사항 목록 조회 (페이징 및 검색)
 	@GetMapping("/notices")
@@ -67,6 +67,12 @@ public class SupportController {
 		model.addAttribute("notice", notice);
 	}
 	
+	// qna 목록 페이지이동
+	@GetMapping("/qnaList")
+	public void qnaListP(Model model) {
+		model.addAttribute("qnaList", qnaService.qnaList(SecurityUtil.getLoginId()));
+	}
+	
 	// qna 등록 페이지이동
 	@GetMapping("/qnaInsert")
 	public void qnaInsertP() {
@@ -74,10 +80,62 @@ public class SupportController {
 	}
 	// qna 단건등록
 	@PostMapping("/qnaInsert")
-	public String postMethodName(@ModelAttribute QnaVO qnaVO , @RequestPart MultipartFile[] files) {
-		
-		return "";
+	public String qnaInsert(QnaVO qnaVO, @RequestPart(required = false) MultipartFile[] files) {
+		fileUtill.setFolder("qna");
+		String groupId = fileUtill.multiUpload(files, "-1");
+		if(qnaVO.getWriter() == null || qnaVO.getWriter().length() == 0) {
+			qnaVO.setWriter("익명");
+		}
+		qnaVO.setWriterId(SecurityUtil.getLoginId());
+		qnaVO.setGroupId(groupId);
+		qnaService.addQna(qnaVO);
+		return "redirect:/support/qnaList";
 	}
 	
-
+	// qna 단건조회 페이지이동
+	@GetMapping("/qnaDetail")
+	public void qnaDetailP(@RequestParam(name = "postNo", required = false) int postNo, Model model) {
+		int total = qnaService.totalParentCmts(postNo);
+		PagingDTO paging = new PagingDTO(1, 2, total, 5);
+		QnaVO qnaVO = qnaService.qnaInfo(postNo, paging);
+		model.addAttribute("paging", paging);
+		model.addAttribute("qna", qnaVO);
+	}
+	
+	// 부모댓글 등록
+	@PostMapping("/qnaParentCmt")
+	public String qnaParentCmt(@RequestBody QnaCmtVO qnaCmtVO, Model model) {
+		// 부모댓글 등록
+		qnaCmtVO.setWriterId(SecurityUtil.getLoginId());
+		qnaCmtVO.setAuth(SecurityUtil.getLoginAuth());
+		qnaService.addParentCmt(qnaCmtVO);
+		
+		// 페이징, 댓글리스트 정보로 프래그먼트 반환
+		int total = qnaService.totalParentCmts(qnaCmtVO.getPostNo());
+		PagingDTO paging = new PagingDTO(1, 2, total, 5);
+		QnaVO qnaVO = qnaService.qnaInfo(qnaCmtVO.getPostNo(), paging);
+		model.addAttribute("paging", paging);
+		model.addAttribute("qna", qnaVO);
+		return "support/fragments/qnaPagination :: qnaPaginationFrg";
+	}
+	
+	// 자식댓글 등록
+	@PostMapping("/qnaChildCmt")
+	@ResponseBody
+	public String qnaChildCmt(@RequestBody QnaCmtVO qnaCmtVO, Model model) {
+		
+		return "support/fragments/qnaPagination :: qnaPaginationFrg";
+	}
+	
+	// 댓글목록 + 페이지네이션 프레그먼트 반환
+	@GetMapping("/loadQnaCmtsFrg")
+	public String loadQnaCmtsFrg(@RequestParam(name = "page") int page, @RequestParam(name = "postNo") int postNo, Model model) {
+		int total = qnaService.totalParentCmts(postNo);
+		PagingDTO paging = new PagingDTO(page, 2, total, 5);
+		QnaVO qnaVO = qnaService.qnaInfo(postNo, paging);
+		model.addAttribute("paging", paging);
+		model.addAttribute("qna", qnaVO);
+		return "support/fragments/qnaPagination :: qnaPaginationFrg";
+	}
+	
 }
