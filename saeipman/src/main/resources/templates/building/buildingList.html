@@ -32,23 +32,57 @@ input {
 .hoSel, .fl, .newRoom {
 	width: 65px;
 }
+
+a.button {
+	display: block;
+	position: relative;
+	float: left;
+	width: 120px;
+	padding: 0;
+	margin: 10px 20px 10px 0;
+	font-weight: 600;
+	text-align: center;
+	line-height: 40px;
+	color: #FFF;
+	border-radius: 5px;
+	transition: all 0.2s;
+	height: 40px;
+}
+
+.btnBlueGreen {
+	background: #73bbfa;
+}
+
+.btnBlueGreen.btnPush {
+	box-shadow: 0px 5px 0px 0px #5789b5;
+}
+
+.btnPush:hover {
+	margin-top: 15px;
+	margin-bottom: 5px;
+}
+
+.btnBlueGreen.btnPush:hover {
+	box-shadow: 0px 0px 0px 0px #007144;
+}
 </style>
 </head>
 <body>
 	<div layout:fragment="Main" class="row">
+		<h4 class="mb-4">빌딩목록</h4>
 		<!-- start 건물리스트 -->
 		<div class="col-md-3" id="buildList">
 			<th:block th:each="building, index:${buildings}">
-
-				<div class="card border-secondary mb-3" th:id="${building.buildingId}" th:data-index="${index.count}">
-					<div class="card-header" style="font-size: 18px; font-weight: bold;">[[${building.buildingName}]]</div>
+				<div class="card border-secondary mb-3"
+					th:id="${building.buildingId}" th:data-index="${index.count}">
+					<div class="card-header"
+						style="font-size: 18px; font-weight: bold;">[[${building.buildingName}]]</div>
 					<div class="card-body text-secondary" style="font-size: 14px;">
-						<p class="card-text">[[${building.doroAddr}]] [[${building.doroAddr}]]</p>
+						<p class="card-text">[[${building.doroAddr}]]
+							[[${building.doroAddr}]]</p>
 						<p class="card-text">[[${building.totalGagu}]]세대</p>
 					</div>
 				</div>
-
-				
 			</th:block>
 			<button type="button"
 				th:onclick="|location.href='@{/buildingInsert}'|"
@@ -122,7 +156,7 @@ input {
 						type="file" id="file" multiple name="newFiles"
 						class="form-control">
 				</div>
-				<div class="form-group col-md-7">
+				<div class="form-group col-md-5">
 					<label for="bname" class="form-label">빌딩 이름 </label> <input
 						type="text" id="bname" name="buildingName" class="form-control">
 				</div>
@@ -185,7 +219,11 @@ input {
 					<label for="memo" class="form-label">비고 </label> <input type="text"
 						id="memo" name="memo" class="form-control">
 				</div>
-				<button type="button" id="roomUpdateBtn">▼</button>
+				<!-- <button type="button" id="roomUpdateBtn">▼</button> -->
+				<div class="row">
+					<a title="Button push blue/green" id="roomUpdateBtn"
+						class="button btnPush btnBlueGreen">방정보 수정</a>
+				</div>
 				<div id="roomUpdate">
 					<div>
 						<input type="hidden" name="buildingId" id="bid">
@@ -212,7 +250,7 @@ input {
 		<!-- End 건물 정보 -->
 
 		<script>
-	
+		let floorList
 		let updateRoomList = [];
 		let delRoomList = [];
 		let insertRoomList = [];
@@ -226,7 +264,7 @@ input {
 				if (firstBuilding) {
 					getBuildingInfo(firstBuilding);
 				}
-				$('li').on('click', function(e) {
+				$('div').on('click', function(e) {
 					$('#imgFile').html('');
 					let buildingId = e.currentTarget.id;
 					let a = 
@@ -284,7 +322,6 @@ input {
 								tr+= `</tr>`;
 								$('#tb').append(tr);
 							}
-							
 						}
 						  // 방 정보가 갱신된 후에도 roomUpdate의 상태를 유지
 				        if (isRoomUpdateVisible) {
@@ -553,14 +590,6 @@ input {
 			}).open();
 		}
 	</script>
-		<script>
-			
-			
-			
-		
-	</script>
-
-
 	</div>
 
 

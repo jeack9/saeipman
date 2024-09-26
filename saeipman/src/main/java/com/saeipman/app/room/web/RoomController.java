@@ -75,7 +75,7 @@ public class RoomController {
 		// 방 목록 페이지네이션
 		page = page == null ? 1 : page;
 		int total = rsvc.totalBuildingRoom(buildingRoom);
-		PagingDTO paging = new PagingDTO(page, 4, total, 5);
+		PagingDTO paging = new PagingDTO(page, 6, total, 5);
 
 		// 방 목록 검색조건
 
