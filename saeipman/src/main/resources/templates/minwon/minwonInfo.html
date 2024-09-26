@@ -77,8 +77,10 @@ textarea {
 </style>
 <body>
 	<div>
-		<input type="hidden" id="postNo" th:value="${minwon.postNo}" /> <input
-			type="hidden" id="loginId" th:value="${loginId}">
+		<input type="hidden" id="postNo" th:value="${minwon.postNo}" />
+		<input type="hidden" id="loginId" th:value="${minwon.roomNo}">
+		
+		
 	</div>
 	<div>
 		<table class="table">
@@ -86,7 +88,7 @@ textarea {
 				<th style="width: 5%">제목</th>
 				<td style="width: 30%">[[${minwon.title}]]</td>
 				<th>작성자</th>
-				<td>[[${minwon.roomNo}]]</td>
+				<td>[[${minwon.roomNo}]]호</td>
 			</tr>
 			<tr>
 				<th>카테고리</th>
@@ -113,15 +115,19 @@ textarea {
 		</table>
 	</div>
 	<div class="button-container" th:if="${cri.auth == 2}">
-		<button type="button"
-			th:onClick="|location.href = '@{/minwonUpdate(postNo=${minwon.postNo})}'|"
-			class="btn btn-outline-warning m-2">수정</button>
+		<div>
+			<button type="button"
+				th:onClick="|location.href = '@{/minwonUpdate(postNo=${minwon.postNo})}'|"
+				class="btn btn-outline-warning m-2">수정</button>
+		</div>
 		<button type="button"
 			th:onClick="|location.href = '@{/minwonList(pageNum=${cri.pageNum}, type=${param.type}, keyword=${param.keyword})}'|"
 			class="btn btn-outline-success m-2">목록</button>
+		<div>
 		<button type="button"
 			th:onClick="|location.href = '@{/minwonDelete(postNo=${minwon.postNo})}'|"
 			class="btn btn-outline-danger m-2">삭제</button>
+		</div>
 	</div>
 
 	<div class="button-container" th:if="${cri.auth == 1}">
@@ -131,16 +137,16 @@ textarea {
 
 		<!-- 접수 버튼 -->
 		<form th:action="@{/updateMinwonState}" method="post">
-			<input type="hidden" name="postNo" th:value="${minwon.postNo}" /> <input
-				type="hidden" name="state" th:value="1" />
+			<input type="hidden" name="postNo" th:value="${minwon.postNo}" /> 
+			<input type="hidden" name="state" th:value="1" />
 			<!-- 접수중은 숫자 1로 전송 -->
 			<button type="submit" class="btn btn-outline-warning m-2">접수</button>
 		</form>
 
 		<!-- 완료 버튼 -->
 		<form th:action="@{/updateMinwonState}" method="post">
-			<input type="hidden" name="postNo" th:value="${minwon.postNo}" /> <input
-				type="hidden" name="state" th:value="2" />
+			<input type="hidden" name="postNo" th:value="${minwon.postNo}" />
+			<input type="hidden" name="state" th:value="2" />
 			<!-- 처리 완료는 숫자 2로 전송 -->
 			<button type="submit" class="btn btn-outline-danger m-2">완료</button>
 		</form>
@@ -311,11 +317,12 @@ textarea {
 	              let group = $(this).data("group");
 	              let content = $(`#reply${group}`).val();
 	              let writer = $("#loginId").val();
+	              let loginId = `${writer}호`
 	              let postNo = $("#postNo").val();
 
 	              let data = {
 	                content,
-	                writer,
+	                loginId,
 	                postNo,
 	                cmtGroup: group,
 	                cmtRep: "1",

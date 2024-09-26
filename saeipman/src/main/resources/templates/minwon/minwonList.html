@@ -58,7 +58,6 @@
 		<div class='row'>
 			<form id="searchFrom" th:action="@{/minwonList}" th:method='get'>
 
-
 				<input type='hidden'name='buildingId' th:value='${cri.buildingId}'>
 				<div th:if="${cri.auth == 1}">
 					<select class="form-select" name="buildingId" style="width: 150px;"
@@ -121,7 +120,8 @@
 					<tr>
 						<td>[[${info.postNo}]]</td>
 						<td>[[${info.title}]]</td>
-						<td>[[${info.roomNo}]]</td>
+						<td>[[${info.roomNo}]]호</td>
+					
 						<!-- 작성자 -->
 						<td>[[${info.acceptState}]]</td>
 						<td>[[ ${#dates.format(info.regDate, 'yyyy/MM/dd')} ]]</td>
