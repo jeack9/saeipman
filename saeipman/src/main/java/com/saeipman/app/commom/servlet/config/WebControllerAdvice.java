@@ -30,7 +30,7 @@ public class WebControllerAdvice {
 		}
 		return login;
 	}
-	@ModelAttribute("memberName")
+//	@ModelAttribute("memberNames")
 	public String getMemberName() {
 		LoginInfoVO login = SecurityUtil.getLoginInfo();
 		String memberName = "비로그인";
