@@ -11,13 +11,33 @@
 	display: none;
 }
 
+.form-container {
+	width: 80%;
+	margin: 0 auto;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.col {
+    flex: 1; 
+    margin-right: 10px; 
+}
+
+.col:last-child {
+    margin-right: 0; 
+}
+
 
 </style>
 </head>
 <body>
-	<form name="updateForm" th:object="${minwon}" >
+	<form name="updateForm" th:object="${minwon}" class="form-container">
 		<input name="postNo" th:value="${minwon.postNo}" type="hidden">
-		<div class="mb-3" >
+		<div class="mb-3">
 			<label for="">제목</label> <input class="form-control" type="text"
 				th:field="*{title}">
 		</div>
@@ -36,18 +56,19 @@
 			</select>
 		</div>
 
-		<div class="mb-3">
-			<label for="visitsDate">방문날짜</label> <input type="datetime-local"
-				class="form-control" name="visitsDate1"
-				th:value="${#temporals.format(minwon.visitsDate1, 'yyyy-MM-dd HH:mm')}">
+		<div class="row">
+			<div class="col">
+				<label for="visitsDate1">방문날짜</label> <input type="datetime-local"
+					class="form-control" name="visitsDate1"
+					th:value="${#temporals.format(minwon.visitsDate1, 'yyyy-MM-dd HH:mm')}">
+			</div>
+			<div class="col">
+				<label for="visitsDate2">방문날짜(택2)</label> <input
+					type="datetime-local" class="form-control" name="visitsDate2"
+					th:value="${#temporals.format(minwon.visitsDate2, 'yyyy-MM-dd HH:mm')}">
+			</div>
 		</div>
 
-
-		<div class="mb-3">
-			<label for="visitsDate">방문날짜(택2)</label> <input type="datetime-local"
-				class="form-control" name="visitsDate2"
-				th:value="${#temporals.format(minwon.visitsDate2, 'yyyy-MM-dd HH:mm')}">
-		</div>
 
 
 		<!-- 기존 이미지 미리보기 -->

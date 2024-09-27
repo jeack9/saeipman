@@ -221,13 +221,16 @@ textarea {
 	            ).slice(-2)}:${("0" + formattedDate.getMinutes()).slice(-2)}`;
 
 	            let deleteButton = "";
-	            let loginId = $("#loginId").val(); // 로그인 아이디
-	            let roomNo = $("#roomNo").val();   // 방번호 (임차인인 경우)
+                let loginId = $("#loginId").val(); // 로그인 아이디 (임차인인 경우)
+                let roomNo = $("#roomNo").val();   // 방번호 (임대인인 경우)
+                let isTenant = $("#isTenant").val(); // 임차인 여부 확인
 
-	            // 댓글 작성자가 임대인인 경우 loginId와, 임차인인 경우 roomNo와 비교
-	            if (comment.writer === loginId || comment.writer === roomNo + "호") {
-	              deleteButton = `<button class="delete-comment-btn" data-id="${comment.minwonCmtNo}">삭제</button>`;
-	            }
+                // 댓글 작성자가 임차인일 경우: loginId로 비교, 임대인일 경우: roomNo와 비교
+                if ((isTenant === 'false' && comment.writer === loginId) || 
+                    (isTenant === 'true' && comment.writer === roomNo + "호")) {
+                    deleteButton = `<button class="delete-comment-btn" data-id="${comment.minwonCmtNo}">삭제</button>`;
+                }
+				
 
 	            let ply = comment.cmtRep == "1" ? "class='ply'" : "";
 	            let onkey = comment.cmtRep == "0" ? "id='onkey'" : "";
