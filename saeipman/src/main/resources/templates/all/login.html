@@ -1,21 +1,30 @@
 <div xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{common/layouts/login_layout}" layout:fragment="Main">
+	<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
 
 	<!-- Sign In Start -->
-	<div class="background" th:style="'background-image: url(' + @{/img/backG3.png} + ');'">
-		<!-- <div class="background" th:style="'background-image: url(' + @{/img/backG1.jpg} + ');'"> -->
-		<form th:action="@{/all/loginProc}" method="post">
-			<div class="container-xxl position-relative d-flex p-0">
-				<div class="container-fluid">
-					<div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
-						<div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
-							<div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
-								<div class="d-flex align-items-center justify-content-between mb-3">
-									<h3 class="text-primary">
-										<i class="fa fa-hashtag me-2"></i>Saeipman
-									</h3>
-									<h3>로그인</h3>
-								</div>
-								<!-- <div class="form-check form-check-inline">
+	<div id="loadingView" style="position: fixed; z-index: 999; width: 100%; height: 100%; top: -15%; right: 5%; background-color: white;">
+		<div class="lottie-container">
+			<lottie-player src="https://lottie.host/6191f13b-11b4-4d44-ae08-5700ae3e8bf8/chYHNfkaAb.json" background="none" speed="0.8" autoplay></lottie-player>
+		</div>
+	</div>
+
+	<div id="loginForm" style="position: fixed; width: 100%; height: 100%;">
+		<div class="background" th:style="'background-image: url(' + @{/img/backG3.png} + ');'">
+			<!-- 로그인 폼을 숨김 -->
+			<form th:action="@{/all/loginProc}" method="post">
+				<div class="container-xxl position-relative d-flex p-0">
+					<div class="container-fluid">
+						<div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
+							<div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+								<div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
+									<div class="d-flex align-items-center justify-content-between mb-3">
+										<h3 class="text-primary">
+											<i class="fa fa-hashtag me-2"></i>Saeipman
+										</h3>
+										<h3>로그인</h3>
+									</div>
+									<!-- <div class="form-check form-check-inline">
 								<input class="form-check-input" type="radio"
 									name="inlineRadioOptions" id="inlineRadio1" value="option1">
 								<label class="form-check-label" for="inlineRadio1">임대인</label>
@@ -25,29 +34,41 @@
 									name="inlineRadioOptions" id="inlineRadio2" value="option2">
 								<label class="form-check-label" for="inlineRadio2">임차인</label>
 							</div> -->
-								<div class="form-floating mb-3">
-									<input type="text" class="form-control" id="floatingInput" name="loginId"> <label for="floatingInput">아이디</label>
-								</div>
-								<div class="form-floating mb-4">
-									<input type="password" class="form-control" name="pw" id="floatingPassword" placeholder="Password"> <label for="floatingPassword">비밀번호</label>
-								</div>
-								<div class="d-flex align-items-center justify-content-between mb-4">
-									<div class="form-check">
-										<input type="checkbox" class="form-check-input" name="remember-me" id="remember-me"> <label class="form-check-label" for="remember-me">자동 로그인</label>
+									<div class="form-floating mb-3">
+										<input type="text" class="form-control" id="floatingInput" name="loginId"> <label for="floatingInput">아이디</label>
 									</div>
-									<a th:href="@{/all/idSelect}" style="font-size: 14px">아이디 찾기</a> <a th:href="@{/all/pwFind}" style="font-size: 14px">비밀번호 찾기</a>
+									<div class="form-floating mb-4">
+										<input type="password" class="form-control" name="pw" id="floatingPassword" placeholder="Password"> <label for="floatingPassword">비밀번호</label>
+									</div>
+									<div class="d-flex align-items-center justify-content-between mb-4">
+										<div class="form-check">
+											<input type="checkbox" class="form-check-input" name="remember-me" id="remember-me"> <label class="form-check-label" for="remember-me">자동 로그인</label>
+										</div>
+										<a th:href="@{/all/idSelect}" style="font-size: 14px">아이디 찾기</a> <a th:href="@{/all/pwFind}" style="font-size: 14px">비밀번호 찾기</a>
+									</div>
+									<button type="submit" class="btn btn-primary py-3 w-100 mb-4">로그인</button>
+									<p class="text-center mb-0">
+										계정이 없나요? <a th:href="@{/all/join}">회원가입</a>
+									</p>
 								</div>
-								<button type="submit" class="btn btn-primary py-3 w-100 mb-4">로그인</button>
-								<p class="text-center mb-0">
-									계정이 없나요? <a th:href="@{/all/join}">회원가입</a>
-								</p>
 							</div>
 						</div>
 					</div>
+					<!-- Sign In End -->
 				</div>
-				<!-- Sign In End -->
-			</div>
-		</form>
+			</form>
+		</div>
 	</div>
-	<!-- <a th:href="@{https://kr.freepik.com/free-vector/city-skyscrapers-illustration-with-clouds-blue-sky_11053542.htm}">created by Pixochris - Freepik.com</a> -->
 </div>
+<!-- <a th:href="@{https://kr.freepik.com/free-vector/city-skyscrapers-illustration-with-clouds-blue-sky_11053542.htm}">created by Pixochris - Freepik.com</a> -->
+<script>
+	$(document).ready(function() {
+		$('#loginForm').hide();
+		loadingplay();
+	});
+
+	function loadingplay() {
+		$('#loadingView').delay(1500).fadeOut(); // 3초 후 로딩 화면 숨김
+		$('#loginForm').delay(2000).fadeIn(300); // 3초 후에 로그인 폼 표시
+	}
+</script>
