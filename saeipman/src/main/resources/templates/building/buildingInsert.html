@@ -32,10 +32,11 @@ input {
 						id="fileImg">
 				</div>
 
-				<div class="col-md-6">
+				<div class="col-md-6 ">
 					<label for="file" class="form-label">빌딩 이미지</label> <input
 						type="file" id="file" multiple name="files" class="form-control">
 				</div>
+				<div id="preview" class="row mt-3"></div>
 				<div>
 					<div class="form-check form-switch" style="display: inline-block;">
 						<label for="liftYn">승강기 여부 </label> <input type="checkbox"
@@ -228,18 +229,7 @@ input {
 				
 			});
 		}	
-		//insertFrom input data
-		/* function getData(){
-			let formArr = $('form[name=insertForm]').serializeArray();
-			let formList = {};
-			
-			$.each(formArr, function(idx, ele){
-				formList[ele.name]= ele.value;
-			})
-			console.log(formList);
-			return formList;
-		} */
-
+		
 		//체크박스
 		$('input:checkbox').change(function() {
 			if (this.checked) {
@@ -282,8 +272,6 @@ input {
 			return roomList;
 		}; 
 		
-		
-		
 		//ocr 업로드
 		$('#fileImg').on('click', function(){
 			let url = ctxPath + "/ocrUpload";
@@ -308,6 +296,57 @@ input {
 				$('input[name="floorArea"]').val(result.floorArea);
 			})
 		})
+		// 파일 이미지 미리보기
+		const dataTransfer = new DataTransfer(); 
+		$('#file').on('change', function() { 
+		let files = $(this)[0].files;
+
+		
+		for (let i = 0; i < files.length; i++) {
+			// 이미 추가된 파일은 중복 방지
+			if (!Array.from(dataTransfer.files).some(file => file.name === files[i].name)) {
+				let reader = new FileReader();
+				reader.onload = function(e) {
+					let div = $('<div>').attr({'class': 'imgDiv col-3 me-2', 'data-fileid': files[i].name});
+					let img = $('<img>').attr({'src': e.target.result, 'width': '150px', 'height': '150px'});
+					let delBtn = $('<button>').attr({'type': 'button', 'class': 'imageDel'}).html('X');
+					$('#preview').append(div);
+					$(div).append(img);
+					$(div).append(delBtn);
+				};
+				reader.readAsDataURL(files[i]);
+
+				dataTransfer.items.add(files[i]);
+			}
+		}
+
+		$(this)[0].files = dataTransfer.files;
+	});
+
+		// 미리보기 이미지 삭제 시 첨부 파일 목록에서 제거
+	 	$('#preview').on('click', '.imageDel', function() {
+			let fileId = $(this).parent().data('fileid'); 
+			$(this).closest('.imgDiv').remove(); 
+	
+			// 삭제되지 않은 파일 담기
+			const updatedDT = new DataTransfer(); 
+			let files = dataTransfer.files;
+	
+			// 삭제되지 않은 파일들만 새로운 DataTransfer에 추가
+			for (let i = 0; i < files.length; i++) {
+				if (files[i].name !== fileId) { 
+					updatedDT.items.add(files[i]);
+				}
+			}
+	
+			// 기존 DataTransfer 비우고 새로운 파일 목록으로 대체
+			dataTransfer.items.clear();  // 이전 파일 목록 비우기
+			for (let i = 0; i < updatedDT.files.length; i++) { 
+				dataTransfer.items.add(updatedDT.files[i]);
+			} 
+			
+			document.querySelector("#file").files = dataTransfer.files;
+		});
 	</script>
 
 		<script

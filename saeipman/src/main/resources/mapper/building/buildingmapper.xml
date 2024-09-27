@@ -65,7 +65,9 @@
 									floor_gagu_count,
 									total_gagu,
 									parking,
-									memo
+									memo,
+									delay_alert_yn,
+									minwon_alert_yn
 									)
 		VALUES (#{buildingId},
 				#{ocrFileName},
@@ -83,7 +85,9 @@
 				#{floorGaguCount},
 				#{totalGagu},
 				#{parking},
-				#{memo}
+				#{memo},
+				'Y',
+				'Y'
 				)
 	</insert>
 	<update id="selectBuildingUpdate" parameterType="BuildingVO">

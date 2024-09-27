@@ -17,6 +17,7 @@ public class BuildingPageDTO {
 	
 	private String buildingId;
 	private Integer paymentState;//월세 납부 상태
+	private Integer roomNo;
 	
 	public BuildingPageDTO() {
 		this.pageNum = 1;
