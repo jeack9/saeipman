@@ -9,7 +9,7 @@
 /* 		.container{
 			font-family: monospace;
 		} */
-		#bName {
+		p {
 			float: left;
 			color: rgb(35, 35, 35);
 			font-size: 20px;
@@ -55,11 +55,13 @@
 </head>
 
 <body>
-	<div layout:fragment="Main" class="container">
+	<div layout:fragment="Main" style="width: 95%;">
 		<div>
 			<br> <br>
 
 			<!-- 건물명 -->
+			<p style="float: left;"># 관리비 상세 내역</p>
+			<br><br>
 			<p id="bName"><i class="fa-solid fa-house" style="color: #009CFF;"></i> [[${buildingInfo.buildingName}]]</p>			
 
 			<!-- Toast UI - Date Picker -->

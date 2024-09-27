@@ -21,23 +21,25 @@
 		.saveBtn {
 			display: inline-block;
 		}
+		
+		
 	</style>
 </head>
 
 <body>
-	<div layout:fragment="Main">
+	<div layout:fragment="Main" style="width: 95%;">
 
 		<div>
 			<br>
 			<br>
 
 			<!-- 건물명 -->
-			<p id="bName"></p>
+			<p id="bName" ></p>
 
 			
 			<!-- Toast UI - Date Picker -->
 			<div class="inputDiv" style="position: relative; z-index: 2; float: right;">
-				<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+				<div class="tui-datepicker-input tui-datetime-input tui-has-focus" style="width: 275px;">
 					<input type="text" id="datepicker-input-ko" aria-label="Year-Month">
 					<span class="tui-ico-date"></span>
 				</div>
@@ -56,6 +58,7 @@
 				<button class="btn btn-outline-primary saveBtn">저장</button>
 			</div>
 			<br>
+			
 		</div>
 
 		<script th:inline="javascript">
@@ -232,8 +235,6 @@
 
 				return grid;
 			}
-
-
 
 
 		</script>
