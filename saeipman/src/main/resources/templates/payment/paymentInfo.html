@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{common/layouts/default_layout}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}">
 <head>
 <meta charset="UTF-8">
 <style>
@@ -12,123 +14,152 @@
 
 table {
 	text-align: center;
+	justify-content: center;
 }
 
 .form-check {
 	justify-content: center;
 }
+
+th, td {
+	text-align: center;
+	
+}
 </style>
 </head>
 <body>
-	<div layout:fragment="Main" id="container">
-		<form id="updateForm">
-			<div>
-				<table class="table table-bordered">
-					<thead>
-						<tr>
-							<th colspan="2">납부 내역 &nbsp; &nbsp;<select aria-label="Default select example" id="option">
-									<option selected>조회기간(최근 3개월)</option>
-							</select></th>
-						</tr>
-						<tr>
-							<th>월세</th>
-							<th>관리비</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<!-- 월세 출력 -->
-							<td class="col-md-6">
-								<table>
-									<tbody>
-										<tr>
-											<td class="delete" id="rentMonth"></td>
-											<td>&nbsp; &nbsp;</td>
-											<td class="delete" id="Rentpay"></td>
-										</tr>
-									</tbody>
-								</table>
-							</td>
-							<td class="col-md-6">
-								<table>
-									<tbody>
-										<tr>
-											<td class="delete" id="gwanlibiMonth"></td>
-											<td>&nbsp; &nbsp;</td>
-											<td class="delete" id="Gwanlibi"></td>
-										</tr>
-									</tbody>
-								</table>
-							</td>
-				</table>
+	<div layout:fragment="Main" class="container col-xl-6 ">
+			<div class='row'>
+				<h4 class="mb-4">납부</h4>
+
+				<form id="updateForm">
+					<div class="justify-content-md-center">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th colspan="2" id=>납부 내역 &nbsp; &nbsp;<select
+										aria-label="Default select example" id="option">
+											<option selected>조회기간(최근 3개월)</option>
+									</select></th>
+								</tr>
+								<tr>
+									<th>월세</th>
+									<th>관리비</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<!-- 월세 출력 -->
+									<td class="col-md-6">
+										<table>
+											<tbody>
+												<tr>
+													<td class="delete" id="rentMonth"></td>
+													<td>&nbsp; &nbsp;</td>
+													<td class="delete" id="Rentpay"></td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+									<td class="col-md-6">
+										<table>
+											<tbody>
+												<tr>
+													<td class="delete" id="gwanlibiMonth"></td>
+													<td>&nbsp; &nbsp;</td>
+													<td class="delete" id="Gwanlibi"></td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+						</table>
 
 
-				<table class="table table-bordered">
-					<thead>
-						<tr>
-							<th colspan="2">납부 예정</th>
-						</tr>
-						<tr>
-							<th>월세</th>
-							<th>관리비</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>
-								<!-- 월세 출력 -->
-								<table>
-									<tbody id="mRentTotal">
-										<th:block th:each="payInF : ${payInfo}">
-											<tr th:if="${payInF.realPaymentMoney > 0}">
-												<td><div class="form-check">
-														<input class="form-check-input check" type="checkbox" th:value="${payInF.mRentHistoryNo}" id="mRentCheck" name="mRentHistoryNo"><label class="form-check-label" for="flexCheckDefault"></label>
-													</div></td>
-												<td>[[${#strings.substring(payInF.realPaymentDate, 0, 11)}]]</td>
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th colspan="2">납부 예정</th>
+								</tr>
+								<tr>
+									<th>월세</th>
+									<th>관리비</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<!-- 월세 출력 -->
+										<table>
+											<tbody id="mRentTotal">
+												<th:block th:each="payInF : ${payInfo}">
+													<tr th:if="${payInF.realPaymentMoney > 0}">
+														<td><div class="form-check">
+																<input class="form-check-input check" type="checkbox"
+																	th:value="${payInF.mRentHistoryNo}" id="mRentCheck"
+																	name="mRentHistoryNo"><label
+																	class="form-check-label" for="flexCheckDefault"></label>
+															</div></td>
+														<td>[[${#strings.substring(payInF.realPaymentDate, 0,
+															11)}]]</td>
 
-												<td>[[${#numbers.formatInteger(payInF.paymentMoney, 3, 'COMMA')}]]</td>
-												<td th:if="${payInF.paymentState == -1}"><font color="red"> 연체</font></td>
-												<td th:if="${payInF.paymentState != -1}"><font color="green"> 예정</font></td>
-											</tr>
-										</th:block>
-									</tbody>
-								</table>
-							</td>
+														<td>[[${#numbers.formatInteger(payInF.paymentMoney,
+															3, 'COMMA')}]]</td>
+														<td th:if="${payInF.paymentState == -1}"><font
+															color="red"> 연체</font></td>
+														<td th:if="${payInF.paymentState != -1}"><font
+															color="green"> 예정</font></td>
+													</tr>
+												</th:block>
+											</tbody>
+										</table>
+									</td>
 
-							<!-- 관리비 출력 -->
-							<td>
-								<table class="table table-bordered">
-									<tbody id="gwanlibiTotal">
-										<th:block th:each="payInF : ${payInfo}">
-											<tr th:if="${payInF.gaguGwanlibi > 0}">
-												<td><div class="form-check">
-														<input class="form-check-input check" type="checkbox" th:value="${payInF.gaguPaymentHistoryNo}" id="gwanlibiCheck" name="gaguPaymentHistoryNo"><label class="form-check-label" for="flexCheckDefault"></label>
-													</div></td>
-												<td>[[${#strings.substring(payInF.paymentMonth, 0, 11)}]]</td>
-												<td>[[${#numbers.formatInteger(payInF.gaguGwanlibi, 3, 'COMMA')}]]</td>
-												<td th:if="${payInF.paymentYN == -1}"><font color="red"> 연체</font></td>
-												<td th:if="${payInF.paymentYN != -1}"><font color="green"> 예정</font></td>
-											</tr>
-										</th:block>
-									</tbody>
-								</table>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				<table>
-					<tr>
-						<th>
-							<button type="button" id="payBtn" class="btn btn-outline-primary">결제하기</button>
-						</th>
-						<th>결제 금액 :</th>
-						<td id="total"></td>
-					</tr>
-				</table>
+									<!-- 관리비 출력 -->
+									<td>
+										<table class="table table-bordered">
+											<tbody id="gwanlibiTotal">
+												<th:block th:each="payInF : ${payInfo}">
+													<tr th:if="${payInF.gaguGwanlibi > 0}">
+														<td class=""><div class="form-check">
+																<input class="form-check-input check" type="checkbox"
+																	th:value="${payInF.gaguPaymentHistoryNo}"
+																	id="gwanlibiCheck" name="gaguPaymentHistoryNo"><label
+																	class="form-check-label" for="flexCheckDefault"></label>
+															</div></td>
+														<td>[[${#strings.substring(payInF.paymentMonth, 0,
+															11)}]]</td>
+														<td>[[${#numbers.formatInteger(payInF.gaguGwanlibi,
+															3, 'COMMA')}]]</td>
+														<td th:if="${payInF.paymentYN == -1}"><font
+															color="red"> 연체</font></td>
+														<td th:if="${payInF.paymentYN != -1}"><font
+															color="green"> 예정</font></td>
+													</tr>
+												</th:block>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<table class="table table-bordered col-6">
+							<tr>
+								<th class="col-4" style="vertical-align: middle">결제 금액</th>
+								<td id="total" class="col-4" style="vertical-align: middle">0원</td>
+								<th class="col-4">
+									<button type="button" id="payBtn"
+										class="btn btn-outline-primary">결제하기</button>
+								</th>
+							</tr>
+						</table>
+					</div>
+				</form>
 			</div>
-		</form>
+		</div>
 
-		<script src="https://cdn.bootpay.co.kr/js/bootpay-3.3.6.min.js" type="application/javascript"></script>
+
+		<script src="https://cdn.bootpay.co.kr/js/bootpay-3.3.6.min.js"
+			type="application/javascript"></script>
 
 		<script>
 			//		<<<<<<<<< 완납내역 >>>>>>>>>>>
@@ -235,7 +266,7 @@ table {
 											.prop("checked")) {
 										total += Number(GwanlibiCheck.eq(i)
 												.children().eq(2).text()
-												.replace(",", ""));
+												.replaceAll(",", ""));
 									}
 								}
 
@@ -246,10 +277,11 @@ table {
 											"checked")) {
 										total += Number(mRentCheck.eq(i)
 												.children().eq(2).text()
-												.replace(",", ""));
+												.replaceAll(",", ""));
 									}
 								}
-								$('#total').text(total);
+								$('#total').text(total.toString()
+								  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",") + "원");
 							})
 							
 			//<<부트페이 결제>>		
@@ -282,10 +314,10 @@ table {
 					
 			//결제 api
 			$('#payBtn').on('click', requestPay)
-
+				
 			function requestPay() {
 				BootPay.request({ 
-					price : $('#total').text(),
+					price : $('#total').text().replaceAll(",", ""),
 					application_id : "66f133da3aa7c4faf96e4c06",
 					name : '월세/관리비',
 					pg : '',
@@ -313,6 +345,5 @@ table {
 				});
 			}
 		</script>
-	</div>
 </body>
 </html>
