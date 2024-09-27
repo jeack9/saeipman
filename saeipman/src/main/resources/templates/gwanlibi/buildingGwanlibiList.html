@@ -48,55 +48,34 @@
 </head>
 
 <body>
-	<div class="buildingBox" layout:fragment="Main">
-		<div class="row">
-			<!-- Thymeleaf each -->
-			<th:block th:each="building : ${list}">
-				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-					<div class="box-part text-justify">
-						<!-- <i class="fa fa-instagram fa-3x" aria-hidden="true"></i> -->
-						<div class="contents"
-							style="padding-left: 45px; font-family: monospace;">
-							<div class="title">
-								<h4>
-									<i class="fa-sharp-duotone fa-solid fa-building"></i> [[ ${
-									building.buildingName } ]]
-								</h4>
-								<!-- 🏠︎ -->
-							</div>
-
-							<div class="text"
-								style="color: rgb(94, 94, 94); font-family: monospace;">
-								<p style="font-style: italic; font-weight: bold;">
-									<i class="fa-sharp fa-solid fa-location-dot"></i> [[ ${
-									building.doroAddr } ]]
-								</p>
-								<p>
-									<i class="fa-duotone fa-solid fa-file-invoice-dollar"></i> 전월
-									관리비 [[ ${ building.previousMonth } ]]원
-								</p>
-								<p>
-									<i class="fa-duotone fa-solid fa-receipt"></i> 금월 관리비 [[ ${
-									building.thisMonth } ]]원
-								</p>
-							</div>
-						</div>
-
-						<!-- 스프링 부트가 매칭 시켜주기에 VO에 필드명과 파라미터명 정확히 일치하게 적어주어야 한다. -->
-						<!-- 날짜는 VO의 포맷으로 변환시켜서 보내주어야 한다. -->
-						<div style="text-align: center;">
+	<div class="buildingBox row roomWrap gx-4 justify-content-center" layout:fragment="Main">
+		<!-- <div class="row"> -->
+		<!-- Thymeleaf each -->
+		
+		<th:block th:each="building : ${list}">
+			<div class="card border-secondary col mb-4 col-3 me-4">
+		
+				<div class="card-header" style="font-size: 18px; font-weight: bold;">[[${building.buildingName}]]</div>
+				<div class="card-body text-secondary" style="font-size: 14px;">
+					<p class="card-text">[[ ${building.doroAddr } ]]</p>
+					<p class="card-text">전월 관리비 [[${ building.previousMonth }]]원</p>
+					<p class="card-text">금월 관리비 [[ ${building.thisMonth } ]]원</p>
+					<div style="text-align: center;">
 						<button type="button" class="btn btn-outline-primary m-1"
 							th:onclick="|location.href='@{/gwanlibiItemList(buildingId=${building.buildingId})}'|">관리비
 							항목 설정</button>
 						<button type="button" class="btn btn-outline-primary m-1"
 							th:onclick="|location.href='@{/gwanlibiDetailsBillList(buildingId=${building.buildingId})}'|">관리비
 							상세 내역</button>
-						</div>
 					</div>
+				
 				</div>
-			</th:block>
-		</div>
+			</div>
+		</th:block>
 
+
+
+		
 		<!-- pagination -->
 		<nav aria-label="Page navigation example">
 			<ul class="pagination justify-content-center" style="margin: 0;">
@@ -117,15 +96,15 @@
 				</th:block>
 
 				<!-- 페이지 버튼 생성 -->
-				<th:block th:each="pageButton : ${#numbers.sequence(page.startPage, page.endPage)}">
+				<th:block
+					th:each="pageButton : ${#numbers.sequence(page.startPage, page.endPage)}">
 					<li class="page-item"
 						th:with="start=${page.startPage}, end=${page.endPage}"
-						th:classappend="${pageButton == page.pageNum ? 'active' : ''}"
-						>
-						<a
-						class="page-link"
+						th:classappend="${pageButton == page.pageNum ? 'active' : ''}">
+						<a class="page-link"
 						th:href="@{/buildingGwanlibiList?pageNum={page} (page=${pageButton})}"
-						th:text=${pageButton}></a></li>
+						th:text=${pageButton}></a>
+					</li>
 				</th:block>
 
 				<!-- 다음 페이지 버튼 (Next) -->
@@ -144,14 +123,11 @@
 			</ul>
 		</nav>
 		<script>
+			/*  			$('.page-item').on('click', function() {
+			 console.log(this)
+			 $('.page-link').css('background', 'blue');
 			
-			
-			
-/*  			$('.page-item').on('click', function() {
- 				console.log(this)
- 					$('.page-link').css('background', 'blue');
-				
-			}) */
+			 }) */
 		</script>
 	</div>
 </body>

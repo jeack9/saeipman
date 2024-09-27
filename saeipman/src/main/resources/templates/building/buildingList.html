@@ -21,9 +21,9 @@
 	display: none;
 }
 
-.deletedImg {
+ .deletedImg {
 	display: none;
-}
+} 
 
 input {
 	border-width: 0 0 1px;
@@ -33,7 +33,7 @@ input {
 	width: 65px;
 }
 
-a.button {
+#roomUpdateBtn {
 	display: block;
 	position: relative;
 	float: left;
@@ -265,9 +265,8 @@ a.button {
 					getBuildingInfo(firstBuilding);
 				}
 				$('div').on('click', function(e) {
-					$('#imgFile').html('');
+					//$('#imgFile').html('');
 					let buildingId = e.currentTarget.id;
-					let a = 
 					getBuildingInfo(buildingId);
 				});
 				function getBuildingInfo(buildingId) {
@@ -281,6 +280,7 @@ a.button {
 						dataType : 'json',
 
 					}).done(function(data) {
+						$('#imgFile').html('');
 						$('#bnameTitle').html(data.buildingName);
 						$("#bname").val(data.buildingName);
 						$(".addr").val(data.doroAddr);
@@ -350,7 +350,7 @@ a.button {
 							let images = data.fileName;
 							
 							for(img of images){
-								let div = $('<div>').attr({'class':'imgDiv',  'data-fildid':img} );
+								let div = $('<div>').attr({'class':'imgDiv',  'data-fileid':img} );
 								let imgName = $("<img>").attr({'src':ctxPath+'/images/'+'건물/'+img});
 								let imgDel = $("<button>").attr('class','imageDel');
 								imgName.attr("class",'imgId');
@@ -474,11 +474,10 @@ a.button {
 			let delList = [];
 			
 			function imgaeDelFunc(e){
-				//console.log($(e.target).parent());
-				$(e.target).parent().addClass("deletedImg"); //remove();
-				let dImg = $(e.target).parent().data('fildid');
-				delList.push({dImg});
-				//console.log(delList);
+				console.log($(e.target).parent());
+			 	$(e.target).parent().addClass("deletedImg");
+				let dImg = $(e.target).parent().data('fileid');
+				delList.push({dImg}); 
 	
 			}
 			
