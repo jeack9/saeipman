@@ -48,18 +48,18 @@
 </head>
 
 <body>
-	<div class="buildingBox row roomWrap gx-4 justify-content-center" layout:fragment="Main">
+	<div class="buildingBox row roomWrap gx-0 justify-content-center	" layout:fragment="Main">
 		<!-- <div class="row"> -->
 		<!-- Thymeleaf each -->
 		
 		<th:block th:each="building : ${list}">
 			<div class="card border-secondary col mb-4 col-3 me-4">
 		
-				<div class="card-header" style="font-size: 18px; font-weight: bold;">[[${building.buildingName}]]</div>
+				<div class="card-header" style="font-size: 18px; font-weight: bold;"><i class="fa-sharp-duotone fa-solid fa-building"></i>[[${building.buildingName}]]</div>
 				<div class="card-body text-secondary" style="font-size: 14px;">
-					<p class="card-text">[[ ${building.doroAddr } ]]</p>
-					<p class="card-text">전월 관리비 [[${ building.previousMonth }]]원</p>
-					<p class="card-text">금월 관리비 [[ ${building.thisMonth } ]]원</p>
+					<p class="card-text"><i class="fa-sharp fa-solid fa-location-dot"></i>[[ ${building.doroAddr } ]]</p>
+					<p class="card-text"><i class="fa-duotone fa-solid fa-file-invoice-dollar"></i>전월 관리비 [[${ building.previousMonth }]]원</p>
+					<p class="card-text"><i class="fa-duotone fa-solid fa-receipt"></i>금월 관리비 [[ ${building.thisMonth } ]]원</p>
 					<div style="text-align: center;">
 						<button type="button" class="btn btn-outline-primary m-1"
 							th:onclick="|location.href='@{/gwanlibiItemList(buildingId=${building.buildingId})}'|">관리비
@@ -73,9 +73,6 @@
 			</div>
 		</th:block>
 
-
-
-		
 		<!-- pagination -->
 		<nav aria-label="Page navigation example">
 			<ul class="pagination justify-content-center" style="margin: 0;">
