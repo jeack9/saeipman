@@ -10,12 +10,14 @@
 .deleteImg {
 	display: none;
 }
+
+
 </style>
 </head>
 <body>
-	<form name="updateForm" th:object="${minwon}">
+	<form name="updateForm" th:object="${minwon}" >
 		<input name="postNo" th:value="${minwon.postNo}" type="hidden">
-		<div class="mb-3">
+		<div class="mb-3" >
 			<label for="">제목</label> <input class="form-control" type="text"
 				th:field="*{title}">
 		</div>
@@ -122,6 +124,7 @@
 		$('#imgFile').html('');  // 새 파일 미리보기 초기화
 
 		for (let i = 0; i < inputFile.length; i++) {
+			
 			let reader = new FileReader();
 			reader.onload = function(e) {
 				let div = $('<div>').attr({'class': 'imgDiv', 'data-fileid': inputFile[i].name});
@@ -137,6 +140,7 @@
 				$(div).append(delBtn);
 			}
 			reader.readAsDataURL(inputFile[i]);
+			
 		}
 	});
 	//let updateImageList= [];

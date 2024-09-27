@@ -1,17 +1,57 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-			    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-				layout:decorate="~{common/layouts/default_layout}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<meta charset="UTF-8">
 	<title>메인 페이지</title>
+	<style >
+/* 		img {
+		     height: 100vh;
+			  background-size: cover;
+		} */
+	
+		 .mainContainer {
+		 height: 100vh;
+	        width: 100vw;
+			margin: 0;
+			padding: 0;
+		}
+		
+		.img {
+		    position: relative;
+		 }
+		
+		p {
+			font-size: 100px;
+		}
+		
+		a {
+			font-size: 50px;
+			text-decoration: none;
+			color: pink;
+		}
+		
+		.text {
+			text-align: center;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate( -50%, -50% );
+			color: white;
+		} 
+	</style>
 </head>
 
 <body>
-	<div layout:fragment="Main">
-		<h1>메인입니다.</h1>
-		<h3>[[${login}]]</h3>
-	</div>
+ 	<div layout:fragment="Main" class="mainContainer">
+		<div>
+			
+			<img th:src="@{/img/mirror_house2.jpg}" class="img">
+			<div class="text">
+			<p>환영합니다.</p>
+			<a th:href="@{/buildingInsert}" >시작하기</a>
+			</div>
+		</div>
+	</div> 
 </body>
 </html>

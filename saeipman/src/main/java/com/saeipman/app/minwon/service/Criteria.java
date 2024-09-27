@@ -16,7 +16,7 @@ public class Criteria {
 	private String imchainId;
 	private String buildingId;
 	private String roomId;
-	private int acceptState;
+	private Integer acceptState;
 	
 	public Criteria() {//mapper에서 조회할떄 (페이지번호,amount,검색 키워드,
 		this(1, 10);

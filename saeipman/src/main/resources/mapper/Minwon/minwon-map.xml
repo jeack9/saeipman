@@ -43,7 +43,7 @@
        AND r.BUILDING_ID = #{buildingId}
     </if>
    
-    <if test="acceptState != null">
+    <if test="acceptState != null and acceptState != -1" >
        AND m.ACCEPT_STATE = #{acceptState}
     </if>
   
@@ -75,6 +75,7 @@
 	    ) a WHERE ROWNUM <![CDATA[ <= ]]> #{pageNum} * #{amount}
 	  ) b WHERE RN > (#{pageNum} - 1) * #{amount}
 	</select>
+	
 	
 	
 	<!-- 전체건수 -->
