@@ -356,11 +356,10 @@ public class GwanlibiController {
 				} else {
 					ele.setStrPaymentState("연체");
 				}
+				model.addAttribute("rooms", rooms);
 			});
-			model.addAttribute("rooms", rooms);
 		}
-
-		System.err.println(buildingList);
+		
 		model.addAttribute("buildingList", buildingList);
 		model.addAttribute("page", pageDTO);
 
