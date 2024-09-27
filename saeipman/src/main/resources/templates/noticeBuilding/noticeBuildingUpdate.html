@@ -22,15 +22,15 @@
 								for="floatingInput">제목</label>
 						</div>
 						<div class="form-floating mb-3">
-							
-							
+
+
 							<select class="form-select mb-6"
 								aria-label="Default select example" id="option"
 								name="buildingId">
-								<option selected value="">건물 목록</option>
+								<option selected th:value="${BNotice.buildingId}">건물 목록</option>
 								<option th:each="list : ${Bname}" th:value="${list.buildingId}">
 									[[${list.buildingName}]]</option>
-									
+
 							</select> <label for="floatingSelect">공지사항을 등록할 건물을 선택하세요.</label>
 						</div>
 
@@ -68,6 +68,7 @@
 
 
   $("#updateBtn").on("click", updateAjax);
+  
   function updateAjax() {
     let info = getNoticeInfo();
     $.ajax(ctxPath + "/noticeBuildingUpdate", {
