@@ -11,6 +11,23 @@
 	float: left;
 }
 
+.form-container {
+	width: 80%;
+	margin: 0 auto;
+}
+.date-inputs {
+    display: flex;
+    justify-content: space-between;
+}
+
+.date-input {
+    flex: 1; 
+    margin-right: 10px; 
+}
+
+.date-input:last-child {
+    margin-right: 0; 
+}
 </style>
 <title>Insert title here</title>
 <script
@@ -18,7 +35,7 @@
 </head>
 <body>
 	<form name="insertForm" th:action="@{/minwonInsert}" method="post"
-		enctype="multipart/form-data">
+		enctype="multipart/form-data" class="form-container">
 		<div class="mb-3">
 			<label for="">제목</label> <input type="text" id="title" name="title"
 				class="form-control">
@@ -35,19 +52,20 @@
 		</div>
 
 		<div class="mb-3">
-			<label for="visitsDate">방문날짜</label> 
+			<label for="visitsDate">방문날짜</label>
 			<div class="date-inputs">
 				<div class="date-input">
-					택1 <input type="datetime-local" id="visitsDate1" name="visitsDate1" class="form-control">
-					<input type="hidden" name="visitsDate1"> 
+					택1 <input type="datetime-local" id="visitsDate1" name="visitsDate1"
+						class="form-control">
 				</div>
-				<div class="date-inputs">
-					택2 <input type="datetime-local" id="visitsDate2" name="visitsDate2" class="form-control"> 
-					<input type="hidden" name="visitsDate2">
+				<div class="date-input">
+					택2 <input type="datetime-local" id="visitsDate2" name="visitsDate2"
+						class="form-control">
 				</div>
 			</div>
 		</div>
-		
+
+
 		<div class="mb-3">
 			<label for="formFile" class="form-label">첨부파일</label> <input
 				class="form-control" type="file" id="file" multiple name="files">

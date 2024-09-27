@@ -47,9 +47,9 @@ public class MinwonController {
 		cri.setAuth(auth);
 		cri.setLoginId(loginId);
 
-		if(cri.getAcceptState() == null) {
-			cri.setAcceptState(null);
-		}
+		if (cri.getAcceptState() == null) {
+		    cri.setAcceptState(-1); // 전체내역을 의미하는 기본값
+		  }
 		
 		System.out.println("zjsxmfhffj");
 		if (auth == 1) {
