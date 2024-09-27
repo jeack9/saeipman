@@ -21,9 +21,9 @@
 	display: none;
 }
 
- .deletedImg {
+.deletedImg {
 	display: none;
-} 
+}
 
 input {
 	border-width: 0 0 1px;
@@ -33,242 +33,236 @@ input {
 	width: 65px;
 }
 
-#roomUpdateBtn {
-	display: block;
-	position: relative;
-	float: left;
-	width: 120px;
-	padding: 0;
-	margin: 10px 20px 10px 0;
-	font-weight: 600;
-	text-align: center;
-	line-height: 40px;
-	color: #FFF;
-	border-radius: 5px;
-	transition: all 0.2s;
-	height: 40px;
-}
-
-.btnBlueGreen {
+.roomUpdateClass .btn {
+	display: inline-block;
 	background: #73bbfa;
+	border-color: #73bbfa;
+	color: #fff;
+	text-decoration: none;
+	text-transform: uppercase;
+	border-radius: 0.5em;
+	border-bottom: 0.25em solid #42738f;
+	-moz-transition: 0.1s;
+	-webkit-transition: 0.1s;
+	transition: 0.1s;
+	box-shadow: 0 2px 3px #5789b5;
+	position: relative;
+	width: 150px;
+	margin-top: 20px;
+	margin-left: 10px;
 }
 
-.btnBlueGreen.btnPush {
-	box-shadow: 0px 5px 0px 0px #5789b5;
-}
-
-.btnPush:hover {
-	margin-top: 15px;
-	margin-bottom: 5px;
-}
-
-.btnBlueGreen.btnPush:hover {
-	box-shadow: 0px 0px 0px 0px #007144;
+.roomUpdateClass .btn:hover {
+	background-color: #1e9feb;
+	border-color: #1e9feb;
+	border-bottom-width: 0;
 }
 </style>
 </head>
 <body>
-	<div layout:fragment="Main" class="row">
-		<h4 class="mb-4">빌딩목록</h4>
-		<!-- start 건물리스트 -->
-		<div class="col-md-3" id="buildList">
-			<th:block th:each="building, index:${buildings}">
-				<div class="card border-secondary mb-3"
-					th:id="${building.buildingId}" th:data-index="${index.count}">
-					<div class="card-header"
-						style="font-size: 18px; font-weight: bold;">[[${building.buildingName}]]</div>
-					<div class="card-body text-secondary" style="font-size: 14px;">
-						<p class="card-text">[[${building.doroAddr}]]
-							[[${building.doroAddr}]]</p>
-						<p class="card-text">[[${building.totalGagu}]]세대</p>
+	<div layout:fragment="Main" class="container">
+		<div class="row roomWrap gx-4 justify-content-center">
+			<!-- start 건물리스트 -->
+			<div class="col-md-3" id="buildList">
+			<h4 class="mb-4">빌딩목록</h4>
+				<th:block th:each="building, index:${buildings}">
+					<div class="card border-secondary mb-3 buildlist"
+						th:id="${building.buildingId}" th:data-index="${index.count}">
+						<div class="card-header buildingListName"
+							style="font-size: 18px; font-weight: bold;">[[${building.buildingName}]]</div>
+						<div class="card-body text-secondary" style="font-size: 14px;">
+							<p class="card-text buildingListAddr">[[${building.doroAddr}]]
+								[[${building.detailsAddr}]]</p>
+							<p class="card-text buildingListGagu">[[${building.totalGagu}]]세대</p>
+						</div>
 					</div>
-				</div>
-			</th:block>
-			<button type="button"
-				th:onclick="|location.href='@{/buildingInsert}'|"
-				class="btn btn-outline-primary m-2">건물추가</button>
-			<!-- 페이징 -->
-			<th:block th:if="${page.total!=0}">
-				<nav aria-label="Page navigation example">
-					<ul class="pagination justify-content-center">
-						<li class="page-item" th:if="${page.startPage > 1}"><a
-							class="page-link"
-							th:href="@{/buildingList?pageNum={page}(page = ${page.startPage -1})}"
-							aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-						</a></li>
-
-						<th:block
-							th:with="start = ${page.startPage}, end = ${page.endPage}">
-							<li class="page-item"
-								th:with="start = ${page.startPage}, end = ${page.endPage}"
-								th:each="pageButton : ${#numbers.sequence(start, end)}"><a
+				</th:block>
+				<button type="button"
+					th:onclick="|location.href='@{/buildingInsert}'|"
+					class="btn btn-outline-primary m-2">건물추가</button>
+				<!-- 페이징 -->
+				<th:block th:if="${page.total!=0}">
+					<nav aria-label="Page navigation example">
+						<ul class="pagination justify-content-center">
+							<li class="page-item" th:if="${page.startPage > 1}"><a
 								class="page-link"
-								th:href="@{/buildingList?pageNum={page} (page = ${pageButton})}"
-								th:text=${pageButton}></a></li>
-						</th:block>
+								th:href="@{/buildingList?pageNum={page}(page = ${page.startPage -1})}"
+								aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+							</a></li>
+
+							<th:block
+								th:with="start = ${page.startPage}, end = ${page.endPage}">
+								<li class="page-item"
+									th:with="start = ${page.startPage}, end = ${page.endPage}"
+									th:each="pageButton : ${#numbers.sequence(start, end)}"><a
+									class="page-link"
+									th:href="@{/buildingList?pageNum={page} (page = ${pageButton})}"
+									th:text=${pageButton}></a></li>
+							</th:block>
 
 
-						<li class="page-item" th:if="${page.next}"><a
-							class="page-link"
-							th:href="@{/buildingList?pageNum={page}(page = ${page.endPage +1})}"
-							aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-						</a></li>
-					</ul>
-				</nav>
-			</th:block>
-		</div>
-		<!-- end 페이징 -->
+							<li class="page-item" th:if="${page.next}"><a
+								class="page-link"
+								th:href="@{/buildingList?pageNum={page}(page = ${page.endPage +1})}"
+								aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+							</a></li>
+						</ul>
+					</nav>
+				</th:block>
+			</div>
+			<!-- end 페이징 -->
 
-		<!-- End 건물리스트 -->
-		<div class="col-md-7">
-			<form name="updateForm" class="row g-3 infoDetail"
-				enctype="multipart/form-data">
-				<input name="groupId" type="hidden" class="groupid" />
-				<!-- start 건물 정보 -->
-				<h3 id="bnameTitle"></h3>
-				<div style="text-align: center;">
-					<button type="button" class="btn btn-outline-primary m-2 "
-						id="updateBtn">수정완료</button>
-					<button type="button"
-						class="btn btn-outline-danger m-2 deleteBtn bid">삭제</button>
-				</div>
-				<!-- 	<div>
-					<input name="buildingId" type="hidden" class="bid" />
-				</div>
- -->
-				<div>
-					<div class="form-check form-switch" style="display: inline-block;">
-						<label class="form-label"><span>연체 알림</span> </label><input
-							role="switch" id="delayAlertYn" type="checkbox"
-							class="form-check-input text-end" name="delayAlertYn" />
-					</div>
-					<div class="form-check form-switch" style="display: inline-block;">
-						<label class="form-label"><span>민원 알림</span> </label><input
-							role="switch" type="checkbox" class="form-check-input text-end"
-							name="minwonAlertYn" id="minwonAlertYn" />
-					</div>
-				</div>
-
-				<div id="imgFile"></div>
-
-				<div class="col-md-4">
-					<label for=" file" class="form-label">빌딩 이미지</label> <input
-						type="file" id="file" multiple name="newFiles"
-						class="form-control">
-				</div>
-				<div class="form-group col-md-5">
-					<label for="bname" class="form-label">빌딩 이름 </label> <input
-						type="text" id="bname" name="buildingName" class="form-control">
-				</div>
-				<div class="form-group col-md-7">
-					<label for="sample6_address" class="form-label"
-						th:style="${'padding-right:20px'}">주소</label> <input type="button"
-						onclick="sample6_execDaumPostcode()" value="주소 찾기"
-						class="btn btn-outline-secondary m-2"> <input type="text"
-						id="sample6_address" placeholder="주소" name="doroAddr"
-						class="form-control addr">
-				</div>
-				<div class="form-group col-md-7">
-					<label for="sample6_detailAddress" class="form-label">상세 주소</label>
-					<input type="text" id="sample6_detailAddress" placeholder="상세주소"
-						name="detailsAddr" class="form-control dAddr">
-				</div>
-				<div class="form-group col-md-5"></div>
-				<div class="form-group col-md-5">
-					<label for="floorArea" class="form-label">연면적 </label> <input
-						type="text" id="floorArea" name="floorArea" class="form-control">
-				</div>
-				<div class="form-group col-md-5">
-					<label for="floorAreaRatio" class="form-label">용적률 산정용 연면적
-					</label> <input type="text" id="floorAreaRatio" name="floorAreaRatio"
-						class="form-control">
-				</div>
-				<div class="form-group col-md-5">
-					<label for="gunchookArea" class="form-label">건축면적 </label> <input
-						type="text" id="gunchookArea" name="gunchookArea"
-						class="form-control">
-				</div>
-				<div class="form-group col-md-5">
-					<label for="buildingHeigh" class="form-label">건물 높이 </label> <input
-						type="text" id="buildingHeigh" name="buildingHeigh"
-						class="form-control">
-				</div>
-				<div class="form-check form-switch">
-					<label for="liftYn">승강기 여부 </label> <input type="checkbox"
-						id="liftYn" name="liftYn" class="form-check-input text-end"
-						role="switch">
-				</div>
-				<div class="form-group col-md-5">
-					<label for="totalFloor" class="form-label">층 수 </label> <input
-						type="text" id="totalFloor" name="totalFloor" class="form-control">
-				</div>
-				<div class="form-group col-md-5">
-					<label for="floorGaguCount" class="form-label">층 별 가구수 </label> <input
-						type="text" id="floorGaguCount" name="floorGaguCount"
-						class="form-control">
-				</div>
-				<div class="form-group col-md-5">
-					<label for="totalGagu" class="form-label">총 세대수 </label> <input
-						type="text" id="totalGagu" name="totalGagu" class="form-control">
-				</div>
-				<div class="form-group col-md-5">
-					<label for="parking" class="form-label">주차 가능 대수 </label> <input
-						type="text" id="parking" name="parking" class="form-control">
-				</div>
-				<div class="form-group col-md-6">
-					<label for="memo" class="form-label">비고 </label> <input type="text"
-						id="memo" name="memo" class="form-control">
-				</div>
-				<!-- <button type="button" id="roomUpdateBtn">▼</button> -->
-				<div class="row">
-					<a title="Button push blue/green" id="roomUpdateBtn"
-						class="button btnPush btnBlueGreen">방정보 수정</a>
-				</div>
-				<div id="roomUpdate">
-					<div>
-						<input type="hidden" name="buildingId" id="bid">
-						<h5 id="staticBackdropLabel">방 수정</h5>
+			<!-- End 건물리스트 -->
+			<div class="col-md-7">
+				<form name="updateForm" class="row g-3 infoDetail"
+					enctype="multipart/form-data">
+					<input name="groupId" type="hidden" class="groupid" />
+					<!-- start 건물 정보 -->
+					<h3 id="bnameTitle"></h3>
+					<div style="text-align: center;">
+						<button type="button" class="btn btn-outline-primary m-2 "
+							id="updateBtn">수정완료</button>
+						<button type="button"
+							class="btn btn-outline-danger m-2 deleteBtn bid">삭제</button>
 					</div>
 					<div>
-						<table class="table table-bordered">
-							<thead>
-								<tr>
-									<th>층 수</th>
-									<th colspan="4">호실</th>
-								</tr>
-							</thead>
-							<tbody id="tb">
 
-							</tbody>
-						</table>
-						<button type="button" id="floorInsert">+</button>
+						<div class="form-check form-switch" style="display: inline-block;">
+							<label for="delayAlertYn">연체 알림 </label> <input type="checkbox"
+								id="delayAlertYn" name="delayAlertYn"
+								class="form-check-input text-end" role="switch">
+						</div>
+
+						<div class="form-check form-switch" style="display: inline-block;">
+							<label for="minwonAlertYn">민원 알림 </label> <input type="checkbox"
+								id="minwonAlertYn" name="minwonAlertYn"
+								class="form-check-input text-end" role="switch">
+						</div>
 					</div>
-				</div>
 
-			</form>
+					<div id="imgFile"></div>
+
+					<div class="col-md-4">
+						<label for=" file" class="form-label">빌딩 이미지</label> <input
+							type="file" id="file" multiple name="newFiles"
+							class="form-control">
+					</div>
+					<div class="form-group col-md-5">
+						<label for="bname" class="form-label">빌딩 이름 </label> <input
+							type="text" id="bname" name="buildingName" class="form-control">
+					</div>
+					<div class="form-group col-md-7">
+						<label for="sample6_address" class="form-label"
+							th:style="${'padding-right:20px'}">주소</label> <input
+							type="button" onclick="sample6_execDaumPostcode()" value="주소 찾기"
+							class="btn btn-outline-secondary m-2"> <input type="text"
+							id="sample6_address" placeholder="주소" name="doroAddr"
+							class="form-control addr">
+					</div>
+					<div class="form-group col-md-7">
+						<label for="sample6_detailAddress" class="form-label">상세
+							주소</label> <input type="text" id="sample6_detailAddress"
+							placeholder="상세주소" name="detailsAddr" class="form-control dAddr">
+					</div>
+					<div class="form-group col-md-5"></div>
+					<div class="form-group col-md-5">
+						<label for="floorArea" class="form-label">연면적 </label> <input
+							type="text" id="floorArea" name="floorArea" class="form-control">
+					</div>
+					<div class="form-group col-md-5">
+						<label for="floorAreaRatio" class="form-label">용적률 산정용 연면적
+						</label> <input type="text" id="floorAreaRatio" name="floorAreaRatio"
+							class="form-control">
+					</div>
+					<div class="form-group col-md-5">
+						<label for="gunchookArea" class="form-label">건축면적 </label> <input
+							type="text" id="gunchookArea" name="gunchookArea"
+							class="form-control">
+					</div>
+					<div class="form-group col-md-5">
+						<label for="buildingHeigh" class="form-label">건물 높이 </label> <input
+							type="text" id="buildingHeigh" name="buildingHeigh"
+							class="form-control">
+					</div>
+					<div class="form-check form-switch" style="margin-left: 10px;">
+						<label for="liftYn">승강기 여부 </label> <input type="checkbox"
+							id="liftYn" name="liftYn" class="form-check-input text-end"
+							role="switch">
+					</div>
+					<div class="form-group col-md-5">
+						<label for="totalFloor" class="form-label">층 수 </label> <input
+							type="text" id="totalFloor" name="totalFloor"
+							class="form-control">
+					</div>
+					<div class="form-group col-md-5">
+						<label for="floorGaguCount" class="form-label">층 별 가구수 </label> <input
+							type="text" id="floorGaguCount" name="floorGaguCount"
+							class="form-control">
+					</div>
+					<div class="form-group col-md-5">
+						<label for="totalGagu" class="form-label">총 세대수 </label> <input
+							type="text" id="totalGagu" name="totalGagu" class="form-control">
+					</div>
+					<div class="form-group col-md-5">
+						<label for="parking" class="form-label">주차 가능 대수 </label> <input
+							type="text" id="parking" name="parking" class="form-control">
+					</div>
+					<div class="form-group col-md-6">
+						<label for="memo" class="form-label">비고 </label> <input
+							type="text" id="memo" name="memo" class="form-control">
+					</div>
+
+					<div class="row roomUpdateClass">
+						<button id="roomUpdateBtn" type="button" class="btn">방정보
+							수정</button>
+					</div>
+					<div id="roomUpdate">
+						<div>
+							<input type="hidden" name="buildingId" id="bid">
+							<h5 id="staticBackdropLabel">방 수정</h5>
+						</div>
+						<div>
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th>층 수</th>
+										<th colspan="4">호실</th>
+									</tr>
+								</thead>
+								<tbody id="tb">
+
+								</tbody>
+							</table>
+							<button type="button" id="floorInsert">+</button>
+						</div>
+					</div>
+
+				</form>
+			</div>
 		</div>
 		<!-- End 건물 정보 -->
-
 		<script>
-		let floorList
+		let floorList;
 		let updateRoomList = [];
 		let delRoomList = [];
 		let insertRoomList = [];
 			$(document).ready(function() {
+				//initBuilindId = "";
+				//getBuildingInfo(initBuilindId);
 				let isRoomUpdateVisible = $('#roomUpdate').css('display') !== 'none';
 				$('#roomUpdateBtn').on('click', function() {
 				    $('#roomUpdate').toggle();
 				});
 				
 				let firstBuilding = $('div[data-index="1"]').attr('id');
-				if (firstBuilding) {
+				if ($('#bid').attr('value')==null) {
 					getBuildingInfo(firstBuilding);
 				}
-				$('div').on('click', function(e) {
+				$('.buildlist').on('click', function(e) {
 					//$('#imgFile').html('');
 					let buildingId = e.currentTarget.id;
 					getBuildingInfo(buildingId);
-				});
+				});	
 				function getBuildingInfo(buildingId) {
 					//상세 정보
 					$.ajax({
@@ -286,9 +280,9 @@ input {
 						$(".addr").val(data.doroAddr);
 						$(".dAddr").val(data.detailsAddr);
 						$("#gunchookArea").val(data.gunchookArea);
-						$('#delayAlertYn').val(data.delayAlertYn);
-						$('#minwonAlertYn').val(data.minwonAlertYn);
-						$("#liftYn").val(data.liftYn);
+						$('#delayAlertYn').val([data.delayAlertYn]);
+						$('#minwonAlertYn').val([data.minwonAlertYn]);
+						$("#liftYn").val([data.liftYn]);
 						$("#totalFloor").val(data.totalFloor);
 						$("#floorGaguCount").val(data.floorGaguCount);
 						$("#totalGagu").val(data.totalGagu);
@@ -299,7 +293,7 @@ input {
 						$('input[name="groupId"]').val(data.groupId);
 						$('#bid').val(data.buildingId);
 						$('#memo').val(data.memo);
-						console.log(data.rooms,"방이다");
+						console.log(data.minwonAlertYn,"방이다");
 					
 						if(data.rooms != null){
 							$('#tb').html("");
@@ -333,9 +327,6 @@ input {
 						//방번호 수정
 						$('.hoSel').on('change',function(e){
 							//호실 추가 리스트 
-							/* $('.hoSel').each((idx,ele)=>{
-								console.log(ele);
-							}) */
 							let roomNo = $(e.target).val();
 							let roomId = $(e.target).attr('id');
 						
@@ -364,14 +355,12 @@ input {
 						//이미지 삭제
 						$('.imageDel').on('click', imgaeDelFunc);
 						
-						checkFunc($("#liftYn"));
+						//checkFunc($("#liftYn"));
 						$(".bid").val(data.buildingId);
 						
 					})
 				}
 
-			})
-			
 			//전체선택 및 선택해제
 		 	$('#tb').delegate('.selectRoom','click',function(e){
 				let parent = $(e.target).closest('tr');
@@ -444,7 +433,6 @@ input {
 				}
 			}); 
 			
-			
 			//행 선택 checkbox
 			$('.selectRoom').click(function(e){
 			
@@ -482,14 +470,7 @@ input {
 			}
 			
 			
-			function checkFunc(liftYn) {
-				if (liftYn.val() === 'Y') {
-					liftYn.prop('checked', true);
-				} else {
-
-					liftYn.prop('checked', false);
-				}
-			}//end of checkFunc
+			//end of checkFunc
 			//수정
 			
 
@@ -522,10 +503,18 @@ input {
 			        processData: false,
 			        contentType: false,
 			        success: function(response) {
-			            alert("업데이트 성공");
-			          
-			            location.reload();
+			          	
+			          	let target=response.target;
+			        	alert("업데이트 성공");
+			        	let bList = document.getElementById(target.buildingId);
 			            
+			            $(bList).find('.buildingListName').html(target.buildingName);
+			            $(bList).find('.buildingListAddr').html(target.doroAddr+" "+target.detailsAddr);
+			            $(bList).find('.buildingListGagu').html(target.totalGagu+"세대");
+			            
+			            let buildingId = $('#bid').attr('value');
+			            getBuildingInfo(buildingId);
+			          
 			        },
 			        error: function(error) {
 			            console.error("업데이트 실패:", error);
@@ -552,15 +541,8 @@ input {
 					return;
 				}
 			})
-		//방 수정 및 생성
-		/* $('#roomUpdateBtn').on('click', function(){
-			  if($('#roomUpdate').css('display') == 'none') {
-				  $('#roomUpdate').show();
-				  }else {
-					  $('#roomUpdate').hide();
-				  }
-		});
-		 */
+			})
+
 		</script>
 		<script
 			src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>

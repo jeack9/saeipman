@@ -6,16 +6,33 @@
 <meta charset="UTF-8">
 <title>title</title>
 <style>
+#updateFrom {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 5px;
+}
+
+#updateFrom>* {
+	margin: 0 !important;
+	padding: 8px 12px;
+}
+
+th, td {
+	text-align: center;
+	vertical-align: middle;
+}
 </style>
 </head>
 <body>
-	<div layout:fragment="Main" class="row">
-		<form name="chagngeForm">
-			<div class="col-sm-12 col-xl-12">
-				<div class="bg-light rounded h-100 p-4">
-					<h6 class="mb-4">월세 납부내역</h6>
-					<div class="col-md-6">
-						<select class="form-select mb-6"
+	<div layout:fragment="Main" class="container col-xl-10">
+
+		<div class="row">
+			<form name="chagngeForm">
+				<h4 class="mb-4">월세 납부내역</h4>
+				<div class="row p-2 mb-2">
+					<div class="col-md-6" style="padding-left: 0px;">
+						<select class="form-select mb-6 col"
 							aria-label="Default select example" id="option" name="buildingId">
 							<option selected value="">건물 전체</option>
 							<option th:each="list : ${buildingNameList}"
@@ -23,49 +40,65 @@
 								th:selected="${list.buildingId}==${page.buildingId}">[[${list.buildingName}]]</option>
 						</select>
 					</div>
-					<div class="radio-container">
-						<div class="radio-group">
-							<label><input type="radio" name="paymentState" value="" th:checked="${page.paymentState == null}">
-								전체 내역</label> <label><input type="radio" name="paymentState"
-								value="-1" th:checked="${page.paymentState == -1}"> 연체</label> <label><input
-								type="radio" name="paymentState" value="0"
-								th:checked="${page.paymentState == 0}"> 예정</label> <label><input
-								type="radio" name="paymentState" value="1"
-								th:checked="${page.paymentState == 1}"> 납부완료</label>
-						</div>
+					<div class="col">
+						<input type="text" class="form-control" placeholder="방번호"
+							id="roomNoSearch">
 					</div>
-					<table class="table table-hover">
-						<thead>
+					<div class="col">
+						<button type="button" class="btn btn-info" id="roomSearchBtn">검색</button>
+					</div>
+				</div>
+				<div class="radio-container mb-4">
+					<div class="radio-group">
+						<label><input type="radio" name="paymentState" value=""
+							th:checked="${page.paymentState == null}"> 전체 내역</label> <label><input
+							type="radio" name="paymentState" value="-1"
+							th:checked="${page.paymentState == -1}"> 연체</label> <label><input
+							type="radio" name="paymentState" value="0"
+							th:checked="${page.paymentState == 0}"> 예정</label> <label><input
+							type="radio" name="paymentState" value="1"
+							th:checked="${page.paymentState == 1}"> 납부완료</label>
+					</div>
+				</div>
+
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>건물명</th>
+							<th>호실</th>
+							<th>납부상태</th>
+							<th>입금자명</th>
+							<th>임차인명</th>
+							<th>납부금액/납부일</th>
+							<th>실 납부금액/실 납부일</th>
+							<th>연체 메시지</th>
+						</tr>
+					</thead>
+					<tbody>
+						<th:block th:each="list:${monthRentList}">
 							<tr>
-								<th>건물명</th>
-								<th>호실</th>
-								<th>납부상태</th>
-								<th>입금자명</th>
-								<th>임차인명</th>
-								<th>납부금액/납부일</th>
-								<th>실 납부금액/실 납부일</th>
-								<th>연체 메시지</th>
+								<td>[[${list.buildingName}]]</td>
+								<td>[[${list.roomNo}]]</td>
+								<td th:if="${list.paymentState==-1}">연체</td>
+								<td th:if="${list.paymentState==0}">예정</td>
+								<td th:if="${list.paymentState==1}">납부완료</td>
+								<td>[[${list.imchainName}]]</td>
+								<td>[[${list.depositorName}]]</td>
+								<td>[[${#numbers.formatInteger(list.mRent, 3, 'COMMA')}]]원<br>[[${#dates.format(list.paymentDate,'yyyy-MM-dd')}]]
+								</td>
+								<td>[[${#numbers.formatInteger(list.realPaymentMoney, 3,
+									'COMMA')}]]원<br>[[${#dates.format(list.realPaymentDate,'yyyy-MM-dd')}]]
+								</td>
+								<td></td>
 							</tr>
-						</thead>
-						<tbody>
-							<th:block th:each="list:${monthRentList}">
-								<tr>
-									<td>[[${list.buildingName}]]</td>
-									<td>[[${list.roomNo}]]</td>
-									<td th:if="${list.paymentState==-1}">연체</td>
-									<td th:if="${list.paymentState==0}">예정</td>
-									<td th:if="${list.paymentState==1}">납부완료</td>
-									<td>[[${list.imchainName}]]</td>
-									<td>[[${list.depositorName}]]</td>
-									<td>[[${list.mRent}]]/[[${#dates.format(list.paymentDate,'yy년MM월dd일')}]]</td>
-									<td>[[${list.realPaymentMoney}]]/[[${#dates.format(list.realPaymentDate,'yy년MM월dd일')}]]</td>
-									<td></td>
-								</tr>
-							</th:block>
-						</tbody>
-					</table>
-					<!-- 페이징 -->
-					<th:block th:if="${page.total!=0}">
+						</th:block>
+					</tbody>
+				</table>
+				<div th:if="${page.total == 0}" style="text-align: center">
+					<br>검색결과가 없습니다.
+				</div>
+				<!-- 페이징 -->
+				<th:block th:if="${page.total!=0}">
 					<nav aria-label="Page navigation example">
 						<ul class="pagination justify-content-center">
 
@@ -91,18 +124,32 @@
 						</ul>
 					</nav>
 				</th:block>
-				</div>
-			</div>
-		</form>
+
+			</form>
+
+		</div>
 		<script>
 			$('#option').on(
 					'change',
 					function(e) {
-						console.log(e.target.value);
+						bid = e.target.value;
 						location.href = ctxPath
-								+ '/monthPaymentHistory?buildingId='
-								+ e.target.value;
+								+ '/monthPaymentHistory?buildingId=' + bid;
 					})
+
+			$('#roomSearchBtn').on(
+					'click',
+					function(e) {
+
+						let roomNo = $(e.target).parent().children().eq(0)
+								.val();
+						let bid = $('#option').val();
+
+						location.href = ctxPath
+								+ '/monthPaymentHistory?roomNo=' + roomNo
+								+ '&buildingId=' + bid;
+					})
+
 			$('input[name="paymentState"]').on('change', function(e) {
 				let paymentState = $(e.target).val(); // 선택된 paymentState 값 가져오기 (전체 선택 시 값은 "")
 
