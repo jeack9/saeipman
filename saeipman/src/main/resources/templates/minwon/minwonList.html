@@ -59,9 +59,9 @@
 			<h4 class="mb-4">민원접수</h4>
 			<form id="searchFrom" th:action="@{/minwonList}" th:method='get'>
 
-				<input type='hidden'name='buildingId' th:value='${cri.buildingId}'>
+				<input type='hidden' name='buildingId' th:value='${cri.buildingId}'>
 				<div th:if="${cri.auth == 1}">
-					<select class="form-select" name="buildingId" style="width: 150px;"
+					<select class="form-select" style="width: 150px;"
 						id="option">
 						<option selected value="">건물</option>
 						<option th:each="building : ${buildingList}"
@@ -88,12 +88,10 @@
 
 				<div class="radio-container">
 					<div class="radio-group">
-						<label><input type="radio" name="acceptState" value="0"
-							th:checked="${cri.acceptState == 0}"> 접수전</label> <label><input
-							type="radio" name="acceptState" value="1"
-							th:checked="${cri.acceptState == 1}"> 접수중</label> <label><input
-							type="radio" name="acceptState" value="2"
-							th:checked="${cri.acceptState == 2}"> 처리완료</label>
+						<label><input type="radio" name="acceptState" value="-1" th:checked="${cri.acceptState == -1}"> 전체내역</label> 
+						<label><input type="radio" name="acceptState" value="0" th:checked="${cri.acceptState == 0}"> 접수전</label> 
+						<label><input type="radio" name="acceptState" value="1" th:checked="${cri.acceptState == 1}"> 접수중</label>
+						<label><input type="radio" name="acceptState" value="2" th:checked="${cri.acceptState == 2}"> 처리완료</label>
 					</div>
 				</div>
 
@@ -182,19 +180,6 @@
 
 		$("#searchFrom button").on("click", function(e) {
 
-			// 검색 종류가 선택되지 않았을 때 경고 메시지
-			//if (!searchFrom.find("option:selected").val()) {
-				//alert("검색종류를 선택하세요");
-				//return false;
-			//}
-
-			// 키워드가 입력되지 않았을 때 경고 메시지
-			//if (!searchFrom.find("input[name='keyword']").val()) {
-				//alert("키워드를 입력하세요");
-				//return false;
-			//}
-
-		
 			// 검색 버튼 클릭 시 페이지 번호를 1로 설정
 			searchFrom.find("input[name='pageNum']").val("1");
 
@@ -214,11 +199,16 @@
 		$('input[name="acceptState"]').on('change', function() {
 			let acceptState = $(this).val(); // 선택된 acceptState 값 가져오기
 			let buildingId = $("input[name='buildingId']").val();
-			
-			location.href = `minwonList?buildingId=${buildingId}&acceptState=${acceptState}`; // URL에 acceptState 값 추가
+			if(acceptState == -1){
+				location.href = `minwonList?buildingId=${buildingId}`;
+			}else{
+				location.href = `minwonList?buildingId=${buildingId}&acceptState=${acceptState}`; // URL에 acceptState 값 추가
+			}
+				
 			
 		});
 
+		
 		$('tbody > tr')
 				.on(
 						'click',
@@ -230,8 +220,10 @@
 							//타입,키워드
 							let keyword = $("input[name='urlkeyword']").val();
 							let type = $("input[name='urltype']").val();
-
-							let url = `minwonInfo?postNo=${postNo}&pageNum=${pageNum}&type=${type}&keyword=${keyword}`;
+							let buildingId = $("input[name='buildingId']").val();
+					
+							
+							let url = `minwonInfo?buildingId=${buildingId}&postNo=${postNo}&pageNum=${pageNum}&type=${type}&keyword=${keyword}`;
 							location.href = url;
 						})
 	</script>

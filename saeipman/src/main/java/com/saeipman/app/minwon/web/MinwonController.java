@@ -9,14 +9,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.saeipman.app.commom.security.SecurityUtil;
-
 import com.saeipman.app.minwon.service.Criteria;
 import com.saeipman.app.minwon.service.MinwonService;
 import com.saeipman.app.minwon.service.MinwonVO;
@@ -40,16 +39,18 @@ public class MinwonController {
 	// 전체조회
 	@GetMapping("minwonList")
 	public String minwonList(@RequestParam(name = "buildingId", required = false) String buildingId,
-			@RequestParam(name = "acceptState", required = false) Integer acceptState, Criteria cri, Model model) {
+			                 Criteria cri, 
+			                 Model model) {
 		int auth = SecurityUtil.getLoginAuth();
 		String loginId = SecurityUtil.getLoginId();
 
 		cri.setAuth(auth);
 		cri.setLoginId(loginId);
 
-		if (acceptState != null) {
-			cri.setAcceptState(acceptState);
+		if(cri.getAcceptState() == null) {
+			cri.setAcceptState(null);
 		}
+		
 		System.out.println("zjsxmfhffj");
 		if (auth == 1) {
 			System.out.println(buildingId + "buildingId");
@@ -81,7 +82,8 @@ public class MinwonController {
 
 	// 단건조회
 	@GetMapping("minwonInfo")
-	public String minwonInfo(@ModelAttribute Criteria cri, MinwonVO minwonVO, Model model) {
+	public String minwonInfo(@ModelAttribute Criteria cri, 
+			                 MinwonVO minwonVO, Model model) {
 		int auth = SecurityUtil.getLoginAuth();
 		String loginId = SecurityUtil.getLoginId();
 
@@ -110,16 +112,21 @@ public class MinwonController {
 
 	// 민원 상태 업로드
 	@PostMapping("/updateMinwonState")
-	public String updateMinwonState(@ModelAttribute Criteria cri, MinwonVO minwonVO,
-			@RequestParam("state") String state) {
+	public String updateMinwonState(@ModelAttribute Criteria cri, 
+								    MinwonVO minwonVO,
+			                        @RequestParam("state") String state,
+			                        RedirectAttributes rttr) {
 		// VO 객체에 상태값 세팅
 		minwonVO.setAcceptState(state);
 
 		// 서비스 계층을 통해 상태 업데이트
 		minwonService.acceptStateUpdate(minwonVO);
-
+		
+		rttr.addAttribute("postNo", minwonVO.getPostNo());
+		rttr.addAttribute("pageNum", cri.getPageNum());
+		
 		// 처리 후 민원 상세 페이지로 리다이렉트
-		return "redirect:/minwonInfo?postNo=" + minwonVO.getPostNo() + "&pageNum=" + cri.getPageNum();
+		return "redirect:/minwonInfo";
 	}
 
 	// 등록(페이지)
