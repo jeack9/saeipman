@@ -92,7 +92,7 @@
 											<tr th:if="${room.buildingId == building.buildingId}">
 												<td>[[${roomSatate.index+1}]]</td>
 												<td>[[${building.buildingName}]]</td>
-												<td>[[${room.roomNo}]]</td>												
+												<td>[[${room.roomNo}]]</td>
 												<td th:text="${room.ipjuState == 1} ? '입주' : '공실'"></td>
 												
 												<!-- 공실 여부에 따른 출력 -->
@@ -115,6 +115,7 @@
 							<div style="text-align: center; margin-right: 10px">
 								<button type="button" class="btn btn-outline-primary msgBtn">연체 안내 문자 전송</button>
 							</div>
+							<br/>
 						</td>
 					</tr>
 				</th:block>
