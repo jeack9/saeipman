@@ -35,6 +35,9 @@ public interface RoomMapper {
 	
 	// 건물선택 -> 방 리스트 조회
 	public List<BuildingRoom> selectBuildingRoom(@Param("room") BuildingRoom buildingRoom, @Param("paging") PagingDTO page);
+	// 페이징용 건물방 토탈 조회
+	public int totalBuildingRoomFilter(BuildingRoom buildingRoom);
+	
 	// 건물의 방 수
 	public int totalBuildingRoom(BuildingRoom buildingRoom);
 	public int buildingIpjuCount(BuildingRoom buildingRoom);

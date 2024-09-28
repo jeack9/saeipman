@@ -10,6 +10,9 @@ public interface RoomService {
 	
 	// 건물 선택 -> 방목록 조회
 	public List<BuildingRoom> buildingRoomList(BuildingRoom buildingRoom, PagingDTO paging);
+	// 페이징용 건물 방수 조회
+	public int totalBuildingRoomFilter(BuildingRoom buildingRoom);
+	
 	// 건물 방 수 조회
 	public int totalBuildingRoom(BuildingRoom buildingRoom);
 	// 건물 입주 방수 조회
