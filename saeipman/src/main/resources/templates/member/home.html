@@ -4,54 +4,47 @@
 <head>
 	<meta charset="UTF-8">
 	<title>메인 페이지</title>
-	<style >
-/* 		img {
-		     height: 100vh;
-			  background-size: cover;
-		} */
-	
-		 .mainContainer {
-		 height: 100vh;
-	        width: 100vw;
+	<style >	
+		body {
+			position: relative;
+			background-size: cover;
+			width: 100vw;
+			height: 100vh;
 			margin: 0;
 			padding: 0;
 		}
 		
-		.img {
-		    position: relative;
-		 }
-		
-		p {
+		.fsize {
 			font-size: 100px;
+			font-weight: bold;
 		}
-		
-		a {
-			font-size: 50px;
-			text-decoration: none;
-			color: pink;
-		}
+
 		
 		.text {
+			font-size: 50px;
 			text-align: center;
 			position: absolute;
-			top: 50%;
+			top: 40%;
 			left: 50%;
 			transform: translate( -50%, -50% );
 			color: white;
 		} 
+		
+		a {
+			font-size: 50px;
+			text-decoration: none;
+			color: white;
+			text-align: center;
+			position: absolute;
+			top: 70%;
+			transform: translate( -50%, -50% );
+			left: 50%;
+		}
 	</style>
 </head>
 
-<body>
- 	<div layout:fragment="Main" class="mainContainer">
-		<div>
-			
-			<img th:src="@{/img/mirror_house2.jpg}" class="img">
-			<div class="text">
-			<p>환영합니다.</p>
-			<a th:href="@{/buildingInsert}" >시작하기</a>
-			</div>
-		</div>
-	</div> 
+<body th:style="'background-image: url(' + @{/img/mirror_house.jpg} + ');'">			
+	<div class="text"><span class="fsize">스마트</span>하고 <span class="fsize">편리한</span> 건물 관리 서비스</div>
+	<a th:href="@{/buildingInsert}" >START</a>
 </body>
 </html>
