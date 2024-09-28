@@ -15,6 +15,7 @@ public class Criteria {
 	private String imdaeinId; //임대인 아이디
 	private String imchainId;
 	private String buildingId;
+	private String buildingName;
 	private String roomId;
 	private Integer acceptState;
 	
