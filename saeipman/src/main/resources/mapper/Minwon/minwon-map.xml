@@ -65,9 +65,11 @@
 	        m.GROUP_ID,
 	        m.REG_DATE,
 	        r.ROOM_NO,
-	        r.BUILDING_ID
+	        r.BUILDING_ID,
+	        b.BUILDING_name
 	      FROM room_info r  
-	      JOIN minwon m ON m.room_id = r.room_id
+	      join minwon m on m.room_id = r.room_id
+	      join building_info b on b.building_id = r.building_id
 	      <where>
 	      <include refid="criteria"/>
 	      </where>

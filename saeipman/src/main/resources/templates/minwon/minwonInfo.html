@@ -17,6 +17,9 @@
 	width: 80%;
 	margin: 0 auto;
 } 
+.group{
+	border: 1px solid #ddd; 
+}
 
 .form-group {
 	margin-bottom: 10px;
@@ -25,6 +28,16 @@
 /* 댓글 영역 */
 .ply {
 	padding-left: 50px;
+	padding-right: 10px;
+	color: #212529;
+	
+	
+}
+
+#onkey{
+	position: relative;
+	padding: 10px;
+	color: #212529;
 }
 
 .fw-bold {
@@ -40,6 +53,11 @@
 	justify-content: space-between;
 	align-items: center;
 	margin-bottom: 10px;
+}
+
+.comment-header span {
+	display: inline-block;
+	width: 150px;
 }
 
 .comment-content {
@@ -115,7 +133,8 @@ textarea {
 			</tr>
 			<tr>
 				<th style="width: 10%">첨부파일</th>
-				<td><img style="width: 75%" th:each=" img : ${minwon.fileName}"
+				<td><img style="width: 45%; margin: 3px;"  th:each=" img : ${minwon.fileName}"
+				
 					th:src="@{/images/민원/{f}(f=${img})}" /></td>
 			</tr>
 			<tr>
@@ -239,12 +258,14 @@ textarea {
 	                <div id='group${comment.cmtGroup}' class="group" data-group="${comment.cmtGroup}">
 	                  <div ${ply} ${onkey}>
 	                    <div class="comment-header">
-	                      <div class="fw-bold">${comment.writer}</div> <!-- 작성자 -->
+	                      <div>
+	                      <span class="fw-bold">${comment.writer}</span> <!-- 작성자 -->
+	                      <span>${dateString}</span> <!-- 작성일 -->
+	                      </div>
 	                      ${deleteButton}
 	                    </div>
 	                    <div class="comment-content">${comment.content}</div> <!-- 댓글 내용 -->
 	                    <div class="comment-footer">
-	                      <div>${dateString}</div> <!-- 작성일 -->
 	                      <input type="hidden" value=${comment.cmtGroup}>
 	                    </div>
 	                  </div>
@@ -255,12 +276,15 @@ textarea {
 	              let commentElement = `
 	                <div ${ply}>
 	                  <div class="comment-header">
-	                    <div class="fw-bold">${comment.writer}</div> <!-- 작성자 -->
+	                    <div >
+	                    	<span class="fw-bold">${comment.writer}</span>
+	                    	<span>${dateString}</span> <!-- 작성일 -->
+	                    
+	                    </div> <!-- 작성자 -->
 	                    ${deleteButton}
 	                  </div>
 	                  <div class="comment-content">${comment.content}</div> <!-- 댓글 내용 -->
 	                  <div class="comment-footer">
-	                    <div>${dateString}</div> <!-- 작성일 -->
 	                    <input type="hidden" value=${comment.cmtGroup}>
 	                  </div>
 	                </div>`;

@@ -3,55 +3,54 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>메인 페이지</title>
-	<style >
-/* 		img {
-		     height: 100vh;
-			  background-size: cover;
-		} */
-	
-		 .mainContainer {
-		 height: 100vh;
-	        width: 100vw;
+	<title>세입만</title>
+	<link rel="icon" href="/img/favicon.ico">
+	<style>
+		body {
 			margin: 0;
-			padding: 0;
 		}
-		
-		.img {
-		    position: relative;
-		 }
-		
-		p {
+
+		.video {
+			width: 100vw;
+			/* background-size: cover;
+			object-fit: fill; */
+		}
+
+		.fsize {
 			font-size: 100px;
+			font-weight: bold;
 		}
-		
+
+		.text,
 		a {
-			font-size: 50px;
-			text-decoration: none;
-			color: pink;
-		}
-		
-		.text {
 			text-align: center;
 			position: absolute;
-			top: 50%;
 			left: 50%;
-			transform: translate( -50%, -50% );
+			transform: translate(-50%, -50%);
 			color: white;
-		} 
+		}
+
+		.text {
+			font-size: 50px;
+			top: 40%;
+		}
+
+		a {
+			text-decoration: none;
+			top: 65%;
+			font-family: monospace;
+			font-size: 60px;
+			font-weight: bold;
+		}
 	</style>
 </head>
 
 <body>
- 	<div layout:fragment="Main" class="mainContainer">
-		<div>
-			
-			<img th:src="@{/img/mirror_house2.jpg}" class="img">
-			<div class="text">
-			<p>환영합니다.</p>
-			<a th:href="@{/buildingInsert}" >시작하기</a>
-			</div>
-		</div>
-	</div> 
+	<video class="video" autoplay loop muted>
+		<source th:src="@{/video/building-video.mp4}" type="video/mp4">
+	</video>
+	<div class="text"><span class="fsize">스마트</span>하고 <span class="fsize">편리한</span> 건물 관리 서비스</div>
+	<a th:href="@{/buildingInsert}">START</a>
 </body>
+
 </html>

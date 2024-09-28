@@ -109,6 +109,7 @@
 				<tr>
 					<th>번호</th>
 					<th>제목</th>
+					<th>건물명</th>
 					<th>작성자</th>
 					<th>처리상태</th>
 					<th>작성일</th>
@@ -119,9 +120,8 @@
 					<tr>
 						<td style="cursor: pointer;">[[${info.postNo}]]</td>
 						<td>[[${info.title}]]</td>
-						<td>[[${info.roomNo}]]호</td>
-					
-						<!-- 작성자 -->
+						<td>[[${info.buildingName}]]</td>
+						<td>[[${info.roomNo}]]호</td><!-- 작성자 -->
 						<td>[[${info.acceptState}]]</td>
 						<td>[[ ${#dates.format(info.regDate, 'yyyy/MM/dd')} ]]</td>
 					</tr>

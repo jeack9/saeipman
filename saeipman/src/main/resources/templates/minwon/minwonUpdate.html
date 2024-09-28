@@ -30,12 +30,17 @@
 .col:last-child {
     margin-right: 0; 
 }
-
-
+.imgDiv {
+	float: left;
+	width: 30%;
+	box-sizing: border-box;
+	margin: 30px;
+}
 </style>
 </head>
 <body>
 	<form name="updateForm" th:object="${minwon}" class="form-container">
+	<div class="row">
 		<input name="postNo" th:value="${minwon.postNo}" type="hidden">
 		<div class="mb-3">
 			<label for="">제목</label> <input class="form-control" type="text"
@@ -105,6 +110,7 @@
 			<button type="button" id="updateBtn"
 				class="btn btn-outline-warning m-2">수정</button>
 		</div>
+		</div>
 	</form>
 	<script>
 	let delList = [];  // 삭제할 기존 이미지 목록
@@ -148,7 +154,7 @@
 			
 			let reader = new FileReader();
 			reader.onload = function(e) {
-				let div = $('<div>').attr({'class': 'imgDiv', 'data-fileid': inputFile[i].name});
+				let div = $('<div>').attr({'class': 'imgDiv ms-3', 'data-fileid': inputFile[i].name});
 				let img = $('<img>').attr({
 					'src': e.target.result,
 					'class': 'imgId',
