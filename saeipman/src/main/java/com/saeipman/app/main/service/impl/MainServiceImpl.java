@@ -1,20 +1,20 @@
 package com.saeipman.app.main.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
+
 
 import com.saeipman.app.main.mapper.MainMapper;
 import com.saeipman.app.main.service.MainService;
 import com.saeipman.app.payment.service.PaymentVO;
 
-@Service
-public class MainServiceImpl implements MainService {
-	private MainMapper mainMapper;
+import lombok.RequiredArgsConstructor;
 
-	@Autowired
-	public MainServiceImpl(MainMapper mainMapper) {
-		this.mainMapper = mainMapper;
-	}
+@Service
+@RequiredArgsConstructor
+public class MainServiceImpl implements MainService {
+	private final MainMapper mainMapper;
 
 	@Override
 	public int selectConstractState(PaymentVO payVO) {
@@ -22,9 +22,16 @@ public class MainServiceImpl implements MainService {
 	}
 
 	@Override
-	public int unPaymentState(PaymentVO payVO) {
-		return mainMapper.selectUnPayment(payVO);
+	public List<PaymentVO> unPaymentState(PaymentVO paymentVO) {
+		return mainMapper.selectUnPayment(paymentVO);
 
 	}
-
+	@Override
+	public int getTotalRoom(String imdaeinId) {
+		return mainMapper.selectTotalRoom(imdaeinId);
+	}
+	@Override
+	public int getExpCnt() {
+		return mainMapper.selectExpCnt();
+	}
 }

@@ -28,9 +28,14 @@ import com.saeipman.app.building.service.BuildingService;
 import com.saeipman.app.building.service.BuildingVO;
 import com.saeipman.app.commom.security.SecurityUtil;
 import com.saeipman.app.file.service.FileService;
+import com.saeipman.app.main.service.MainService;
 import com.saeipman.app.member.service.LoginInfoVO;
+import com.saeipman.app.minwon.service.Criteria;
+import com.saeipman.app.minwon.service.MinwonService;
+import com.saeipman.app.minwon.service.MinwonVO;
 import com.saeipman.app.ocrTest.config.OcrApi;
 import com.saeipman.app.ocrTest.config.OcrUtil;
+import com.saeipman.app.payment.service.PaymentVO;
 import com.saeipman.app.room.service.RoomVO;
 import com.saeipman.app.upload.config.FileUtility;
 
@@ -51,6 +56,8 @@ public class BuildingController {
 	private final BuildingService buildingService;
 	private final FileUtility fileUtill;
 	private final FileService fileService;
+	private final MainService mainService;
+	private final MinwonService minwonService;
 
 	@GetMapping("/buildingList")
 	public String buildingInfo(BuildingPageDTO buildingPageDTO, Model model) {
@@ -132,6 +139,31 @@ public class BuildingController {
 
 		Map<String, Object> result = buildingService.roomSelectInsert(list);
 		return result;
+	}
+	@GetMapping("/googleChart")
+	public String selectGoogleChart(PaymentVO paymentVO, Model model, Criteria cri) {
+		String login =SecurityUtil.getLoginId();
+		paymentVO.setImdaeinId(login);
+		//월세 미납
+		List<PaymentVO> unMRent = mainService.unPaymentState(paymentVO);
+		model.addAttribute("unMRent",unMRent);
+		//입주자 수
+		int ipju = mainService.selectConstractState(paymentVO);
+		model.addAttribute("ipju",ipju);
+		//총 방 수
+		int totalRoom = mainService.getTotalRoom(login);
+		model.addAttribute("totalRoom",totalRoom);
+		System.out.println("totalRoom"+totalRoom);
+		//계약 만료 날짜
+		int expCnt = mainService.getExpCnt();
+		model.addAttribute("expCnt",expCnt);
+		
+		//민원 관련
+		cri.setImdaeinId(login);
+		List<MinwonVO> list = minwonService.minwonList(cri);
+		model.addAttribute("minwon", list);
+		
+		return "building/chartTest";
 	}
 
 	@PostMapping("/ocrUpload")

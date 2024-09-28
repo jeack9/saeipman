@@ -61,10 +61,21 @@ input {
 </head>
 <body>
 	<div layout:fragment="Main" class="container">
-		<div class="row roomWrap gx-4 justify-content-center">
+		<h4>건물관리</h4>
+		<div class="row roomWrap gx-4">
 			<!-- start 건물리스트 -->
-			<div class="col-md-3" id="buildList">
-			<h4 class="mb-4">빌딩목록</h4>
+			<div class="col-md-3" style="margin-top: 120px;" id="buildList">
+				<div class="row">
+					<div class="col-5" style="padding-right: 0;">
+						<p style="font-size: 20px;">건물목록</p>
+					</div>
+					<div class="col" style="padding-left: 0; text-align: right;">
+						<button type="button"
+							th:onclick="|location.href='@{/buildingInsert}'|"
+							class="btn btn-outline-secondary  m-2">건물추가</button>
+					</div>
+				</div>
+
 				<th:block th:each="building, index:${buildings}">
 					<div class="card border-secondary mb-3 buildlist"
 						th:id="${building.buildingId}" th:data-index="${index.count}">
@@ -77,9 +88,7 @@ input {
 						</div>
 					</div>
 				</th:block>
-				<button type="button"
-					th:onclick="|location.href='@{/buildingInsert}'|"
-					class="btn btn-outline-primary m-2">건물추가</button>
+
 				<!-- 페이징 -->
 				<th:block th:if="${page.total!=0}">
 					<nav aria-label="Page navigation example">
@@ -118,16 +127,21 @@ input {
 					enctype="multipart/form-data">
 					<input name="groupId" type="hidden" class="groupid" />
 					<!-- start 건물 정보 -->
-					<h3 id="bnameTitle"></h3>
-					<div style="text-align: center;">
-						<button type="button" class="btn btn-outline-primary m-2 "
-							id="updateBtn">수정완료</button>
-						<button type="button"
-							class="btn btn-outline-danger m-2 deleteBtn bid">삭제</button>
+					<!-- <h3 id="bnameTitle" style="margin-bottom:0px;"></h3> -->
+					<div class="row" style="text-align: center; margin-top: 60px;">
+						<div class="col-2">
+							<h4 style="text-align: left;" id="bnameTitle"></h4>
+						</div>
+						<div class="col-6">
+							<button type="button" class="btn btn-outline-primary m-2"
+								id="updateBtn">수정완료</button>
+							<button type="button"
+								class="btn btn-outline-danger m-2 deleteBtn bid">삭제</button>
+						</div>
 					</div>
 					<div>
-
-						<div class="form-check form-switch" style="display: inline-block;">
+						<div class="form-check form-switch me-3"
+							style="display: inline-block;">
 							<label for="delayAlertYn">연체 알림 </label> <input type="checkbox"
 								id="delayAlertYn" name="delayAlertYn"
 								class="form-check-input text-end" role="switch">
@@ -280,9 +294,9 @@ input {
 						$(".addr").val(data.doroAddr);
 						$(".dAddr").val(data.detailsAddr);
 						$("#gunchookArea").val(data.gunchookArea);
-						$('#delayAlertYn').val([data.delayAlertYn]);
-						$('#minwonAlertYn').val([data.minwonAlertYn]);
-						$("#liftYn").val([data.liftYn]);
+						$('#delayAlertYn').val(data.delayAlertYn);
+						$('#minwonAlertYn').val(data.minwonAlertYn);
+						$("#liftYn").val(data.liftYn);
 						$("#totalFloor").val(data.totalFloor);
 						$("#floorGaguCount").val(data.floorGaguCount);
 						$("#totalGagu").val(data.totalGagu);
@@ -293,7 +307,22 @@ input {
 						$('input[name="groupId"]').val(data.groupId);
 						$('#bid').val(data.buildingId);
 						$('#memo').val(data.memo);
-						console.log(data.minwonAlertYn,"방이다");
+						if(data.delayAlertYn=='Y'){
+							$('#delayAlertYn').prop("checked",true);
+						}else{
+							$('#delayAlertYn').prop("checked",false);
+						}
+						if(data.minwonAlertYn=='Y'){
+							$('#minwonAlertYn').prop("checked",true);
+						}else{
+							$('#minwonAlertYn').prop("checked",false);
+						}
+						if(data.liftYn=='Y'){
+							$('#liftYn').prop("checked",true);
+						}else{
+							$('#liftYn').prop("checked",false);
+						}
+						//console.log([data.delayAlertYn],"방이다");
 					
 						if(data.rooms != null){
 							$('#tb').html("");
@@ -532,6 +561,8 @@ input {
 					$(this).attr('value', 'N');
 				}
 			})
+			
+			
 			//삭제 버튼
 			$('.deleteBtn').on('click',function(e){
 				if(confirm('삭제 하시겠습니까?')==true){
