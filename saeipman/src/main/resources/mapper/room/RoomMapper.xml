@@ -166,9 +166,28 @@
         <if test="room.buildingId != null and room.buildingId != ''">
         	AND bi.building_id = #{room.buildingId}
         </if>
+        <if test="room.ipjuState != 0">
+    		AND r.ipju_state = #{room.ipjuState}
+    	</if>
     )
     WHERE row_num BETWEEN (#{paging.page} - 1) * #{paging.recordSize} + 1 AND #{paging.page} * #{paging.recordSize}
 	</select>
+	<!-- 페이징용 건물 방수 조회 -->
+	<select id="totalBuildingRoomFilter">
+	SELECT COUNT(*)
+	FROM room_info r JOIN building_info  bi 
+						ON r.building_id = bi.building_id
+    				 LEFT OUTER JOIN constract_info ci 
+    				 	ON r.room_id = ci.room_id AND ci.constract_state = 1
+	WHERE bi.imdaein_id = #{imdaeinId} 
+	<if test="buildingId != null and buildingId != ''">
+    	AND bi.building_id = #{buildingId}
+    </if>
+    <if test="ipjuState != 0">
+    	AND r.ipju_state = #{ipjuState}
+    </if>
+	</select>
+	
 	<!-- 건물 방수 조회 -->
 	<select id="totalBuildingRoom">
 	SELECT COUNT(*)

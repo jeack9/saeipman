@@ -49,5 +49,9 @@ public class RoomServiceImpl implements RoomService {
 	public List<ConstractVO> roomConstractsPaging(String roomId, PagingDTO paging) {
 		return roomMapper.roomConstractsPaging(roomId, paging);
 	}
+	@Override
+	public int totalBuildingRoomFilter(BuildingRoom buildingRoom) {
+		return roomMapper.totalBuildingRoomFilter(buildingRoom);
+	}
 
 }

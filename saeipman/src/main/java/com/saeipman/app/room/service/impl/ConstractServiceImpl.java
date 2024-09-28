@@ -41,7 +41,7 @@ public class ConstractServiceImpl implements ConstractService{
 	@Transactional
 	public String addConstract(ConstractVO constractVO) {
 		int result = cmapper.insertConstractInfo(constractVO);
-		// 계약 추가 방 입실 상태 변경
+		// 계약확정 시 입실 상태 변경
 		if(result == 1) {
 			String newConstractNo = constractVO.getConstractNo();
 			RoomVO updateRoom = new RoomVO();
