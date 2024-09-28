@@ -3,52 +3,52 @@
 	layout:decorate="~{common/layouts/default_layout}"
 	layout:fragment="Main">
 
-	<div class="container-fluid pt-4 px-4">
-		<div class="row g-4">
-			<div class="col-md-12">
-				<div class="bg-light rounded h-100 p-4">
-					<h6 class="mb-4">공지사항</h6>
-					<table class="table">
+		<div class="container-fluid pt-4 px-4 ">
+			<div class="row g-4 justify-content-md-center">
+				<div class="col-md-9">
+					<div class="rounded h-100 p-4">
+						<h4 class="mb-4">공지사항</h4>
+						<table class="table table-bordered"
+							style="border-radius: 5px; border-style: hidden; box-shadow: 0 0 0 1px #d2d2d2;">
+							<tr class="col-md-10">
+								<th class="col-1 bg-light">제목</th>
+								<td class="col-7">[[${BNotice.title}]]</td>
+								<th class="col-1 bg-light">조회수</th>
+								<td class="col-1">[[${BNotice.views}]]</td>
+							</tr>
+							<tr>
+								<th class="bg-light">첨부파일</th>
+								<td colspan="4"><img
+									style="width: 150px; height: 150px; border-radius: 20%; margin: 1%;"
+									th:each=" img : ${BNotice.fileName}"
+									th:src="@{/images/공지사항/{fileName}(fileName=${img})}" /></td>
+							</tr>
+							<tr>
+								<th class="bg-light">작성일</th>
+								<td th:if="${BNotice.modDate == ''}">[[${#dates.format(BNotice.regDate,'yyyy/MM/dd')}]]</td>
+								<td th:if="${BNotice.modDate != ''}">[[${#dates.format(BNotice.modDate,'yyyy/MM/dd')}]]</td>
+							</tr>
+							<tr>
+								<td colspan="4" id="textarea" style="padding: 50px;">[[${BNotice.content}]]</td>
+							</tr>
 
-						<tr class="col-md-12">
-							<th style="width: 5%">제목</th>
-							<td style="width: 30%">[[${BNotice.title}]]</td>
-							<th>조회수</th>
-							<td>[[${BNotice.views}]]</td>
-						</tr>
-						<tr>
-							<th style="width: 10%">첨부파일</th>
-							<td><img style="width: 30%"
-								th:each=" img : ${BNotice.fileName}"
-								th:src="@{/images/공지사항/{fileName}(fileName=${img})}" /></td>
-						</tr>
-						<tr>
-							<th>최초등록일</th>
-							<td>[[${#dates.format(BNotice.regDate,'yyyy/MM/dd')}]]</td>
-							<th style="width: 10%">수정일</th>
-							<td>[[${#dates.format(BNotice.modDate,'yyyy/MM/dd')}]]</td>
-						</tr>
-						<tr>
-							<td colspan="12" id="textarea">[[${BNotice.content}]]</td>
-						</tr>
-
-					</table>
+						</table>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div style="text-align: center" th:if="${login.auth==1}">
-			<button type="button"
-				th:onclick="|location.href='@{/noticeBuildingUpdate(postNo=${BNotice.postNo})}'|"
-				class="btn btn-outline-warning m-2">수정</button>
-			<button type="button"
-				th:onclick="|location.href='@{/noticeBuildingList(nowPage=${pagingSearchDTO.nowPage}, scKeyword=${param.scKeyword})}'|"
-				class="btn btn-outline-success m-2">목록</button>
-			<button type="button"
-				th:onclick="|location.href='@{/noticeBuildingDelete(no=${BNotice.postNo})}'|"
-				class="btn btn-outline-danger m-2">삭제</button>
+			<div style="text-align: center" th:if="${login.auth==1}">
+				<button type="button"
+					th:onclick="|location.href='@{/noticeBuildingUpdate(postNo=${BNotice.postNo})}'|"
+					class="btn btn-outline-warning m-2">수정</button>
+				<button type="button"
+					th:onclick="|location.href='@{/noticeBuildingList(nowPage=${pagingSearchDTO.nowPage}, scKeyword=${param.scKeyword})}'|"
+					class="btn btn-outline-success m-2">목록</button>
+				<button type="button"
+					th:onclick="|location.href='@{/noticeBuildingDelete(no=${BNotice.postNo})}'|"
+					class="btn btn-outline-danger m-2">삭제</button>
+			</div>
 		</div>
 	</div>
-</div>
 <script>
 	var str = $('#textarea').html();
 
