@@ -140,7 +140,6 @@
 		
 		// 이전 계약정보 조회 함수
 		function getPrevConstract(){
-			let contractNo = $("input[name='constractNo']").val();
 			$.ajax({
 				url: `${ctxPath}/room/prevConstract`,
 				method: "GET",
@@ -161,7 +160,6 @@
                         $("#imdaeinAccount").val(prevConstract.imdaeinAccount);
                         $("#imchainAccount").val(prevConstract.imchainAccount);
                         $("#memo").val(prevConstract.memo);
-                        $("#constractNo").val(prevConstract.constractNo);
                     }else{
                     	alert('이전 계약정보가 없습니다.');
                     }

@@ -86,8 +86,7 @@
 							[[${room.buildingName}]] / 
 							<p class="col m-0" style="font-size: 18px; font-weight: bold;">[[${room.constractType}]]</p>
 							<div style="text-align: right;">
-								<!-- <button type="button" class="btn btn-outline-success">입주
-									예정</button> -->
+								<button type="button" class="btn btn-outline-success" th:if="${room.reserveCnt > 0}">입주 예정</button>
 								<th:block th:if="${room.ipjuState == -1}">
 								<button type="button" class="btn btn-outline-success">공실</button>
 								</th:block>
@@ -194,7 +193,6 @@
     	let buildingId;
     	// 방의 계약정보 모달창 띄우기
     	$infoBtn.on("click", (e) => {
-    		isUpdateMode = true;
     		let constractNo = $(e.target).data("cno") + "";
     		let roomId = $(e.target).data("roomid") + "";
     		let buildingName = $(e.target).data("bname") + "";
@@ -216,7 +214,6 @@
     	});
     	// 방의 입주예약 모달창 띄우기
     	$bookBtn.on("click", (e)=>{
-    		isUpdateMode = false;
     		let roomId = $(e.target).data("roomid") + "";
     		let buildingName = $(e.target).data("bname") + "";
     		buildingId = $(e.target).data("buildingid") == undefined ? '' : $(e.target).data("buildingid") + "";
