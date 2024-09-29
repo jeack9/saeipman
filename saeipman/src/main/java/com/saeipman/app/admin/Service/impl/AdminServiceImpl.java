@@ -42,14 +42,11 @@ public class AdminServiceImpl implements AdminService {
     public int countNotices(String keyword) {
         return adminMapper.totalNotice(keyword);
     }
-
 	
 	// 공지사항 단건조회
 	@Override
-	@Transactional
 	public NoticeVO noticeInfo(int postNo) {
 		NoticeVO notice = adminMapper.selectNoticeInfo(postNo);
-		adminMapper.updateNoticeViews(postNo);
 		return notice;
 	}
 
@@ -85,5 +82,9 @@ public class AdminServiceImpl implements AdminService {
 		map.put("retCode", false);
 		return map;
 	}
-
+	// 공지 조회수 증가
+	@Override
+	public void increaseViews(int postNo) {
+		adminMapper.updateNoticeViews(postNo);
+	}
 }

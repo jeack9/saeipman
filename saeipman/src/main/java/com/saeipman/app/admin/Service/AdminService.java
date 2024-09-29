@@ -21,4 +21,6 @@ public interface AdminService {
 	Map<String, Object> addNotice(NoticeVO noticeVO);
 	// 공지사항 단건수정 -- postNo 반환
 	Map<String, Object> modiNotice(NoticeVO noticeVO);
+	// 공지 조회수 증가
+	void increaseViews(int postNo);
 }
