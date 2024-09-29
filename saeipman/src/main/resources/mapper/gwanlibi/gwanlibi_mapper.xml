@@ -158,7 +158,7 @@
 		    	   , #{item.gwanlibiItemNo}
 		    	   , #{item.fixedPrice} )
 		    </foreach>
-		    
+
 		    <foreach collection="gaguGwanlibiHistoryList" item="item2">
 		    INTO gagu_gwanlibi_history ( gagu_payment_history_no
                                  			  , month_gwanlibi_no

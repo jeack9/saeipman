@@ -321,7 +321,7 @@ public class GwanlibiController {
 		String buildingName = imchainPhoneNumber.get(0).getBuildingName();
 		
 		// 메시지 내용.
-		String msg = "⚠️ 관리비 연체 고지 ⚠️\n" + "안녕하세요. " + buildingName + " 임대인입니다.\n빠른 시일 내에 연체된 관리비를 입금해 주세요.\n좋은 하루 보내세요.";
+		String msg = "관리비 연체 고지\n" + buildingName + " 임대인입니다.\n빠른 시일 내에 연체된 관리비를 입금해 주세요.";
 
 		msgService.sendGroup(imchainPhoneNumber, imdaeinPhoneNumber, msg);
 

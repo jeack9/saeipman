@@ -116,11 +116,6 @@ public class MemberServiceImpl implements MemberService {
 	public boolean addImchain(ConstractVO constractVO) {
 		String imchainPhone = "";
 		imchainPhone = constractVO.getImchainPhone();
-		// 임차인의 연락처로 계약중인 정보가 있을때 등록불가
-		int checkResult = cmapper.existsByPhoneActive(imchainPhone);
-		if(checkResult == 1) {
-			return false;
-		}
 		// 임차인 단건추가
 		ImchainVO imchainVO = new ImchainVO();
 		imchainVO.setImchainId(imchainPhone);

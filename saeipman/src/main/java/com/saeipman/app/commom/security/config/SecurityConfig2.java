@@ -127,7 +127,7 @@ public class SecurityConfig2 {
 				.requestMatchers("/css/**", "/img/**", "/js/**", "/lib/**", "/scss/**", "/dashmin-1.0.0/**", "/images/**").permitAll()
 				.requestMatchers("/all/**").permitAll()
 				.requestMatchers("/member/**").hasAnyAuthority("ROLE_1", "ROLE_2")
-				.requestMatchers("/room/**").hasAnyAuthority("ROLE_1")
+				.requestMatchers("/room/**", "/support/**").hasAnyAuthority("ROLE_1", "ROLE_0")
 				.anyRequest().authenticated());
 		return http.build();
 	}

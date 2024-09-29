@@ -18,4 +18,5 @@ public class QnaCmtVO {
 	private Date regDate;
 	private int state;
 	private List<QnaCmtVO> childCmts;
+	private String timeAgo;
 }

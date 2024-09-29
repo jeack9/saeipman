@@ -31,12 +31,12 @@ class SaeipmanApplicationTests {
 		System.out.println(nextPayDate);
 	}
 	
-	//@Test
+	@Test
 	public void passEncrypt() {
 		String s = passwordEncoder.encode("1234");
 		System.out.println(s);
 	}
-	@Test
+//	@Test
 	public void test2() {
 		RoomVO vo = roomMapper.selectRoomInfo("ZIP000392101");
 		System.out.println(vo.getConstractList());

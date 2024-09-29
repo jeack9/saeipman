@@ -12,12 +12,14 @@
 			<div class="bg-light rounded h-100 p-4">
 				<h4 class="mb-4">세입만 QnA</h4>
 				<!-- 답변상태 -->
-				<form id="searchFrom" class="d-flex justify-content-end">
-					<select class="form-select me-2 w-25" id="option" name="state">
-						<option selected value="">답변상태</option>
-						<option value="0">답변대기</option>
-						<option value="1">답변완료</option>
-					</select> <input type="text" name="keyword" class="form-control me-2 w-50">
+				<form id="searchFrom" class="d-flex justify-content-end mb-3">
+					<select class="form-select me-2 w-25" id="option" name="answerState">
+						<option value="-1" th:selected="${search.answerState == -1 or search.answerState == null}">답변상태</option>
+						<option value="0" th:selected="${search.answerState == 0}">답변대기</option>
+						<option value="1" th:selected="${search.answerState == 1}">답변완료</option>
+					</select> 
+					<input type="text" placeholder="제목 or 내용 검색" th:field="${search.keyword}" class="form-control me-2 w-50">
+					<input type="text" th:field="${search.page}" hidden="true">
 					<button class="btn btn-outline-success">Search</button>
 				</form>
 				<!-- 목록 -->
@@ -41,16 +43,44 @@
 						</tr>
 					</tbody>
 				</table>
+				<p class="text-center" th:unless="${paging.total > 0}">데이터가 없습니다.</p>
+				
 				<div style="text-align: right">
 					<a th:href="@{/support/qnaInsert}"><button type="button" class="btn btn-outline-success m-2">등록</button></a>
 				</div>
 				<!-- 페이지네이션 -->
+				<nav aria-label="Page navigation" >
+					<ul class="pagination justify-content-center mt-3">
+						<!-- 이전페이지 -->
+						<li class="page-item"
+							th:classappend="${paging.prev ? '' : 'disabled'}"><a
+							class="page-link"
+							th:href="@{/support/qnaList(page=${paging.startPage - paging.viewPage}, keyword=${search.keyword}, answerState=${search.answerState})}"
+							aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+						</a></li>
+						<!-- 페이지번호 매기기 -->
+						<li class="page-item"
+							th:classappend="${pageNum == paging.page ? 'active' : ''}"
+							th:each="pageNum : ${#numbers.sequence(paging.startPage, paging.endPage)}">
+							<a class="page-link"
+							th:href="@{/support/qnaList(page=${pageNum}, keyword=${search.keyword}, answerState=${search.answerState})}">[[${pageNum}]]</a>
+						</li>
+						<!-- 다음페이지 -->
+						<li class="page-item"
+							th:classappend="${paging.next ? '' : 'disabled'}"><a
+							class="page-link"
+							th:href="@{/support/qnaList(page=${paging.endPage + 1}, keyword=${search.keyword}, answerState=${search.answerState})}"
+							aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+						</a></li>
+					</ul>
+				</nav>
+				<!-- 페이지네이션 END -->
 			</div>
 		</div>
 		
 		<script>
 		// 단건조회 이벤트
-		$("tr").on("click", (e) =>{
+		$("tbody > tr").on("click", (e) =>{
 			let postNO = $(e.currentTarget).find("th").text();
 			location.href = `${ctxPath}/support/qnaDetail?postNo=${postNO}`;
 		});

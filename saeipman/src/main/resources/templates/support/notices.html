@@ -11,9 +11,8 @@
 		<div class="col-sm-12 col-xl-11">
 			<div class="bg-light rounded p-4">
 				<h4 class="mb-4">세입만 공지사항</h4>
-				<!-- 답변상태 -->
-				<form id="searchFrom" class="d-flex justify-content-end">
-					<input type="text" name="keyword" class="form-control me-2 w-50">
+				<form id="searchFrom" class="d-flex justify-content-end mb-3">
+					<input type="text" name="keyword" class="form-control me-2 w-50" placeholder="제목 검색">
 					<button class="btn btn-outline-success">Search</button>
 				</form>
 				<table class="table table-hover" style="text-align: center">
@@ -36,9 +35,10 @@
 						</tr>
 					</tbody>
 				</table>
+				<p class="text-center" th:if="${paging.total == 0}">데이터가 없습니다.</p>
 			</div>
 			<!-- 페이지네이션 -->
-			<nav aria-label="Page navigation">
+			<nav aria-label="Page navigation" >
 				<ul class="pagination justify-content-center mt-3">
 					<!-- 이전페이지 -->
 					<li class="page-item"
@@ -67,7 +67,7 @@
 		</div>
 		<script>
 		// 단건조회 이벤트
-			$("tr").on("click", (e) =>{
+			$("tbody > tr").on("click", (e) =>{
 				let postNO = $(e.currentTarget).find("th").text();
 				location.href = `${ctxPath}/support/noticeDetail?postNo=${postNO}`;
 			});

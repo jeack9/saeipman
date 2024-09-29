@@ -2,154 +2,259 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.saeipman.app.admin.mapper.QnaMapper">
 	<select id="selectQnaList">
-		select post_no,
-		       title,
-		       content,
-		       writer,
-		       reg_date,
-		       answer_state,
-		       writer_id
-		from  qna
-		WHERE writer_id = #{writerId}
-		ORDER BY 1 DESC
+		SELECT q.*
+		FROM
+		(SELECT post_no,
+		title,
+		content,
+		writer,
+		reg_date,
+		answer_state,
+		writer_id
+		, ROW_NUMBER() OVER (ORDER BY post_no desc) AS rn
+		FROM qna
+		<where>
+			(title LIKE '%' || #{keyword} || '%' OR content LIKE '%' ||
+			#{keyword} || '%')
+			<if test="auth != 0">
+				AND writer_id = #{writerId}
+			</if>
+			<if test="answerState != null and answerState != -1">
+				AND answer_state = #{answerState}
+			</if>
+		</where>
+		) q
+		WHERE q.rn BETWEEN (#{page} - 1) * #{recordSize} + 1 AND #{page} *
+		#{recordSize}
+		ORDER BY q.rn DESC
 	</select>
-	
-	<resultMap id="qnaIncludeCmt" type="com.saeipman.app.admin.Service.QnaVO">
-	<id column="post_no" property="postNo"/>
-	<id column="group_id" property="groupId"/>
-  	<collection property="qnaCmts" javaType="java.util.ArrayList" column="post_no" ofType="com.saeipman.app.admin.Service.QnaCmtVO" select="selectParentQnaCmtList"/>
-  	<collection property="qnaFiles" javaType="java.util.ArrayList" column="group_id" ofType="com.saeipman.app.file.service.FileVO" select="selectFiles"/>
+
+	<!-- qna 페이징용 토탈 -->
+	<select id="totalQna">
+		SELECT COUNT(*)
+		FROM qna
+		<where>
+			(title LIKE '%' || #{keyword} || '%' OR content LIKE '%' || #{keyword} || '%')
+			<if test="auth != 0">
+				AND writer_id = #{writerId}
+			</if>
+			<if test="answerState != null and answerState != -1">
+				AND answer_state = #{answerState}
+			</if>
+		</where>
+	</select>
+
+	<resultMap id="qnaIncludeCmt"
+		type="com.saeipman.app.admin.Service.QnaVO">
+		<id column="post_no" property="postNo" />
+		<id column="group_id" property="groupId" />
+		<collection property="qnaCmts"
+			javaType="java.util.ArrayList" column="post_no"
+			ofType="com.saeipman.app.admin.Service.QnaCmtVO"
+			select="selectParentQnaCmtList" />
+		<collection property="qnaFiles"
+			javaType="java.util.ArrayList" column="group_id"
+			ofType="com.saeipman.app.file.service.FileVO" select="selectFiles" />
 	</resultMap>
 	<!-- qna 단건조회 -->
 	<select id="selectQnaInfo" resultMap="qnaIncludeCmt">
 		select post_no,
-		       title,
-		       content,
-		       writer,
-		       mod_date,
-		       reg_date,
-		       group_id,
-		       answer_state,
-		       writer_id
-		from  qna
+		title,
+		content,
+		writer,
+		mod_date,
+		reg_date,
+		group_id,
+		answer_state,
+		writer_id
+		from qna
 		where post_no = #{postNo}
 	</select>
-	
-	<resultMap id="pcCmts" type="com.saeipman.app.admin.Service.QnaCmtVO">
-	<id column="cmt_group" property="cmtGroup"/>
-  	<collection property="childCmts" javaType="java.util.ArrayList" column="cmt_group" ofType="com.saeipman.app.admin.Service.QnaCmtVO" select="selectChildQnaCmtList"/>
+
+	<resultMap id="pcCmts"
+		type="com.saeipman.app.admin.Service.QnaCmtVO">
+		<id column="cmt_group" property="cmtGroup" />
+		<collection property="childCmts"
+			javaType="java.util.ArrayList" column="cmt_group"
+			ofType="com.saeipman.app.admin.Service.QnaCmtVO"
+			select="selectChildQnaCmtList" />
 	</resultMap>
 	<!-- 부모댓글 목록조회 -->
 	<select id="selectParentQnaCmtList" resultMap="pcCmts">
-	SELECT * FROM
+		SELECT * FROM
 		(SELECT
-		    cmt_no,
-		    post_no,
-		    content,
-		    writer_id,
-		    auth,
-		    cmt_rep,
-		    cmt_group,
-		    cmt_order,
-		    state,
-		    reg_date
-		    ,ROW_NUMBER() OVER (ORDER BY cmt_no desc) AS row_num
+		cmt_no,
+		post_no,
+		content,
+		writer_id,
+		auth,
+		cmt_rep,
+		cmt_group,
+		cmt_order,
+		state,
+		reg_date
+		,ROW_NUMBER() OVER (ORDER BY cmt_no desc) AS row_num
 		FROM
-		    qna_cmt
+		qna_cmt
 		WHERE
-		    post_no = #{postNo} AND cmt_rep = 0
+		post_no = #{postNo} AND cmt_rep = 0
 		)
-	WHERE row_num BETWEEN (#{paging.page} - 1) * #{paging.recordSize} + 1 AND #{paging.page} * #{paging.recordSize}
+		WHERE row_num BETWEEN (#{paging.page} - 1) * #{paging.recordSize} + 1 AND
+		#{paging.page} * #{paging.recordSize}
 	</select>
-	
+
 	<!-- 자식댓글 목록조회 -->
 	<select id="selectChildQnaCmtList">
-	SELECT
-	    cmt_no,
-	    post_no,
-	    content,
-	    writer_id,
-	    auth,
-	    cmt_rep,
-	    cmt_group,
-	    cmt_order,
-	    state,
+		SELECT
+		cmt_no,
+		post_no,
+		content,
+		writer_id,
+		auth,
+		cmt_rep,
+		cmt_group,
+		cmt_order,
+		state,
 		reg_date
-	FROM
-	    qna_cmt
-	WHERE cmt_group = #{cmt_group} AND cmt_rep = 1
-	ORDER BY cmt_order ASC
+		FROM
+		qna_cmt
+		WHERE cmt_group = #{cmt_group} AND cmt_rep = 1
+		ORDER BY cmt_order ASC
 	</select>
-	
+
 	<!-- 파일목록 조회 -->
 	<select id="selectFiles">
-    	SELECT
-		    file_id,
-		    file_path,
-		    file_name,
-		    file_type,
-		    table_name,
-		    file_size,
-		    group_id
+		SELECT
+		file_id,
+		file_path,
+		file_name,
+		file_type,
+		table_name,
+		file_size,
+		group_id
 		FROM
-		    file_info
+		file_info
 		WHERE
-		    group_id = #{groupId}
-    </select>
+		group_id = #{groupId}
+	</select>
 
 	<!-- qna 단건등록 -->
 	<insert id="insertQna">
 		INSERT INTO qna (
-		    post_no,
-		    title,
-		    writer,
-		    content,
-		    reg_date,
-		    mod_date,
-		    group_id,
-		    answer_state,
-		    writer_id
+		post_no,
+		title,
+		writer,
+		content,
+		reg_date,
+		mod_date,
+		group_id,
+		answer_state,
+		writer_id
 		) VALUES (
-		    qna_seq.NEXTVAL,
-		    #{title},
-		    #{writer},
-		    #{content},
-		    sysdate,
-		    sysdate,
-		    #{groupId},
-		    0,
-		    #{writerId}
+		qna_seq.NEXTVAL,
+		#{title},
+		#{writer},
+		#{content},
+		sysdate,
+		sysdate,
+		#{groupId},
+		0,
+		#{writerId}
 		)
 	</insert>
 
 	<!-- 부모 댓글 단건등록 -->
 	<insert id="insertParentCmt">
-	INSERT INTO qna_cmt (
-	    cmt_no,
-	    post_no,
-	    content,
-	    writer_id,
-	    auth,
-	    cmt_rep,
-	    cmt_group,
-	    cmt_order
-	) VALUES (
-	    qna_cmt_seq.NEXTVAL,
-	    #{postNo},
-	    #{content},
-	    #{writerId},
-	    #{auth},
-	    0,
-	    qna_cmt_seq.NEXTVAL,
-	    qna_cmt_seq.NEXTVAL
-	)
+		<selectKey order="BEFORE" resultType="int"
+			keyProperty="cmtNo">
+			SELECT qna_cmt_seq.NEXTVAL FROM dual
+		</selectKey>
+		INSERT INTO qna_cmt (
+		cmt_no,
+		post_no,
+		content,
+		writer_id,
+		auth,
+		cmt_rep,
+		cmt_group,
+		cmt_order
+		) VALUES (
+		#{cmtNo},
+		#{postNo},
+		#{content},
+		#{writerId},
+		#{auth},
+		0,
+		#{cmtNo},
+		#{cmtNo}
+		)
 	</insert>
-	
+
+	<!-- 자식 댓글 단건등록 -->
+	<insert id="insertChildCmt">
+		<selectKey order="BEFORE" resultType="int"
+			keyProperty="cmtNo">
+			SELECT qna_cmt_seq.NEXTVAL FROM dual
+		</selectKey>
+		INSERT INTO qna_cmt (
+		cmt_no,
+		post_no,
+		content,
+		writer_id,
+		auth,
+		cmt_rep,
+		cmt_group,
+		cmt_order
+		) VALUES (
+		#{cmtNo},
+		#{postNo},
+		#{content},
+		#{writerId},
+		#{auth},
+		1,
+		#{cmtGroup},
+		#{cmtNo}
+		)
+	</insert>
+
+	<!-- 부모댓글 토탈 (페이징 부모댓글기준) -->
 	<select id="totalParentCmt">
 		SELECT COUNT(*)
 		FROM qna_cmt
 		WHERE
-		    post_no = #{postNo} AND cmt_rep = 0
+		post_no = #{postNo} AND cmt_rep = 0
 	</select>
 
+	<!-- qna 답변완료 상태로 변경 -->
+	<update id="updateStateToOne">
+		UPDATE qna
+		SET answer_state = 1
+		WHERE post_no = #{postNo}
+	</update>
+
+	<!-- 댓글삭제 -->
+	<update id="deleteCmt">
+		UPDATE qna_cmt
+		SET content = '삭제된 댓글입니다.', state = -1
+		WHERE cmt_no = #{cmtNo} 
+		<if test="auth != 0">
+		AND writer_id = #{writerId}
+		</if>
+	</update>
+	<!-- 댓글 단건조회 -->
+	<select id="selectCmtInfo">
+		SELECT
+		cmt_no
+		,post_no
+		,content
+		,writer_id
+		,auth
+		,cmt_rep
+		,cmt_group
+		,cmt_order
+		,state
+		,reg_date
+		FROM qna_cmt
+		WHERE cmt_no = #{cmtNo}
+	</select>
 </mapper>
