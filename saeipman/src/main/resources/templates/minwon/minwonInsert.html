@@ -32,9 +32,15 @@
 
 .imgDiv {
 	float: left;
-	width: 30%;
+	width: calc(25% - 5px);
 	box-sizing: border-box;
-	margin: 30px;
+	margin: 10px;
+}
+
+#preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
 }
 </style>
 <title>Insert title here</title>
@@ -94,8 +100,9 @@
 		</div>
 	</form>
 	<script>
-		//$('form[name="insertForm"]').on("submit", insertHandler);
-		
+		$(function() {
+    		$('form[name="insertForm"]').submit(insertHandler); // 폼 제출 이벤트에 핸들러 연결
+		})
 		const dataTransfer = new DataTransfer(); // 파일 관리 객체 생성
 
 		// 파일 이미지 미리보기
@@ -108,8 +115,8 @@
 			if (!Array.from(dataTransfer.files).some(file => file.name === files[i].name)) {
 				let reader = new FileReader();
 				reader.onload = function(e) {
-					let div = $('<div>').attr({'class': 'imgDiv ms-3', 'data-fileid': files[i].name});
-					let img = $('<img>').attr({'src': e.target.result, 'width': '200px', 'height': '200px'});
+					let div = $('<div>').attr({'class': 'imgDiv col-2 me-2', 'data-fileid': files[i].name});
+					let img = $('<img>').attr({'src': e.target.result, 'width': '150px', 'height': '150px'});
 					let delBtn = $('<button>').attr({'type': 'button', 'class': 'imageDel'}).html('X');
 					$('#preview').append(div);
 					$(div).append(img);
@@ -154,6 +161,26 @@
 		
 		function insertHandler(e){
 			e.preventDefault()
+			
+		    let title = $('#title').val();
+		    let category = $('#category').val();
+		    let content = $('#exampleFormControlTextarea1').val();
+
+		    if (!title) {
+		        alert("제목을 입력해주세요.");
+		        return;
+		    }
+		    
+		    if (!category) {
+		        alert("카테고리를 선택해주세요.");
+		        return;
+		    }
+		    
+		    if (!content) {
+		        alert("내용을 입력해주세요.");
+		        return;
+		    }
+			
 			$('[name="visitsDate1"]').val(  $("#visitsDate1").val().replace("T", " "))
 			$('[name="visitsDate2"]').val(  $("#visitsDate2").val().replace("T", " "))
 			insertForm.submit();

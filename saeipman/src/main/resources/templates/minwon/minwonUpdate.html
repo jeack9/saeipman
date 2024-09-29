@@ -32,10 +32,11 @@
 }
 .imgDiv {
 	float: left;
-	width: 30%;
+	width:  calc(25% - 5px);
 	box-sizing: border-box;
-	margin: 30px;
+	margin: 10px;
 }
+
 </style>
 </head>
 <body>
@@ -154,7 +155,7 @@
 			
 			let reader = new FileReader();
 			reader.onload = function(e) {
-				let div = $('<div>').attr({'class': 'imgDiv ms-3', 'data-fileid': inputFile[i].name});
+				let div = $('<div>').attr({'class': 'imgDiv col-2 me-2 ms-3', 'data-fileid': inputFile[i].name});
 				let img = $('<img>').attr({
 					'src': e.target.result,
 					'class': 'imgId',

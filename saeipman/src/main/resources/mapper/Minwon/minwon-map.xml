@@ -200,7 +200,7 @@
 			</if>
 			, visits_date1 = #{visitsDate1}
 			, visits_date2 = #{visitsDate2}
-			
+			, mod_date = SYSDATE
 		where post_no = #{postNo}
 	</update>
 	

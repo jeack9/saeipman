@@ -10,19 +10,43 @@
 <style>
 /* 댓글 섹션 스타일 */
 #comments-section {
-	margin-top: 30px;
-	padding: 10px;
-	background-color: #f9f9f9;
-	border: 1px solid #ddd;
-	width: 80%;
-	margin: 0 auto;
-} 
+    margin-top: 30px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
 .group{
-	border: 1px solid #ddd; 
+	border: 1px solid #ddd;
+	border-radius: 5px;
 }
 
 .form-group {
+	margin-left: 10px;
+    margin-right: 10px;
 	margin-bottom: 10px;
+}
+
+/* 댓글 작성 섹션 */
+#comment-form-section {
+    width: 80%;
+    margin: 0 auto;
+    padding: 15px; /* 패딩을 적절하게 조절 */
+    background-color: #f1f5f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px; /* 댓글 목록과 폰트 크기 맞춤 */
+}
+
+/* 댓글 작성 폼 스타일 */
+#comment-form textarea {
+    width: 100%;
+    resize: vertical;
+    padding: 10px;
+    font-size: 14px; /* 폰트 크기를 동일하게 설정 */
 }
 
 /* 댓글 영역 */
@@ -79,15 +103,22 @@
 }
 
 /* 댓글 작성 폼 스타일 */
-textarea {
-	width: 100%;
-	resize: vertical;
+#comment-form textarea {
+    width: 100%;
+    resize: vertical;
+    padding: 10px;
 }
+
+
 
 .group {
 	margin-bottom: 15px;
 }
-
+.btn.btn-primary {
+	margin-bottom: 10px;
+    margin-left: 10px;
+    color: #FFFFFF;
+}
 /* 버튼 중앙 정렬 */
 .button-container {
 	display: flex;
@@ -139,7 +170,13 @@ textarea {
 			</tr>
 			<tr>
 				<th>내용</th>
-				<td id="textarea">[[${minwon.content}]]</td>
+				<td colspan="12" id="textarea">[[${minwon.content}]]</td>
+			</tr>
+			<tr>
+				<th>작성일</th>
+				<td>[[  ${#dates.format(minwon.regDate, 'yyyy/MM/dd')} ]]</td>
+				<th th:if="${minwon.modDate != null}">수정일</th>
+				<td>[[  ${#dates.format(minwon.modDate, 'yyyy/MM/dd')} ]]</td>
 			</tr>
 		</table>
 	</div>
@@ -181,24 +218,25 @@ textarea {
 		</form>
 	</div>
 
-	<div>
-		<section id="comments-section" th:style="'margin-top: 20px;'">
-
-			<h4>comment</h4>
-			<div id="comments-container">
-				<!-- 댓글 목록 -->
-				<div class="ms-3" id="cmtContainer"></div>
-			</div>
-			<!-- 댓글 작성 폼 -->
-			<form id="comment-form">
-				<div class="form-group">
-					<label for="comment">댓글 추가:</label>
-					<textarea class="form-control" id="comment" rows="3"></textarea>
-				</div>
-				<button type="button" class="btn btn-primary"
-					id="create-comment-btn">댓글 작성</button>
-			</form>
+	<div style="padding: 60px" >
+		<section id="comments-section">
+		    <h4>댓글</h4>
+		    <div id="comments-container">
+		        <!-- 댓글 목록이 여기에 표시됩니다 -->
+		        <div class="ms-3" id="cmtContainer"></div>
+		    </div>
 		</section>
+			
+			<!-- 댓글 작성 폼 -->
+			<section id="comment-form-section">
+				<p style="font-size: 18px;">댓글 작성</p>
+			    <form id="comment-form">
+			        <div class="form-group">
+			            <textarea class="form-control" id="comment" rows="3"></textarea>
+			        </div>
+			        <button type="button" class="btn btn-primary" id="create-comment-btn">댓글 등록</button>
+			    </form>
+			</section>
 
 		<!-- 대댓글 작성 폼 -->
 		<!-- 	<form id="comment-form">
@@ -259,8 +297,8 @@ textarea {
 	                  <div ${ply} ${onkey}>
 	                    <div class="comment-header">
 	                      <div>
-	                      <span class="fw-bold">${comment.writer}</span> <!-- 작성자 -->
-	                      <span>${dateString}</span> <!-- 작성일 -->
+	                      <span class="fw-bold" style="font-size: 18px;">${comment.writer}</span> <!-- 작성자 -->
+	                      <span style="color: gray;">${dateString}</span> <!-- 작성일 -->
 	                      </div>
 	                      ${deleteButton}
 	                    </div>
@@ -277,8 +315,8 @@ textarea {
 	                <div ${ply}>
 	                  <div class="comment-header">
 	                    <div >
-	                    	<span class="fw-bold">${comment.writer}</span>
-	                    	<span>${dateString}</span> <!-- 작성일 -->
+	                    	<span class="fw-bold" style="font-size: 18px;">${comment.writer}</span>
+	                    	<span style="color: gray;">${dateString}</span> <!-- 작성일 -->
 	                    
 	                    </div> <!-- 작성자 -->
 	                    ${deleteButton}
@@ -301,7 +339,7 @@ textarea {
 	                  <label for="reply${div.dataset.group}">대댓글 추가:</label>
 	                  <textarea class="form-control" id="reply${div.dataset.group}" rows="3"></textarea>
 	                </div>
-	                <button type="button" class="btn btn-primary reply-comment-btn" data-group="${div.dataset.group}">댓글 작성</button>
+	                <button type="button" class="btn btn-primary reply-comment-btn" data-group="${div.dataset.group}">댓글 등록</button>
 	              </form>`;
 	            $(div).append(replyForm);
 	          });
