@@ -28,7 +28,7 @@ public interface QnaService {
 	public int totalParentCmts(int postNo);
 	
 	// 자식댓글 단건등록
-	public boolean addChildCmt(QnaCmtVO cmt);
+	public QnaCmtVO addChildCmt(QnaCmtVO cmt);
 	
 	// qna 답변완료로 상태변경
 	public void changeStateToOne(int postNo);

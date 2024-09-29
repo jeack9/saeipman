@@ -228,7 +228,7 @@
 	<!-- qna 답변완료 상태로 변경 -->
 	<update id="updateStateToOne">
 		UPDATE qna
-		SET state = 1
+		SET answer_state = 1
 		WHERE post_no = #{postNo}
 	</update>
 
@@ -236,7 +236,10 @@
 	<update id="deleteCmt">
 		UPDATE qna_cmt
 		SET content = '삭제된 댓글입니다.', state = -1
-		WHERE cmt_no = #{cmtNo} AND writer_id = #{writerId}
+		WHERE cmt_no = #{cmtNo} 
+		<if test="auth != 0">
+		AND writer_id = #{writerId}
+		</if>
 	</update>
 	<!-- 댓글 단건조회 -->
 	<select id="selectCmtInfo">
