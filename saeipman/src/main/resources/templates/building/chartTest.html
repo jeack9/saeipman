@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}">
+<head>
+<meta charset="UTF-8">
+<title>title</title>
+<style>
+</style>
+
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+
+</head>
+<body>
+	<div layout:fragment="Main" class="container">
+		<h3>메인</h3>
+		<div class="col-3">
+			<hr>
+			<th:block th:each="list:${unMRent}">
+				<p>미납 현황</p>
+				<p>[[${list.paymentState}]]건</p>
+				<p>미납액 :
+					[[${#numbers.formatInteger(list.paymentMoney,3,'COMMA')}]]원</p>
+			</th:block>
+			<hr>
+		</div>
+		<div class="col-3">
+			<hr>
+			<p>현재 임대 현황</p>
+			<p>[[${ipju}]]/[[${totalRoom}]]호</p> 
+			<hr>
+		</div>
+		<div class="col-3">
+			<hr>
+			<p>계약 만료</p>
+			<p>[[${expCnt}]]건</p>
+			<hr>
+		</div>
+		<div class="col-5">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>번호</th>
+						<th>제목</th>
+						<th>건물명</th>
+						<th>작성자</th>
+						<th>처리상태</th>
+						<th>작성일</th>
+					</tr>
+				</thead>
+				<tbody>
+					<th:block th:each="info,iterStat : ${minwon}">
+						<tr>
+							<td>[[${iterStat.count}]]</td>
+							<td>[[${info.title}]]</td>
+							<td>[[${info.buildingName}]]</td>
+							<td>[[${info.roomNo}]]호</td>
+							<!-- 작성자 -->
+							<td>[[${info.acceptState}]]</td>
+							<td>[[ ${#dates.format(info.regDate, 'yyyy/MM/dd')} ]]</td>
+						</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="columnchart_material" style="width: 800px; height: 500px;"></div>
+		<script>
+			google.charts.load('current', {
+				'packages' : [ 'bar' ]
+			});
+			google.charts.setOnLoadCallback(drawChart);
+
+			function drawChart() {
+				var data = google.visualization
+						.arrayToDataTable([
+								[ 'Year', 'Sales', 'Expenses', 'Profit' ],
+								[ '2014', 1000, 400, 800 ],
+								[ '2015', 1170, 460, 250 ],
+								[ '2016', 660, 1120, 300 ],
+								[ '2017', 1030, 540, 350 ] ]);
+
+				var options = {
+					chart : {
+						title : 'Company Performance',
+						subtitle : 'Sales, Expenses, and Profit: 2014-2017',
+					}
+				};
+
+				var chart = new google.charts.Bar(document
+						.getElementById('columnchart_material'));
+
+				chart.draw(data, google.charts.Bar.convertOptions(options));
+			}
+		</script>
+	</div>
+</body>
+</html>

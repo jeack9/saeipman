@@ -16,9 +16,10 @@ input {
 </style>
 </head>
 <body>
-	<div layout:fragment="Main" class="row">
-	<h4 class="mb-4">내 건물 추가</h4>
-		<div>
+
+	<div layout:fragment="Main" class="container">
+		<h4>건물 추가</h4>
+		<div class="row roomWrap gx-4 justify-content-center">
 			<form th:action="@{/buildingInsert}" method="POST" name="insertForm"
 				class="row g-3" enctype="multipart/form-data">
 				<div class="col-md-6">
@@ -308,7 +309,7 @@ input {
 			if (!Array.from(dataTransfer.files).some(file => file.name === files[i].name)) {
 				let reader = new FileReader();
 				reader.onload = function(e) {
-					let div = $('<div>').attr({'class': 'imgDiv col-3 me-2', 'data-fileid': files[i].name});
+					let div = $('<div>').attr({'class': 'imgDiv col-2 me-2', 'data-fileid': files[i].name});
 					let img = $('<img>').attr({'src': e.target.result, 'width': '150px', 'height': '150px'});
 					let delBtn = $('<button>').attr({'type': 'button', 'class': 'imageDel'}).html('X');
 					$('#preview').append(div);

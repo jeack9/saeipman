@@ -1,160 +1,127 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}">
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{common/layouts/default_layout}">
 
 <head>
-<meta charset="UTF-8">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-	integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-	crossorigin="anonymous" referrerpolicy="no-referrer" />
-<style>
-.buildingBox {
-	padding-bottom: 60px;
-	padding-top: 0px;
-	width: 95%;
-	font-family: monospace;
-	
-}
+	<meta charset="UTF-8">
+	<style>
+		.title {
+			float: left;
+			font-weight: bold;
+		}
+		
+		.buildingBox {
+			padding-bottom: 60px;
+			padding-top: 0px;
+			width: 95%;
+		}
 
-.box-part {
-	background: #FFF;
-	border-radius: 0;
-	padding: 60px 10px;
-	margin: 30px 0px;
-}
+		.buildingBox .btn {
+			width: 120px;
+			display: inline-block;
+			background: #73bbfa;
+			border-color: #73bbfa;
+			color: rgb(48, 48, 48);
+			text-transform: uppercase;
+			border-radius: 1.0em;
+			border-bottom: 0.25em solid #42738f;
+			-moz-transition: 0.1s;
+			-webkit-transition: 0.1s;
+			transition: 0.1s;
+			box-shadow: 0 2px 3px #5789b5;
+			position: relative;
+		}
 
-.fa {
-	color: #4183D7;
-}
+		.buildingBox .btn:hover {
+			background-color: #1e9feb;
+			border-color: #1e9feb;
+			border-bottom-width: 0;
+		}
 
-/* .btn-outline-primary {
-	color: #6498e9;
-    border-color: #6498e9;
-} */
+		.page-link:hover {
+			background-color: skyblue;
+			color: white;
+		}
 
-.page-link:hover {
-	background-color: skyblue;
-	color: white;
-}
+		.page-link:active {
+			background-color: skyblue;
+			color: white;
+		}
 
-.page-link:active {
-	background-color: skyblue;
-	color: white;
-}
-
-/* .buildingBox .btn {
-	background: #6498e9;
-	border-color: #6498e9;
-	color: white;
-}
-
-.buildingBox .btn:hover {
-	background: white;
-	border-color: white;
-	color: #6498e9;	
-} */
-
-
-.buildingBox .btn {
-  display: inline-block;
-  background: #73bbfa;
-  border-color: #73bbfa;
-  color: #fff;
-  text-decoration: none;
-  text-transform: uppercase;
-  border-radius: 0.5em;
-  border-bottom: 0.25em solid #42738f;
-  -moz-transition: 0.1s;
-  -webkit-transition: 0.1s;
-  transition: 0.1s;
-  box-shadow: 0 2px 3px #5789b5;
-  position: relative;
-}
-
-.buildingBox .btn:hover {
-  background-color: #1e9feb;
-  border-color: #1e9feb;
-  border-bottom-width: 0;
- }
-
-</style>
+	</style>
 </head>
 
 <body>
-	<div class="buildingBox row roomWrap gx-0 justify-content-center" layout:fragment="Main">
-		<!-- <div class="row"> -->
-		<!-- Thymeleaf each -->
-		<h4 class="mb-4">관리비관리</h4>
-		<th:block th:each="building : ${list}">
-			<div class="card border-secondary col mb-4 col-3 me-4" style="margin-top: 50px;">
-		
-				<div class="card-header" style="font-size: 20px; color: black; font-weight: bold; padding-left: 15px"><i class="fa-sharp-duotone fa-solid fa-building"></i> [[${building.buildingName}]]</div>
-				<div class="card-body text-secondary" style="font-size: 15px; font-family: monospace;">
-					<p class="card-text" style="font-style: italic; color: black;"><i class="fa-sharp fa-solid fa-location-dot" style="color: #c32c2c;"></i> [[ ${building.doroAddr } ]]</p>
-					<p class="card-text"><i class="fa-duotone fa-solid fa-file-invoice-dollar"></i> 전월 관리비 <b>[[${ building.previousMonth }]]원</b></p>
-					<p class="card-text"><i class="fa-duotone fa-solid fa-receipt"></i> 금월 관리비 <b>[[ ${building.thisMonth } ]]원</b></p>
-					<div style="text-align: center;">
-						<button type="button" class="btn btn-outline-primary"
-							th:onclick="|location.href='@{/gwanlibiItemList(buildingId=${building.buildingId})}'|">관리비
-							항목 설정</button>
-						<button type="button" class="btn btn-outline-primary"
-							th:onclick="|location.href='@{/gwanlibiDetailsBillList(buildingId=${building.buildingId})}'|">관리비
-							상세 내역</button>
-					</div>
+	<div layout:fragment="Main" class="buildingBox justify-content-center">
+
+		<div  class=" row roomWrap gx-0 justify-content-left">
+			<!-- Thymeleaf each -->
+			<h4 class="title">관리비 항목 설정 <img class="" th:src="@{/img/gwanlibi.png}">
+			<br>아이콘 수정 중이니 아이콘 마음대로 변경하셔도 됩니다. 다만, 사이트 통일감을 떨어뜨리는 이미지는 지양해주시면 감사하겠슴당. 그럼 20000</h4>
+			<th:block th:each="building : ${list}">
+				<div class="card border-secondary col mb-4 col-3 me-4" >
+					<div class="card-header" style="font-size: 17px; font-weight: bold;">
+						<i class="fa-sharp-duotone fa-solid fa-building"></i> [[${building.buildingName}]]</div>
+						<div class="card-body text-secondary" style="font-size: 15px;">
+							<p><i class="fa-sharp fa-solid fa-location-dot" style="color: tomato;"></i> [[${building.doroAddr}]]</p>
+							<p>&nbsp;- 전월 관리비 : <b>[[${building.previousMonth}]]원</b></p>
+							<p>&nbsp;- 금월 관리비 : <b>[[${building.thisMonth}]]원</b></p>
+							<div style="text-align: center;">
+								<button type="button" class="btn btn-outline-primary"
+								th:onclick="|location.href='@{/gwanlibiItemList(buildingId=${building.buildingId})}'|">관리비<br>항목 설정</button>
+								<button type="button" class="btn btn-outline-primary"
+								th:onclick="|location.href='@{/gwanlibiDetailsBillList(buildingId=${building.buildingId})}'|">관리비<br>상세 내역</button>
+							</div>
+						</div>						
+
 				
-				</div>
-			</div>
-		</th:block>
-
-		<!-- pagination -->
-		<nav aria-label="Page navigation example" style="margin-top: 50px;">
-			<ul class="pagination justify-content-center">
-				<!-- 맨 첫 페이지로 이동 : 시작 페이지(startPage)가 1보다 크면 이전 버튼 출력 -->
-				<th:block th:if="${page.startPage > 1}">
-					<li class="page-item"><a class="page-link"
-						th:href="@{/buildingGwanlibiList?pageNum=1}" aria-label="Previous">
-							<span aria-hidden="true">&laquo;</span>
+				<!-- pagination -->
+				<nav aria-label="Page navigation example" style="margin-top: 50px;">
+					<ul class="pagination justify-content-center">
+						<!-- 맨 첫 페이지로 이동 : 시작 페이지(startPage)가 1보다 크면 이전 버튼 출력 -->
+						<th:block th:if="${page.startPage > 1}">
+							<li class="page-item"><a class="page-link" th:href="@{/buildingGwanlibiList?pageNum=1}"
+								aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+							</a></li>
+						</th:block>
+						
+						<!-- 이전 페이지 버튼 (Previous) -->
+						<th:block th:if="${page.prev}">
+							<li class="page-item"><a class="page-link"
+								th:href="@{/buildingGwanlibiList?pageNum={page}(page = ${page.startPage - 1})}"
+								aria-label="Previous"> <span aria-hidden="false">&lt;</span>
+							</a></li>
+						</th:block>
+						
+						<!-- 페이지 버튼 생성 -->
+						<th:block th:each="pageButton : ${#numbers.sequence(page.startPage, page.endPage)}">
+							<li class="page-item" th:with="start=${page.startPage}, end=${page.endPage}"
+							th:classappend="${pageButton == page.pageNum ? 'active' : ''}">
+							<a class="page-link" th:href="@{/buildingGwanlibiList?pageNum={page} (page=${pageButton})}"
+							th:text=${pageButton}></a>
+						</li>
+					</th:block>
+					
+					<!-- 다음 페이지 버튼 (Next) -->
+					<li class="page-item" th:if="${page.next}"><a class="page-link"
+						th:href="@{/buildingGwanlibiList?pageNum={page} (page = ${page.endPage +1})}" aria-label="Next">
+						<span aria-hidden="true">&gt;</span>
 					</a></li>
-				</th:block>
-
-				<!-- 이전 페이지 버튼 (Previous) -->
-				<th:block th:if="${page.prev}">
-					<li class="page-item"><a class="page-link"
-						th:href="@{/buildingGwanlibiList?pageNum={page}(page = ${page.startPage - 1})}"
-						aria-label="Previous"> <span aria-hidden="false">&lt;</span>
-					</a></li>
-				</th:block>
-
-				<!-- 페이지 버튼 생성 -->
-				<th:block
-					th:each="pageButton : ${#numbers.sequence(page.startPage, page.endPage)}">
-					<li class="page-item"
-						th:with="start=${page.startPage}, end=${page.endPage}"
-						th:classappend="${pageButton == page.pageNum ? 'active' : ''}">
-						<a class="page-link"
-						th:href="@{/buildingGwanlibiList?pageNum={page} (page=${pageButton})}"
-						th:text=${pageButton}></a>
-					</li>
-				</th:block>
-
-				<!-- 다음 페이지 버튼 (Next) -->
-				<li class="page-item" th:if="${page.next}"><a class="page-link"
-					th:href="@{/buildingGwanlibiList?pageNum={page} (page = ${page.endPage +1})}"
-					aria-label="Next"> <span aria-hidden="true">&gt;</span>
-				</a></li>
-
-				<!-- 끝 페이지(endPage)-->
-				<th:block th:if="${page.endPage < page.realEnd}">
-					<li class="page-item"><a class="page-link"
-						th:href="@{/buildingGwanlibiList?pageNum={page}(page = ${page.realEnd})}"
-						aria-label="Previous"> <span aria-hidden="false">&raquo;</span>
-					</a></li>
-				</th:block>
-			</ul>
-		</nav>
+					
+					<!-- 끝 페이지(endPage)-->
+					<th:block th:if="${page.endPage < page.realEnd}">
+						<li class="page-item"><a class="page-link"
+							th:href="@{/buildingGwanlibiList?pageNum={page}(page = ${page.realEnd})}"
+							aria-label="Previous"> <span aria-hidden="false">&raquo;</span>
+						</a></li>
+					</th:block>
+				</ul>
+			</nav>
+		</div>
 	</div>
-</body>
-
-</html>
+	</div>
+	</body>
+	
+	</html>

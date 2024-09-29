@@ -1,5 +1,7 @@
 package com.saeipman.app.payment.service;
 
+import java.sql.Date;
+
 import lombok.Data;
 
 @Data
@@ -23,7 +25,7 @@ public class PaymentVO {
 	
 	private String imdaeinId; // 임대인 아이디
 	private String imchainPhone; //임차인 아이디(연락처)
-	
+	private Date expDate;//만료일
 	
 
 	public String getmRentHistoryNo() {

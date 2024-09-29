@@ -13,9 +13,10 @@
 		AND c.constract_state = 1
 	</select>
 
-<!-- 미납자 카운팅 -->
-	<select id="selectUnPayment">
-		SELECT count(payment_state)
+	<!-- 미납자 카운팅 -->
+	<select id="selectUnPayment" resultType="PaymentVO">
+		SELECT count(payment_state) as payment_state,
+			   sum(m.payment_money) as payment_money
 		FROM m_rent_payment_history m join room_info r
 		                               on m.room_id = r.room_id
 		                              join building_info b
@@ -23,5 +24,17 @@
 		WHERE b.imdaein_id = #{imdaeinId}
 		AND payment_state = -1
 	</select>
-
+	<select id="selectTotalRoom" resultType="int">
+		SELECT count(r.room_id)
+		FROM room_info r join building_info b
+		                 on r.building_id = b.building_id
+		WHERE b.imdaein_id = #{imdaeinId}
+	</select>
+	<select id="selectExpCnt" resultType="int">
+		SELECT count(*)
+		FROM constract_info
+		<![CDATA[ 
+		WHERE exp_date<=TO_CHAR(ADD_MONTHS(SYSDATE,+3),'YYYY-MM-DD')
+		]]>
+	</select>
 </mapper>
