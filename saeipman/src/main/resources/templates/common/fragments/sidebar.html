@@ -1,14 +1,20 @@
 <div class="sidebar pe-4 pb-3" xmlns:th="http://www.thymeleaf.org" th:fragment="SidebarFrag">
 	<nav class="navbar bg-light navbar-light">
-		<a th:href="@{/}" class="navbar-brand mx-4 mb-3">
-				<img th:src="@{/img/saeipman-logo.png}" width="80px" style="margin-left: 50px">
+		<a th:href="@{/}" class="navbar-brand mx-4 mb-3"> <img th:src="@{/img/saeipman-logo.png}" width="80px" style="margin-left: 50px">
 		</a>
 		<div class="d-flex align-items-center ms-4 mb-4">
 			<div class="position-relative">
-				<img class="rounded-circle" th:src="@{/img/user.jpg}" alt=""
-					style="width: 40px; height: 40px;">
-				<div
-					class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+			
+				<div th:if="${login.auth == 1}">
+					<img class="rounded-circle" th:src="@{/img/landlord.png}" alt="" style="width: 40px; height: 40px;">
+				</div>
+				<div th:if="${login.auth == 2}">
+					<img class="rounded-circle" th:src="@{/img/tenant.png}" alt="" style="width: 40px; height: 40px;">
+					
+				</div>
+
+
+				<div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
 			</div>
 			<div class="ms-3">
 				<h6 class="mb-0">[[${login != null ? login.loginId : "익명"}]]</h6>
@@ -20,52 +26,42 @@
 		</div>
 		<div class="navbar-nav w-100">
 			<a th:href="@{/buildingList}" th:if="${login.auth == 1}" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>건물관리</a>
-			
+
 			<div class="nav-item dropdown" th:if="${login.auth == 1}">
-				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
-						class="fa fa-laptop me-2"></i>방관리</a>
+				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>방관리</a>
 				<div class="dropdown-menu bg-transparent border-0">
-					<a th:href="@{/room/roomListBackup}" class="dropdown-item ps-5">a. 방 목록</a>
-					<a th:href="@{/room/constractList}" class="dropdown-item ps-5">b. 방 계약관리</a>
+					<a th:href="@{/room/roomListBackup}" class="dropdown-item ps-5">a. 방 목록</a> <a th:href="@{/room/constractList}" class="dropdown-item ps-5">b. 방 계약관리</a>
 				</div>
 			</div>
-			
+
 			<!-- 관리비 관리 -->
 			<div class="nav-item dropdown" th:if="${login.auth == 1}">
-				<a th:href="@{/buildingGwanlibiList}" class="nav-item nav-link">
-					<i class="fa-duotone fa-solid fa-cash-register me-2"></i>관리비 관리
+				<a th:href="@{/buildingGwanlibiList}" class="nav-item nav-link"> <i class="fa-duotone fa-solid fa-cash-register me-2"></i>관리비 관리
 				</a>
 			</div>
-			
+
 
 			<!-- 납부 내역 -->
 			<div class="nav-item dropdown" th:if="${login.auth == 1}">
-				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-					<i class="fa-solid fa-list-check me-2"></i>납부내역
+				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"> <i class="fa-solid fa-list-check me-2"></i>납부내역
 				</a>
-					<div class="dropdown-menu bg-transparent border-0">
-						<a th:href="@{/monthPaymentHistory}" class="dropdown-item ps-5">a. 월세 납부 내역</a>
-						<a th:href="@{/gwanlibiPaymentState}" class="dropdown-item ps-5">b. 관리비 납부 내역</a>
-					</div>
-			</div>
-			
-			<a th:href="@{/paymentInfo}" th:if="${login.auth == 2}" class="nav-item nav-link"><i
-					class="fa fa-tachometer-alt me-2"></i>납부</a>
-					
-			<div class="nav-item dropdown">
-				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
-						class="fa fa-laptop me-2"></i>커뮤니티</a>
 				<div class="dropdown-menu bg-transparent border-0">
-					 <a th:href="@{/noticeBuildingList}" class="dropdown-item ps-5">a. 공지사항</a> 
-					 <a th:href="@{/minwonList}" class="dropdown-item ps-5">b. 민원접수</a>
+					<a th:href="@{/monthPaymentHistory}" class="dropdown-item ps-5">a. 월세 납부 내역</a> <a th:href="@{/gwanlibiPaymentState}" class="dropdown-item ps-5">b. 관리비 납부 내역</a>
+				</div>
+			</div>
+
+			<a th:href="@{/paymentInfo}" th:if="${login.auth == 2}" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>납부</a>
+
+			<div class="nav-item dropdown">
+				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>커뮤니티</a>
+				<div class="dropdown-menu bg-transparent border-0">
+					<a th:href="@{/noticeBuildingList}" class="dropdown-item ps-5">a. 공지사항</a> <a th:href="@{/minwonList}" class="dropdown-item ps-5">b. 민원접수</a>
 				</div>
 			</div>
 			<div class="nav-item dropdown" th:if="${login.auth == 1}">
-				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
-						class="fa fa-laptop me-2"></i>고객지원</a>
+				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>고객지원</a>
 				<div class="dropdown-menu bg-transparent border-0">
-					 <a th:href="@{/support/notices}" class="dropdown-item ps-5">a. 세입만 공지</a> 
-					 <a th:href="@{/support/qnaList}" class="dropdown-item ps-5">b. 세입만 QnA</a>
+					<a th:href="@{/support/notices}" class="dropdown-item ps-5">a. 세입만 공지</a> <a th:href="@{/support/qnaList}" class="dropdown-item ps-5">b. 세입만 QnA</a>
 				</div>
 			</div>
 
