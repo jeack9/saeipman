@@ -3,6 +3,11 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layouts/default_layout}">
 <head>
+<style type="text/css">
+  .del-pointer{
+  	cursor: pointer;
+  }
+</style>
 <meta charset="UTF-8">
 <title>세입만 QnA</title>
 </head>
@@ -13,17 +18,17 @@
 			<div class="card">
 				<div
 					class="d-flex justify-content-between align-items-center card-header">
-					<h2>[[${qna.title}]]</h2>
+					<p class="m-0 fw-bold fs-4">[[${qna.title}]]</p>
 				</div>
 				<div class="card-body">
-					<div class="mb-3 d-flex justify-content-between border-bottom">
-						<p>작성자: [[${qna.writer}]]</p>
-						<p class="bg-warning text-dark rounded-pill p-2">[[${qna.answerState
+					<div class="pb-3 mb-2 d-flex justify-content-between border-bottom align-items-center">
+						<p class="align-middle text-muted m-0">작성자: [[${qna.writer}]]</p>
+						<p class="m-0 bg-warning text-dark rounded-pill p-2">[[${qna.answerState
 							== 0 ? '답변대기' : '답변완료'}]]</p>
 					</div>
 					<img th:each="file : ${qna.qnaFiles}" alt="이미지 로딩"
 						th:src="@{/images/{filePath}(filePath=${file.filePath})}"
-						width="150" class="me-3">
+						class="img-fluid pe-5 pb-3">
 					<pre class="lead">[[${qna.content}]]</pre>
 					<p class="text-end">수정일: [[${#dates.format(qna.modDate,
 						'yyyy.MM.dd')}]]</p>
@@ -36,7 +41,7 @@
 			<div id="paginationContainer">
 				<th:block
 					th:replace="~{support/fragments/qnaPagination :: qnaPaginationFrg}">
-				</th:replace>
+					</th:replace>
 			</div>
 			<!-- 페이지네이션 END -->
 
@@ -47,8 +52,8 @@
 						<input type="hidden" th:field="${qna.postNo}" />
 						<div class="mb-3">
 							<label for="content" class="form-label">댓글 내용</label>
-							<textarea id="content" name="content" class="form-control parentCmtInput"
-								rows="3" required></textarea>
+							<textarea id="content" name="content"
+								class="form-control parentCmtInput" rows="3" required></textarea>
 						</div>
 						<button type="button" class="btn btn-primary" id="pCommentBtn">댓글
 							작성</button>
@@ -78,8 +83,14 @@
 			// 자식댓글(대댓글) 클릭 이벤트
 			$(document).on("click", "button.childCmtBtn", function(e){
 				let frm = e.target.closest("form");
-				let textArea = e.target.closest("textarea");
+				let textArea = frm.querySelector("textArea");
 		 		let formObj = getFormObj(frm);
+		 		let parentCmtDiv = e.target.closest("div.parentCmt");
+		 		if(!formObj.content){
+		 			alert("내용을 입력하세요");
+		 			textArea.focus();
+		 			return;
+		 		}
 		 		
 		 		// 대댓글 등록 ajax 요청
 	            $.ajax({
@@ -88,7 +99,24 @@
 	                data : JSON.stringify(formObj),
 	                contentType : 'application/json',
 	                success: function (data, status) {
-	                	$('#paginationContainer').html(data);
+	                	//console.log(data);
+	                	let childCmt = `
+	                	<div class="ms-3">
+	    					<div class="list-group-item bg-light">
+	    						<div class="d-flex w-100 justify-content-between">
+	    							<h6 class="mb-1">${data.writerId}</h6>
+	    							<small>3 days ago</small>
+	    						</div>
+	    						<p class="mb-2">${data.content}</p>
+	    						<small 
+	    						class="p-2 bg-danger text-white rounded-3 border border-2 del-pointer" 
+	    						data-cmtno="${data.cmtNo}">삭제
+	    						</small>
+	    					</div>
+	    				</div>`;
+	    				parentCmtDiv.insertAdjacentHTML("beforeend", childCmt);
+	                	
+	    				//$('#paginationContainer').html(data);
 	                	$(textArea).val("");
 	                },
 	                error: function (err) {
@@ -103,6 +131,12 @@
 			function pCommentHandler(e){
 				let frm = e.target.closest("form");
 		 		let formObj = getFormObj(frm);
+		 		let textArea = frm.querySelector("textArea");
+		 		if(!formObj.content){
+		 			alert("내용을 입력하세요");
+		 			textArea.focus();
+		 			return;
+		 		}
 	            // 댓글 등록 ajax 요청
 	            $.ajax({
 	                url: `${ctxPath}/support/qnaParentCmt`,
@@ -142,8 +176,32 @@
 			
 			// 대댓글 버튼 토글
 			$(document).on("click", "div.parentCmt", function(e){
-				$(e.currentTarget).find("form").toggleClass("d-none");
+				if(e.target.closest("form") == null){
+					$(e.currentTarget).find("form").toggleClass("d-none");
+				}
 			});
+			
+			// 댓글 삭제버튼 이벤트
+			$(document).on("click", "small.del-pointer", function(e){
+				e.stopPropagation();
+				let cmtNo = e.target.dataset.cmtno;
+				let $contentBody = $(e.target).closest("div.cmtBody").find("p.contentBody");
+				console.log($contentBody);
+				$.ajax({
+			        url: `${ctxPath}/support/qnaCmt/${cmtNo}`,
+			        type: 'DELETE',
+			        success: function(data) {
+			        	// 삭제 후 변경된 내용으로 view 변경
+			            console.log(data);
+			            $contentBody.text(data.content);
+			            e.target.remove();
+			        },
+			        error: function(err) {
+			            console.log(err);
+			        }
+			    });
+			});
+
 			</script>
 	</div>
 </body>

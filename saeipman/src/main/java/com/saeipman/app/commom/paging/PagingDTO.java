@@ -24,7 +24,7 @@ public class PagingDTO {
         this.endPage = (int) (Math.ceil((double) page / viewPage) * viewPage);
         this.startPage = this.endPage - (viewPage - 1);
         this.realEnd = (int) Math.ceil((double) total / recordSize);
-        
+        this.realEnd = this.realEnd == 0 ? startPage : this.realEnd;
         this.endPage = this.endPage > this.realEnd ? this.realEnd : this.endPage;
         
         this.prev = this.startPage > 1;

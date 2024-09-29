@@ -6,12 +6,18 @@
 		<div class="list-group" th:each="commentParent : ${qna.qnaCmts}">
 			<!-- 댓글 -->
 			<div class="list-group-item parentCmt">
-				<div class="d-flex w-100 justify-content-between">
-					<h6 class="mb-1">[[${commentParent.writerId}]]</h6>
-					<small>3 days ago</small>
+				<div class="cmtBody">
+					<div class="d-flex w-100 justify-content-between">
+						<h6 class="mb-1 writerBody">[[${commentParent.writerId}]]</h6>
+						<small class="pb-1">[[${commentParent.timeAgo}]]</small>
+					</div>
+					<p class="contentBody">[[${commentParent.content}]]</p>
+					<div class="mb-3" th:if="${login.loginId == commentParent.writerId and commentParent.state != -1}">
+					  <small th:data-cmtno="${commentParent.cmtNo}"
+					  class="p-2 bg-danger text-white rounded-3 border border-2 del-pointer">
+					  삭제</small>
+					</div>
 				</div>
-				<p class="mb-1">[[${commentParent.content}]]</p>
-				<small>삭제</small>
 
 				<!-- 대댓글 작성 폼 -->
 				<form class="d-none">
@@ -33,13 +39,18 @@
 				<!-- 대댓글 -->
 				<div class="ms-3"
 					th:each="commentChild : ${commentParent.childCmts}">
-					<div class="list-group-item bg-light">
+					<div class="list-group-item bg-light cmtBody">
 						<div class="d-flex w-100 justify-content-between">
-							<h6 class="mb-1">[[${commentChild.writerId}]]</h6>
-							<small>3 days ago</small>
+							<h6 class="mb-1 writerBody">[[${commentChild.writerId}]]</h6>
+							<small>[[${commentChild.timeAgo}]]</small>
 						</div>
-						<p class="mb-1">[[${commentChild.content}]]</p>
-						<small>삭제</small>
+						<p class="mb-2 contentBody">[[${commentChild.content}]]</p>
+						<small 
+						class="p-2 bg-danger text-white rounded-3 border border-2 del-pointer" 
+						th:if="${login.loginId == commentChild.writerId and commentChild.state != -1}" 
+						th:data-cmtno="${commentChild.cmtNo}">
+						삭제
+						</small>
 					</div>
 				</div>
 				<!-- 대댓글 END -->
