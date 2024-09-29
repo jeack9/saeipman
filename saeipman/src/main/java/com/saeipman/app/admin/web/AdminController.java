@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.saeipman.app.admin.Service.AdminService;
 import com.saeipman.app.admin.Service.Member;
 import com.saeipman.app.admin.Service.NoticeVO;
+import com.saeipman.app.admin.Service.QnaCmtVO;
 import com.saeipman.app.admin.Service.QnaService;
 import com.saeipman.app.admin.Service.QnaVO;
 import com.saeipman.app.commom.paging.PagingDTO;
@@ -140,7 +141,7 @@ public class AdminController {
 		search.setAuth(SecurityUtil.getLoginAuth());
 		int page = search.getPage() < 1 ? 1 : search.getPage();
 		int total = qnaService.totalQna(search);
-		PagingDTO paging = new PagingDTO(page, 10, total, 10);
+		PagingDTO paging = new PagingDTO(page, search.getRecordSize(), total, 10);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("paging", paging);
@@ -150,14 +151,50 @@ public class AdminController {
 	}
 
 	@GetMapping("/qna/{postNo}")
-	public Map<String, Object> qnaDetail(@PathVariable(name = "postNo") int postNo) {
+	public Map<String, Object> qnaDetail(@PathVariable(name = "postNo") int postNo
+										,@RequestParam(name = "page") int page) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		// qna단건, 댓글목록 조회
 		int total = qnaService.totalParentCmts(postNo);
-		PagingDTO paging = new PagingDTO(1, 2, total, 5);
+		PagingDTO paging = new PagingDTO(page, 5, total, 5);
 		QnaVO qnaVO = qnaService.qnaInfo(postNo, paging);
 		map.put("paging", paging);
 		map.put("qna", qnaVO);
 		return map;
 	}
+
+	@PostMapping("/qna/{postNo}/pComments")
+	public QnaCmtVO addQnaCmt(@PathVariable(name = "postNo") int postNo
+							, @RequestBody QnaCmtVO qnaCmtVO) {
+		// 부모댓글 등록
+		qnaCmtVO.setPostNo(postNo);
+		qnaCmtVO.setWriterId(SecurityUtil.getLoginId());
+		qnaCmtVO.setAuth(SecurityUtil.getLoginAuth());
+		qnaService.addParentCmt(qnaCmtVO);
+		qnaService.changeStateToOne(postNo);
+		
+		return qnaCmtVO;
+	}
+	
+	@PostMapping("/qna/{postNo}/cComments")
+	public String addQnaChildCmt(@PathVariable(name = "postNo") int postNo
+								, @RequestBody QnaCmtVO qnaCmtVO) {
+		int auth = SecurityUtil.getLoginAuth();
+		qnaCmtVO.setPostNo(postNo);
+		qnaCmtVO.setWriterId(SecurityUtil.getLoginId());
+		qnaCmtVO.setAuth(auth);
+		QnaCmtVO cmt = qnaService.addChildCmt(qnaCmtVO);
+		qnaService.changeStateToOne(postNo);
+		return "ok";
+	}
+	
+	@DeleteMapping("/qnaCmt/{cmoNo}")
+	public String removeQnaCmt(@PathVariable(name = "cmoNo") int cmtNo) {
+		QnaCmtVO delCmt = new QnaCmtVO();
+		delCmt.setCmtNo(cmtNo);
+		delCmt.setAuth(SecurityUtil.getLoginAuth());
+		qnaService.removeCmt(delCmt);
+		return "ok";
+	}
+
 }

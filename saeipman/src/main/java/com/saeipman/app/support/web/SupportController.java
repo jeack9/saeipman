@@ -147,19 +147,16 @@ public class SupportController {
 		int auth = SecurityUtil.getLoginAuth();
 		qnaCmtVO.setWriterId(SecurityUtil.getLoginId());
 		qnaCmtVO.setAuth(auth);
-		qnaService.addChildCmt(qnaCmtVO);
+		QnaCmtVO cmt = qnaService.addChildCmt(qnaCmtVO);
 		// auth 관리자면 qna 답변상태 변경
-		if(auth == 0) {
-			
-		}
-		return qnaCmtVO;
+		return cmt;
 	}
 	
 	// 댓글목록 + 페이지네이션 프레그먼트 반환
 	@GetMapping("/loadQnaCmtsFrg")
 	public String loadQnaCmtsFrg(@RequestParam(name = "page") int page, @RequestParam(name = "postNo") int postNo, Model model) {
 		int total = qnaService.totalParentCmts(postNo);
-		PagingDTO paging = new PagingDTO(page, 2, total, 5);
+		PagingDTO paging = new PagingDTO(page, 5, total, 5);
 		QnaVO qnaVO = qnaService.qnaInfo(postNo, paging);
 		model.addAttribute("paging", paging);
 		model.addAttribute("qna", qnaVO);

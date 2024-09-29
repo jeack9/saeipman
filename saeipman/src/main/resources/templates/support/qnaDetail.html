@@ -105,7 +105,7 @@
 	    					<div class="list-group-item bg-light">
 	    						<div class="d-flex w-100 justify-content-between">
 	    							<h6 class="mb-1">${data.writerId}</h6>
-	    							<small>3 days ago</small>
+	    							<small>${data.timeAgo}</small>
 	    						</div>
 	    						<p class="mb-2">${data.content}</p>
 	    						<small 
@@ -187,12 +187,14 @@
 				let cmtNo = e.target.dataset.cmtno;
 				let $contentBody = $(e.target).closest("div.cmtBody").find("p.contentBody");
 				console.log($contentBody);
+				if(!window.confirm("정말로 이 댓글을 삭제하시겠습니까?")){
+					return;
+				}
 				$.ajax({
 			        url: `${ctxPath}/support/qnaCmt/${cmtNo}`,
 			        type: 'DELETE',
 			        success: function(data) {
 			        	// 삭제 후 변경된 내용으로 view 변경
-			            console.log(data);
 			            $contentBody.text(data.content);
 			            e.target.remove();
 			        },

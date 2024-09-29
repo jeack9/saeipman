@@ -107,8 +107,9 @@ public class QnaSerivceImpl implements QnaService {
 
 	// 자식댓글 단건등록
 	@Override
-	public boolean addChildCmt(QnaCmtVO cmt) {
-		return qnaMapper.insertChildCmt(cmt) == 1;
+	public QnaCmtVO addChildCmt(QnaCmtVO cmt) {
+		qnaMapper.insertChildCmt(cmt);
+		return cmtInfo(cmt.getCmtNo());
 	}
 
 	// qna 답변완료 상태변경
@@ -126,7 +127,10 @@ public class QnaSerivceImpl implements QnaService {
 
 	@Override
 	public QnaCmtVO cmtInfo(int cmtNo) {
-		return qnaMapper.selectCmtInfo(cmtNo);
+		QnaCmtVO cmt = qnaMapper.selectCmtInfo(cmtNo);
+		String timeAgo = getTimeAgo(cmt.getRegDate());
+		cmt.setTimeAgo(timeAgo);
+		return cmt;
 	}
 
 	@Override
