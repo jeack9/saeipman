@@ -81,7 +81,7 @@ table.fold-table > tbody > tr.view:hover {
   background: #ddd;
 }
 table.fold-table > tbody > tr.view.open {
-  background: tomato;
+  background: rgb(32, 128, 128);
   color: white;
 }
 table.fold-table > tbody > tr.view.open td:first-child:before,

@@ -10,6 +10,10 @@
 .offVisible {
 	visibility: hidden;
 }
+.removeCss{
+	cursor : default;
+	pointer-events: none;
+}
 </style>
 </head>
 <body>
@@ -23,9 +27,9 @@
 						data-bs-toggle="modal" data-bs-target="#buildingModal">
 						<i class="fa fa-home me-2"></i>건물 선택
 					</button>
-					<button type="button" class="btn btn-outline-primary"
-						id="resetBuildingBtn">선택 초기화</button>
-					<button type="button" class="btn btn-outline-danger"
+					<!-- <button type="button" class="btn btn-outline-primary"
+						id="resetBuildingBtn">선택 초기화</button> -->
+					<button type="button" class="btn btn-outline-danger removeCss"
 						th:if="${buildingVO.buildingName != null}">[[${buildingVO.buildingName}]]</button>
 					<!-- 건물선택 모달창 -->
 					<div class="modal fade" id="buildingModal" tabindex="-1"
@@ -105,10 +109,10 @@
 						th:if="${constractList.size() > 0}">
 						<tr>
 							<td rowspan="2">[[${constract.get('ROOM_NO')}]]</td>
-							<td>[[${constract.get('CONSTRACT_TYPE')}]]</td>
+							<td>[[${constract.get('CONSTRACT_TYPE')}]]&nbsp</td>
 							<td>[[${#dates.format(constract.get('CONSTRACT_DATE'),
 								'yyyy-MM-dd')}]]</td>
-							<td>[[${constract.get('M_RENT')}]]</td>
+							<td>[[${constract.get('M_RENT') > 0 ? #numbers.formatInteger(constract.get('M_RENT'), 3, 'COMMA') + " 원" : ""}]]</td>
 							<td>[[${constract.get('IMCHAIN_NAME')}]]</td>
 							<td rowspan="2">
 								<!-- <button class="btn btn-outline-dark"
@@ -118,7 +122,7 @@
 								<a
 								th:if="${constract.get('CONSTRACT_FILE') !=null}"
 								th:href="@{/pdfs/계약서/{fileName}(fileName=${constract.CONSTRACT_FILE})}"
-								target="_blank">PDF 보기</a>
+								target="_blank">계약서 보기</a>
 							</td>
 							<td rowspan="2">
 								<button class="btn btn-outline-primary historyBtn" type="button"
@@ -127,11 +131,11 @@
 							</td>
 						</tr>
 						<tr>
-							<td>[[${constract.get('DEPOSIT')}]]</td>
+							<td>[[${constract.get('DEPOSIT') > 0 ? #numbers.formatInteger(constract.get('DEPOSIT'), 3, 'COMMA') + " 원" : ""}]]</td>
 							<td>[[${#dates.format(constract.get('EXP_DATE'),
 								'yyyy-MM-dd')}]]</td>
 							<td>[[${constract.get('PAY_TYPE')}]] /
-								[[${constract.get('M_RENT_DATE')}]]일</td>
+								[[${constract.get('M_RENT_DATE') != null ? constract.get('M_RENT_DATE') + "일" : ""}]]</td>
 							<td>[[${constract.get('IMCHAIN_PHONE')}]]</td>
 						</tr>
 					</th:block>
@@ -233,11 +237,11 @@
 				location.href = `${ctxPath}/room/constractList?buildingId=${buildingId}`;
 			}
 			// 건물선택 초기화버튼
-			let $resetBuildingBtn = $("#resetBuildingBtn");
+			/* let $resetBuildingBtn = $("#resetBuildingBtn");
 			$resetBuildingBtn.on('click', resetBuilding);
 			function resetBuilding() {
 				location.href = `${ctxPath}/room/constractList`;
-			}
+			} */
 		</script>
 	</div>
 	<!-- Main END -->

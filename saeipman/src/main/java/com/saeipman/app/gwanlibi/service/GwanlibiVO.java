@@ -13,7 +13,7 @@ public class GwanlibiVO {
 	private String buildingId;			  // 건물 식별 ID - FK
 	private int totalMoney; 			  // 관리비 총 금액
 	@DateTimeFormat(pattern = "yyyy-MM")
-	private Date paymentMonth;  		  // 관리비 납부 월
+	private Date paymentMonth;  		  // 관리비 정산 월
 	private String buildingName; 		  // 건물 이름
 	private String doroAddr;
 	private int previousMonth;			  // 전월 관리 비용
@@ -21,7 +21,7 @@ public class GwanlibiVO {
 	private String gwanlibiName;		  // 관리비 이름
 	
 	private int gaguGwanlibi; 			  // 가구별 관리비
-	private double gwanlibiByGagu;        // 가구별 관리비
+	private double gaguGwanlibiByItem;        // 가구별 관리비
 	private String strGwanlibiByGagu;	  // 가구별 관리비 (,)
 	
 	private int gwanlibiItemMoney;		  // 항목별 관리비
@@ -37,5 +37,9 @@ public class GwanlibiVO {
 	
 	
 	private String roomId;
+	@DateTimeFormat(pattern = "yyyy-MM")
+	private Date paymentDueDate;		  // 관리비 납부 기한
+	private int ipjuState;
+	//private String strIpjuState;
 	
 }

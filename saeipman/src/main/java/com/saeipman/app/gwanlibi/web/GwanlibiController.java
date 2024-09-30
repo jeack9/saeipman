@@ -22,6 +22,7 @@ import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.building.service.BuildingService;
 import com.saeipman.app.building.service.BuildingVO;
 import com.saeipman.app.commom.security.SecurityUtil;
+import com.saeipman.app.gwanlibi.mapper.GwanlibiMapper;
 import com.saeipman.app.gwanlibi.service.GaguGwanlibiHistoryVO;
 import com.saeipman.app.gwanlibi.service.GwanlibiMsgService;
 import com.saeipman.app.gwanlibi.service.GwanlibiMsgVO;
@@ -44,6 +45,7 @@ public class GwanlibiController {
 	private GwanlibiMsgService gwanlibiMsgService;
 	private GwanlibiPaymentService gwanlibiPaymentService;
 	private MsgService msgService;
+	private GwanlibiMapper gwanlibiMapper;
 
 	// 전월 구하기
 	public String preYM() {
@@ -149,12 +151,17 @@ public class GwanlibiController {
 
 		// 가구별 관리비 number format 설정.
 		for (GwanlibiVO list : detailsList) {
-			list.setStrGwanlibiByGagu(numberToString(list.getGwanlibiByGagu()));
+			list.setStrGwanlibiByGagu(numberToString(list.getGaguGwanlibi()));
 			list.setStrGwanlibiItemMoney(numberToString(list.getGwanlibiItemMoney()));
 		}
-
+		
+		int totalGagu = gwanlibiMapper.countTotalGagu(buildingInfo.getBuildingId());
+		int totalIpjuGagu = gwanlibiMapper.countIpjuTotalGagu(buildingInfo.getBuildingId());
+		
 		model.addAttribute("detailsList", detailsList);
 		model.addAttribute("buildingInfo", buildingInfo);
+		model.addAttribute("totalGagu", totalGagu);
+		model.addAttribute("totalIpjuGagu", totalIpjuGagu);
 		return "gwanlibi/gwanlibiDetailsBillList";
 	}
 
@@ -164,11 +171,17 @@ public class GwanlibiController {
 	public Map<String, Object> reDetailsBillList(GwanlibiVO vo) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<GwanlibiVO> detailsList = gwanlibiService.detailsBillList(vo);
-
+		
+		
 		// 가구별 관리비, 관리 비용 number format 설정.
 		for (GwanlibiVO list : detailsList) {
-			list.setStrGwanlibiByGagu(numberToString(list.getGwanlibiByGagu()));
+			list.setStrGwanlibiByGagu(numberToString(list.getGaguGwanlibi()));
 			list.setStrGwanlibiItemMoney(numberToString(list.getGwanlibiItemMoney()));
+			
+			// 현재 입주한 가구
+			List<GwanlibiVO> totalGagu = gwanlibiMapper.selectTotalGagu(list.getBuildingId());
+			// 관리비 아이템 별 가구 관리비 계산
+			list.setGaguGwanlibiByItem(list.getGwanlibiItemMoney() / totalGagu.size());
 		}
 
 		map.put("detailsList", detailsList);
@@ -237,15 +250,28 @@ public class GwanlibiController {
 		// 방 리스트
 		List<GaguGwanlibiHistoryVO> roomIdList = gwanlibiService.roomIdList(buildingId);
 
+		// 실제 관리비 월자
 		String ym = preYM();
 		String date = ym + "-" + paymentDate;
-
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date paymentMonth = formatter.parse(date);
 		System.err.println(paymentDate + "/" + date);
-		System.err.println("결과 = " + paymentMonth);
+		System.err.println("실제 관리비 청구 월 = " + paymentMonth);
 		gridDatalist.get(0).setPaymentMonth(paymentMonth);
 
+		
+		// 납부 기한
+		Date now = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(now);
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH) + 1;
+		String nowym = year + "-" + month;
+		String nowDate = nowym + "-" + paymentDate;
+		Date paymentDueDate = formatter.parse(nowDate);
+		gridDatalist.get(0).setPaymentDueDate(paymentDueDate);
+		System.err.println("납부 기한 = " + paymentDueDate);
+		
 		gwanlibiService.addGwanlibi(gridDatalist, roomIdList);
 
 		return "/gwanlibiDetailsBillList?buildingId=" + buildingId + "&paymentMonth=" + ym;
@@ -272,6 +298,9 @@ public class GwanlibiController {
 	@ResponseBody
 	public void updateGwanlibiProcess(@RequestBody List<GwanlibiVO> gridDatalist) {
 		gwanlibiService.modifyGwanlibi(gridDatalist);
+//		String buildingId = gridDatalist.get(0).getBuildingId();
+//		String ym = preYM();
+//		return "redirect:gwanlibiDetailsBillList?buildingId=" + buildingId + "&paymentMonth=" + ym;
 	}
 
 	// 관리비 청구 문자 /sendSMSMsg 요청 -> sendSMSMessage()
@@ -329,7 +358,7 @@ public class GwanlibiController {
 		return msg;
 	}
 
-	// TODO
+	
 	@GetMapping("gwanlibiPaymentState")
 	public String gwanlibiPaymentStateList(BuildingVO buildingVO, BuildingPageDTO pageDTO, Model model) {
 
@@ -346,8 +375,7 @@ public class GwanlibiController {
 
 		// add roomList
 		for (BuildingVO building : buildingList) {
-			List<GwanlibiPaymentVO> rooms = gwanlibiPaymentService
-					.getGwanlibiPaymentStateList(building.getBuildingId());
+			List<GwanlibiPaymentVO> rooms = gwanlibiPaymentService.getGwanlibiPaymentStateList(building.getBuildingId());
 			rooms.forEach(ele -> {
 				if (ele.getPaymentYn() == 1) {
 					ele.setStrPaymentState("완납");
