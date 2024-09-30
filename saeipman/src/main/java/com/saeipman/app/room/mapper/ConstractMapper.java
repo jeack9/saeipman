@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.saeipman.app.commom.paging.PagingDTO;
+import com.saeipman.app.room.service.BuildingContractExcel;
 import com.saeipman.app.room.service.ConstractVO;
 
 public interface ConstractMapper {
@@ -37,4 +38,7 @@ public interface ConstractMapper {
 	
 	// 방의 이전 계약정보 조회
 	public ConstractVO selectPrevConstractByRoomId(String roomId);
+	
+	// 선택한 건물 계약 엑셀다운용 조회
+	public List<BuildingContractExcel> selectBuildingConstractList(String buildingId);
 }

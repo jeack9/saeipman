@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.saeipman.app.commom.paging.PagingDTO;
 import com.saeipman.app.room.mapper.ConstractMapper;
 import com.saeipman.app.room.mapper.RoomMapper;
+import com.saeipman.app.room.service.BuildingContractExcel;
 import com.saeipman.app.room.service.ConstractService;
 import com.saeipman.app.room.service.ConstractVO;
 import com.saeipman.app.room.service.RoomVO;
@@ -94,6 +95,12 @@ public class ConstractServiceImpl implements ConstractService{
 	@Override
 	public ConstractVO prevConstractByRoomId(String roomId) {
 		return cmapper.selectPrevConstractByRoomId(roomId);
+	}
+	
+	// 엑셀용
+	@Override
+	public List<BuildingContractExcel> buildingConstractExcel(String buildingId) {
+		return cmapper.selectBuildingConstractList(buildingId);
 	}
 
 }
