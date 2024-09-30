@@ -2,6 +2,8 @@ package com.saeipman.app.main.mapper;
 
 import java.util.List;
 
+import com.saeipman.app.minwon.service.Criteria;
+import com.saeipman.app.minwon.service.MinwonVO;
 import com.saeipman.app.payment.service.PaymentVO;
 
 public interface MainMapper {
@@ -15,4 +17,7 @@ public interface MainMapper {
 	public int selectTotalRoom(String imdaeinId);
 	
 	public int selectExpCnt();
+	
+	//민원
+	public List<MinwonVO> mainMinwonList(Criteria cri);
 }

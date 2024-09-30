@@ -160,7 +160,7 @@ public class BuildingController {
 		
 		//민원 관련
 		cri.setImdaeinId(login);
-		List<MinwonVO> list = minwonService.minwonList(cri);
+		List<MinwonVO> list = mainService.minwonListMain(cri);
 		model.addAttribute("minwon", list);
 		
 		return "building/chartTest";

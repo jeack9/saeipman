@@ -4,6 +4,8 @@ package com.saeipman.app.main.service;
 import java.sql.Date;
 import java.util.List;
 
+import com.saeipman.app.minwon.service.Criteria;
+import com.saeipman.app.minwon.service.MinwonVO;
 import com.saeipman.app.payment.service.PaymentVO;
 
 public interface MainService {
@@ -16,4 +18,6 @@ public interface MainService {
 	public int getTotalRoom(String imdaeinId);
 	
 	public int getExpCnt();
+	
+	public List<MinwonVO> minwonListMain(Criteria cri);
 }
