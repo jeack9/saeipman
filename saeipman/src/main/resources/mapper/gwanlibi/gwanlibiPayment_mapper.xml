@@ -4,7 +4,7 @@
 	
 	
 	<!-- 호실별 관리비 납부 상태 조회 -->
-	<select id="selectGwanlibiPaymentStateList" resultType="com.saeipman.app.gwanlibi.service.GwanlibiPaymentVO" parameterType="String">
+<!-- 	<select id="selectGwanlibiPaymentStateList" resultType="com.saeipman.app.gwanlibi.service.GwanlibiPaymentVO" parameterType="String">
 		SELECT r.building_id,
 			   r.room_no,
 			   r.ipju_state,
@@ -12,6 +12,31 @@
 		FROM   room_info r JOIN gagu_gwanlibi_history g
 		                   ON (r.room_id = g.room_id)
 		AND    r.building_id = #{buildingId}
+	</select> -->
+	
+	<!-- 호실별 관리비 납부 상태 조회 -->
+	<select id="selectGwanlibiPaymentStateList" resultType="com.saeipman.app.gwanlibi.service.GwanlibiPaymentVO" parameterType="String">
+		SELECT r.building_id,
+		       r.room_no,
+		       r.ipju_state,
+		       g.payment_yn,
+		       m.month_gwanlibi_no,
+		       m.payment_due_date
+		FROM   room_info r JOIN gagu_gwanlibi_history g
+		                   ON (r.room_id = g.room_id)
+		                   JOIN month_gwanlibi m
+		                   ON (m.month_gwanlibi_no = g.month_gwanlibi_no)
+		WHERE  r.building_id = #{buildingId}
+		<choose>
+			<when test="paymentMonth == null">
+				AND    TO_CHAR(m.payment_month, 'yyMM') =  TO_CHAR(TO_DATE(ADD_MONTHS(sysdate, -1), 'yyyy-MM-dd'), 'yyMM')
+			</when>
+			<otherwise>
+				AND    TO_CHAR(m.payment_month, 'yyMM') =  TO_CHAR(TO_DATE(ADD_MONTHS(#{paymentMonth}, -1), 'yyyy-MM-dd'), 'yyMM')
+			</otherwise>		
+		</choose>
+		ORDER BY r.room_id
+		
 	</select>
 	
 	
