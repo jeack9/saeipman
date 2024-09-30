@@ -17,8 +17,8 @@ public class GwanlibiPaymentServiceImpl implements GwanlibiPaymentService {
 	private GwanlibiPaymentMapper gwanlibiPaymentMapper;
 	
 	@Override
-	public List<GwanlibiPaymentVO> getGwanlibiPaymentStateList(String buildingId) {
-		return gwanlibiPaymentMapper.selectGwanlibiPaymentStateList(buildingId);
+	public List<GwanlibiPaymentVO> getGwanlibiPaymentStateList(String buildingId, String paymentMonth) {
+		return gwanlibiPaymentMapper.selectGwanlibiPaymentStateList(buildingId, paymentMonth);
 	}
 
 }

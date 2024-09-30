@@ -1,9 +1,20 @@
 /********** Template CSS **********/
+@font-face {
+    font-family: 'ownglyph';
+    src: url('./ownglyph.ttf') format('truetype');
+    font-weight: normal;
+}
+
+*:not(i) {
+	font-family: 'ownglyph' !important;
+}
+
 :root {
     --primary: #009CFF;
     --light: #F3F6F9;
     --dark: #191C24;
 }
+
 
 .back-to-top {
     position: fixed;

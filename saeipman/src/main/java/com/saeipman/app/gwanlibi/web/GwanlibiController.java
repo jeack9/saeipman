@@ -372,10 +372,11 @@ public class GwanlibiController {
 		pageDTO.setTotal(total);
 
 		List<BuildingVO> buildingList = buildingService.buildingList(pageDTO, login.getLoginId());
-
+		String paymentMonth = null;
+		
 		// add roomList
 		for (BuildingVO building : buildingList) {
-			List<GwanlibiPaymentVO> rooms = gwanlibiPaymentService.getGwanlibiPaymentStateList(building.getBuildingId());
+			List<GwanlibiPaymentVO> rooms = gwanlibiPaymentService.getGwanlibiPaymentStateList(building.getBuildingId(), paymentMonth);
 			rooms.forEach(ele -> {
 				if (ele.getPaymentYn() == 1) {
 					ele.setStrPaymentState("완납");

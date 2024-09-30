@@ -59,16 +59,20 @@
 		<br />
 		<h3 class="title">관리비 납부 내역</h3>
 		
-		<br>
+		<div style="float: right;">
+		
+	<label for = "when"> 납부년월 선택 : </label> <input id = "when" name = "when" type = "month" >
+		</div>
+		<br><br>
 		<div style="display: flex;">
-				<h5 class="title" style="flex: 1">Building List.</h5>			
-				<div class="row">
-					<div class="col-7">
+				<h5 class="title" style="flex: 1; margin-top: 5px;">Building List.</h5>			
+				<div class="row" style="margin: 0; padding: 0;">
+					<div class="col-7" style="margin: 0; padding: 0;">
 						<input class="form-control me-2" type="text"
 							aria-label="Search" id="roomNoSearch" placeholder="건물 이름을 입력하세요." style="flex: 1;">
 					</div>
-					<div class="col-2">
-						<button type ="button" class="btn btn-outline-success" id="roomSearchBtn" style="flex: 1">Search</button>
+					<div class="col-2" style="margin: 0; padding: 0;">
+						<button type ="button" class="btn btn-outline-success" id="roomSearchBtn" style="flex: 1;">Search</button>
 					</div>
 				</div>
 		</div>
