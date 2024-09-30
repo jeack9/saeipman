@@ -26,7 +26,7 @@ public class MemberRequestDTO {
 	@NotBlank(message = "비밀번호: 필수입니다.")
 	private String pw; // 로그인 비번
 	
-	@NotBlank(message = "이름: 필수입니다.")
+	@NotBlank(message = "이름: 필수입니다.") 
 	private String name; // 임대인 이름, 임차인 이름
 	
 	@Email(message = "이메일: 올바르지 않은 형식입니다.")
