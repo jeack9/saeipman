@@ -1,26 +1,19 @@
-<div xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}"
-	layout:fragment="Main">
+<div xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{common/layouts/default_layout}" layout:fragment="Main">
 
 	<div class="container">
 		<div class='row'>
-			<h4 class="mb-4">건물 공지사항</h4>
+			<h4 class="mb-4">
+				건물 공지사항 <img class="" th:src="@{/img/buildingNotice.png}" width="35px;">
+			</h4>
 
-			<form name="chagngeForm" id="scForm"
-				th:action="@{/noticeBuildingList}" th:method='get' class="d-flex">
-				<input type="hidden" name="nowPage" value="1"> <select
-					th:if="${login.auth==1}" class="form-select mb-6"
-					aria-label="Default select example" id="option" name="buildingId">
+			<form name="chagngeForm" id="scForm" th:action="@{/noticeBuildingList}" th:method='get' class="d-flex justify-content-end">
+				<input type="hidden" name="nowPage" value="1"> <select th:if="${login.auth==1}" class="form-select mb-6" id="option" name="buildingId" style="width: 200px;">
 					<option selected value="">건물 목록</option>
-					<option th:each="list : ${Bname}" th:value="${list.buildingId}"
-						th:selected="${list.buildingId}==${pagingSearchDTO.buildingId}">
-						[[${list.buildingName}]]</option>
+					<option th:each="list : ${Bname}" th:value="${list.buildingId}" th:selected="${list.buildingId}==${pagingSearchDTO.buildingId}">[[${list.buildingName}]]</option>
 				</select>
-				
+
 				<!-- 검색 -->
-				<input class="form-control me-2" type="search" name="scKeyword"
-					aria-label="Search" placeholder="Search" style="width: 180px;">
+				<input class="form-control me-2" type="search" name="scKeyword" aria-label="Search" placeholder="Search" style="width: 180px;">
 				<button class="btn btn-outline-success" id="keywordBtn">Search</button>
 			</form>
 
@@ -28,9 +21,9 @@
 				<br> <br>결과가 없습니다.
 			</div>
 
-			<table class="table table-hover" style="text-align: center"
-				th:if="${pagingSearchDTO.total > 0}">
+			<table class="table table-hover" style="text-align: center" th:if="${pagingSearchDTO.total > 0}">
 				<thead>
+				<tr>&nbsp;</tr>
 					<tr>
 						<th scope="col" class="col-sm-1">번호</th>
 						<th scope="col" class="col-sm-5">제목</th>
@@ -45,45 +38,29 @@
 							<th scope="row">[[${list.postNo}]]</th>
 							<td>[[${list.title}]]</td>
 							<td>[[${list.buildingName}]]</td>
-							<td th:if="${list.modDate == ''}">[[${#dates.format(list.regDate,
-								'yyyy/MM/dd')}]]</td>
-							<td th:if="${list.modDate != ''}">[[${#dates.format(list.modDate,
-								'yyyy/MM/dd')}]]</td>
+							<td th:if="${list.modDate == ''}">[[${#dates.format(list.regDate, 'yyyy/MM/dd')}]]</td>
+							<td th:if="${list.modDate != ''}">[[${#dates.format(list.modDate, 'yyyy/MM/dd')}]]</td>
 							<td>[[${list.views}]]</td>
 						</tr>
 					</th:block>
 				</tbody>
 			</table>
 			<div style="text-align: right">
-				<button type="button" th:if="${login.auth==1}"
-					th:onclick="|location.href='@{/noticeBuildingInsert}'|"
-					class="btn btn-outline-success m-2">등록</button>
+				<button type="button" th:if="${login.auth==1}" th:onclick="|location.href='@{/noticeBuildingInsert}'|" class="btn btn-outline-success m-2">등록</button>
 			</div>
 			<div id="searchResult" th:hidden="${pagingSearchDTO.total == 0}">
 
 				<nav aria-label="Page navigation example">
 					<ul class="pagination justify-content-center">
-						<li class="page-item" th:if="${Paging.startPage > 1}"><a
-							class="page-link"
-							th:href="|javascript:changePage(${Paging.startPage} - 1)|"
-							aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+						<li class="page-item" th:if="${Paging.startPage > 1}"><a class="page-link" th:href="|javascript:changePage(${Paging.startPage} - 1)|" aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 
 						</a></li>
 
-						<th:block
-							th:with="start = ${Paging.startPage}, end = ${Paging.endPage}">
-							<li class="page-item"
-								th:with="start = ${Paging.startPage}, end = ${Paging.endPage}"
-								th:each="pageButton : ${#numbers.sequence(start, end)}"><a
-								class="page-link"
-								th:href="|javascript:changePage(${pageButton})|"
-								th:text=${pageButton}></a></li>
+						<th:block th:with="start = ${Paging.startPage}, end = ${Paging.endPage}">
+							<li class="page-item" th:with="start = ${Paging.startPage}, end = ${Paging.endPage}" th:each="pageButton : ${#numbers.sequence(start, end)}"><a class="page-link" th:href="|javascript:changePage(${pageButton})|" th:text=${pageButton}></a></li>
 						</th:block>
 
-						<li class="page-item" th:if="${Paging.nextPage}"><a
-							class="page-link"
-							th:href="|javascript:changePage(${Paging.endPage} + 1)|"
-							aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+						<li class="page-item" th:if="${Paging.nextPage}"><a class="page-link" th:href="|javascript:changePage(${Paging.endPage} + 1)|" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 						</a></li>
 					</ul>
 				</nav>
