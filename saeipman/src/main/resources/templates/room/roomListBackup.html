@@ -10,6 +10,10 @@
 .offVisible {
 	visibility: hidden;
 }
+.removeCss{
+	cursor : default;
+	pointer-events: none;
+}
 </style>
 </head>
 <body>
@@ -24,7 +28,7 @@
 					</button>
 					<button type="button" class="btn btn-outline-primary"
 						id="resetBuildingBtn">선택 초기화</button>
-					<button type="button" class="btn btn-outline-danger"
+					<button type="button" class="btn btn-outline-danger removeCss"
 						th:if="${buildingVO.buildingName != null}">[[${buildingVO.buildingName}]]</button>
 					<!-- 건물선택 모달창 -->
 					<div class="modal fade" id="buildingModal" tabindex="-1"
@@ -86,12 +90,12 @@
 							[[${room.buildingName}]] / 
 							<p class="col m-0" style="font-size: 18px; font-weight: bold;">[[${room.constractType}]]</p>
 							<div style="text-align: right;">
-								<button type="button" class="btn btn-outline-success" th:if="${room.reserveCnt > 0}">입주 예정</button>
+								<button type="button" class="btn btn-outline-success removeCss" th:if="${room.reserveCnt > 0}">입주 예정</button>
 								<th:block th:if="${room.ipjuState == -1}">
-								<button type="button" class="btn btn-outline-success">공실</button>
+								<button type="button" class="btn btn-outline-success removeCss">공실</button>
 								</th:block>
 								<th:block th:if="${room.ipjuState == 1}">
-								<button type="button" class="btn btn-success">입주</button>
+								<button type="button" class="btn btn-success removeCss">입주</button>
 								</th:block>
 								
 							</div>
