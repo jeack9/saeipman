@@ -11,6 +11,7 @@
 						<h6 class="mb-4">공지사항 수정</h6>
 
 						<div class="form-floating mb-3">
+							<input th:field="${BNotice.groupId}" hidden="true"/>
 							<input type="text" class="form-control" id="floatingInput"
 								placeholder="글번호" th:field="*{postNo}" readonly /> <label
 								for="floatingInput">글번호</label>
@@ -35,10 +36,26 @@
 						</div>
 
 						<div class="mb-3">
-							<label for="formFileMultiple" class="form-label"></label> <input
-								class="form-control" type="file" id="formFileMultiple" multiple
-								th:field="*{groupId}" />
+							<label>기존 이미지</label>
+							<div id="existingImgFile">
+								<!-- 서버에서 제공된 기존 이미지 목록을 표시 -->
+								<div th:each="img : ${BNotice.fileName}">
+									<div class="imgDiv" th:data-fileid="${img}"
+										style="display: inline-block; margin: 10px;">
+										<img th:src="@{/images/공지사항/{img}(img=${img})}" class="imgId"
+											width="200" height="200">
+										<button type="button" class="imageDel">X</button>
+									</div>
+								</div>
+							</div>
 						</div>
+
+
+						<div class="mb-3">
+							<label for="formFileMultiple" class="form-label">첨부파일</label> <input
+								class="form-control" type="file" id="file" multiple name="newFiles" />
+						</div>
+						<div id="imgFile"></div>
 
 						<div class="form-floating">
 							<textarea class="form-control" placeholder="Leave a comment here"
@@ -56,30 +73,90 @@
 	</div>
 </div>
 <script>
-  function getNoticeInfo() {
-    let formData = $('form[name="UpdateForm"]').serializeArray();
-    let noticeObj = {};
-    $.each(formData, function (idx, keyVal) {
-      noticeObj[keyVal.name] = keyVal.value;
-    });
-    console.log(noticeObj);
-    return noticeObj;
-  }
+let delList = [];  // 삭제할 기존 이미지 목록
+
+//기존 이미지 삭제
+$('#existingImgFile').on('click', '.imageDel', function() {
+	let fileId = $(this).parent().data('fileid');
+	//console.log(fileId)
+	let ke = $(this).closest('.imgDiv').remove();  // 이미지 미리보기에서 삭제
+	console.log(delList,"삭제리스트")
+	delList.push(fileId);  // 삭제할 파일 목록에 추가
+});
 
 
-  $("#updateBtn").on("click", updateAjax);
+//미리보기 이미지 삭제(글작성시)
+$('#imgFile').on('click', '.imageDel', function() {
+		let fileId = $(this).parent().data('fileid');
+		$(this).closest('.imgDiv').remove();  // 이미지 미리보기에서 삭제
+		
+		//실제 첨부 파일 목록에서 해당 파일 삭제
+		let files = document.querySelector("#file").files;
+		cosole.log(files);
+		let dataTransfer = new DataTransfer(); // 새 DataTransfer 객체 생성
+		
+		// 첨부된 파일 중에서 삭제할 파일을 제외한 나머지를 다시 추가
+	    Array.from(files).forEach(file => { //파일 배열을 Array로 변환
+	        if (file.name !== fileId) { //삭제할 파일이 아닌 경우에만 추가
+	            dataTransfer.items.add(file); //dataTransfer 객체를 사용하여 새로운 파일 목록을 구성
+	        }
+	    });
+	    document.querySelector("#file").files = dataTransfer.files; //input에 새로운 파일 목록을 적용
+	});
+
+//새로 선택한 파일 미리보기 처리
+$('#file').on('change', function() {
+	let inputFile = $(this)[0].files;
+	$('#imgFile').html('');  // 새 파일 미리보기 초기화
+
+	for (let i = 0; i < inputFile.length; i++) {
+		
+		let reader = new FileReader();
+		reader.onload = function(e) {
+			let div = $('<div>').attr({'class': 'imgDiv col-2 me-2 ms-3', 'data-fileid': inputFile[i].name});
+			let img = $('<img>').attr({
+				'src': e.target.result,
+				'class': 'imgId',
+				'width': '200px',
+				'height': '200px'
+			});
+			let delBtn = $('<button>').attr({'type': 'button', 'class': 'imageDel'}).html('X');
+			$('#imgFile').append(div);
+			$(div).append(img);
+			$(div).append(delBtn);
+		}
+		reader.readAsDataURL(inputFile[i]);
+		
+	}
+});
+
+  $("#updateBtn").on("click", function(e){
+	  e.preventDefault();
+	  
+	  let formData = new FormData(document.UpdateForm);
+	  let inputFile = $("input[name='newFiles']")[0].files;
+	  console.log($("input[name='newFiles']").files);
+	  
+	  delList.forEach(fileName => {
+		  formData.append("deleteFileNames", fileName);
+	  }); 
   
-  function updateAjax() {
-    let info = getNoticeInfo();
-    $.ajax(ctxPath + "/noticeBuildingUpdate", {
+    $.ajax({
+      url: ctxPath + "/noticeBuildingUpdate", 
       type: "post",
-      contentType: "application/json",
-      data: JSON.stringify(info),
-    })
-      .done((result) => {
-        alert("수정되었습니다!");
-        location.href = ctxPath + "/noticeBuildingList";
-      })
-      .fail((err) => alert("오류가 발생했습니다!"));
-  }
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function(result) {
+    	  console.log(result);
+    	  alert("수정되었습니다!");
+    	  if(result.result){
+	          location.href = ctxPath + "/noticeBuildingList";
+    	  }
+      },
+      error: function(error) {
+    	 alert("오류가 발생했습니다!");
+      }
+  	});
+  });
 </script>

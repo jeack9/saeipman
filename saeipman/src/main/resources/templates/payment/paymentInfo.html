@@ -28,7 +28,7 @@ th, td {
 </style>
 </head>
 <body>
-	<div layout:fragment="Main" class="container col-xl-6 ">
+	<div layout:fragment="Main" class="container col-xl-7 ">
 			<div class='row'>
 				<h4 class="mb-4">납부</h4>
 
@@ -39,7 +39,7 @@ th, td {
 								<tr>
 									<th colspan="2" id=>납부 내역 &nbsp; &nbsp;<select
 										aria-label="Default select example" id="option">
-											<option selected>조회기간(최근 3개월)</option>
+											<option selected>기간선택</option>
 									</select></th>
 								</tr>
 								<tr>
@@ -100,23 +100,22 @@ th, td {
 																	class="form-check-label" for="flexCheckDefault"></label>
 															</div></td>
 														<td>[[${#strings.substring(payInF.realPaymentDate, 0,
-															11)}]]</td>
+															11)}]]&nbsp;</td>
 
 														<td>[[${#numbers.formatInteger(payInF.paymentMoney,
 															3, 'COMMA')}]]</td>
 														<td th:if="${payInF.paymentState == -1}"><font
-															color="red"> 연체</font></td>
+															color="red">&nbsp; 연체</font></td>
 														<td th:if="${payInF.paymentState != -1}"><font
-															color="green"> 예정</font></td>
+															color="green">&nbsp; 예정</font></td>
 													</tr>
 												</th:block>
 											</tbody>
 										</table>
-									</td>
 
 									<!-- 관리비 출력 -->
 									<td>
-										<table class="table table-bordered">
+										<table>
 											<tbody id="gwanlibiTotal">
 												<th:block th:each="payInF : ${payInfo}">
 													<tr th:if="${payInF.gaguGwanlibi > 0}">
@@ -127,13 +126,13 @@ th, td {
 																	class="form-check-label" for="flexCheckDefault"></label>
 															</div></td>
 														<td>[[${#strings.substring(payInF.paymentMonth, 0,
-															11)}]]</td>
+															11)}]]&nbsp;</td>
 														<td>[[${#numbers.formatInteger(payInF.gaguGwanlibi,
 															3, 'COMMA')}]]</td>
 														<td th:if="${payInF.paymentYN == -1}"><font
-															color="red"> 연체</font></td>
+															color="red">&nbsp; 연체</font></td>
 														<td th:if="${payInF.paymentYN != -1}"><font
-															color="green"> 예정</font></td>
+															color="green">&nbsp; 예정</font></td>
 													</tr>
 												</th:block>
 											</tbody>
