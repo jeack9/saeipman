@@ -14,7 +14,7 @@
             content LIKE '%' || #{keyword} || '%'
           </when>
           <when test="type == 'W'.toString()">
-            room_no LIKE '%' || #{keyword} || '%'
+            r.room_no LIKE '%' || #{keyword} || '%'
           </when>
           <when test="type == 'TC'.toString()">
             (title LIKE '%' || #{keyword} || '%' OR content LIKE '%' || #{keyword} || '%')
@@ -37,6 +37,7 @@
       AND r.building_id IN (
         SELECT B.building_id FROM building_info B WHERE B.imdaein_id = #{imdaeinId}
       )
+      
     </if>
     
     <if test="buildingId != null and buildingId != ''">
@@ -70,6 +71,7 @@
 	      FROM room_info r  
 	      join minwon m on m.room_id = r.room_id
 	      join building_info b on b.building_id = r.building_id
+	      join constract_info c on m.room_id = c.room_id  and   c.constract_state = 1
 	      <where>
 	      <include refid="criteria"/>
 	      </where>
@@ -115,11 +117,12 @@
 		    m.reg_date,
 		    m.mod_date,
 		    m.alert_type,
-		    m.room_id
+		    m.room_id,
+		    c.imchain_phone
 		FROM 
 		    minwon m LEFT JOIN minwon_category ci ON m.category = ci.category_no  <!-- category 번호를 기준으로 조인 -->
 		JOIN
-    		constract_info c ON m.room_id = c.room_id AND c.imchain_phone  = #{imchainId}
+    		constract_info c ON m.room_id = c.room_id AND c.imchain_phone  = #{imchainId} AND c.constract_state = 1
 		JOIN
     		room_info r ON c.room_id = r.room_id     
 		WHERE 

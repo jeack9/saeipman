@@ -130,8 +130,10 @@
 						data: JSON.stringify(grid.getData())						
 					})
 					.done(function(result) {
-						alert('업데이트 성공!');						
-						location.href = ctxPath + '/gwanlibiDetailsBillList?buildingId=' + building.buildingId + '&paymentMonth=' + paymentMonth;
+						alert('업데이트 성공!');
+						//history.go(-2);
+						//location.href = ctxPath + '/gwanlibiDetailsBillList?buildingId=' + building.buildingId + '&paymentMonth=' + paymentMonth;
+						location.replace(ctxPath + '/gwanlibiDetailsBillList?buildingId=' + building.buildingId + '&paymentMonth=' + paymentMonth);
 					})
 					.fail(function(err){
 						console.log(err);

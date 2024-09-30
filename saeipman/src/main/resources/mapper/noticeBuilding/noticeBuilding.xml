@@ -141,6 +141,15 @@
 		, building_id = #{buildingId}
 		WHERE post_no = #{postNo}
 	</update>
+	
+	
+	<select id="selectFileName">
+		select 	fi.file_name as file_name
+		FROM building_notice bn JOIN file_info fi
+		                    ON bn.group_id = fi.group_id  
+		WHERE bn.post_no = #{postNo}
+	
+	</select>
 
 
 	<!-- 삭제 -->

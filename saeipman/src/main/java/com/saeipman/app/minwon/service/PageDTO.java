@@ -14,7 +14,7 @@ public class PageDTO {
 	
 	private int total;
 	private Criteria cri;
-	private int pagesize = 5;
+	private int pagesize = 6;
 	
 	public PageDTO(Criteria cri, int total) {
 		

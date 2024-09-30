@@ -1,8 +1,10 @@
 <div xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layouts/login_layout}" layout:fragment="Main">
-
-	<div class="container-xxl position-relative bg-white d-flex p-0">
+	
+	<div class="background"
+		th:style="'background-image: url(' + @{/img/backG3.png} + ');'">
+	<div class="container-xxl position-relative d-flex p-0">
 		<div class="container-fluid">
 			<div class="row h-100 align-items-center justify-content-center"
 				style="min-height: 100vh;">
@@ -25,6 +27,7 @@
 							<span toggle="#newPassword" class="fa fa-fw fa-eye-slash field-icon toggle-password"
 								style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></span>
 						</div>
+						<div style="font-size: 14px;" id="resultDiv"></div>
 
 						<!-- 비밀번호 확인 입력 -->
 						<div class="form-floating mb-3 position-relative">
@@ -52,8 +55,9 @@
 		</div>
 	</div>
 </div>
-
+</div>
 <script>
+
 	// 비밀번호 눈 모양 아이콘 클릭 시 비밀번호 표시/숨기기 기능
 	$('.toggle-password').click(function() {
 		const input = $($(this).attr('toggle')); // 현재 클릭한 아이콘에 연결된 입력 필드 선택
@@ -66,6 +70,7 @@
 		} else {
 			$(this).removeClass('fa-eye').addClass('fa-eye-slash'); // 빗금 있는 눈으로 변경 (숨김)
 		}
+		
 	});
 
 	// 비밀번호 변경 버튼 클릭
@@ -73,7 +78,14 @@
 		const newPassword = $('#newPassword').val();
 		const confirmPassword = $('#confirmPassword').val();
 		const passwordError = $('#passwordError'); // 비밀번호 불일치 경고 메시지 영역
-
+		const resultDiv = $('#resultDiv').val();
+		let passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,16}$/;
+		
+		if (!passwordRegex.test(newPassword)) {
+			resultDiv.innerHTML = '6~16자 영문자 + 숫자를 조합하세요.';
+			
+		}
+		
 		// 이전에 표시된 에러 메시지 숨기기
 		passwordError.hide();
 

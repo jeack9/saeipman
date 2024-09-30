@@ -8,7 +8,7 @@
 	<style>
 		.title {
 			font-family: monospace;
-			margin: 30px 0;
+			margin: 0;
 		}
 
 		.fold-content {
@@ -23,23 +23,32 @@
 
 		.btn:hover {
 			border-color: black;
-			background: tomato;
+			background: rgb(117, 168, 157);
 			color: black;
 		}
 
 		.page-link {
-			color: tomato;
-			border-color: tomato;
+			color: rgb(71, 100, 127);
+			border-color: black;
 		}
 
 		.page-link:hover {
-			background-color: tomato;
-			color: white;
+			background-color: rgb(229, 229, 229);
+			border-color: rgb(71, 100, 127);
+			color: rgb(71, 100, 127);
 		}
 
 		.swal2-html-container {
 			color: black !important;
-			font-family: monospace;
+		}
+		
+		.bg {
+			/* background: rgb(136, 199, 225) !important; */
+			background: rgb(136, 199, 225) !important;
+		}
+		
+		input::placeholder {
+		 	color: red;
 		}
 	</style>
 </head>
@@ -48,10 +57,27 @@
 	<!-- html -->
 	<div layout:fragment="Main" style="width: 95%;">
 		<br />
-		<h3 class="title">Building List.</h3>
-		<br />
+		<h3 class="title">관리비 납부 내역</h3>
+		
+		<br>
+		<div style="display: flex;">
+				<h5 class="title" style="flex: 1">Building List.</h5>			
+				<div class="row">
+					<div class="col-7">
+						<input class="form-control me-2" type="text"
+							aria-label="Search" id="roomNoSearch" placeholder="건물 이름을 입력하세요." style="flex: 1;">
+					</div>
+					<div class="col-2">
+						<button type ="button" class="btn btn-outline-success" id="roomSearchBtn" style="flex: 1">Search</button>
+					</div>
+				</div>
+		</div>
+		
+		<br>
+		
 		<table class="fold-table">
-			<!-- column name of building information list -->
+			<!-- column name of building information list --
+
 			<thead>
 				<tr>
 					<th><span class="visible-big">No.</span></th>
@@ -71,15 +97,14 @@
 					<!-- folding tables -->
 					<tr class="fold">
 						<td colspan="7">
-							<div class="fold-content">
-								<h4 style="font-family: monospace">Room List.</h4>
-								<p style="font-family: monospace">관리비가 연체된 세입자에게 문자를 전송할 수 있습니다. [건당 20원]</p>
+							<div class="fold-content" style="background: rgb(241, 246, 246)">
+								<h5>Room List.</h5>
+								<p>관리비가 연체된 세입자에게 문자를 전송할 수 있습니다. [건당 20원]</p>
 								<table class="small-friendly">
 									<!-- column name of room information list -->
 									<thead>
 										<tr>
 											<th><span class="visible-big">No.</span></th>
-											<th><span class="visible-big">Building Name</span></th>
 											<th><span class="visible-big">Room Number</span></th>
 											<th><span class="visible-big">Occupancy Status</span></th>
 											<th><span class="visible-big">Payment State</span></th>
@@ -91,7 +116,6 @@
 										<th:block th:each="room, roomSatate : ${rooms}">
 											<tr th:if="${room.buildingId == building.buildingId}">
 												<td>[[${roomSatate.index+1}]]</td>
-												<td>[[${building.buildingName}]]</td>
 												<td>[[${room.roomNo}]]</td>
 												<td th:text="${room.ipjuState == 1} ? '입주' : '공실'"></td>
 												
@@ -111,15 +135,17 @@
 									</tbody>
 
 								</table>
-							</div>
-							<div style="text-align: center; margin-right: 10px">
+						
+							<div style="text-align: center; text-align: center; margin-top: 25px;">
 								<button type="button" class="btn btn-outline-primary msgBtn">연체 안내 문자 전송</button>
 							</div>
+							</div>
+							
 							<br/>
+							
 						</td>
 					</tr>
 				</th:block>
-
 
 			</tbody>
 		</table>
@@ -146,11 +172,16 @@
 				</th:block>
 
 				<!-- 페이지 버튼 생성 -->
-				<th:block th:with="start=${page.startPage}, end=${page.endPage}">
-					<li class="page-item" th:with="start=${page.startPage}, end=${page.endPage}"
-						th:each="pageButton : ${#numbers.sequence(start, end)}"><a class="page-link"
-							th:href="@{/gwanlibiPaymentState?pageNum={page} (page=${pageButton})}"
-							th:text=${pageButton}></a></li>
+				<th:block th:with="start=${page.startPage}, end=${page.endPage}">				
+					<li class="page-item"
+						th:with="start=${page.startPage}, end=${page.endPage}"
+						
+						th:each="pageButton : ${#numbers.sequence(start, end)}">
+							<a class="page-link"
+							   th:classappend="${pageButton == page.pageNum ? 'bg' : ''}"
+							   th:href="@{/gwanlibiPaymentState?pageNum={page} (page=${pageButton})}"
+							   th:text=${pageButton}></a>
+					</li>
 				</th:block>
 
 				<!-- 다음 페이지 버튼 (Next) -->

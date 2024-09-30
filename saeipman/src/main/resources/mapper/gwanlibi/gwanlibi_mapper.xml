@@ -50,7 +50,7 @@
 		       , mg.month_gwanlibi_no
 		       , mg.gagu_gwanlibi
 		       , mg.total_money
-		       , (gd.gwanlibi_item_money/bi.total_gagu) gwanlibi_by_gagu
+		       <!-- , (gd.gwanlibi_item_money/bi.total_gagu) gwanlibi_by_gagu -->
 		FROM     gwanlibi_details gd JOIN building_gwanlibi_item bgi
 		                             ON   (gd.building_id = bgi.building_id AND gd.gwanlibi_item_no = bgi.gwanlibi_item_no)
 		                             
@@ -138,12 +138,14 @@
 			    				    , building_id
 			    				    , total_money
 			    				    , payment_month
+			    				    , payment_due_date
 			    				    , gagu_gwanlibi )
 			    VALUES ( #{monthGwanlibiInfo.monthGwanlibiNo}
 					   , #{monthGwanlibiInfo.buildingId}
 					   , #{monthGwanlibiInfo.totalMoney}
 					   <!-- , ADD_MONTHS(SYSDATE, -1) -->
 					   , #{monthGwanlibiInfo.paymentMonth}
+					   , #{monthGwanlibiInfo.paymentDueDate}
 					   , #{monthGwanlibiInfo.gaguGwanlibi} )
 
 		    <foreach collection="list" item="item">
@@ -174,11 +176,27 @@
 	</insert>
 	
 	
-	<!-- 총 가구수 -->
-	<select id="selectToTalGagu">
-		SELECT total_gagu
-		FROM   building_info
-		WHERE  building_id = #{buildingId}
+	<!-- 각 건물 별 입주 총 가구 정보 -->
+	<select id="selectTotalGagu">
+		SELECT bi.total_gagu, ri.ipju_state
+		FROM   building_info bi JOIN room_info ri
+                     		    ON (ri.building_id = bi.building_id AND ri.ipju_state = 1)
+        WHERE  bi.building_id = #{buildingId}
+	</select>
+	
+	<!-- 각 건물별 총 가구수 -->
+	<select id="countTotalGagu">
+		SELECT count(*)
+		FROM   building_info bi JOIN room_info ri
+                     		    ON (ri.building_id = bi.building_id)
+        WHERE  bi.building_id = #{buildingId}
+	</select>
+	<!-- 각 건물별 입주한 총 가구수 -->
+	<select id="countIpjuTotalGagu">
+		SELECT count(*)
+		FROM   building_info bi JOIN room_info ri
+                     		    ON (ri.building_id = bi.building_id AND ri.ipju_state = 1)
+        WHERE  bi.building_id = #{buildingId}
 	</select>
 	
 	<!-- month_gwnalibi 데이터 개수 : 데이터가 있으면 수정, 없으면 등록 -->

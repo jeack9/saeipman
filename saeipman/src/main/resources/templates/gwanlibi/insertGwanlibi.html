@@ -220,6 +220,7 @@
 						}).then((result) => {
 							if (result.isConfirmed) {
 								location.href = ctxPath + url;
+								//history.back();
 							}
 						})
 					}).fail(function (err) {
