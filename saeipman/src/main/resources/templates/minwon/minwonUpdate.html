@@ -194,7 +194,7 @@
 		
 		// 삭제된 기존 이미지 목록도 FormData에 추가
 		delList.forEach(fileName => {
-			formData.append("deleteFileNames", fileName);
+			formData.append("deleteFile", fileName);
 		});
 
 		// 서버에 AJAX로 데이터 전송

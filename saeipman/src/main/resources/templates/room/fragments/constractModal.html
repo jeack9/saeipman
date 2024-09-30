@@ -29,6 +29,7 @@
 				<label class="col-sm-2 col-form-label">선후불</label>
 				<div class="col-sm-4">
 					<select class="form-select" th:field="*{payType}">
+						<option value="">선택</option>
 						<option value="선불" th:selected="*{payType == '선불'}">선불</option>
 						<option value="후불" th:selected="*{payType == '후불'}">후불</option>
 					</select>

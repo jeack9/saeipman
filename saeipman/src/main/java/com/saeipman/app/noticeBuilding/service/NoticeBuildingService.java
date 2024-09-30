@@ -31,9 +31,10 @@ public interface NoticeBuildingService {
 	// 임대인 소유 건물 조회
 	public List<BuildingVO> imdaeinBuilding(BuildingVO buildingVO);
 	
-	//파일 업로드
-	public List<String> getFileInfo(int postNo);
-
+	//첨부파일
+	public List<String> getFileName(int postNo);
+	public int fileDelete(List<String> fileNames);
+	public int fileNamesByGroupId(String groupId);
 	
 	
 }

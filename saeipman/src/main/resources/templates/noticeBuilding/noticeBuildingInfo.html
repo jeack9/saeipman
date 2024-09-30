@@ -11,22 +11,22 @@
 						<table class="table table-bordered"
 							style="border-radius: 5px; border-style: hidden; box-shadow: 0 0 0 1px #d2d2d2;">
 							<tr class="col-md-10">
-								<th class="col-1 bg-light">제목</th>
+								<th class="col-1 bg-light" style="text-align: center">제목</th>
 								<td class="col-7">[[${BNotice.title}]]</td>
-								<th class="col-1 bg-light">조회수</th>
+								<th class="col-1 bg-light" style="text-align: center">조회수</th>
 								<td class="col-1">[[${BNotice.views}]]</td>
 							</tr>
 							<tr>
-								<th class="bg-light">첨부파일</th>
-								<td colspan="4"><img
+								<th class="bg-light" style="text-align: center">첨부파일</th>
+								<td colspan="3"><img
 									style="width: 150px; height: 150px; border-radius: 20%; margin: 1%;"
 									th:each=" img : ${BNotice.fileName}"
 									th:src="@{/images/공지사항/{fileName}(fileName=${img})}" /></td>
 							</tr>
 							<tr>
-								<th class="bg-light">작성일</th>
-								<td th:if="${BNotice.modDate == ''}">[[${#dates.format(BNotice.regDate,'yyyy/MM/dd')}]]</td>
-								<td th:if="${BNotice.modDate != ''}">[[${#dates.format(BNotice.modDate,'yyyy/MM/dd')}]]</td>
+								<th class="bg-light" style="text-align: center">작성일</th>
+								<td colspan="3" th:if="${BNotice.modDate == ''}">[[${#dates.format(BNotice.regDate,'yyyy/MM/dd')}]]</td>
+								<td colspan="3" th:if="${BNotice.modDate != ''}">[[${#dates.format(BNotice.modDate,'yyyy/MM/dd')}]]</td>
 							</tr>
 							<tr>
 								<td colspan="4" id="textarea" style="padding: 50px;">[[${BNotice.content}]]</td>

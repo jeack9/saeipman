@@ -39,8 +39,12 @@ public interface GwanlibiMapper {
 	public int updateGwanlibiDetails(List<GwanlibiVO> list);
 	public int updateMonthGwanlibi(GwanlibiVO gwanlibiVO);
 	
-	// 총 가구수
-	public int selectToTalGagu(String buildingId);
+	// 각 건물별 입주 총 가구 정보
+	public List<GwanlibiVO> selectTotalGagu(String buildingId);
+	// 각 건물별 총 가구수
+	public int countTotalGagu(String buildingId);
+	// 각 건물별 입주한 총 가구수
+	public int countIpjuTotalGagu(String buildingId);
 	
 	// 월 관리비 데이터 수
 	public int getCountingMonthGwanlibiData(String buildingId);
