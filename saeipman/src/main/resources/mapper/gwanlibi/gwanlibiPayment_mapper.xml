@@ -32,7 +32,7 @@
 				AND    TO_CHAR(m.payment_month, 'yyMM') =  TO_CHAR(TO_DATE(ADD_MONTHS(sysdate, -1), 'yyyy-MM-dd'), 'yyMM')
 			</when>
 			<otherwise>
-				AND    TO_CHAR(m.payment_month, 'yyMM') =  TO_CHAR(TO_DATE(ADD_MONTHS(#{paymentMonth}, -1), 'yyyy-MM-dd'), 'yyMM')
+				AND    TO_CHAR(m.payment_month, 'yyMM') =  TO_CHAR(TO_DATE(#{paymentMonth}, 'yyyy-MM'), 'yyMM')
 			</otherwise>		
 		</choose>
 		ORDER BY r.room_id
