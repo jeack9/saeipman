@@ -43,14 +43,13 @@
 										<input type="password" class="form-control" th:field=*{pw}
 											placeholder="비밀번호" autoComplete="off"> <label
 											for="pw">비밀번호</label>
-										<div class="" id="pwMsg">비밀번호: 8~16자 영문 대소문자, 숫자를 사용하세요.</div>
+										<div class="" id="pwMsg">비밀번호: 6~16자 영문 대소문자, 숫자를 사용하세요.</div>
 										<div class="field-error" th:errors="*{pw}"></div>
 									</div>
 									<div class="form-floating mb-3">
 										<input type="email" class="form-control"
 											th:errorclass="field-error" th:field=*{email}
-											placeholder="이메일(비밀번호 찾기용)"> <label for="email">이메일(비밀번호
-											찾기용)</label>
+											placeholder="이메일"> <label for="email">이메일</label>
 										<div class="" id="emailMsg"></div>
 										<div class="field-error" th:errors="*{email}"></div>
 									</div>
@@ -66,16 +65,16 @@
 										<div class="d-flex form-floating">
 											<input type="text" class="form-control" th:field=*{phone}
 												placeholder="전화번호"> <label for="phone">전화번호</label>
-											<button type="button" class="btn btn-primary"
-												style="min-width: 90px;">인증요청</button>
+											<!-- <button type="button" class="btn btn-primary"
+												style="min-width: 90px;">인증요청</button> -->
 										</div>
 										<div class="" id="phoneMsg">연락처: 10~11자리의 숫자만 입력가능합니다</div>
 										<div class="field-error" th:errors="*{phone}"></div>
 									</div>
-									<div class="form-floating mb-3">
+									<!-- <div class="form-floating mb-3">
 										<input type="text" class="form-control" id="floatingValid"
 											placeholder="인증번호"> <label for="floatingValid">인증번호</label>
-									</div>
+									</div> -->
 									<button type="submit" class="btn btn-primary py-3 w-100 mb-4">회원가입</button>
 								</div>
 							</form>

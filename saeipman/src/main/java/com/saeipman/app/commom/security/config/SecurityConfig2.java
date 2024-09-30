@@ -20,6 +20,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import com.saeipman.app.commom.jwt.JwtFilter;
 import com.saeipman.app.commom.jwt.JwtUtil;
 import com.saeipman.app.commom.jwt.LoginFilter;
+import com.saeipman.app.commom.security.CustomLoginSuccessHandler;
 
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +33,7 @@ public class SecurityConfig2 {
 	// AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final JwtUtil jwtUtill;
+	 private final CustomLoginSuccessHandler successHandler;
 
 	@Bean // 비밀번호 암호화
 	BCryptPasswordEncoder passwordEncoder() {
@@ -108,8 +110,7 @@ public class SecurityConfig2 {
 		http.formLogin(login -> login.loginPage("/all/login").loginProcessingUrl("/all/loginProc") // 로그인 submit url 설정
 				.usernameParameter("loginId") // 파라미터 name 설정
 				.passwordParameter("pw")
-				// .successHandler()
-				.defaultSuccessUrl("/member/home", true).permitAll() // 로그인 성공시 이동하는 페이지 허용
+				.successHandler(successHandler) // 권한별 로그인 성공시 이동
 		).logout(logout -> logout.logoutUrl("/all/logoutProc").logoutSuccessUrl("/all/login"));
 
 		// 세션설정
