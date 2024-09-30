@@ -1,5 +1,10 @@
 package com.saeipman.app.building.service;
 
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
@@ -18,6 +23,10 @@ public class BuildingPageDTO {
 	private String buildingId;
 	private Integer paymentState;//월세 납부 상태
 	private Integer roomNo;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date paymentDate1;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date paymentDate2;
 	
 	public BuildingPageDTO() {
 		this.pageNum = 1;

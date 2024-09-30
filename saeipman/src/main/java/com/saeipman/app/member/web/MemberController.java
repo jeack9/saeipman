@@ -11,6 +11,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("member")
 public class MemberController {
 	// 메인페이지
-	@GetMapping("home") 
-	public void homeP() {}
+//	@GetMapping("home") 
+//	public void homeP() {}
 }

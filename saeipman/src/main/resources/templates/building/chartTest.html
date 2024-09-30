@@ -13,7 +13,7 @@
 
 </head>
 <body>
-	<div layout:fragment="Main" class="container">
+	<div layout:fragment="Main" class="container row">
 		<h3>메인</h3>
 		<div class="col-3">
 			<hr>
@@ -86,8 +86,7 @@
 					}
 				};
 
-				var chart = new google.charts.Bar(document
-						.getElementById('columnchart_material'));
+				var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
 
 				chart.draw(data, google.charts.Bar.convertOptions(options));
 			}

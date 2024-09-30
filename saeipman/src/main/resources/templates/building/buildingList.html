@@ -180,21 +180,21 @@ input {
 					</div>
 					<div class="form-group col-md-5"></div>
 					<div class="form-group col-md-5">
-						<label for="floorArea" class="form-label">연면적 </label> <input
+						<label for="floorArea" class="form-label">연면적(m²) </label> <input
 							type="text" id="floorArea" name="floorArea" class="form-control">
 					</div>
 					<div class="form-group col-md-5">
-						<label for="floorAreaRatio" class="form-label">용적률 산정용 연면적
+						<label for="floorAreaRatio" class="form-label">용적률 산정용 연면적(m²)
 						</label> <input type="text" id="floorAreaRatio" name="floorAreaRatio"
 							class="form-control">
 					</div>
 					<div class="form-group col-md-5">
-						<label for="gunchookArea" class="form-label">건축면적 </label> <input
+						<label for="gunchookArea" class="form-label">건축면적(m²) </label> <input
 							type="text" id="gunchookArea" name="gunchookArea"
 							class="form-control">
 					</div>
 					<div class="form-group col-md-5">
-						<label for="buildingHeigh" class="form-label">건물 높이 </label> <input
+						<label for="buildingHeigh" class="form-label">건물 높이(m) </label> <input
 							type="text" id="buildingHeigh" name="buildingHeigh"
 							class="form-control">
 					</div>
@@ -213,6 +213,7 @@ input {
 							type="text" id="floorGaguCount" name="floorGaguCount"
 							class="form-control">
 					</div>
+					<input type="hidden" name="buildingId" id="bid">
 					<div class="form-group col-md-5">
 						<label for="totalGagu" class="form-label">총 세대수 </label> <input
 							type="text" id="totalGagu" name="totalGagu" class="form-control">
@@ -221,7 +222,7 @@ input {
 						<label for="parking" class="form-label">주차 가능 대수 </label> <input
 							type="text" id="parking" name="parking" class="form-control">
 					</div>
-					<div class="form-group col-md-6">
+					<div class="form-group col-md-10">
 						<label for="memo" class="form-label">비고 </label> <input
 							type="text" id="memo" name="memo" class="form-control">
 					</div>
@@ -232,7 +233,7 @@ input {
 					</div>
 					<div id="roomUpdate">
 						<div>
-							<input type="hidden" name="buildingId" id="bid">
+						
 							<h5 id="staticBackdropLabel">방 수정</h5>
 						</div>
 						<div>
@@ -247,7 +248,7 @@ input {
 
 								</tbody>
 							</table>
-							<button type="button" id="floorInsert">+</button>
+							<button type="button" id="floorInsert" class="btn btn-outline-secondary ps-2 pe-2 pt-0 pb-0">+</button>
 						</div>
 					</div>
 
@@ -270,12 +271,17 @@ input {
 				
 				let firstBuilding = $('div[data-index="1"]').attr('id');
 				if ($('#bid').attr('value')==null) {
+					//document.getElementById(firstBuilding);
+
 					getBuildingInfo(firstBuilding);
 				}
 				$('.buildlist').on('click', function(e) {
 					//$('#imgFile').html('');
 					let buildingId = e.currentTarget.id;
 					getBuildingInfo(buildingId);
+					$(".buildlist").css("backgroundColor", "transparent");
+
+					$(e.currentTarget).css("backgroundColor", "#e8eaff");
 				});	
 				function getBuildingInfo(buildingId) {
 					//상세 정보
@@ -286,7 +292,6 @@ input {
 							id : buildingId,
 						},
 						dataType : 'json',
-
 					}).done(function(data) {
 						$('#imgFile').html('');
 						$('#bnameTitle').html(data.buildingName);
@@ -333,15 +338,15 @@ input {
 								}
 							}
 							for(let i = floors[0]; i <= floors[floors.length- 1]; i++){
-								let tr = `<tr><td><input type='checkbox' id="checkbox${i}" class='selectRoom'><input type='text' name='floor'  value=${i} class='fl'></td>`;
+								let tr = `<tr><td><input type='checkbox' style="margin-right:10px;" id="checkbox${i}" class='selectRoom'><input type='text' name='floor'  value=${i} class='fl'></td>`;
 								for(room of data.rooms){
 									if(room.floor == i){
-										tr += `<td><input type='checkbox' name = 'chk' ><input type='text'  class='hoSel' name = 'roomNo' id=${room.roomId} value=${room.roomNo}>
-											<input type='hidden' name=${room.roomId}></td>`;
+										tr += `<td><input type='checkbox' style="margin-right:10px;" name = 'chk' ><input type='text'  class='hoSel' name = 'roomNo' id=${room.roomId} value=${room.roomNo}>
+											`;
 									} 
 								}
-									tr+=`<td><button type='button' class='addRoom'>추가</button>
-									<button type='button' class='delRoom'>삭제</button></td>`;
+									tr+=`<td><button type='button' class='btn btn-outline-secondary ps-2 pe-2 pt-0 pb-0 addRoom'>추가</button>
+									<button type='button' class='btn btn-outline-secondary ps-2 pe-2 pt-0 pb-0 delRoom'>삭제</button></td>`;
 								tr+= `</tr>`;
 								$('#tb').append(tr);
 							}
@@ -419,9 +424,9 @@ input {
 				let newFloor;
 			
 				newFloor += `<tr>`;
-				newFloor += `<td><input type="checkbox" class='selectRoom'><input type='text' name = 'floor' class="fl" placeholder='숫자입력'></td>`;
-				newFloor +=`<td><button type='button' class='addRoom'>추가</button>
-					<button type='button' class='delRoom'>삭제</button></td>`;
+				newFloor += `<td><input type="checkbox" style="margin-right:10px;" class='selectRoom'><input type='text' name = 'floor' class="fl" placeholder='숫자입력'></td>`;
+				newFloor +=`<td><button type='button' class='btn btn-outline-secondary ps-2 pe-2 pt-0 pb-0 addRoom'>추가</button>
+					<button type='button' class='btn btn-outline-secondary ps-2 pe-2 pt-0 pb-0 delRoom'>삭제</button></td>`;
 				newFloor+=`</tr>`;
 				//$(newFloor).append(newButton);
 				$('#tb').append(newFloor);
@@ -430,7 +435,7 @@ input {
 			$('#tb').delegate('.addRoom','click',function(e){
 				let addSel = $(e.target).closest('tr');
 				//console.log(addSel);
-				addSel.find('.addRoom').parent().before(`<td><input type="checkbox" name="chk"><input type="text" name='roomNo' class = "newRoom"></td>`);
+				addSel.find('.addRoom').parent().before(`<td><input type="checkbox" style="margin-right:10px;" name="chk"><input type="text" name='roomNo' class = "newRoom"></td>`);
 				
 			});
 			
@@ -445,14 +450,22 @@ input {
 			//호실 삭제
 		 	$('#tb').delegate('.delRoom','click',function(e){
 				let delSel = $(e.target).closest('tr');
-				// 체크된 모든 항목에 대해 반복 
-				delSel.find("input[name=chk]:checked").each(function() { 
+				// 체크된 모든 항목에 대해 반복
+
+			 	delSel.find("input[name=chk]:checked").next().each((idx, ele) => {
+				
+					let roomId = $(ele).attr('id');
+					delRoomList.push({roomId});
+				}) 
+				console.log(delRoomList,"리스트");
+			 /* 	delSel.find("input[name=chk]:checked").each(function(e) { 
+					console.log();
 					let roomId =  delSel.find("input[name=chk]:checked").next().attr('id'); // 각 체크된 항목의 ID 가져오기 
 					delRoomList.push({
 						roomId
-					}); // 삭제 리스트에 추가
-				});
-				console.log(delRoomList);
+					}); // 삭제 리스트에 추가 
+				}); */
+				
 				if(delSel.find('.selectRoom').is(':checked')){
 					delSel.find('input[name=chk]').closest('tr').remove();
 

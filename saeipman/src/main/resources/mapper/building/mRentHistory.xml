@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.saeipman.app.building.mapper.MRentHistoryMapper">
-	<select id="selectMRentList" resultType="RentPayVO">
+	<select id="selectMRentList">
 		SELECT *
 		FROM ( select rownum rn ,
 					  a.*
@@ -30,7 +30,10 @@
 				    <if test="pageDTO.roomNo != null">
 				    	AND b.room_no = #{pageDTO.roomNo}
 				    </if>
-								ORDER BY 1
+				     <if test="pageDTO.paymentDate1 != null and pageDTO.paymentDate2 != null">
+				    	AND c.payment_date between #{pageDTO.paymentDate1} and #{pageDTO.paymentDate2}
+				    </if>
+				    	ORDER BY 8 desc
 								)a
 		<![CDATA[     
 		where rownum <= #{pageDTO.pageNum} * #{pageDTO.amount} )b   
@@ -55,6 +58,9 @@
 	    </if>
 	    <if test="pageDTO.roomNo != null">
 	    	AND b.room_no = #{pageDTO.roomNo}
+	    </if>
+	    <if test="pageDTO.paymentDate1 != null and pageDTO.paymentDate2 != null">
+	    	AND c.payment_date between #{pageDTO.paymentDate1} and #{pageDTO.paymentDate2}
 	    </if>
 	</select>
 	<select id="selectBuildingNameInfo" resultType="RentPayVO">

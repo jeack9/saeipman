@@ -10,7 +10,7 @@ input {
 	border-width: 0 0 1px;
 }
 
-#hoSel {
+.hoSel, .fl {
 	width: 60px;
 }
 </style>
@@ -125,7 +125,7 @@ input {
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content">
 							<div class="modal-header">
-								<input type="text" name="buildingId" id="bid">
+								<input type="hidden" name="buildingId" id="bid">
 								<h5 class="modal-title" id="staticBackdropLabel">자동 방생성</h5>
 								<button type="button" class="btn-close" data-bs-dismiss="modal"
 									aria-label="Close"></button>
@@ -133,17 +133,18 @@ input {
 							<div class="modal-body">
 								층수 : <input type="text" id="floorCnt" style="width: 40px;">
 								층별 가구수 : <input type="text" id="gaguCnt" style="width: 40px;">
-								<button type="button" id="insertBtn">생성 버튼</button>
+								<button type="button" id="insertBtn" class="btn btn-outline-secondary ps-2 pe-2 pt-0 pb-0">생성 버튼</button>
 								<table class="table table-bordered">
 									<thead>
 										<tr>
-											<th>층 수</th>
+											<th><input type="checkbox" style="margin-right:10px;" id="totalChk">층 수</th>
 											<th colspan="4">호실</th>
 										</tr>
 									</thead>
 									<tbody id="tb">
 									</tbody>
 								</table>
+								
 							</div>
 							<div class="modal-footer">
 								<button type="button" id="roomInsertBtn" class="btn btn-primary">저장</button>
@@ -230,7 +231,14 @@ input {
 			    } 
 				
 			});
-		}	
+		}
+		$('#totalChk').on('change',function(){
+			if($('#totalChk').is(":checked")){
+				$('input:checkbox').prop("checked",true);
+			}else{
+				$('input:checkbox').prop("checked",false);
+			}
+		})
 		
 		//체크박스
 		$('input:checkbox').change(function() {
@@ -266,11 +274,13 @@ input {
 			
 			let chks = $('input[name=chk]:checked').next();
 			for(chk of chks){
-				let floor = $(chk).attr('class');
+				let floorClass = $(chk).attr('class');
+				let floor = floorClass.substring(0,1);
 				let roomNo= chk.value;
 				roomList.push({buildingId, floor, roomNo});
 			} 
 			console.log(roomList);
+
 			return roomList;
 		}; 
 		
@@ -389,17 +399,17 @@ input {
 				//console.log(floors);
 				for (let i = 1; i <= floor; i++) {
 					tbody += `<tr>`;
-					tbody += `<td><input type="checkbox" id="checkbox${i}" class="selectRoom"><span>${i}층<span></td>`;
+					tbody += `<td><input type="checkbox" id="checkbox${i}" style="margin-right:10px;" class="selectRoom"><input type='text' name='floor'  value=${i} class='fl'></td>`;
 					for (let j = 1; j <= gagu; j++) {
 						if (j < 10) {
 							j = '0' + j;
 						} else {
 							j = String(j);
 						}
-						tbody += `<td><input type="checkbox" name="chk"><input type = "text" class="${i}" name="roomNo" id = "hoSel" value=${i+j}></td>`;
+						tbody += `<td><input type="checkbox" name="chk" style="margin-right:10px;"><input type = "text" class="${i} hoSel" name="roomNo" class = "hoSel" value=${i+j}></td>`;
 					}
-					tbody += `<td><button type ="button" id="addBtn${i}" class="addRoom">추가</button>`;
-					tbody += `<button type ="button" id="delBtn${i}" class="delRoom">삭제</button></td>`;
+					tbody += `<td><button type ="button" id="addBtn${i}" class="btn btn-outline-secondary ps-2 pe-2 pt-0 pb-0 me-1 addRoom">추가</button>`;
+					tbody += `<button type ="button" id="delBtn${i}" class="btn btn-outline-secondary ps-2 pe-2 pt-0 pb-0 delRoom">삭제</button></td>`;
 					tbody += `</tr>`;
 
 				}
@@ -407,7 +417,7 @@ input {
 				$('#tb').append(tbody);
 					
 				//행 선택 checkbox
-				$('.selectRoom').click(function(e){
+				$('#tb').delegate('.selectRoom','click',function(e){
 				
 					let parent = $(e.target).closest('tr')
 					if($(e.target).is(":checked")){
@@ -418,7 +428,7 @@ input {
 					
 					}
 				})
-				$("input[name=chk]").click(function(e) {
+				$('#tb').delegate("input[name=chk]",'click',function(e) {
 					let tr = $(e.target).closest('tr');
 					let total = tr.find("input[name=chk]").length;
 					let checked = tr.find("input[name=chk]:checked").length;
@@ -432,9 +442,10 @@ input {
 				});//end 행선택
 				
 				//호실 삭제
-				$('.delRoom').on('click',function(e){
+				$('#tb').delegate('.delRoom','click',function(e){
 					let delSel = $(e.target).closest('tr');
 					if(delSel.find('.selectRoom').is(':checked')){
+						
 						delSel.find('input[name=chk]').closest('tr').remove();
 					}
 					else {
@@ -443,11 +454,13 @@ input {
 				
 				});
 				//호실 추가
-				$('.addRoom').on('click',function(e){
+				$('#tb').delegate('.addRoom','click',function(e){
 					let addSel = $(e.target).closest('tr');
-					addSel.find('.addRoom').parent().before(`<td><input type="checkbox" name="chk"><input type="text" id = "hoSel"></td>`);
+					let floor = $(e.target).closest('tr').eq(0).find('input[name=floor]').val();
+					addSel.find('.addRoom').parent().before(`<td><input type="checkbox" style="margin-right:10px;" name="chk"><input type="text" class = "${floor} hoSel"></td>`);
 					
 				})
+				
 			}
 		</script>
 	</div>

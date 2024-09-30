@@ -33,6 +33,7 @@ public class BuildingVO {
 	private List<String> fileName;
 	
 	private List<RoomVO> rooms;
+
 	
 	// 경민
 	private List<GwanlibiPaymentVO> roomList;
