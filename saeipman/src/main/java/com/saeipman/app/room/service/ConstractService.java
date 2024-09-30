@@ -36,4 +36,6 @@ public interface ConstractService {
 	// 방의 이전 계약정보 조회
 	public ConstractVO prevConstractByRoomId(String roomId);
 	
+	// 계약 엑셀용
+	public List<BuildingContractExcel> buildingConstractExcel(String buildingId);
 }

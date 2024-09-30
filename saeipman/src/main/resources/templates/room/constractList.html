@@ -29,8 +29,10 @@
 					</button>
 					<!-- <button type="button" class="btn btn-outline-primary"
 						id="resetBuildingBtn">선택 초기화</button> -->
-					<button type="button" class="btn btn-outline-danger removeCss"
-						th:if="${buildingVO.buildingName != null}">[[${buildingVO.buildingName}]]</button>
+					<th:block th:if="${buildingVO.buildingName != null}">
+					<button type="button" class="btn btn-outline-danger removeCss">[[${buildingVO.buildingName}]]</button>
+					<button type="button" onclick="exportExcel(this.dataset.id)" th:data-id="${buildingVO.buildingId}"  class="btn btn-success">엑셀 내보내기</button>
+					</th:block>
 					<!-- 건물선택 모달창 -->
 					<div class="modal fade" id="buildingModal" tabindex="-1"
 						aria-labelledby="buildingModalLabel" aria-hidden="true">
@@ -230,7 +232,7 @@
 		            console.log(err);
 		        }
 		    });
-			});
+		});
 			// 건물선택 이벤트
 			function selectBuilding(target) {
 				let buildingId = $(target).data("buildingid");
@@ -242,6 +244,11 @@
 			function resetBuilding() {
 				location.href = `${ctxPath}/room/constractList`;
 			} */
+			
+			// 엑셀 내보내기
+			const exportExcel = (buildingId) => {
+				window.location.href = `${ctxPath}/exports/constracts?buildingId=${buildingId}`;
+			}
 		</script>
 	</div>
 	<!-- Main END -->

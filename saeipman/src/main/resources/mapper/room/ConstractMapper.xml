@@ -230,4 +230,25 @@
 	    WHERE room_id = #{roomId})
 	WHERE rn = 1
 	</select>
+	
+	<!-- 엑셀용 계약조회 -->
+	<select id="selectBuildingConstractList">
+	SELECT
+	    (SELECT building_name FROM building_info WHERE building_id = #{buildingId}) as building_name,
+	    ri.room_no room_no,
+	    ci.constract_type constract_type,
+	    ci.deposit deposit,
+	    ci.constract_date constract_date,
+	    ci.exp_date exp_date,
+	    ci.m_rent m_rent,
+	    ci.pay_type pay_type,
+	    ci.m_rent_date m_rent_date,
+	    ci.imchain_name imchain_name,
+	    ci.imchain_phone imchain_phone,
+	    ci.memo memo
+	FROM constract_info ci RIGHT OUTER JOIN room_info ri 
+	                        ON ri.room_id = ci.room_id AND ci.constract_state = 1
+	WHERE ri.building_id = #{buildingId}
+	ORDER BY ri.room_no
+	</select>
 </mapper>
