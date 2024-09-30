@@ -20,6 +20,7 @@ public class MinwonVO {
 	private String acceptState; // 처리상태
 	private String imdaeinId; //임대인 아이디
 	private String imchainId;
+	private String imchainPhone;
 	private List<String> fileName;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")

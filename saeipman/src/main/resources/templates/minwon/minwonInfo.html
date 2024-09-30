@@ -8,45 +8,52 @@
 <title>Insert title here</title>
 </head>
 <style>
+table, th, td {
+	border: 1px solid #ddd;
+	border-collapse: collapse;
+	border-radius: 5px;
+}
+
 /* 댓글 섹션 스타일 */
 #comments-section {
-    margin-top: 30px;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    width: 80%;
-    margin: 0 auto;
-    margin-bottom: 20px;
-    border-radius: 5px;
+	margin-top: 30px;
+	padding: 10px;
+	background-color: #f9f9f9;
+	border: 1px solid #ddd;
+	width: 80%;
+	margin: 0 auto;
+	margin-bottom: 20px;
+	border-radius: 5px;
 }
-.group{
+
+.group {
 	border: 1px solid #ddd;
 	border-radius: 5px;
 }
 
 .form-group {
 	margin-left: 10px;
-    margin-right: 10px;
+	margin-right: 10px;
 	margin-bottom: 10px;
 }
 
 /* 댓글 작성 섹션 */
 #comment-form-section {
-    width: 80%;
-    margin: 0 auto;
-    padding: 15px; /* 패딩을 적절하게 조절 */
-    background-color: #f1f5f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px; /* 댓글 목록과 폰트 크기 맞춤 */
+	width: 80%;
+	margin: 0 auto;
+	padding: 15px;
+	background-color: #f1f5f9;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	font-size: 14px;
 }
 
 /* 댓글 작성 폼 스타일 */
 #comment-form textarea {
-    width: 100%;
-    resize: vertical;
-    padding: 10px;
-    font-size: 14px; /* 폰트 크기를 동일하게 설정 */
+	width: 100%;
+	resize: vertical;
+	padding: 10px;
+	font-size: 14px;
 }
 
 /* 댓글 영역 */
@@ -54,11 +61,9 @@
 	padding-left: 50px;
 	padding-right: 10px;
 	color: #212529;
-	
-	
 }
 
-#onkey{
+#onkey {
 	position: relative;
 	padding: 10px;
 	color: #212529;
@@ -104,20 +109,19 @@
 
 /* 댓글 작성 폼 스타일 */
 #comment-form textarea {
-    width: 100%;
-    resize: vertical;
-    padding: 10px;
+	width: 100%;
+	resize: vertical;
+	padding: 10px;
 }
-
-
 
 .group {
 	margin-bottom: 15px;
 }
+
 .btn.btn-primary {
 	margin-bottom: 10px;
-    margin-left: 10px;
-    color: #FFFFFF;
+	margin-left: 10px;
+	color: #FFFFFF;
 }
 /* 버튼 중앙 정렬 */
 .button-container {
@@ -125,63 +129,63 @@
 	justify-content: center;
 	margin-top: 20px;
 }
-
-.table {
-	margin: 0 auto;
-}
 </style>
 <body>
 	<div>
-		<input type="hidden" id="postNo" th:value="${minwon.postNo}" /> 
-		<input type="hidden" id="loginId" th:value="${cri.loginId}">
-		<input type="hidden" id="isTenant" th:value="${cri.auth == 2 ? 'true' : 'false'}">
-		<input type="hidden" id="roomNo" th:value="${minwon.roomNo}">
-
-
-
+		<input type="hidden" id="postNo" th:value="${minwon.postNo}" /> <input
+			type="hidden" id="loginId" th:value="${cri.loginId}"> <input
+			type="hidden" id="isTenant"
+			th:value="${cri.auth == 2 ? 'true' : 'false'}"> <input
+			type="hidden" id="roomNo" th:value="${minwon.roomNo}">
 
 	</div>
-	<div>
-		<table class="table" style="width: 80%">
+	<div class="">
+		<h4 class="container p-0" style="width: 80%;">민원 접수</h4>
+		<table class="table container"
+			style="width: 80%; border-radius: 5px; border-style: hidden; box-shadow: 0 0 0 1px #d2d2d2;">
 			<tr class="col-md-12">
 				<th style="width: 5%">제목</th>
 				<td style="width: 30%">[[${minwon.title}]]</td>
 				<th>작성자</th>
-				<td style="width: 50%">[[${minwon.roomNo}]]호</td>
+				<td style="width: 20%">[[${minwon.roomNo}]]호</td>
+				<th>전화번호</th>
+				<td id="me_phone">[[${minwon.imchainPhone}]]</td>
 			</tr>
 			<tr>
 				<th>카테고리</th>
-				<td>[[${minwon.categoryType}]]</td>
+				<td colspan="12">[[${minwon.categoryType}]]</td>
 			</tr>
-			<tr>
-				<th>방문날짜</th>
-				<td
-					th:text="${#temporals.format(minwon.visitsDate1, 'yyyy-MM-dd HH:mm')}"></td>
-
-				<th th:if="${minwon.visitsDate2 != null}">또는</th>
-				<td
-					th:text="${#temporals.format(minwon.visitsDate2, 'yyyy-MM-dd HH:mm')}"></td>
+			<tr
+				th:if="${minwon.visitsDate1 != null || minwon.visitsDate2 != null}">
+				<th>희망 방문날짜</th>
+				<td style="border-right: hidden;" colspan="5">
+					[[${#temporals.format(minwon.visitsDate1, 'yyyy/MM/dd HH:mm')}]] <span
+					th:if="${minwon.visitsDate2 != null}">&nbsp 또는 &nbsp</span>
+					[[${#temporals.format(minwon.visitsDate2, 'yyyy/MM/dd HH:mm')}]]
+				</td>
 			</tr>
 			<tr>
 				<th style="width: 10%">첨부파일</th>
-				<td><img style="width: 45%; margin: 3px;"  th:each=" img : ${minwon.fileName}"
-				
+				<td colspan="12"><img
+					style="width: 150px; height: 150px; margin: 3px;"
+					th:each=" img : ${minwon.fileName}"
 					th:src="@{/images/민원/{f}(f=${img})}" /></td>
 			</tr>
 			<tr>
-				<th>내용</th>
-				<td colspan="12" id="textarea">[[${minwon.content}]]</td>
+				<td colspan="12" id="textarea" style="padding: 50px;">[[${minwon.content}]]</td>
 			</tr>
 			<tr>
 				<th>작성일</th>
-				<td>[[  ${#dates.format(minwon.regDate, 'yyyy/MM/dd')} ]]</td>
-				<th th:if="${minwon.modDate != null}">수정일</th>
-				<td>[[  ${#dates.format(minwon.modDate, 'yyyy/MM/dd')} ]]</td>
+				<td colspan="12" th:if="${minwon.modDate == null}">[[
+					${#dates.format(minwon.regDate, 'yyyy/MM/dd')} ]]</td>
+				<td colspan="12" th:if="${minwon.modDate != null}">[[
+					${#dates.format(minwon.modDate, 'yyyy/MM/dd')} ]]</td>
 			</tr>
 		</table>
 	</div>
 	<div class="button-container" th:if="${cri.auth == 2}">
-		<div th:if="${minwon.acceptState != '1' and minwon.acceptState != '2'}">
+		<div
+			th:if="${minwon.acceptState != '1' and minwon.acceptState != '2'}">
 			<button type="button"
 				th:onClick="|location.href = '@{/minwonUpdate(postNo=${minwon.postNo})}'|"
 				class="btn btn-outline-warning m-2">수정</button>
@@ -189,7 +193,8 @@
 		<button type="button"
 			th:onClick="|location.href = '@{/minwonList(pageNum=${cri.pageNum}, type=${param.type}, keyword=${param.keyword})}'|"
 			class="btn btn-outline-success m-2">목록</button>
-		<div th:if="${minwon.acceptState != '1' and minwon.acceptState != '2'}">
+		<div
+			th:if="${minwon.acceptState != '1' and minwon.acceptState != '2'}">
 			<button type="button"
 				th:onClick="|location.href = '@{/minwonDelete(postNo=${minwon.postNo})}'|"
 				class="btn btn-outline-danger m-2">삭제</button>
@@ -206,7 +211,9 @@
 			<input type="hidden" name="postNo" th:value="${minwon.postNo}" /> <input
 				type="hidden" name="state" th:value="1" />
 			<!-- 접수중은 숫자 1로 전송 -->
+			<div>
 			<button type="submit" class="btn btn-outline-warning m-2">접수</button>
+			</div>
 		</form>
 
 		<!-- 완료 버튼 -->
@@ -218,25 +225,26 @@
 		</form>
 	</div>
 
-	<div style="padding: 60px" >
+	<div style="padding: 60px">
 		<section id="comments-section">
-		    <h4>댓글</h4>
-		    <div id="comments-container">
-		        <!-- 댓글 목록이 여기에 표시됩니다 -->
-		        <div class="ms-3" id="cmtContainer"></div>
-		    </div>
+			<h4>댓글</h4>
+			<div id="comments-container">
+				<!-- 댓글 목록이 여기에 표시됩니다 -->
+				<div class="ms-3" id="cmtContainer"></div>
+			</div>
 		</section>
-			
-			<!-- 댓글 작성 폼 -->
-			<section id="comment-form-section">
-				<p style="font-size: 18px;">댓글 작성</p>
-			    <form id="comment-form">
-			        <div class="form-group">
-			            <textarea class="form-control" id="comment" rows="3"></textarea>
-			        </div>
-			        <button type="button" class="btn btn-primary" id="create-comment-btn">댓글 등록</button>
-			    </form>
-			</section>
+
+		<!-- 댓글 작성 폼 -->
+		<section id="comment-form-section">
+			<p style="font-size: 18px;">댓글 작성</p>
+			<form id="comment-form">
+				<div class="form-group">
+					<textarea class="form-control" id="comment" rows="3"></textarea>
+				</div>
+				<button type="button" class="btn btn-primary"
+					id="create-comment-btn">댓글 등록</button>
+			</form>
+		</section>
 
 		<!-- 대댓글 작성 폼 -->
 		<!-- 	<form id="comment-form">
@@ -256,6 +264,12 @@
 	  str = str.replace(/(?:\r\n|\r|\n)/g, "<br/>");
 	  $("#textarea").html(str);
 	  loadComment();
+	 
+          
+	  var test = $("#me_phone").html();
+	  var testDate = test.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3");
+	  $("#me_phone").text(testDate);
+		    
 
 	  // 댓글 목록 가져오기
 	  function loadComment() {
@@ -302,7 +316,7 @@
 	                      </div>
 	                      ${deleteButton}
 	                    </div>
-	                    <div class="comment-content">${comment.content}</div> <!-- 댓글 내용 -->
+	                    <div class="comment-content" id="textarea">${comment.content}</div> <!-- 댓글 내용 -->
 	                    <div class="comment-footer">
 	                      <input type="hidden" value=${comment.cmtGroup}>
 	                    </div>
@@ -321,7 +335,7 @@
 	                    </div> <!-- 작성자 -->
 	                    ${deleteButton}
 	                  </div>
-	                  <div class="comment-content">${comment.content}</div> <!-- 댓글 내용 -->
+	                  <div class="comment-content" id="textarea">${comment.content}</div> <!-- 댓글 내용 -->
 	                  <div class="comment-footer">
 	                    <input type="hidden" value=${comment.cmtGroup}>
 	                  </div>
@@ -336,7 +350,7 @@
 	              <form id="cmtfrm${div.dataset.group}" style="display:none;">
 	                <input type="hidden" name="cmtGroup" value="${div.dataset.group}">
 	                <div class="form-group">
-	                  <label for="reply${div.dataset.group}">대댓글 추가:</label>
+	                  <label for="reply${div.dataset.group}">대댓글 작성</label>
 	                  <textarea class="form-control" id="reply${div.dataset.group}" rows="3"></textarea>
 	                </div>
 	                <button type="button" class="btn btn-primary reply-comment-btn" data-group="${div.dataset.group}">댓글 등록</button>
