@@ -87,12 +87,14 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		monthGwanlibiInfo.setPaymentMonth(list.get(0).getPaymentMonth());		
 		
 		// 고정 관리비 -> 관리미 항목 별 금액
-		//monthGwanlibiInfo.setGwanlibiItemMoney(gwanlibiMoney);		
+		//monthGwanlibiInfo.setGwanlibiItemMoney(gwanlibiMoney);
 		
-		// month_gwanlibi - 가구별 관리비 계산.  // TODO 현재 입주 가구 수만 가져오기
-		int totalGagu = gwanlibiMapper.selectToTalGagu(list.get(0).getBuildingId());
-		int gwanlibiByGagu = total / totalGagu;
+		// month_gwanlibi - 가구별 관리비 계산.
+		List<GwanlibiVO> totalGagu = gwanlibiMapper.selectTotalGagu(list.get(0).getBuildingId());
+		int gwanlibiByGagu = total / totalGagu.size();
 		monthGwanlibiInfo.setGaguGwanlibi(gwanlibiByGagu);
+		System.err.println("입주한 총 가구수 : " + totalGagu.size());
+		System.err.println(gwanlibiByGagu);
 
 		gwanlibiMapper.insertGwanlibi(monthGwanlibiInfo, list, roomIdlist);
 	}
@@ -123,10 +125,12 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 		gwanlibiVO.setBuildingId(buildingId);
 		gwanlibiVO.setTotalMoney(totalMoney);
 		
-		int totalGagu = gwanlibiMapper.selectToTalGagu(buildingId);
+		// 가구별 관리비
+		List<GwanlibiVO> totalGagu = gwanlibiMapper.selectTotalGagu(buildingId);
 		System.err.println("총 가구 수 : " + totalGagu);
-		int gwanlibiByGagu = totalMoney / totalGagu;
-		gwanlibiVO.setGaguGwanlibi(gwanlibiByGagu);
+		int gwanlibiByGagu = totalMoney / totalGagu.size();
+		gwanlibiVO.setGaguGwanlibi(gwanlibiByGagu);	
+		
 		
 		System.err.println(gwanlibiVO);
 		// updateMonthGwanlibi
@@ -137,6 +141,6 @@ public class GwanlibiServiceImpl implements GwanlibiService {
 	@Override
 	public List<GaguGwanlibiHistoryVO> roomIdList(String buildingId) {
 		return gwanlibiMapper.selectRoomIdList(buildingId);
-	}	
+	}
 	
 }

@@ -8,7 +8,7 @@
 	<style>
 		.title {
 			float: left;
-			font-weight: bold;
+			margin:20px 0;
 		}
 
 		.buildingBox {
@@ -56,9 +56,7 @@
 	<div layout:fragment="Main" class="buildingBox justify-content-center">
 		<div class=" row roomWrap gx-0 justify-content-left">
 
-			<h4 class="title">관리비 항목 설정 <img class="" th:src="@{/img/gwanlibi.png}">
-				<br>아이콘 수정 중이니 아이콘 마음대로 변경하셔도 됩니다. 다만, 사이트 통일감을 떨어뜨리는 이미지는 지양해주시면 감사하겠슴당. 그럼 20000
-			</h4>
+			<h4 class="title">건물별 관리비 내역 <img class="" th:src="@{/img/gwanlibi.png}" width="35px;"></h4>
 			
 			<!-- Thymeleaf each -->
 			<th:block th:each="building : ${list}">
@@ -67,8 +65,8 @@
 						<i class="fa-sharp-duotone fa-solid fa-building"></i> [[${building.buildingName}]]
 					</div>
 					<div class="card-body text-secondary" style="font-size: 15px;">
-						<p><i class="fa-sharp fa-solid fa-location-dot" style="color: tomato;"></i> [[${building.doroAddr}]]</p>
-						<p>&nbsp;- 전월 관리비 : <b>[[${building.previousMonth}]]원</b></p>
+						<p><i class="fa-sharp fa-solid fa-location-dot" style="color: rgb(198, 65, 41);"></i> [[${building.doroAddr}]]</p>
+						<p>&nbsp;- 전월 관리비 : <b>[[${#numbers.formatInteger(building.previousMonth, 0, 'COMMA') + '원'}]]</b></p>
 						<p>&nbsp;- 금월 관리비 : <b>[[${building.thisMonth}]]원</b></p>
 						<div style="text-align: center;">
 							<button type="button"
