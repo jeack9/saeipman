@@ -6,7 +6,7 @@
 }
 
 *:not(i) {
-	font-family: 'ownglyph' !important;
+	font-family: 'ownglyph';
 }
 
 :root {

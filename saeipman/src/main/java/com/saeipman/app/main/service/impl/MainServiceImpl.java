@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.saeipman.app.main.mapper.MainMapper;
 import com.saeipman.app.main.service.MainService;
+import com.saeipman.app.minwon.service.Criteria;
+import com.saeipman.app.minwon.service.MinwonVO;
 import com.saeipman.app.payment.service.PaymentVO;
 
 import lombok.RequiredArgsConstructor;
@@ -33,5 +35,9 @@ public class MainServiceImpl implements MainService {
 	@Override
 	public int getExpCnt() {
 		return mainMapper.selectExpCnt();
+	}
+	@Override
+	public List<MinwonVO> minwonListMain(Criteria cri) {
+		return mainMapper.mainMinwonList(cri);
 	}
 }

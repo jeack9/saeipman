@@ -35,5 +35,6 @@ public interface BuildingService {
 	public int roomUpdate(RoomVO roomVO);
 	public int roomInfoDelete(RoomVO roomVO);
 	public int roomInfoInsert(RoomVO roomVO);
+	
 
 }

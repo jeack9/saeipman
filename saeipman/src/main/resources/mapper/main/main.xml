@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.saeipman.app.main.mapper.MainMapper">
 
 <!-- 계약자 카운팅 -->
@@ -36,5 +36,35 @@
 		<![CDATA[ 
 		WHERE exp_date<=TO_CHAR(ADD_MONTHS(SYSDATE,+3),'YYYY-MM-DD')
 		]]>
+	</select>
+	<select id="mainMinwonList">
+		 SELECT * 
+		 FROM (
+			    SELECT ROWNUM RN, a.* 
+			    FROM (
+				      SELECT 
+					        m.POST_NO, 
+					        m.TITLE, 
+					        m.CONTENT,
+					        CASE 
+					          WHEN m.ACCEPT_STATE = 0 THEN '접수전'
+					          WHEN m.ACCEPT_STATE = 1 THEN '접수중'
+					          WHEN m.ACCEPT_STATE = 2 THEN '처리 완료'
+					        END as ACCEPT_STATE,
+					        m.GROUP_ID,
+					        m.REG_DATE,
+					        r.ROOM_NO,
+					        r.BUILDING_ID,
+					        b.BUILDING_name
+				      FROM room_info r  
+						      join minwon m on m.room_id = r.room_id
+						      join building_info b on b.building_id = r.building_id
+						      join constract_info c on m.room_id = c.room_id  and   c.constract_state = 1
+			          ORDER BY m.post_no DESC
+					 ) a
+				 )
+		    <![CDATA[ 
+		    WHERE ROWNUM<=10
+		    ]]>
 	</select>
 </mapper>
