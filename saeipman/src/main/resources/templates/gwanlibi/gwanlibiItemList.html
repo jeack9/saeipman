@@ -1,46 +1,118 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
-				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-				layout:decorate="~{common/layouts/default_layout}">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}">
 
 <head>
-	<meta charset="UTF-8">
-	<style>
-		p {
-			float: left;
-			color: #323f5d;
-			font-size: 20px;
-			font-weight: bold;
-			font-family: monospace;
-		}
+<meta charset="UTF-8">
+<style>
+h5 {
+	float: left;
+	color: #323f5d;
+	font-size: 20px;
+	font-weight: bold;
+	font-family: monospace;
+	
+}
 
-		.btnDiv,
-		.btnDiv2 {
-			text-align: center;
-		}
 
-		.btnDiv2 {
-			margin-top: 10px
-		}
+.aa {
+    position: relative;
+}
 
-		#appendBtn,
-		#deleteBtn,
-		.goBtn,
-		.saveBtn {
-			display: inline-block;
-		}
-	</style>
+.cc {
+	display: inline-block;
+}
+
+.tip{
+float:right;
+    position: absolute;
+    top: 8px;
+    left: 55px;
+
+    font-size: 14px;
+    line-height: 26px;
+    text-align: center;
+
+    background-color: #b3dfe6;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: default;
+}
+
+.tip:before{
+    content:'?';
+    font-weight: bold;
+    color:#fff;
+}
+
+.tip:hover p{
+    visibility: visible;
+    opacity: 1;
+}
+
+.tip p{
+    opacity: 0;
+    visibility: hidden;
+
+    color: #fff;
+    font-size: 13px;
+    line-height: 1.4;
+    text-align: left;
+
+    background-color: #0064b7;
+    width: 400px;
+    padding: 20px;
+    border-radius: 3px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2), -1px -1px 3px rgba(0, 0, 0, 0.2);
+
+    position: absolute;
+    right: -370px;
+
+    transition: visibility 0s, opacity 0.5s linear;
+}
+
+.tip p:before{
+    position: absolute;
+    content: '';
+    width:0;
+    height: 0;
+    border:6px solid transparent;
+    border-bottom-color:#0064b7;
+    left:10px;
+    top: -12px;
+}
+
+.btnDiv, .btnDiv2 {
+	text-align: center;
+}
+
+.btnDiv2 {
+	margin-top: 10px
+}
+
+#appendBtn, #deleteBtn, .goBtn, .saveBtn {
+	display: inline-block;
+}
+</style>
 </head>
 
 <body>
 	<div layout:fragment="Main" style="width: 95%;">
-	<h4 class="mb-4">관리비 항목 설정</h4>
+		<div class="aa">
+			<h4 class="mb-4 cc">건물 관리비 항목 설정</h4>
+			<div class="tip cc">
+				<p class="cc">관리비 항목을 등록 및 수정할 수 있습니다.<br>항목 설정이 최초라면 기본적인 관리비 항목이 나타납니다.</p>
+			</div>
+		</div>
+
 		<div>
 			<br> <br>
 
 			<!-- 건물명 -->
 			<!-- <p style="float: left;"># 관리비 항목 설정</p> -->
-			<p id="bName" style="float: right;"></p>
+			<h5 id="bName" style="float: right;"></h5>
 
 			<br> <br>
 
@@ -54,7 +126,9 @@
 				<button class="btn btn-outline-primary m-1 " id="deleteBtn">삭제</button>
 
 				<button class="btn btn-primary m-1 saveBtn">저장</button>
-				<button class="btn btn-primary m-1 goBtn" th:onclick="|location.href='@{/gwanlibiDetailsBillList(buildingId=${buildingInfo.buildingId})}'|">관리비 상세 내역 보기</button>
+				<button class="btn btn-primary m-1 goBtn"
+					th:onclick="|location.href='@{/gwanlibiDetailsBillList(buildingId=${buildingInfo.buildingId})}'|">관리비
+					상세 내역 보기</button>
 			</div>
 
 			<br>
@@ -152,7 +226,7 @@
 						},
 						// [Column-3] 고정 관리비
 						{
-							header: '고정 관리비',
+							header: '고정 관리비 (WON)',
 							name: 'fixedPrice',
 							resizable: true,
 							align: 'center',
@@ -235,7 +309,7 @@
 				if (grid.validate().length >= 1) {
 					Swal.fire({
 						icon: "error",
-						text: "입력한 내용을 다시 한 번 확인해주세요."
+						text: "입력한 내용을 다시 확인해주세요."
 					});
 					return;
 				}
