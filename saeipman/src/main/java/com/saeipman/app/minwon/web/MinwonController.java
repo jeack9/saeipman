@@ -48,7 +48,7 @@ public class MinwonController {
 		cri.setLoginId(loginId);
 
 		if (cri.getAcceptState() == null) {
-		    cri.setAcceptState(-1); // 전체내역을 의미하는 기본값
+		    cri.setAcceptState(-1); // 전체내역을 의미
 		  }
 		
 		System.out.println("zjsxmfhffj");
@@ -100,11 +100,11 @@ public class MinwonController {
 			System.out.println("임차인 아이디" + imchainId);
 			minwonVO.setImchainId(imchainId);
 		}
-		MinwonVO findVO = minwonService.minwonSelect(minwonVO);
-
+		MinwonVO selectVO = minwonService.minwonSelect(minwonVO);
+		System.err.println(selectVO);
 		List<String> fileName = minwonService.getFileName(minwonVO.getPostNo());
-		findVO.setFileName(fileName);
-		model.addAttribute("minwon", findVO);
+		selectVO.setFileName(fileName);
+		model.addAttribute("minwon", selectVO);
 		model.addAttribute("cri", cri);
 		model.addAttribute("loginId", loginId);
 		return "minwon/minwonInfo";

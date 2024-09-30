@@ -2,7 +2,9 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layouts/login_layout}" layout:fragment="Main">
 
-	<div class="container-xxl position-relative bg-white d-flex p-0">
+	<div class="background"
+		th:style="'background-image: url(' + @{/img/backG3.png} + ');'">
+	<div class="container-xxl position-relative d-flex p-0">
 		<div class="container-fluid">
 			<div class="row h-100 align-items-center justify-content-center"
 				style="min-height: 100vh;">
@@ -80,7 +82,7 @@
 		</div>
 	</div>
 </div>
-
+</div>
 <script>
 	// 인증 완료 여부를 저장하는 변수
 	let isCodeVerified = false;
