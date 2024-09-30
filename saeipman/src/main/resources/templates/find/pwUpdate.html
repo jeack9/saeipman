@@ -1,53 +1,57 @@
 <div xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layouts/login_layout}" layout:fragment="Main">
-	
+
 	<div class="background"
 		th:style="'background-image: url(' + @{/img/backG3.png} + ');'">
-	<div class="container-xxl position-relative d-flex p-0">
-		<div class="container-fluid">
-			<div class="row h-100 align-items-center justify-content-center"
-				style="min-height: 100vh;">
-				<div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
-					<div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
-						<div
-							class="d-flex align-items-center justify-content-between mb-3">
-							<h3 class="text-primary">
-								<i class="fa fa-hashtag me-1"></i>Saeipman
-							</h3>
-							<h3 style="font-size: 20px">비밀번호 변경</h3>
-						</div>
+		<div class="container-xxl position-relative d-flex p-0">
+			<div class="container-fluid">
+				<div class="row h-100 align-items-center justify-content-center"
+					style="min-height: 100vh;">
+					<div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+						<div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
+							<div
+								class="d-flex align-items-center justify-content-between mb-3">
+								<h3 class="text-primary">
+									<i class="fa fa-hashtag me-1"></i>Saeipman
+								</h3>
+								<h3 style="font-size: 20px">비밀번호 변경</h3>
+							</div>
 
-						<!-- 새 비밀번호 입력 -->
-						<div class="form-floating mb-3 position-relative">
-							<input type="password" class="form-control" id="newPassword"
-								name="newPassword" placeholder="새 비밀번호" required> <label
-								for="newPassword">새 비밀번호</label>
-							<!-- 눈 모양 아이콘 추가 -->
-							<span toggle="#newPassword" class="fa fa-fw fa-eye-slash field-icon toggle-password"
-								style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></span>
-						</div>
-						<div style="font-size: 14px;" id="resultDiv"></div>
+							<!-- 새 비밀번호 입력 -->
+							<div class="form-floating mb-3 position-relative">
+								<input type="password" class="form-control" id="newPassword"
+									name="newPassword" placeholder="새 비밀번호" required> <label
+									for="newPassword">새 비밀번호</label>
+								<!-- 눈 모양 아이콘 추가 -->
+								<span toggle="#newPassword"
+									class="fa fa-fw fa-eye-slash field-icon toggle-password"
+									style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></span>
+								<div style="font-size: 14px;" id="pwMsg">비밀번호: 6~16자 영문
+									대소문자, 숫자를 사용하세요.</div>
+							</div>
 
-						<!-- 비밀번호 확인 입력 -->
-						<div class="form-floating mb-3 position-relative">
-							<input type="password" class="form-control" id="confirmPassword"
-								name="confirmPassword" placeholder="비밀번호 확인" required> <label
-								for="confirmPassword">비밀번호 확인</label>
-							<!-- 눈 모양 아이콘 추가 -->
-							<span toggle="#confirmPassword" class="fa fa-fw fa-eye-slash field-icon toggle-password"
-								style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></span>
-						</div>
+							<!-- 비밀번호 확인 입력 -->
+							<div class="form-floating mb-3 position-relative">
+								<input type="password" class="form-control" id="confirmPassword"
+									name="confirmPassword" placeholder="비밀번호 확인" required>
+								<label for="confirmPassword">비밀번호 확인</label>
+								<!-- 눈 모양 아이콘 추가 -->
+								<span toggle="#confirmPassword"
+									class="fa fa-fw fa-eye-slash field-icon toggle-password"
+									style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></span>
+							</div>
 
-						<!-- 비밀번호 불일치 경고 메시지를 표시할 영역 -->
-						<div id="passwordError"
-							style="color: red; font-size: 14px; display: none;">비밀번호가
-							일치하지 않습니다.</div>
+							<!-- 비밀번호 불일치 경고 메시지를 표시할 영역 -->
+							<div id="passwordError"
+								style="color: red; font-size: 14px; display: none;">비밀번호가
+								일치하지 않습니다.</div>
 
-						<div
-							class="d-flex align-items-center justify-content-between mb-4">
-							<button type="button" class="btn btn-primary py-3 w-100 mb-4"
-								id="updatePwBtn">비밀번호 변경</button>
+							<div
+								class="d-flex align-items-center justify-content-between mb-4">
+								<button type="button" class="btn btn-primary py-3 w-100 mb-4"
+									id="updatePwBtn">비밀번호 변경</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -55,9 +59,7 @@
 		</div>
 	</div>
 </div>
-</div>
 <script>
-
 	// 비밀번호 눈 모양 아이콘 클릭 시 비밀번호 표시/숨기기 기능
 	$('.toggle-password').click(function() {
 		const input = $($(this).attr('toggle')); // 현재 클릭한 아이콘에 연결된 입력 필드 선택
@@ -70,7 +72,24 @@
 		} else {
 			$(this).removeClass('fa-eye').addClass('fa-eye-slash'); // 빗금 있는 눈으로 변경 (숨김)
 		}
-		
+
+	});
+
+	// 비밀번호 실시간 유효성 검사
+	$('#newPassword').on('input', function() {
+		let $pwInput = $(this);
+		let $pwMsg = $('#pwMsg');
+		let pwRegex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,16}$/;
+
+		if (!$pwInput.val().trim() || !pwRegex.test($pwInput.val())) {
+			$pwMsg.text('비밀번호: 6~16자 영문자 + 숫자를 조합하세요.');
+			$pwMsg.addClass('error_text');
+			$pwMsg.css('color', 'red');
+		} else {
+			$pwMsg.text('유효한 비밀번호입니다.');
+			$pwMsg.removeClass('error_text');
+			$pwMsg.css('color', 'blue'); // 유효한 비밀번호일 때 녹색으로 표시
+		}
 	});
 
 	// 비밀번호 변경 버튼 클릭
@@ -78,14 +97,7 @@
 		const newPassword = $('#newPassword').val();
 		const confirmPassword = $('#confirmPassword').val();
 		const passwordError = $('#passwordError'); // 비밀번호 불일치 경고 메시지 영역
-		const resultDiv = $('#resultDiv').val();
-		let passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,16}$/;
-		
-		if (!passwordRegex.test(newPassword)) {
-			resultDiv.innerHTML = '6~16자 영문자 + 숫자를 조합하세요.';
-			
-		}
-		
+
 		// 이전에 표시된 에러 메시지 숨기기
 		passwordError.hide();
 

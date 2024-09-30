@@ -72,6 +72,8 @@
 	      join minwon m on m.room_id = r.room_id
 	      join building_info b on b.building_id = r.building_id
 	      join constract_info c on m.room_id = c.room_id  and   c.constract_state = 1
+	      AND m.imchain_id = c.imchain_phone  <!-- 민원 작성자가 계약된 임차인과 일치하는지 확인 -->
+    	  AND c.constract_state != -1
 	      <where>
 	      <include refid="criteria"/>
 	      </where>
@@ -87,7 +89,7 @@
 	  	SELECT COUNT(*)
         FROM room_info R 
         JOIN constract_info C ON C.room_id = R.room_id
-        JOIN minwon M ON M.room_id = C.room_id
+        JOIN minwon M ON M.room_id = C.room_id and c.constract_state = 1 and m.imchain_id = c.imchain_phone
 	
 	 <where>
 	<include refid="criteria"></include></where>
