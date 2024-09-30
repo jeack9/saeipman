@@ -76,7 +76,11 @@ public class MinwonController {
 		model.addAttribute("pageMaker", new PageDTO(cri, total));
 
 		model.addAttribute("cri", cri);
+		
+		int total1 = minwonService.pageTotal(cri);  // 총 데이터 개수를 가져오는 메소드
+		System.out.println("Total Data Count: " + total1);
 
+		
 		return "minwon/minwonList";
 	}
 

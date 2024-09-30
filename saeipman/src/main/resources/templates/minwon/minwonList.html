@@ -141,41 +141,39 @@
 		</div>
 
 
+		
+		<nav aria-label="Page navigation example" th:if="${pageMaker.total > 0}">
+    <ul class="pagination justify-content-center">
+        <!-- 처음으로 이동 -->
+        <li class="page-item">
+            <a class="page-link"
+               th:href="@{/minwonList(pageNum=1, buildingId=${param.buildingId}, acceptState=${param.acceptState}, type=${param.type}, keyword=${param.keyword})}"
+               aria-label="Previous">
+                <span aria-hidden="true">처음</span>
+            </a>
+        </li>
 
-		<nav aria-label="Page navigation example"
-			th:if="${pageMaker.total > 0}">
-			<ul class="pagination justify-content-center">
-				<li class="page-item">
-					<!-- 타임리프에서는 조건이 참일 때 'selected'라는 문자열을 반환할 필요가 없음. 대신 조건이 참이면 selected 속성이 추가되고, 거짓이면 속성이 추가되지 않음 -->
-					<a class="page-link"
-					th:href="@{/minwonList(pageNum=1, buildingId=${param.buildingId}, acceptState=${param.acceptState} , type=${param.type}, keyword=${param.keyword})}"
-					aria-label="Previous"> <span aria-hidden="true">처음</span>
-				</a>
-				</li>
-				<li class="page-item" th:if="${pageMaker.startPage > 1}"><a
-					class="page-link"
-					th:href="@{/minwonList(pageNum=${pageMaker.startPage -1}, type=${param.type}, keyword=${param.keyword})}"
-					aria-label="Previous"> <span aria-hidden="true">이전</span>
-				</a></li>
-				<th:block
-					th:with="start = ${pageMaker.startPage}, end = ${pageMaker.endPage}">
-					<li class="page-item"
-						th:each="pageButton : ${#numbers.sequence(start, end)}"><a
-						class="page-link"
-						th:href="@{/minwonList(buildingId=${param.buildingId}, acceptState=${param.acceptState},  pageNum=${pageButton}, type=${param.type}, keyword=${param.keyword})}"
-						th:text=${pageButton}></a></li>
-				</th:block>
-				<li class="page-item" th:if="${pageMaker.next}"><a
-					class="page-link"
-					th:href="@{/minwonList(pageNum=${pageMaker.endPage + 1}, type=${param.type}, keyword=${param.keyword})}"
-					aria-label="Next"> <span aria-hidden="true">다음</span>
-				</a></li>
-				<li class="page-item"><a class="page-link"
-					th:href="@{/minwonList(buildingId=${param.buildingId}, acceptState=${param.acceptState}, pageNum=${pageMaker.realEnd}, type=${param.type}, keyword=${param.keyword})}"
-					aria-label="Last"> <span aria-hidden="true">끝</span>
-				</a></li>
-			</ul>
-		</nav>
+        <!-- 페이지 번호 목록 생성 -->
+        <th:block th:with="start=${pageMaker.startPage}, end=${pageMaker.endPage}">
+            <li class="page-item" th:each="pageButton : ${#numbers.sequence(start, end)}"
+                th:if="${pageButton <= pageMaker.realEnd}"> <!-- realEnd 이하만 표시 -->
+                <a class="page-link"
+                   th:href="@{/minwonList(buildingId=${param.buildingId}, acceptState=${param.acceptState}, pageNum=${pageButton}, type=${param.type}, keyword=${param.keyword})}"
+                   th:text="${pageButton}"></a>
+            </li>
+        </th:block>
+
+        <!-- 마지막으로 이동 -->
+        <li class="page-item">
+            <a class="page-link"
+               th:href="@{/minwonList(pageNum=${pageMaker.realEnd}, buildingId=${param.buildingId}, acceptState=${param.acceptState}, type=${param.type}, keyword=${param.keyword})}"
+               aria-label="Last">
+                <span aria-hidden="true">끝</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
 
 
 	</div>
@@ -228,9 +226,9 @@
 							let keyword = $("input[name='urlkeyword']").val();
 							let type = $("input[name='urltype']").val();
 							let buildingId = $("input[name='buildingId']").val();
-					
+							let acceptState = $('input[name="acceptState"]:checked').val();
 							
-							let url = `minwonInfo?buildingId=${buildingId}&postNo=${postNo}&pageNum=${pageNum}&type=${type}&keyword=${keyword}`;
+							let url = `minwonInfo?buildingId=${buildingId}&acceptState=${acceptState}&postNo=${postNo}&pageNum=${pageNum}&type=${type}&keyword=${keyword}`;
 							location.href = url;
 						})
 	</script>

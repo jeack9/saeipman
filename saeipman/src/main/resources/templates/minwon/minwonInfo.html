@@ -203,11 +203,13 @@ table, th, td {
 
 	<div class="button-container" th:if="${cri.auth == 1}">
 		<button type="button"
-			th:onClick="|location.href = '@{/minwonList(buildingId=${param.buildingId}, pageNum=${cri.pageNum}, type=${param.type}, keyword=${param.keyword})}'|"
+			th:onClick="|location.href = '@{/minwonList(buildingId=${param.buildingId}, acceptState=${param.acceptState}, pageNum=${cri.pageNum}, type=${param.type}, keyword=${param.keyword})}'|"
 			class="btn btn-outline-success m-2">목록</button>
 
 		<!-- 접수 버튼 -->
-		<form th:action="@{/updateMinwonState}" method="post">
+		<form 
+			th:if="${minwon.acceptState != '1' and minwon.acceptState != '2'}"
+			th:action="@{/updateMinwonState}" method="post">
 			<input type="hidden" name="postNo" th:value="${minwon.postNo}" /> <input
 				type="hidden" name="state" th:value="1" />
 			<!-- 접수중은 숫자 1로 전송 -->
@@ -217,7 +219,7 @@ table, th, td {
 		</form>
 
 		<!-- 완료 버튼 -->
-		<form th:action="@{/updateMinwonState}" method="post">
+		<form th:if="${minwon.acceptState != '2'}" th:action="@{/updateMinwonState}" method="post">
 			<input type="hidden" name="postNo" th:value="${minwon.postNo}" /> <input
 				type="hidden" name="state" th:value="2" />
 			<!-- 처리 완료는 숫자 2로 전송 -->
