@@ -140,7 +140,7 @@ public class BuildingController {
 		Map<String, Object> result = buildingService.roomSelectInsert(list);
 		return result;
 	}
-	@GetMapping("/googleChart")
+	@GetMapping("/member/home")
 	public String selectGoogleChart(PaymentVO paymentVO, Model model, Criteria cri) {
 		String login =SecurityUtil.getLoginId();
 		paymentVO.setImdaeinId(login);
@@ -245,6 +245,7 @@ public class BuildingController {
 			@RequestParam(name = "insertRoomList", required = false) String insertRoomList) {
 		System.out.println("새파일" + newFiles);
 
+		System.err.println(buildingVO.toString() + "ddddddddddddddddddddddddddddddddddddddddddddd");
 		fileUtill.setFolder("건물");
 		// 방번호 수정
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -296,6 +297,7 @@ public class BuildingController {
 			}
 		}
 		System.out.println(insertRoomList + "방추가");
+		
 		// 방번호 추가
 		if (insertRoomList != null) {
 

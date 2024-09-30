@@ -1,11 +1,13 @@
 package com.saeipman.app.building.web;
 
 import java.security.Security;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.saeipman.app.building.service.BuildingPageDTO;
 import com.saeipman.app.building.service.MonthRentService;
@@ -37,7 +39,6 @@ public class MonthRentListController {
 		List<RentPayVO> monthRentList = monthService.mRentList(buildingPageDTO, loginId);
 		model.addAttribute("monthRentList",monthRentList);
 		System.out.println(monthRentList+"monthRentList");
-		
 		return "building/monthRentList";
 	}
 }
