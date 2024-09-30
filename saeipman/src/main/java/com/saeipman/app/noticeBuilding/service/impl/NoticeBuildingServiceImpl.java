@@ -6,24 +6,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.saeipman.app.building.mapper.BuildingMapper;
 import com.saeipman.app.building.service.BuildingVO;
 import com.saeipman.app.noticeBuilding.mapper.NoticeBuildingMapper;
 import com.saeipman.app.noticeBuilding.service.NoticeBuildingService;
 import com.saeipman.app.noticeBuilding.service.NoticeBuildingVO;
 import com.saeipman.app.noticeBuilding.utils.PagingSearchDTO;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
+
 public class NoticeBuildingServiceImpl implements NoticeBuildingService {
 
-	private NoticeBuildingMapper noticeBuildingMapper;
+	private final NoticeBuildingMapper noticeBuildingMapper;
+	private final BuildingMapper buildingMapper;
 	
-	@Autowired
-	public NoticeBuildingServiceImpl(NoticeBuildingMapper noticeBuildingMapper) {
-		this.noticeBuildingMapper = noticeBuildingMapper;
-	}
 
 	@Override //전체조회
 	public List<NoticeBuildingVO> noticeBuildingList(PagingSearchDTO pgsc) {
@@ -83,8 +84,24 @@ public class NoticeBuildingServiceImpl implements NoticeBuildingService {
 	}
 
 	@Override //파일 업로드
-	public List<String> getFileInfo(int postNo) {
-		return noticeBuildingMapper.getFile(postNo);
+	public List<String> getFileName(int postNo) {
+		return noticeBuildingMapper.selectFileName(postNo);
 	}
 
+	@Override
+	public int fileDelete(List<String> fileNames) {
+		int result = 0;
+		for(String fileName : fileNames) {
+			result = buildingMapper.selectDeleteFileName(fileName);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public int fileNamesByGroupId(String groupId) {
+		return buildingMapper.selectFileNamesByGroupId(groupId);
+	}
+
+	
 }

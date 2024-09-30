@@ -59,8 +59,7 @@
 <body>
 	<div class="container">
 		<div class='row'>
-			<h4 class="mb-4">건물 민원접수 <img class="" th:src="@{/img/complain.png}">
-			<br>아이콘 수정 중이니 아이콘 마음대로 변경하셔도 됩니다. 다만, 사이트 통일감을 떨어뜨리는 이미지는 지양해주시면 감사하겠슴당. 그럼 20000</h4>
+			<h4 class="mb-4">건물 민원접수 <img class="" th:src="@{/img/complain.png}"></h4>
 			<form id="searchFrom" th:action="@{/minwonList}" th:method='get'>
 
 				<input type='hidden' name='buildingId' th:value='${cri.buildingId}'>
