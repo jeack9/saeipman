@@ -19,5 +19,5 @@ public interface MainMapper {
 	public int selectExpCnt();
 	
 	//민원
-	public List<MinwonVO> mainMinwonList(Criteria cri);
+	public List<MinwonVO> mainMinwonList(String imdaeinId);
 }

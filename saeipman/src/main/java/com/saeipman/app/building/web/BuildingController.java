@@ -141,7 +141,7 @@ public class BuildingController {
 		return result;
 	}
 	@GetMapping("/member/home")
-	public String selectGoogleChart(PaymentVO paymentVO, Model model, Criteria cri) {
+	public String selectGoogleChart(PaymentVO paymentVO, Model model) {
 		String login =SecurityUtil.getLoginId();
 		paymentVO.setImdaeinId(login);
 		//월세 미납
@@ -159,8 +159,7 @@ public class BuildingController {
 		model.addAttribute("expCnt",expCnt);
 		
 		//민원 관련
-		cri.setImdaeinId(login);
-		List<MinwonVO> list = mainService.minwonListMain(cri);
+		List<MinwonVO> list = mainService.minwonListMain(login);
 		model.addAttribute("minwon", list);
 		
 		return "building/chartTest";

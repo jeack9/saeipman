@@ -78,14 +78,14 @@ th, td {
 				<div class="col">
 					<div class="row">
 						<div class="date-input col">
-							여기서부터 <input type="date" id="paymentDate1" name="paymentDate1"
+							시작일 <input type="date" id="paymentDate1" name="paymentDate1"
 								th:value="${#dates.format(buildingPageDTO.paymentDate1, 'yyyy-MM-dd')}"
 								class="form-control">
 						</div>
 						<div class="date-input col">
-							여기까지 <input type="date" id="paymentDate2" name="paymentDate2"
+							종료일 <input type="date" id="paymentDate2" name="paymentDate2"
 								th:value="${#dates.format(buildingPageDTO.paymentDate2, 'yyyy-MM-dd')}"
-								class="form-control">
+								class="form-control"> 
 						</div>
 					</div>
 				</div>

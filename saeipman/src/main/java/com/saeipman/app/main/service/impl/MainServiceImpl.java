@@ -37,7 +37,7 @@ public class MainServiceImpl implements MainService {
 		return mainMapper.selectExpCnt();
 	}
 	@Override
-	public List<MinwonVO> minwonListMain(Criteria cri) {
-		return mainMapper.mainMinwonList(cri);
+	public List<MinwonVO> minwonListMain(String imdaeinId) {
+		return mainMapper.mainMinwonList(imdaeinId);
 	}
 }

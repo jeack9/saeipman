@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{common/layouts/default_layout}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}">
 <head>
 <meta charset="UTF-8">
 <style>
@@ -22,6 +24,11 @@ table {
 th, td {
 	text-align: center;
 }
+
+.delete {
+	text-align: center;
+}
+
 </style>
 </head>
 <body>
@@ -34,7 +41,8 @@ th, td {
 					<table class="table table-bordered">
 						<thead>
 							<tr>
-								<th colspan="2" id=>납부 내역 &nbsp; &nbsp;<select aria-label="Default select example" id="option">
+								<th colspan="2" id=>납부 내역 &nbsp; &nbsp;<select
+									aria-label="Default select example" id="option">
 										<option selected>기간선택</option>
 								</select></th>
 							</tr>
@@ -47,26 +55,24 @@ th, td {
 							<tr>
 								<!-- 월세 출력 -->
 								<td class="col-md-6">
-									<table>
+									<table style="width: 100%">
 										<tbody>
-											<tr>
+											<tr id="test">
 												<td class="delete" id="rentMonth"></td>
 												<td>&nbsp; &nbsp;</td>
 												<td class="delete" id="Rentpay"></td>
-												<td th:if="${rentMonth == '' || Rentpay == ''}"> 납부 내역이 없습니다.</td>
 											</tr>
 										</tbody>
 									</table>
 								</td>
 
 								<td class="col-md-6">
-									<table>
+									<table style="width: 100%">
 										<tbody>
 											<tr>
-												<td class="delete" id="gwanlibiMonth"></td>
+												<td class="delete" id="gwanlibiMonth" ></td>
 												<td>&nbsp; &nbsp;</td>
 												<td class="delete" id="Gwanlibi"></td>
-												<td th:if="${gwanlibiMonth == '' || Gwanlibi == ''}"> 납부 내역이 없습니다.</td>
 											</tr>
 										</tbody>
 									</table>
@@ -88,36 +94,56 @@ th, td {
 							<tr>
 								<td>
 									<!-- 월세 출력 -->
-									<table>
+									<table style="width: 100%">
 										<tbody id="mRentTotal">
-											<th:block th:each="payInF : ${payInfo}">
+											<th:block th:each="payInF : ${payInfo.mr}">
 												<tr th:if="${payInF.realPaymentMoney > 0}">
 													<td><div class="form-check">
-															<input class="form-check-input check" type="checkbox" th:value="${payInF.mRentHistoryNo}" id="mRentCheck" name="mRentHistoryNo"><label class="form-check-label" for="flexCheckDefault"></label>
+															<input class="form-check-input check" type="checkbox"
+																th:value="${payInF.mRentHistoryNo}" id="mRentCheck"
+																name="mRentHistoryNo"><label
+																class="form-check-label" for="flexCheckDefault"></label>
 														</div></td>
-													<td>[[${#strings.substring(payInF.realPaymentDate, 0, 11)}]]&nbsp;</td>
+													<td>[[${#strings.substring(payInF.realPaymentDate, 0,
+														11)}]]&nbsp;</td>
 
-													<td>[[${#numbers.formatInteger(payInF.paymentMoney, 3, 'COMMA')}]]</td>
-													<td th:if="${payInF.paymentState == -1}"><font color="red">&nbsp; 연체</font></td>
-													<td th:if="${payInF.paymentState != -1}"><font color="green">&nbsp; 예정</font></td>
+													<td>[[${#numbers.formatInteger(payInF.paymentMoney, 3,
+														'COMMA')}]]원</td>
+													<td th:if="${payInF.paymentState == -1}"><font
+														color="red">&nbsp; 연체</font></td>
+													<td th:if="${payInF.paymentState != -1}"><font
+														color="green">&nbsp; 예정</font></td>
 												</tr>
 											</th:block>
+											<tr th:if="${#lists.size(payInfo.mr)}== 0">
+												<td class="text-align: center;">미납 및 납부예정금이 없습니다.</td>
+											</tr>
 										</tbody>
 									</table> <!-- 관리비 출력 -->
 								<td>
-									<table>
+									<table style="width: 100%">
 										<tbody id="gwanlibiTotal">
-											<th:block th:each="payInF : ${payInfo}">
+											<th:block th:each="payInF : ${payInfo.gw}">
 												<tr th:if="${payInF.gaguGwanlibi > 0}">
 													<td class=""><div class="form-check">
-															<input class="form-check-input check" type="checkbox" th:value="${payInF.gaguPaymentHistoryNo}" id="gwanlibiCheck" name="gaguPaymentHistoryNo"><label class="form-check-label" for="flexCheckDefault"></label>
+															<input class="form-check-input check" type="checkbox"
+																th:value="${payInF.gaguPaymentHistoryNo}"
+																id="gwanlibiCheck" name="gaguPaymentHistoryNo"><label
+																class="form-check-label" for="flexCheckDefault"></label>
 														</div></td>
-													<td>[[${#strings.substring(payInF.paymentMonth, 0, 11)}]]&nbsp;</td>
-													<td>[[${#numbers.formatInteger(payInF.gaguGwanlibi, 3, 'COMMA')}]]</td>
-													<td th:if="${payInF.paymentYN == -1}"><font color="red">&nbsp; 연체</font></td>
-													<td th:if="${payInF.paymentYN != -1}"><font color="green">&nbsp; 예정</font></td>
+													<td>[[${#strings.substring(payInF.paymentMonth, 0,
+														11)}]]&nbsp;</td>
+													<td>[[${#numbers.formatInteger(payInF.gaguGwanlibi, 3,
+														'COMMA')}]]원</td>
+													<td th:if="${payInF.paymentYN == -1}"><font
+														color="red">&nbsp; 연체</font></td>
+													<td th:if="${payInF.paymentYN != -1}"><font
+														color="green">&nbsp; 예정</font></td>
 												</tr>
 											</th:block>
+											<tr th:if="${#lists.size(payInfo.gw)}== 0">
+												<td style="text-align: center;">미납 및 납부예정금이 없습니다.</td>
+											</tr>
 										</tbody>
 									</table>
 								</td>
@@ -129,7 +155,8 @@ th, td {
 							<th class="col-4" style="vertical-align: middle">결제 금액</th>
 							<td id="total" class="col-4" style="vertical-align: middle">0원</td>
 							<th class="col-4">
-								<button type="button" id="payBtn" class="btn btn-outline-primary">결제하기</button>
+								<button type="button" id="payBtn"
+									class="btn btn-outline-primary">결제하기</button>
 							</th>
 						</tr>
 					</table>
@@ -139,7 +166,8 @@ th, td {
 
 
 
-		<script src="https://cdn.bootpay.co.kr/js/bootpay-3.3.6.min.js" type="application/javascript"></script>
+		<script src="https://cdn.bootpay.co.kr/js/bootpay-3.3.6.min.js"
+			type="application/javascript"></script>
 
 		<script>
 			//		<<<<<<<<< 완납내역 >>>>>>>>>>>
@@ -151,79 +179,84 @@ th, td {
 			let yearM;
 			for (let i = startMonth; i < nowMonth - 1; i++) {
 				let optionDate = dateToM(new Date(year, i, 1));
+				let selected = '';
 				yearM = dateToYM(new Date(year, i, 1))
+				if(i == nowMonth -2){
+					selected = "selected";
+				}
 				//console.log(dateToM(new Date(year, i, 1)));
-				$('#option').append(
-						`<option value="${yearM}">` + optionDate
-								+ '월 </option>');
+				$('#option').append( `<option value="${yearM}" ${selected}>` + optionDate + '월 </option>');
 			}
 
 			//납부조회 날짜를 클릭했을 때 해당 월의 납부 조회기록 출력을 위해 Ajax 사용
 
 			$('#option').on('change', selectMonth)
+			$('#option').trigger('change')
 
 			function selectMonth(event) {
 				let payDate = event.target.value;
 
 				console.log(payDate);
 
-				$
-						.ajax(ctxPath + "/paymentAjax", {
+				$.ajax(ctxPath + "/paymentAjax", {
 							type : "GET",
 							//contentType : "application/json",
 							data : {
 								payDate : payDate
 							},
-						})
-						.done(
-								function(payDate) {
-									console.log("ddddddddd : ", payDate);
+					})
+					.done( function(data) {
+							let gw = data.gw;
+							let mr = data.mr;
+							console.log("ddddddddd : ", payDate);
 
-									//현재 다른 결제월의 test데이터는 없는데, 다른 결제월을 선택해도 기존의 결제일에 출력된 데이터가 계속 남아있어서 작성함.
-									$('.delete').html('');
+							//현재 다른 결제월의 test데이터는 없는데, 다른 결제월을 선택해도 기존의 결제일에 출력된 데이터가 계속 남아있어서 작성함.
+							$('.delete').html('');
+							
+							// 월세(납부예정금이) 없는 경우
+							if(mr.length==0){										
+								$('#rentMonth').html('납부하실 내역이 없습니다.');
+							}
+							
+							//관리비(납부예정금) 없는 경우
+							if(gw.length==0){
+								$('#Gwanlibi').html('납부하실 내역이 없습니다.');
+							}
+							
+							//관리비 납부내역 출력
+							for (let i = 0; i < gw.length; i++) {
+									let paymentMonth = gw[i].paymentMonth; //2024-07-07 00:00:00()
+									let yearG = paymentMonth.substring(0, 4); //2024
+									let monthG = paymentMonth.substring(5, 7); //07
+									let dayG = paymentMonth.substring(8, 10); //07
+									let payG = `${yearG}/${monthG}/${dayG}`; //2024/07/07
 
-									for (let i = 0; i < payDate.length; i++) {
-										if (payDate[i].realPaymentDate == null) {
-											let paymentMonth = payDate[i].paymentMonth; //2024-07-07 00:00:00()
-											let yearG = paymentMonth.substring(
-													0, 4); //2024
-											let monthG = paymentMonth
-													.substring(5, 7); //07
-											let dayG = paymentMonth.substring(
-													8, 10); //07
-											let payG = `${yearG}/${monthG}/${dayG}`; //2024/07/07
-											let loginI
+									$('#gwanlibiMonth').html(payG);
+									$('#Gwanlibi').html(
+													gw[i].gaguGwanlibi
+															.toString()
+															.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "원");
+							} 
+							
+							//월세 납부내역 출력
+							for (let i = 0; i < mr.length; i++) {
+							 
+								let realPaymentDate = mr[i].realPaymentDate;
+								console.log(realPaymentDate+"확인");
+								let yearM = realPaymentDate.substring(0, 4); //2024
+								let monthM = realPaymentDate.substring(5, 7); //07
+								let dayM = realPaymentDate.substring(8, 10); //07e
+								let payM = `${yearM}/${monthM}/${dayM}`;
+								
+								
+								$('#rentMonth').html(payM);
+								$('#Rentpay').html(mr[i].realPaymentMoney
+														.toString()
+														.replace(/\B(?=(\d{3})+(?!\d))/g,",")+ "원");
 
-											$('#gwanlibiMonth').html(payG);
-											$('#Gwanlibi')
-													.html(
-															payDate[i].gaguGwanlibi
-																	.toString()
-																	.replace(
-																			/\B(?=(\d{3})+(?!\d))/g,
-																			","));
-										} else {
-
-											let realPaymentDate = payDate[i].realPaymentDate;
-											let yearM = realPaymentDate
-													.substring(0, 4); //2024
-											let monthM = realPaymentDate
-													.substring(5, 7); //07
-											let dayM = realPaymentDate
-													.substring(8, 10); //07e
-											let payM = `${yearM}/${monthM}/${dayM}`;
-
-											$('#rentMonth').html(payM);
-											$('#Rentpay')
-													.html(
-															payDate[i].realPaymentMoney
-																	.toString()
-																	.replace(
-																			/\B(?=(\d{3})+(?!\d))/g,
-																			","));
-										}
-									}
-								})
+							}
+								
+					})
 			}
 
 			//			<<<<<<<<< 미납내역 >>>>>>>>>>>

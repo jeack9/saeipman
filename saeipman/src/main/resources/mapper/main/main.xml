@@ -60,6 +60,7 @@
 						      join minwon m on m.room_id = r.room_id
 						      join building_info b on b.building_id = r.building_id
 						      join constract_info c on m.room_id = c.room_id  and   c.constract_state = 1
+					  WHERE b.imdaein_id = #{imdaeinId}
 			          ORDER BY m.post_no DESC
 					 ) a
 				 )
