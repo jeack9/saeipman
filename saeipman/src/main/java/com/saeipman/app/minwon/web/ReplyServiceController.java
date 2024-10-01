@@ -72,7 +72,7 @@ public class ReplyServiceController {
     
     // 댓글 등록 (POST 요청 처리)
     @PostMapping("/comments/{postNo}")
-    public String addComment(@PathVariable int postNo, @RequestBody ReplyVO reply) {
+    public String addComment(@PathVariable(name = "postNo") int postNo, @RequestBody ReplyVO reply) {
 	    // 서비스 레이어를 통해 댓글을 저장
     	reply.setPostNo(postNo);
 	    replyService.insertCmt(reply); 
