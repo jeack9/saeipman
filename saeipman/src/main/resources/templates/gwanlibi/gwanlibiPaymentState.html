@@ -44,7 +44,7 @@
 	background: rgb(136, 199, 225) !important;
 }
 
-input::placeholder {
+input:placeholder {
 	color: red;
 }
 </style>
@@ -199,25 +199,23 @@ input::placeholder {
 
 		<!-- java script -->
 		<script th:inline="javascript">
-		
-			
 			$('#when').on('change', function() {
 				let paymentMonth = $('#when').val();
-/* 				$.ajax({
-					url: `${ctxPath}/gwanlibiPaymentStateByDate?paymentMonth=${paymentMonth}`,
+					$.ajax({
+					url: `${ctxPath}/gwanlibiPaymentState&paymentMonth=${paymentMonth}`,
 					method: 'get'
 				}).done(function (result) {
 					//console.log(result)
 					
-					location.href = `${ctxPath}/gwanlibiPaymentStateByDate?paymentMonth=${paymentMonth}`;
+					//location.href = `${ctxPath}/gwanlibiPaymentState?buildingId=${buildingId}&paymentMonth=${paymentMonth}`;
+					location.href = `${ctxPath}/gwanlibiPaymentState`;
 					console.log('성공');
 				}).fail(function (err) {
 					console.log(err);
-				}) */
+				}) 
 				//console.log($('#when').val())
 				
 			})
-
 			
 			// folde tables
 			$('.fold-table .view').on("click", function () {

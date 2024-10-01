@@ -18,6 +18,15 @@
 
 		.saveBtn {
 			display: inline-block;
+			color: black;
+			font-weight: lighter;
+			border: solid black 1px;
+		}
+
+		.saveBtn:hover {
+			background: rgba(107, 166, 233, 0.8);
+			color: rgb(54, 54, 54);
+			font-weight: lighter;
 		}
 		
 		
@@ -25,12 +34,12 @@
 </head>
 
 <body>
-	<div layout:fragment="Main" style="width: 95%;">
+	<div layout:fragment="Main" class="container">
 
 		<div>
 			<br>
 			<br>
-
+			<h4 class="mb-4">관리비 정산 등록</h4>
 			<!-- 건물명 -->
 			<p id="bName" ></p>
 
@@ -53,7 +62,7 @@
 			<br>
 
 			<div class="btnDiv">
-				<button class="btn btn-outline-primary saveBtn">저장</button>
+				<button class="btn saveBtn">저장</button>
 			</div>
 			<br>
 			
