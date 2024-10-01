@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class TestController {
 	@GetMapping("/")
 	public String test() {
-		return "test";
+		return "redirect:/member/home";
 	}
 	
 	@GetMapping("/api/test")

@@ -23,9 +23,9 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
         // 권한에 따른 페이지 이동
         if (roles.contains("ROLE_1")) {
-            response.sendRedirect("/member/home");
+            response.sendRedirect(request.getContextPath() + "/member/home");
         } else if (roles.contains("ROLE_2")) {
-            response.sendRedirect("/mainInfo");
+            response.sendRedirect(request.getContextPath() + "/mainInfo");
         }
     }
 }
