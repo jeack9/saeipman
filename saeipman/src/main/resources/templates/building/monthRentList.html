@@ -140,7 +140,7 @@ th, td {
 
 					<li class="page-item" th:if="${page.startPage > 1}"><a
 						class="page-link"
-						th:href="@{/monthPaymentHistory(pageNum=${page.startPage - 1}, buildingId=${page.buildingId},paymentState=${page.paymentState},paymentDate1=${#dates.format(page.paymentDate1, 'yyyy-MM-dd')},paymentDate2=${#dates.format(page.paymentDate2, 'yyyy-MM-dd')})}"
+						th:href="@{/monthPaymentHistory(pageNum=${page.startPage - 1},roomNo=${page.roomNo}, buildingId=${page.buildingId},paymentState=${page.paymentState},paymentDate1=${#dates.format(page.paymentDate1, 'yyyy-MM-dd')},paymentDate2=${#dates.format(page.paymentDate2, 'yyyy-MM-dd')})}"
 						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 					</a></li>
 
@@ -148,13 +148,13 @@ th, td {
 						<li class="page-item"
 							th:each="pageButton : ${#numbers.sequence(start, end)}"><a
 							class="page-link"
-							th:href="@{/monthPaymentHistory(pageNum=${pageButton}, buildingId=${page.buildingId} ,paymentState=${page.paymentState},paymentDate1=${#dates.format(page.paymentDate1, 'yyyy-MM-dd')},paymentDate2=${#dates.format(page.paymentDate2, 'yyyy-MM-dd')})}"
+							th:href="@{/monthPaymentHistory(pageNum=${pageButton},roomNo=${page.roomNo}, buildingId=${page.buildingId} ,paymentState=${page.paymentState},paymentDate1=${#dates.format(page.paymentDate1, 'yyyy-MM-dd')},paymentDate2=${#dates.format(page.paymentDate2, 'yyyy-MM-dd')})}"
 							th:text="${pageButton}"></a></li>
 					</th:block>
 
 					<li class="page-item" th:if="${page.next}"><a
 						class="page-link"
-						th:href="@{/monthPaymentHistory(pageNum=${page.endPage + 1}, buildingId=${page.buildingId} ,paymentState=${page.paymentState},paymentDate1=${#dates.format(page.paymentDate1, 'yyyy-MM-dd')},paymentDate2=${#dates.format(page.paymentDate2, 'yyyy-MM-dd')})}"
+						th:href="@{/monthPaymentHistory(pageNum=${page.endPage + 1},roomNo=${page.roomNo}, buildingId=${page.buildingId} ,paymentState=${page.paymentState},paymentDate1=${#dates.format(page.paymentDate1, 'yyyy-MM-dd')},paymentDate2=${#dates.format(page.paymentDate2, 'yyyy-MM-dd')})}"
 						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 					</a></li>
 				</ul>
