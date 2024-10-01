@@ -10,8 +10,8 @@
 			float: left;
 			color: rgb(35, 35, 35);
 			font-size: 20px;
-			font-weight: bold;
 			padding-left: 5px;
+			margin-right: 20px;
 		}
 		
 		.table {
@@ -36,12 +36,15 @@
 		.btn {
 			margin: 2px;
 			display: none;
+			border-color: black;
+			color: black;
+			margin-left: 10px;
 		}
 
 		.btn:hover{
-			/* background: #009CFF; */
-			background: #385d61;
-			color: white;
+			border-color: black;
+			background: rgb(117, 168, 157);
+			color: black;
 		}
 		
 		.tui-calendar .tui-calendar-title-today {
@@ -55,21 +58,25 @@
 </head>
 
 <body>
-	<div layout:fragment="Main" style="width: 95%;">
+	<div layout:fragment="Main" class=" container">
 		<div>
 			<br> <br>
 			<h4 class="mb-4">관리비 상세 내역</h4>
-			<p style="color: rgb(175, 175, 220)">총 가구 수 : [[${totalGagu}]] (입주 : [[${totalIpjuGagu}]] / 공실 : [[${totalGagu - totalIpjuGagu}]])</p>
 			<!-- 건물명 -->
-			<p id="bName"><i class="fa-solid fa-house" style="color: #009CFF;"></i> [[${buildingInfo.buildingName}]]</p>			
+			<div style="text-align: center;">
 
-			<!-- Toast UI - Date Picker -->
-			<div class="inputDiv" style="position: relative; z-index: 2; float: right;">
-				<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-					<input type="text" id="datepicker-input-ko" aria-label="Year-Month">
-					<span class="tui-ico-date"></span>
+				<p id="bName"><i class="fa-solid fa-house" style="color: rgba(107, 166, 233, 0.8);"></i> [[${buildingInfo.buildingName}]]</p>
+				<!-- 입주 현황 -->
+				<p style="color: rgb(85, 85, 85); float: left; padding-top: 5px;">총 가구 수 : [[${totalGagu}]] (입주 : [[${totalIpjuGagu}]] / 공실 : [[${totalGagu - totalIpjuGagu}]])</p>
+
+				<!-- Toast UI - Date Picker -->
+				<div class="inputDiv" style="position: relative; z-index: 2; float: right;">
+					<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+						<input type="text" id="datepicker-input-ko" aria-label="Year-Month">
+						<span class="tui-ico-date"></span>
+					</div>
+					<div class="datepicker-cell" id="datepicker-month-ko" style="margin-top: -1px;"></div>
 				</div>
-				<div class="datepicker-cell" id="datepicker-month-ko" style="margin-top: -1px;"></div>
 			</div>
 
 			<br>

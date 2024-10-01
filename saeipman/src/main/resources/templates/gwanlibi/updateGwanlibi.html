@@ -15,20 +15,28 @@
 		.btnDiv {
 			text-align: center;		
 		}
-		
+				
 		.updateBtn {
 			margin: auto;
+			color: black;
+			font-weight: lighter;
+			border: solid black 1px;
 		}
 
+		.updateBtn:hover {
+			background: rgba(107, 166, 233, 0.8);
+			color: rgb(54, 54, 54);
+			font-weight: lighter;
+		}
 	</style>
 
 </head>
 
 <body>
-	<div layout:fragment="Main" style="width: 95%;">
+	<div layout:fragment="Main" class="container">
 		<div>
 			<br> <br>
-			<h4 class="mb-4">관리비 정산</h4>
+			<h4 class="mb-4">관리비 정산 수정</h4>
 			<!-- 건물명 -->
 			<p id="bName"></p>
 
@@ -40,7 +48,7 @@
 			<hr style="color: black">
 			
 			<div class="btnDiv">
-				<button class="btn btn-outline-primary updateBtn">저장</button>
+				<button class="btn updateBtn">저장</button>
 			</div>
 
 			<br>
@@ -131,7 +139,7 @@
 						alert('업데이트 성공!');
 						//history.go(-2);
 						//location.href = ctxPath + '/gwanlibiDetailsBillList?buildingId=' + building.buildingId + '&paymentMonth=' + paymentMonth;
-						location.replace(ctxPath + '/gwanlibiDetailsBillList?buildingId=' + building.buildingId + '&paymentMonth=' + paymentMonth);
+						location.href = ctxPath + '/gwanlibiDetailsBillList?buildingId=' + building.buildingId;
 					})
 					.fail(function(err){
 						console.log(err);
