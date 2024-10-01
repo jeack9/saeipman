@@ -1,12 +1,6 @@
 /********** Template CSS **********/
-@font-face {
-    font-family: 'ownglyph';
-    src: url('./ownglyph.ttf') format('truetype');
-    font-weight: normal;
-}
-
 *:not(i) {
-	font-family: 'ownglyph';
+	font-family: 'Do Hyeon', sans-serif;
 }
 
 :root {
