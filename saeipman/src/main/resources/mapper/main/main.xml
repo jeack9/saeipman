@@ -34,7 +34,7 @@
 		SELECT count(*)
 		FROM constract_info
 		<![CDATA[ 
-		WHERE exp_date<=TO_CHAR(ADD_MONTHS(SYSDATE,+3),'YYYY-MM-DD')
+		WHERE TO_CHAR(exp_date, 'yyyy-MM-dd') <= TO_CHAR(ADD_MONTHS(SYSDATE,+3),'yyyy-MM-dd')
 		]]>
 	</select>
 	<select id="mainMinwonList">
