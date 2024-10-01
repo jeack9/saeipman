@@ -275,11 +275,13 @@ input {
 			let chks = $('input[name=chk]:checked').next();
 			for(chk of chks){
 				let floorClass = $(chk).attr('class');
-				let floor = floorClass.substring(0,1);
+				let fl = floorClass.split(" ");
+				let floor = fl[0];
 				let roomNo= chk.value;
 				roomList.push({buildingId, floor, roomNo});
 			} 
 			console.log(roomList);
+			
 
 			return roomList;
 		}; 

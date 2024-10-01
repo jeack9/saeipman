@@ -30,9 +30,10 @@ body {
 					<div class="card-header "
 						style="font-size: 20px; font-weight: bold;">월세 미납 현황</div>
 					<div class="card-body text-secondary" style="font-size: 16px;">
-						<p class="card-text"> 
-						<!-- <a class="nav-link" href="#nonPaymentModal" data-toggle="modal" ></a> -->
-						[[${list.paymentState}]]건</p>
+						<p class="card-text">
+							<!-- <a class="nav-link" href="#nonPaymentModal" data-toggle="modal" ></a> -->
+							[[${list.paymentState}]]건
+						</p>
 						<p class="card-text">미납액 :
 							[[${#numbers.formatInteger(list.paymentMoney,3,'COMMA')}]]원</p>
 					</div>
@@ -72,10 +73,10 @@ body {
 			<p>[[${expCnt}]]건</p>
 			<hr> -->
 		</div>
-	<!-- 	<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+		<!-- 	<button type="button" class="btn btn-primary" data-bs-toggle="modal"
 			data-bs-target="#nonPaymentModal">Launch demo modal</button>
 			 -->
-		<div class="modal" id ="nonPaymentModal" tabindex="-1">
+		<div class="modal" id="nonPaymentModal" tabindex="-1">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -109,19 +110,19 @@ body {
 						<th>작성일</th>
 					</tr>
 				</thead>
-				<tbody>
-					<th:block th:each="info,iterStat : ${minwon}">
-						<tr>
-							<td>[[${iterStat.count}]]</td>
-							<td>[[${info.title}]]</td>
-							<td>[[${info.buildingName}]]</td>
-							<td>[[${info.roomNo}]]호</td>
-							<!-- 작성자 -->
-							<td>[[${info.acceptState}]]</td>
-							<td>[[ ${#dates.format(info.regDate, 'yyyy/MM/dd')} ]]</td>
-						</tr>
+				<tbody th:if="${minwon.size() > 0}">
+					<tr th:each="info,iterStat : ${minwon}">
+						<td>[[${iterStat.count}]]</td>
+						<td>[[${info.title}]]</td>
+						<td>[[${info.buildingName}]]</td>
+						<td>[[${info.roomNo}]]호</td>
+						<!-- 작성자 -->
+						<td>[[${info.acceptState}]]</td>
+						<td>[[ ${#dates.format(info.regDate, 'yyyy/MM/dd')} ]]</td>
+					</tr>
 				</tbody>
 			</table>
+			<p th:unless="${minwon.size() > 0}" class="text-center">데이터 없습니다.</p>
 		</div>
 		<div class="col-7 mt-3">
 			<h5>수익</h5>

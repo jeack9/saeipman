@@ -19,5 +19,5 @@ public interface MainService {
 	
 	public int getExpCnt();
 	
-	public List<MinwonVO> minwonListMain(Criteria cri);
+	public List<MinwonVO> minwonListMain(String imdaeinId);
 }
