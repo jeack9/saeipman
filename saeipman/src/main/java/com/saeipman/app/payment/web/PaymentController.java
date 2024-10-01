@@ -1,6 +1,7 @@
 package com.saeipman.app.payment.web;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,7 +41,7 @@ public class PaymentController {
 		payVO.setPaymentState(-1);
 		
 
-		List<PaymentVO> payInfo = paymentService.selectPayInfo(payVO);
+		Map<String, Object> payInfo = paymentService.selectPayInfo(payVO);
 		model.addAttribute("payInfo", payInfo);
 
 		return "payment/paymentInfo";
@@ -49,7 +50,7 @@ public class PaymentController {
 	// 기간에 따른 납부 조회
 	@GetMapping("paymentAjax")
 	@ResponseBody
-	public List<PaymentVO> paymentInfo(@RequestParam("payDate") String payDate, PaymentVO payVO) {
+	public Map<String, Object> paymentInfo(@RequestParam("payDate") String payDate, PaymentVO payVO) {
 		
 		System.out.println("ddd : " + payDate);
 
@@ -62,7 +63,7 @@ public class PaymentController {
 		payVO.setRealPaymentDate(payDate);
 		payVO.setImchainPhone(loginId);
 
-		List<PaymentVO> pay = paymentService.selectPayInfo(payVO);
+		Map<String, Object>  pay = paymentService.selectPayInfo(payVO);
 		if (pay == null) {
 			return null;
 		}
