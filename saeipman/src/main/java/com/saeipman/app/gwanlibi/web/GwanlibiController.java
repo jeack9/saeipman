@@ -363,7 +363,7 @@ public class GwanlibiController {
 	public String gwanlibiPaymentStateList(GwanlibiPaymentVO gpVO, BuildingVO buildingVO, BuildingPageDTO pageDTO, Model model) {
 
 		LoginInfoVO login = SecurityUtil.getLoginInfo();
-
+//		System.out.println(paymentMonth+"eeeeeeeeeeeee");
 		// 한 페이지당 출력할 건물 개수 - 페이징
 		pageDTO.setAmount(5);
 
@@ -390,15 +390,16 @@ public class GwanlibiController {
 				model.addAttribute("rooms", rooms);
 			});
 		}
-		
+		model.addAttribute("gpVO", gpVO);
 		model.addAttribute("buildingList", buildingList);
 		model.addAttribute("page", pageDTO);
 
 		return "gwanlibi/gwanlibiPaymentState";
 	}
 	
-	//@GetMapping("gwanlibiPaymentStateByDate")
-	public void gwanlibiPaymentStateByDate(@RequestParam(name = "paymentMonth") String paymentMonth, BuildingVO buildingVO, BuildingPageDTO pageDTO, Model model) {
+	@GetMapping("gwanlibiPaymentStateByDate")
+	@ResponseBody
+	public String gwanlibiPaymentStateByDate(GwanlibiPaymentVO gpVO, BuildingVO buildingVO, BuildingPageDTO pageDTO, Model model) {
 
 		LoginInfoVO login = SecurityUtil.getLoginInfo();
 
@@ -414,7 +415,7 @@ public class GwanlibiController {
 		
 		// add room list
 		for (BuildingVO building : buildingList) {
-			List<GwanlibiPaymentVO> rooms = gwanlibiPaymentService.getGwanlibiPaymentStateList(building.getBuildingId(), paymentMonth);
+			List<GwanlibiPaymentVO> rooms = gwanlibiPaymentService.getGwanlibiPaymentStateList(building.getBuildingId(), gpVO.getPaymentMonth());
 			rooms.forEach(ele -> {
 				if (ele.getPaymentYn() == 1) {
 					ele.setStrPaymentState("완납");
@@ -426,11 +427,14 @@ public class GwanlibiController {
 				model.addAttribute("rooms", rooms);
 			});
 		}
+		// 날짜포맷 변경
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+		String strNowDate = simpleDateFormat.format(gpVO.getPaymentMonth()); 
 		
 		model.addAttribute("buildingList", buildingList);
 		model.addAttribute("page", pageDTO);
-
-		//return "redirect:gwanlibiPaymentState?paymentMonth=" + paymentMonth;
+		String url = "gwanlibiPaymentState?paymentMonth=" + strNowDate;
+		return url;
 	}
 
 }
