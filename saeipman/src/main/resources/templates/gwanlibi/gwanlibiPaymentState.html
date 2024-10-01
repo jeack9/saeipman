@@ -1,53 +1,52 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}">
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{common/layouts/default_layout}">
 
 <head>
-<meta charset="UTF-8">
-<link th:href="@{/css/gwanlibiPayment.css}" rel="stylesheet">
-<style>
+	<meta charset="UTF-8">
+	<link th:href="@{/css/gwanlibiPayment.css}" rel="stylesheet">
+	<style>
+		.fold-content {
+			margin-bottom: 30px;
+		}
 
-.fold-content {
-	margin-bottom: 30px;
-}
+		.btn {
+			border-color: black;
+			color: black;
+			margin-left: 10px;
+		}
 
-.btn {
-	border-color: black;
-	color: black;
-	margin-left: 10px;
-}
+		.btn:hover {
+			border-color: black;
+			background: rgb(117, 168, 157);
+			color: black;
+		}
 
-.btn:hover {
-	border-color: black;
-	background: rgb(117, 168, 157);
-	color: black;
-}
+		.page-link {
+			color: rgb(71, 100, 127);
+			border-color: black;
+		}
 
-.page-link {
-	color: rgb(71, 100, 127);
-	border-color: black;
-}
+		.page-link:hover {
+			background-color: rgb(229, 229, 229);
+			border-color: rgb(71, 100, 127);
+			color: rgb(71, 100, 127);
+		}
 
-.page-link:hover {
-	background-color: rgb(229, 229, 229);
-	border-color: rgb(71, 100, 127);
-	color: rgb(71, 100, 127);
-}
+		.swal2-html-container {
+			color: black !important;
+		}
 
-.swal2-html-container {
-	color: black !important;
-}
+		.bg {
+			/* background: rgb(136, 199, 225) !important; */
+			background: rgb(136, 199, 225) !important;
+		}
 
-.bg {
-	/* background: rgb(136, 199, 225) !important; */
-	background: rgb(136, 199, 225) !important;
-}
-
-input:placeholder {
-	color: red;
-}
-</style>
+		input:placeholder {
+			color: red;
+		}
+	</style>
 </head>
 
 <body>
@@ -55,15 +54,14 @@ input:placeholder {
 	<div layout:fragment="Main" class="container">
 		<br />
 		<form>
-		<h3 class="title">관리비 납부 내역</h3>
-		<div style="float: right;">
-		<input type= "hidden" name="buildingId" value="${}">
-	<label for = "when"> 납부년월 선택 : </label> <input id = "when" name = "when" type = "month" >
-		</div>
-		<br><br>
-		<div style="display: flex;">
-				<h5 class="title" style="flex: 1; margin-top: 5px;">Building List.</h5>			
-<!-- 				<div class="row" style="margin: 0; padding: 0;">
+			<h3 style="margin-top: 40px;">관리비 납부 내역</h3>
+			<br> <br>
+			<div style="display: flex;">
+				<h5 style="flex: 1; margin-top: 5px;">Building List.</h5>
+				<div style="float: right;">
+					<label for="when"> 납부년월 선택 : </label> <input id="when" type="month" th:field="${gpVO.paymentMonth}">
+				</div>
+				<!-- 				<div class="row" style="margin: 0; padding: 0;">
 					<div class="col-7" style="margin: 0; padding: 0;">
 						<input class="form-control me-2" type="text"
 							aria-label="Search" id="roomNoSearch" placeholder="건물 이름을 입력하세요." style="flex: 1;">
@@ -72,83 +70,84 @@ input:placeholder {
 						<button type ="button" class="btn btn-outline-success" id="roomSearchBtn" style="flex: 1;">Search</button>
 					</div>
 				</div> -->
-		</div>
-		<br>
-		<table class="fold-table">
-			<!-- column name of building information list -->
-			<thead>
-				<tr>
-					<th><span class="visible-big">No.</span></th>
-					<th><span class="visible-big">Building Name</span></th>
-					<th><span class="visible-big">Address</span></th>
-				</tr>
-			</thead>
-			
-			<!-- building information list -->
-			<tbody>
-				<th:block th:each="building, buildingStat : ${buildingList}">
-					<tr class="view">
-						<td th:text="${buildingStat.index+1}"></td>
-						<td th:text="${building.buildingName}"></td>
-						<td>[[${building.doroAddr}]]</td>
+			</div>
+			<br>
+			<table class="fold-table">
+				<!-- column name of building information list -->
+				<thead>
+					<tr>
+						<th><span class="visible-big">No.</span></th>
+						<th><span class="visible-big">Building Name</span></th>
+						<th><span class="visible-big">Address</span></th>
 					</tr>
+				</thead>
 
-					<!-- folding tables -->
-					<tr class="fold">
-						<td colspan="7">
-							<div class="fold-content" style="background: rgb(241, 246, 246)">
-								<h5>Room List.</h5>
-								<p>관리비가 연체된 세입자에게 문자를 전송할 수 있습니다. [건당 20원]</p>
-								<table class="small-friendly">
-								
-									<!-- column name of room information list -->
-									<thead>
-										<tr>
-											<th><span class="visible-big">No.</span></th>
-											<th><span class="visible-big">Room Number</span></th>
-											<th><span class="visible-big">Occupancy Status</span></th>
-											<th><span class="visible-big">Payment State</span></th>
-											<th><input type="checkbox" onclick="checkAllBtn(event)"></th>
-										</tr>
-									</thead>
-									
-									<!-- room information list -->
-									<tbody>
-										<th:block th:each="room, roomSatate : ${rooms}">
-											<tr th:if="${room.buildingId == building.buildingId}">
-												<td>[[${roomSatate.index+1}]]</td>
-												<td>[[${room.roomNo}]]</td>
-												<td th:text="${room.ipjuState == 1} ? '입주' : '공실'"></td>
+				<!-- building information list -->
+				<tbody>
+					<th:block th:each="building, buildingStat : ${buildingList}">
+						<tr class="view">
+							<td th:text="${buildingStat.index+1}"></td>
+							<td th:text="${building.buildingName}"></td>
+							<td>[[${building.doroAddr}]]</td>
+						</tr>
 
-												<!-- 공실 여부에 따른 출력 -->
-												<td th:switch="${room.ipjuState}"><span th:case="1">[[${room.strPaymentState}]]</span>
-													<span th:case="*">-</span></td>
+						<!-- folding tables -->
+						<tr class="fold">
+							<td colspan="7">
+								<div class="fold-content" style="background: rgb(241, 246, 246)">
+									<h5>Room List.</h5>
+									<p>관리비가 연체된 세입자에게 문자를 전송할 수 있습니다. [건당 20원]</p>
+									<table class="small-friendly">
 
-												<!-- 공실이거나 완납했으면 체크박스 disabled -->
-												<td><input type="checkbox" name="chkbox" id="chkbox"
-													th:value="${building.buildingId}"
-													th:disabled="${room.paymentYn != -1 || room.ipjuState == -1}">
-												</td>
+										<!-- column name of room information list -->
+										<thead>
+											<tr>
+												<th><span class="visible-big">No.</span></th>
+												<th><span class="visible-big">Room Number</span></th>
+												<th><span class="visible-big">Occupancy Status</span></th>
+												<th><span class="visible-big">Payment State</span></th>
+												<th><input type="checkbox" onclick="checkAllBtn(event)"></th>
 											</tr>
-										</th:block>
-									</tbody>
+										</thead>
 
-								</table>
+										<!-- room information list -->
+										<tbody>
+											<th:block th:each="room, roomSatate : ${rooms}">
+												<tr th:if="${room.buildingId == building.buildingId}">
+													<td>[[${roomSatate.index+1}]]</td>
+													<td>[[${room.roomNo}]]</td>
+													<td th:text="${room.ipjuState == 1} ? '입주' : '공실'"></td>
 
-								<div
-									style="text-align: center; text-align: center; margin-top: 25px;">
-									<button type="button" class="btn btn-outline-primary msgBtn">연체
-										안내 문자 전송</button>
-								</div>
-							</div> <br />
+													<!-- 공실 여부에 따른 출력 -->
+													<td th:switch="${room.ipjuState}"><span
+															th:case="1">[[${room.strPaymentState}]]</span>
+														<span th:case="*">-</span>
+													</td>
 
-						</td>
-					</tr>
-				</th:block>
+													<!-- 공실이거나 완납했으면 체크박스 disabled -->
+													<td><input type="checkbox" name="chkbox" id="chkbox"
+															th:value="${building.buildingId}"
+															th:disabled="${room.paymentYn != -1 || room.ipjuState == -1}">
+													</td>
+												</tr>
+											</th:block>
+										</tbody>
 
-			</tbody>
-		</table>
-</form>
+									</table>
+
+									<div style="text-align: center; text-align: center; margin-top: 25px;">
+										<button type="button" class="btn btn-outline-primary msgBtn">연체
+											안내 문자 전송</button>
+									</div>
+								</div> <br />
+
+							</td>
+						</tr>
+					</th:block>
+
+				</tbody>
+			</table>
+		</form>
 		<br />
 
 		<!-- pagination -->
@@ -157,66 +156,64 @@ input:placeholder {
 				<!-- 맨 첫 페이지로 이동 : 시작 페이지(startPage)가 1보다 크면 이전 버튼 출력 -->
 				<th:block th:if="${page.startPage > 1}">
 					<li class="page-item"><a class="page-link"
-						th:href="@{/gwanlibiPaymentState?pageNum=1}" aria-label="Previous">
-							<span aria-hidden="true">&laquo;</span>
-					</a></li>
+							th:href="@{/gwanlibiPaymentState(pageNum=1, paymentMonth=${#dates.format(gpVO.paymentMonth, 'yyyy-MM')})}"
+							aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+						</a></li>
 				</th:block>
 
 				<!-- 이전 페이지 버튼 (Previous) -->
 				<th:block th:if="${page.prev}">
 					<li class="page-item"><a class="page-link"
-						th:href="@{/gwanlibiPaymentState?pageNum={page}(page = ${page.startPage - 1})}"
-						aria-label="Previous"> <span aria-hidden="false">&lt;</span>
-					</a></li>
+							th:href="@{/gwanlibiPaymentState(pageNum=${page.startPage - 1}, paymentMonth=${#dates.format(gpVO.paymentMonth, 'yyyy-MM')})}"
+							aria-label="Previous"> <span aria-hidden="false">&lt;</span>
+						</a></li>
 				</th:block>
 
 				<!-- 페이지 버튼 생성 -->
 				<th:block th:with="start=${page.startPage}, end=${page.endPage}">
-					<li class="page-item"
-						th:with="start=${page.startPage}, end=${page.endPage}"
-						th:each="pageButton : ${#numbers.sequence(start, end)}"><a
-						class="page-link"
-						th:classappend="${pageButton == page.pageNum ? 'bg' : ''}"
-						th:href="@{/gwanlibiPaymentState?pageNum={page} (page=${pageButton})}"
-						th:text=${pageButton}></a></li>
+					<li class="page-item" th:each="pageButton : ${#numbers.sequence(start, end)}"><a class="page-link"
+							th:classappend="${pageButton == page.pageNum ? 'bg' : ''}"
+							th:href="@{/gwanlibiPaymentState(pageNum=${pageButton}, paymentMonth=${#dates.format(gpVO.paymentMonth, 'yyyy-MM')})}"
+							th:text=${pageButton}></a></li>
 				</th:block>
 
 				<!-- 다음 페이지 버튼 (Next) -->
 				<li class="page-item" th:if="${page.next}"><a class="page-link"
-					th:href="@{/gwanlibiPaymentState?pageNum={page} (page = ${page.endPage +1})}"
-					aria-label="Next"> <span aria-hidden="true">&gt;</span>
-				</a></li>
+						th:href="@{/gwanlibiPaymentState(pageNum=${page.endPage + 1}, paymentMonth=${#dates.format(gpVO.paymentMonth, 'yyyy-MM')})}"
+						aria-label="Next"> <span aria-hidden="true">&gt;</span>
+					</a></li>
 
 				<!-- 끝 페이지(endPage)-->
 				<th:block th:if="${page.endPage < page.realEnd}">
 					<li class="page-item"><a class="page-link"
-						th:href="@{/gwanlibiPaymentState?pageNum={page}(page = ${page.realEnd})}"
-						aria-label="Previous"> <span aria-hidden="false">&raquo;</span>
-					</a></li>
+							th:href="@{/gwanlibiPaymentState(pageNum=${page.realEnd}, paymentMonth=${#dates.format(gpVO.paymentMonth, 'yyyy-MM')})}"
+							aria-label="Previous"> <span aria-hidden="false">&raquo;</span>
+						</a></li>
 				</th:block>
 			</ul>
 		</nav>
 
 		<!-- java script -->
 		<script th:inline="javascript">
-			$('#when').on('change', function() {
+			$('#when').on('change', function () {
 				let paymentMonth = $('#when').val();
-					$.ajax({
-					url: `${ctxPath}/gwanlibiPaymentState&paymentMonth=${paymentMonth}`,
+				console.log($('#when').val());
+
+				$.ajax({
+					url: `${ctxPath}/gwanlibiPaymentStateByDate?paymentMonth=${paymentMonth}`,
 					method: 'get'
 				}).done(function (result) {
-					//console.log(result)
-					
+					console.log('?' + result);
+
 					//location.href = `${ctxPath}/gwanlibiPaymentState?buildingId=${buildingId}&paymentMonth=${paymentMonth}`;
-					location.href = `${ctxPath}/gwanlibiPaymentState`;
+					location.href = `${ctxPath}/${result}`;
 					console.log('성공');
 				}).fail(function (err) {
 					console.log(err);
-				}) 
-				//console.log($('#when').val())
-				
+				})
+
 			})
-			
+
 			// folde tables
 			$('.fold-table .view').on("click", function () {
 				if ($(this).hasClass("open")) {
@@ -229,24 +226,24 @@ input:placeholder {
 
 			// rooms
 			let rooms = /* [[${rooms}]] */'기본값';
-			
+
 			// 조건에 따른 텍스트 강조 출력 - todo
 			$('.fold-content tr td').each((idx, ele) => {
 				//console.log(ele);
 				if ($(ele).text() == '미납') {
 					$(ele).css('style', 'color: blue !important');
 				}
-				
+
 				if ($(ele).text() == '연체') {
 					$(ele).css('color', 'tomato');
 				}
-				
+
 				if ($(ele).text() == '입주') {
 					$(ele).css('font-weight', 'bold');
 					$(ele).css('color', 'black');
 				}
 			})
-			
+
 
 			// 체크박스 전체 선택
 			function checkAllBtn(event) {
@@ -269,9 +266,9 @@ input:placeholder {
 				// 선택된 목록의 개수 세기
 				const checkedBoxsCnt = checkedBoxs.length;
 				// 출력
-				console.log(checkedBoxsCnt);				
+				console.log(checkedBoxsCnt);
 				// 체크된 항목이 없을 떄
-				if(checkedBoxsCnt <= 0) {
+				if (checkedBoxsCnt <= 0) {
 					Swal.fire({
 						text: "체크된 항목이 없습니다.",
 						icon: "warning",
