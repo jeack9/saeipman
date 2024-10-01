@@ -1,7 +1,9 @@
 package com.saeipman.app.payment.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,15 +23,15 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
-	public List<PaymentVO> selectPayInfo(PaymentVO payVO) {
+	public Map<String, Object> selectPayInfo(PaymentVO payVO) {
 		
-		List<PaymentVO> payList = new ArrayList<>();
+		Map<String, Object> payList = new HashMap<>();
 		
 		List<PaymentVO> gw = paymentMapper.selectGwanlibiPay(payVO);
 		List<PaymentVO> mr = paymentMapper.selectMonthlyRentPay(payVO);
 		
-		payList.addAll(gw);
-		payList.addAll(mr);
+		payList.put("gw", gw);
+		payList.put("mr", mr);
 		
 		System.out.println("관리비!!!!!!!!!!!!!!! " + gw); // 로그 추가
 	    System.out.println("월세!!!!!!!!!!!!!!!!! " + mr); // 로그 추가
