@@ -23,8 +23,10 @@
 				<div class="card-body">
 					<div class="pb-3 mb-2 d-flex justify-content-between border-bottom align-items-center">
 						<p class="align-middle text-muted m-0">작성자: [[${qna.writer}]]</p>
-						<p class="m-0 bg-warning text-dark rounded-pill p-2">[[${qna.answerState
-							== 0 ? '답변대기' : '답변완료'}]]</p>
+						<th:block>
+						<p class="m-0 bg-warning text-dark rounded-pill p-2" th:if="${qna.answerState == 0}">답변대기</p>
+						<p class="m-0 bg-success text-dark rounded-pill p-2" th:if="${qna.answerState == 1}">답변완료</p>
+						</th:block>
 					</div>
 					<img th:each="file : ${qna.qnaFiles}" alt="이미지 로딩"
 						th:src="@{/images/{filePath}(filePath=${file.filePath})}"
