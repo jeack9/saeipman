@@ -9,16 +9,15 @@
 body {
 	font-family: "맑은 고딕", 돋움, 굴림;
 }
-<<<<<<< HEAD
 
 hr {
 	color: black;
 }
-=======
+
 /* .minwon{
 	margin-top:40px;
 } */
->>>>>>> refs/heads/main
+
 </style>
 <style>
 </style>
@@ -33,15 +32,13 @@ hr {
 		<div class="col-4">
 			<!-- 	<hr> -->
 			<th:block th:each="list:${unMRent}">
-<<<<<<< HEAD
-				<h6>미납 현황</h6><hr>
-=======
 				<div class="card border-secondary mb-3 text-center">
 					<div class="card-header "
 						style="font-size: 20px; font-weight: bold;">월세 미납 현황</div>
 					<div class="card-body text-secondary" style="font-size: 16px;">
 						<p class="card-text"> 
-						<a class="nav-link" href="#nonPaymentModal" data-toggle="modal" >[[${list.paymentState}]]건</a></p>
+						<!-- <a class="nav-link" href="#nonPaymentModal" data-toggle="modal" ></a> -->
+						[[${list.paymentState}]]건</p>
 						<p class="card-text">미납액 :
 							[[${#numbers.formatInteger(list.paymentMoney,3,'COMMA')}]]원</p>
 					</div>
@@ -55,13 +52,6 @@ hr {
 			<!-- 	<hr> -->
 		</div>
 		<div class="col-4">
-<<<<<<< HEAD
-			<hr>
-			<h6>현재 임대 현황</h6><hr>
-			<p>[[${ipju}]]/[[${totalRoom}]]호</p> 
-			<p>[[${ipju}]]/[[${totalRoom}]]호</p> 
-			<hr>
-=======
 			<div class="card border-secondary mb-3 text-center">
 				<div class="card-header" style="font-size: 20px; font-weight: bold;">현재
 					임대 현황</div>
@@ -74,14 +64,9 @@ hr {
 			<h6>현재 임대 현황</h6>
 			<p>[[${ipju}]]/[[${totalRoom}]]호</p>
 			<hr> -->
->>>>>>> refs/heads/main
+
 		</div>
 		<div class="col-4">
-<<<<<<< HEAD
-			<hr>
-			<h6>계약 만료</h6><hr>
-			<p>[[${expCnt}]]건</p>
-=======
 			<div class="card border-secondary mb-3 text-center">
 				<div class="card-header" style="font-size: 20px; font-weight: bold;">계약
 					만료</div>
@@ -96,9 +81,9 @@ hr {
 			<p>[[${expCnt}]]건</p>
 			<hr> -->
 		</div>
-		<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+	<!-- 	<button type="button" class="btn btn-primary" data-bs-toggle="modal"
 			data-bs-target="#nonPaymentModal">Launch demo modal</button>
-			
+			 -->
 		<div class="modal" id ="nonPaymentModal" tabindex="-1">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -119,7 +104,10 @@ hr {
 				</div>
 			</div>
 		</div>
-
+	<div class="col-7 mt-3">
+			<h5>수익</h5>
+			<div id="columnchart_material" style="height: 500px;"></div>
+		</div>
 		<div class="col-5 minwon  mt-3">
 			<h5>민원</h5>
 			<table class="table table-hover">
@@ -147,10 +135,7 @@ hr {
 				</tbody>
 			</table>
 		</div>
-		<div class="col-7 mt-3">
-			<h5>수익</h5>
-			<div id="columnchart_material" style="height: 500px;"></div>
-		</div>
+		
 
 
 

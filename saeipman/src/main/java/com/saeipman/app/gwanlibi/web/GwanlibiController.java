@@ -374,7 +374,7 @@ public class GwanlibiController {
 		List<BuildingVO> buildingList = buildingService.buildingList(pageDTO, login.getLoginId());
 		
 		
-		String paymentMonth = null;
+		//String paymentMonth = null;
 		
 		// add roomList
 		for (BuildingVO building : buildingList) {
