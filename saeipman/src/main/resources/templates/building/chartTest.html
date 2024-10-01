@@ -9,6 +9,10 @@
 body{
 	font-family: "맑은 고딕",돋움,굴림;
 }
+
+hr {
+	color: black;
+}
 </style>
 <style>
 </style>
@@ -21,7 +25,7 @@ body{
 		<div class="col-4">
 			<hr>
 			<th:block th:each="list:${unMRent}">
-				<h6>미납 현황</h6>
+				<h6>미납 현황</h6><hr>
 				<p>[[${list.paymentState}]]건</p>
 				<p>미납액 :
 					[[${#numbers.formatInteger(list.paymentMoney,3,'COMMA')}]]원</p>
@@ -30,13 +34,15 @@ body{
 		</div>
 		<div class="col-4">
 			<hr>
-			<h6>현재 임대 현황</h6>
+			<h6>현재 임대 현황</h6><hr>
+			<p>[[${ipju}]]/[[${totalRoom}]]호</p> 
 			<p>[[${ipju}]]/[[${totalRoom}]]호</p> 
 			<hr>
 		</div>
 		<div class="col-4">
 			<hr>
-			<h6>계약 만료</h6>
+			<h6>계약 만료</h6><hr>
+			<p>[[${expCnt}]]건</p>
 			<p>[[${expCnt}]]건</p>
 			<hr>
 		</div>
