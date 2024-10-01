@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{common/layouts/default_layout}">
 
 <head>
 	<meta charset="UTF-8">
 	<style>
 		#bName {
-			color: rgb(35, 35, 35);
-			font-size: 20px;
-			padding-left: 5px;
 			display: inline-block;
+			color: rgb(35, 35, 35);
+			font-size: 19px;
+			padding-left: 5px;
+			margin-bottom: 8px;
 		}
 
 		.aa {
@@ -121,18 +123,16 @@
 			color: rgb(54, 54, 54);
 			font-weight: lighter;
 		}
-	
-		/*  */
+
 		.aDiv {
 			margin-top: 20px;
-			text-align: center;			
+			text-align: center;
 		}
+
 		.goBtn {
 			text-decoration: none;
 			color: black;
 		}
-		
-		
 	</style>
 </head>
 
@@ -146,11 +146,12 @@
 		</div> -->
 
 		<div>
-
-
 			<!-- 건물명 -->
 			<!-- <p style="float: left;"># 관리비 항목 설정</p> -->
-			<div style="text-align: left;"><i class="fa-solid fa-house" style="color: rgba(107, 166, 233, 0.8); display: inline-block;"></i><p id="bName"></p></div>
+			<div style="text-align: left;">
+				<i class="fa-solid fa-house" style="color: rgba(53, 133, 225, 0.8); display: inline-block;"></i>
+				<p id="bName"></p>
+			</div>
 
 
 			<!-- Toast UI - Grid -->
@@ -163,11 +164,11 @@
 
 				<button class="btn m-1 saveBtn">저장</button>
 			</div>
-			
+
 			<div class="aDiv">
-			<a class="goBtn"
-				th:onclick="|location.href='@{/gwanlibiDetailsBillList(buildingId=${buildingInfo.buildingId})}'|">관리비
-				상세 내역 페이지로 이동</a>
+				<a class="goBtn"
+					th:onclick="|location.href='@{/gwanlibiDetailsBillList(buildingId=${buildingInfo.buildingId})}'|">관리비
+					상세 내역 페이지로 이동</a>
 			</div>
 
 			<br>
