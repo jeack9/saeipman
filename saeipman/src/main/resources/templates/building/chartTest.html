@@ -31,7 +31,8 @@ body {
 						style="font-size: 20px; font-weight: bold;">월세 미납 현황</div>
 					<div class="card-body text-secondary" style="font-size: 16px;">
 						<p class="card-text"> 
-						<a class="nav-link" href="#nonPaymentModal" data-toggle="modal" >[[${list.paymentState}]]건</a></p>
+						<!-- <a class="nav-link" href="#nonPaymentModal" data-toggle="modal" ></a> -->
+						[[${list.paymentState}]]건</p>
 						<p class="card-text">미납액 :
 							[[${#numbers.formatInteger(list.paymentMoney,3,'COMMA')}]]원</p>
 					</div>
