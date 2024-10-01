@@ -25,10 +25,10 @@
 			</div>
 		</div>
 		<div class="navbar-nav w-100">
-			<a th:href="@{/buildingList}" th:if="${login.auth == 1}" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>건물관리</a>
+			<a th:href="@{/buildingList}" th:if="${login.auth == 1}" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>건물 관리</a>
 
 			<div class="nav-item dropdown" th:if="${login.auth == 1}">
-				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>방관리</a>
+				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>방 관리</a>
 				<div class="dropdown-menu bg-transparent border-0">
 					<a th:href="@{/room/roomListBackup}" class="dropdown-item ps-5">a. 방 목록</a> <a th:href="@{/room/constractList}" class="dropdown-item ps-5">b. 방 계약내역</a>
 				</div>
@@ -36,17 +36,17 @@
 
 			<!-- 관리비 관리 -->
 			<div class="nav-item dropdown" th:if="${login.auth == 1}">
-				<a th:href="@{/buildingGwanlibiList}" class="nav-item nav-link"> <i class="fa-duotone fa-solid fa-cash-register me-2"></i>관리비 관리
-				</a>
+				<a th:href="@{/buildingGwanlibiList}" class="nav-item nav-link"> <i class="fa-duotone fa-solid fa-cash-register me-2"></i>관리비 관리</a>
 			</div>
 
 
-			<!-- 납부 내역 -->
+			<!-- 납부 현황 -->
 			<div class="nav-item dropdown" th:if="${login.auth == 1}">
-				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"> <i class="fa-solid fa-list-check me-2"></i>납부내역
+				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"> <i class="fa-solid fa-list-check me-2"></i>납부 현황
 				</a>
 				<div class="dropdown-menu bg-transparent border-0">
-					<a th:href="@{/monthPaymentHistory}" class="dropdown-item ps-5">a. 월세 납부 내역</a> <a th:href="@{/gwanlibiPaymentState}" class="dropdown-item ps-5">b. 관리비 납부 내역</a>
+					<a th:href="@{/monthPaymentHistory}" class="dropdown-item ps-5">a. 월세 납부 현황</a>
+					<a th:href="@{/gwanlibiPaymentState}" class="dropdown-item ps-5">b. 관리비 납부 현황</a>
 				</div>
 			</div>
 
@@ -55,7 +55,7 @@
 			<div class="nav-item dropdown">
 				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>커뮤니티</a>
 				<div class="dropdown-menu bg-transparent border-0">
-					<a th:href="@{/noticeBuildingList}" class="dropdown-item ps-5">a. 공지사항</a> <a th:href="@{/minwonList}" class="dropdown-item ps-5">b. 민원접수</a>
+					<a th:href="@{/noticeBuildingList}" class="dropdown-item ps-5">a. 공지 사항</a> <a th:href="@{/minwonList}" class="dropdown-item ps-5">b. 민원 접수</a>
 				</div>
 			</div>
 			<div class="nav-item dropdown" th:if="${login.auth == 1}">

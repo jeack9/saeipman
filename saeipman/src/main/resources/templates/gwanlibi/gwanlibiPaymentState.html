@@ -8,7 +8,8 @@
 	<link th:href="@{/css/gwanlibiPayment.css}" rel="stylesheet">
 	<style>
 		.fold-content {
-			margin-bottom: 30px;
+			margin-bottom: 5px;
+			background: rgb(241, 246, 246);
 		}
 
 		.btn {
@@ -54,8 +55,8 @@
 	<div layout:fragment="Main" class="container">
 		<br />
 		<form>
-			<h3 style="margin-top: 40px;">관리비 납부 내역</h3>
-			<br> <br>
+			<h3 style="margin-top: 40px;">관리비 납부 현황</h3>
+			<br>
 			<div style="display: flex;">
 				<h5 style="flex: 1; margin-top: 5px;">Building List.</h5>
 				<div style="float: right;">
@@ -94,9 +95,9 @@
 						<!-- folding tables -->
 						<tr class="fold">
 							<td colspan="7">
-								<div class="fold-content" style="background: rgb(241, 246, 246)">
+								<div class="fold-content">
 									<h5>Room List.</h5>
-									<p>관리비가 연체된 세입자에게 문자를 전송할 수 있습니다. [건당 20원]</p>
+									<p>관리비가 연체된 세입자에게 문자를 전송할 수 있습니다.</p>
 									<table class="small-friendly">
 
 										<!-- column name of room information list -->
@@ -135,9 +136,8 @@
 
 									</table>
 
-									<div style="text-align: center; text-align: center; margin-top: 25px;">
-										<button type="button" class="btn btn-outline-primary msgBtn">연체
-											안내 문자 전송</button>
+									<div style="text-align: center; text-align: center; margin-top: 30px; margin-bottom: 15px;">
+										<button type="button" class="btn btn-outline-primary msgBtn">연체 안내 문자 전송</button>
 									</div>
 								</div> <br />
 

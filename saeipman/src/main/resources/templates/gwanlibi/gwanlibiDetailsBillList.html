@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{common/layouts/default_layout}">
 
 <head>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<style>
 		#bName {
 			float: left;
@@ -13,7 +13,7 @@
 			padding-left: 5px;
 			margin-right: 20px;
 		}
-		
+
 		.table {
 			margin-left: auto;
 			margin-right: auto;
@@ -41,18 +41,16 @@
 			margin-left: 10px;
 		}
 
-		.btn:hover{
+		.btn:hover {
 			border-color: black;
 			background: rgb(117, 168, 157);
 			color: black;
 		}
-		
+
 		.tui-calendar .tui-calendar-title-today {
 			padding: 0;
 			width: 100%;
 		}
-
-
 	</style>
 
 </head>
@@ -65,9 +63,11 @@
 			<!-- 건물명 -->
 			<div style="text-align: center;">
 
-				<p id="bName"><i class="fa-solid fa-house" style="color: rgba(107, 166, 233, 0.8);"></i> [[${buildingInfo.buildingName}]]</p>
+				<p id="bName"><i class="fa-solid fa-house" style="color: rgba(107, 166, 233, 0.8);"></i>
+					[[${buildingInfo.buildingName}]]</p>
 				<!-- 입주 현황 -->
-				<p style="color: rgb(85, 85, 85); float: left; padding-top: 5px;">총 가구 수 : [[${totalGagu}]] (입주 : [[${totalIpjuGagu}]] / 공실 : [[${totalGagu - totalIpjuGagu}]])</p>
+				<p style="color: rgb(85, 85, 85); float: left; padding-top: 5px;">총 가구 수 : [[${totalGagu}]] (입주 :
+					[[${totalIpjuGagu}]] / 공실 : [[${totalGagu - totalIpjuGagu}]])</p>
 
 				<!-- Toast UI - Date Picker -->
 				<div class="inputDiv" style="position: relative; z-index: 2; float: right;">
@@ -233,7 +233,7 @@
 					}
 
 				});
-				
+
 			}
 
 			// 관리비 정산 버튼
@@ -245,7 +245,7 @@
 					data: JSON.stringify(detailsList)
 				}).done(function (result) {
 					// 예외 처리 - 방 없을 때,
-					if(result.roomListSize <= 0) {
+					if (result.roomListSize <= 0) {
 						Swal.fire({
 							icon: "warning",
 							title: "등록된 방이 없습니다.",
@@ -259,17 +259,17 @@
 						//location.href = ctxPath + '/buildingList?buildingId=' + building.buildingId;
 						return;
 					}
-					
+
 					if (result.gwanlibiItmeListSize <= 0) {
-							Swal.fire({
-								icon: "warning",
-								title: "관리비 항목이 미등록되어있습니다.",
-								text: "관리비 항목 설정 페이지로 이동합니다."
-							}).then((result) => {
-								if (result.isConfirmed) {
-									location.href = ctxPath + '/gwanlibiItemList?buildingId=' + building.buildingId;
-								}
-							})
+						Swal.fire({
+							icon: "warning",
+							title: "관리비 항목이 미등록되어있습니다.",
+							text: "관리비 항목 설정 페이지로 이동합니다."
+						}).then((result) => {
+							if (result.isConfirmed) {
+								location.href = ctxPath + '/gwanlibiItemList?buildingId=' + building.buildingId;
+							}
+						})
 					} else {
 						location.href = ctxPath + result.url;
 					}
@@ -284,7 +284,7 @@
 				let totalMoney = $('#totalGwanlibiByGagu').text().split(' ', 1);
 				// 년월일만 추출
 				let ymd = detailsList[0].paymentMonth.split('-');
-				
+
 				let year = ymd[0];
 				let month = ymd[1];
 				let date = ymd[2].split('T', 1);
@@ -319,7 +319,7 @@
 									icon: "error",
 									title: "전송 실패",
 									text: "관리자에게 문의하세요."
-								});								
+								});
 							}
 						}); // end of ajax
 					} // end of if

@@ -29,10 +29,10 @@
 		WHERE  r.building_id = #{buildingId}
 		<choose>
 			<when test="paymentMonth == null">
-				AND    TO_CHAR(m.payment_month, 'yyMM') =  TO_CHAR(TO_DATE(ADD_MONTHS(sysdate, -1), 'yyyy-MM-dd'), 'yyMM')
+				AND    TO_CHAR(m.payment_month, 'yyyyMM') =  TO_CHAR(sysdate, 'yyyyMM')
 			</when>
 			<otherwise>
-				AND    TO_CHAR(m.payment_month, 'yyMM') =  TO_CHAR(#{paymentMonth}, 'yyMM')
+				AND    TO_CHAR(m.payment_month, 'yyyyMM') =  TO_CHAR(#{paymentMonth}, 'yyyyMM')
 			</otherwise>		
 		</choose>
 		ORDER BY r.room_id

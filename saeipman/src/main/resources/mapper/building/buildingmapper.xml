@@ -184,8 +184,7 @@
 	<!-- 방 수정시 방이 존재하면 업데이트 -->
 	<update id="selectRoomUpdate" parameterType="RoomVO">
 		UPDATE room_info
-		SET room_no=#{roomNo},
-			floor=#{floor}
+		SET room_no=#{roomNo}
 		WHERE room_id =#{roomId}
 	</update>
 	<delete id="selectRoomInfoDelete" parameterType="RoomVO">

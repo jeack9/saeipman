@@ -228,8 +228,7 @@ input {
 					</div>
 
 					<div class="row roomUpdateClass">
-						<button id="roomUpdateBtn" type="button" class="btn">방정보
-							수정</button>
+						<button id="roomUpdateBtn" type="button" class="btn">방정보</button>
 					</div>
 					<div id="roomUpdate">
 						<div>
@@ -257,10 +256,11 @@ input {
 		</div>
 		<!-- End 건물 정보 -->
 		<script>
-		let floorList;
-		let updateRoomList = [];
-		let delRoomList = [];
-		let insertRoomList = [];
+	
+				let floorList;
+				let updateRoomList = [];
+				let delRoomList = [];
+				let insertRoomList = [];
 			$(document).ready(function() {
 				//initBuilindId = "";
 				//getBuildingInfo(initBuilindId);
@@ -391,6 +391,16 @@ input {
 						
 						//checkFunc($("#liftYn"));
 						$(".bid").val(data.buildingId);
+
+						//삭제 버튼
+						$('.deleteBtn').on('click',function(e){
+							if(confirm('삭제 하시겠습니까?')==true){
+								location.href= ctxPath + "/buildingDelete?id=" + e.target.value;
+							}
+							else{
+								return;
+							}
+						})
 						
 					})
 				}
@@ -556,6 +566,9 @@ input {
 			            $(bList).find('.buildingListGagu').html(target.totalGagu+"세대");
 			            let buildingId = $('#bid').attr('value');
 			            getBuildingInfo(buildingId);
+			            updateRoomList = [];
+						delRoomList = [];
+						insertRoomList = [];
 			          
 			        },
 			        error: function(error) {
@@ -576,15 +589,6 @@ input {
 			})
 			
 			
-			//삭제 버튼
-			$('.deleteBtn').on('click',function(e){
-				if(confirm('삭제 하시겠습니까?')==true){
-					location.href= ctxPath + "/buildingDelete?id=" + e.target.value;
-				}
-				else{
-					return;
-				}
-			})
 			})
 
 		</script>
