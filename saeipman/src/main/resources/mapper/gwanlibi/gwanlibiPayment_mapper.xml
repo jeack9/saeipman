@@ -35,7 +35,7 @@
 				AND    TO_CHAR(m.payment_month, 'yyyyMM') =  TO_CHAR(#{paymentMonth}, 'yyyyMM')
 			</otherwise>		
 		</choose>
-		ORDER BY r.room_id
+		ORDER BY r.room_no
 		
 	</select>
 	

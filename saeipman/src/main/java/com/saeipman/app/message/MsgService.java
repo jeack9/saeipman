@@ -1,6 +1,5 @@
 package com.saeipman.app.message;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +9,6 @@ import com.saeipman.app.gwanlibi.service.GwanlibiMsgVO;
 
 import jakarta.annotation.PostConstruct;
 import net.nurigo.sdk.NurigoApp;
-import net.nurigo.sdk.message.exception.NurigoEmptyResponseException;
-import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
-import net.nurigo.sdk.message.exception.NurigoUnknownException;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.service.DefaultMessageService;
@@ -50,6 +46,8 @@ public class MsgService {
 
 	}
 
+	
+	
 	// 경민
 	public void sendGroup(List<GwanlibiMsgVO> imchainInfoList, String imdaeinPhoneNumber, String msg) {
 
@@ -74,16 +72,16 @@ public class MsgService {
 				// 테스트 환경.
 				System.err.print(message.toString());
 				
-				try {
-					// 실제 사용 시에만 주석 풀고 사용하자아!
-					this.messageService.send(message);
-				} catch (NurigoMessageNotReceivedException e) {
-					System.out.println("NurigoMessageNotReceivedException : " + e.getMessage());
-				} catch (NurigoEmptyResponseException e) {
-					System.out.println("NurigoEmptyResponseException : " + e.getMessage());
-				} catch (NurigoUnknownException e) {
-					System.out.println("NurigoUnknownException : " + e.getMessage());
-				}
+//				try {
+//					// 실제 사용 시에만 주석 풀고 사용하자아!
+//					this.messageService.send(message);
+//				} catch (NurigoMessageNotReceivedException e) {
+//					System.out.println("NurigoMessageNotReceivedException : " + e.getMessage());
+//				} catch (NurigoEmptyResponseException e) {
+//					System.out.println("NurigoEmptyResponseException : " + e.getMessage());
+//				} catch (NurigoUnknownException e) {
+//					System.out.println("NurigoUnknownException : " + e.getMessage());
+//				}
 
 			} else {
 				return;
