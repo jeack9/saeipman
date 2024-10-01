@@ -1,72 +1,69 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layouts/default_layout}">
 
 <head>
-	<meta charset="UTF-8">
-	<link th:href="@{/css/gwanlibiPayment.css}" rel="stylesheet">
-	<style>
-		.title {
-			font-family: monospace;
-			margin: 0;
-		}
+<meta charset="UTF-8">
+<link th:href="@{/css/gwanlibiPayment.css}" rel="stylesheet">
+<style>
 
-		.fold-content {
-			margin-bottom: 30px;
-		}
+.fold-content {
+	margin-bottom: 30px;
+}
 
-		.btn {
-			border-color: black;
-			color: black;
-			margin-left: 10px;
-		}
+.btn {
+	border-color: black;
+	color: black;
+	margin-left: 10px;
+}
 
-		.btn:hover {
-			border-color: black;
-			background: rgb(117, 168, 157);
-			color: black;
-		}
+.btn:hover {
+	border-color: black;
+	background: rgb(117, 168, 157);
+	color: black;
+}
 
-		.page-link {
-			color: rgb(71, 100, 127);
-			border-color: black;
-		}
+.page-link {
+	color: rgb(71, 100, 127);
+	border-color: black;
+}
 
-		.page-link:hover {
-			background-color: rgb(229, 229, 229);
-			border-color: rgb(71, 100, 127);
-			color: rgb(71, 100, 127);
-		}
+.page-link:hover {
+	background-color: rgb(229, 229, 229);
+	border-color: rgb(71, 100, 127);
+	color: rgb(71, 100, 127);
+}
 
-		.swal2-html-container {
-			color: black !important;
-		}
-		
-		.bg {
-			/* background: rgb(136, 199, 225) !important; */
-			background: rgb(136, 199, 225) !important;
-		}
-		
-		input::placeholder {
-		 	color: red;
-		}
-	</style>
+.swal2-html-container {
+	color: black !important;
+}
+
+.bg {
+	/* background: rgb(136, 199, 225) !important; */
+	background: rgb(136, 199, 225) !important;
+}
+
+input::placeholder {
+	color: red;
+}
+</style>
 </head>
 
 <body>
 	<!-- html -->
-	<div layout:fragment="Main" style="width: 95%;">
+	<div layout:fragment="Main" class="container">
 		<br />
+		<form>
 		<h3 class="title">관리비 납부 내역</h3>
-		
 		<div style="float: right;">
-		
+		<input type= "hidden" name="buildingId" value="${}">
 	<label for = "when"> 납부년월 선택 : </label> <input id = "when" name = "when" type = "month" >
 		</div>
 		<br><br>
 		<div style="display: flex;">
 				<h5 class="title" style="flex: 1; margin-top: 5px;">Building List.</h5>			
-				<div class="row" style="margin: 0; padding: 0;">
+<!-- 				<div class="row" style="margin: 0; padding: 0;">
 					<div class="col-7" style="margin: 0; padding: 0;">
 						<input class="form-control me-2" type="text"
 							aria-label="Search" id="roomNoSearch" placeholder="건물 이름을 입력하세요." style="flex: 1;">
@@ -74,14 +71,11 @@
 					<div class="col-2" style="margin: 0; padding: 0;">
 						<button type ="button" class="btn btn-outline-success" id="roomSearchBtn" style="flex: 1;">Search</button>
 					</div>
-				</div>
+				</div> -->
 		</div>
-		
 		<br>
-		
 		<table class="fold-table">
-			<!-- column name of building information list --
-
+			<!-- column name of building information list -->
 			<thead>
 				<tr>
 					<th><span class="visible-big">No.</span></th>
@@ -89,6 +83,7 @@
 					<th><span class="visible-big">Address</span></th>
 				</tr>
 			</thead>
+			
 			<!-- building information list -->
 			<tbody>
 				<th:block th:each="building, buildingStat : ${buildingList}">
@@ -105,6 +100,7 @@
 								<h5>Room List.</h5>
 								<p>관리비가 연체된 세입자에게 문자를 전송할 수 있습니다. [건당 20원]</p>
 								<table class="small-friendly">
+								
 									<!-- column name of room information list -->
 									<thead>
 										<tr>
@@ -115,6 +111,7 @@
 											<th><input type="checkbox" onclick="checkAllBtn(event)"></th>
 										</tr>
 									</thead>
+									
 									<!-- room information list -->
 									<tbody>
 										<th:block th:each="room, roomSatate : ${rooms}">
@@ -122,38 +119,36 @@
 												<td>[[${roomSatate.index+1}]]</td>
 												<td>[[${room.roomNo}]]</td>
 												<td th:text="${room.ipjuState == 1} ? '입주' : '공실'"></td>
-												
+
 												<!-- 공실 여부에 따른 출력 -->
-												<td th:switch="${room.ipjuState}">													
-													<span th:case="1">[[${room.strPaymentState}]]</span>
-													<span th:case="*">-</span>
-												</td>
-												
+												<td th:switch="${room.ipjuState}"><span th:case="1">[[${room.strPaymentState}]]</span>
+													<span th:case="*">-</span></td>
+
 												<!-- 공실이거나 완납했으면 체크박스 disabled -->
 												<td><input type="checkbox" name="chkbox" id="chkbox"
-														th:value="${building.buildingId}"
-														th:disabled="${room.paymentYn != -1 || room.ipjuState == -1}">
+													th:value="${building.buildingId}"
+													th:disabled="${room.paymentYn != -1 || room.ipjuState == -1}">
 												</td>
 											</tr>
 										</th:block>
 									</tbody>
 
 								</table>
-						
-							<div style="text-align: center; text-align: center; margin-top: 25px;">
-								<button type="button" class="btn btn-outline-primary msgBtn">연체 안내 문자 전송</button>
-							</div>
-							</div>
-							
-							<br/>
-							
+
+								<div
+									style="text-align: center; text-align: center; margin-top: 25px;">
+									<button type="button" class="btn btn-outline-primary msgBtn">연체
+										안내 문자 전송</button>
+								</div>
+							</div> <br />
+
 						</td>
 					</tr>
 				</th:block>
 
 			</tbody>
 		</table>
-
+</form>
 		<br />
 
 		<!-- pagination -->
@@ -161,45 +156,43 @@
 			<ul class="pagination justify-content-center" style="margin: 0;">
 				<!-- 맨 첫 페이지로 이동 : 시작 페이지(startPage)가 1보다 크면 이전 버튼 출력 -->
 				<th:block th:if="${page.startPage > 1}">
-					<li class="page-item"><a class="page-link" th:href="@{/gwanlibiPaymentState?pageNum=1}"
-							aria-label="Previous">
+					<li class="page-item"><a class="page-link"
+						th:href="@{/gwanlibiPaymentState?pageNum=1}" aria-label="Previous">
 							<span aria-hidden="true">&laquo;</span>
-						</a></li>
+					</a></li>
 				</th:block>
 
 				<!-- 이전 페이지 버튼 (Previous) -->
 				<th:block th:if="${page.prev}">
 					<li class="page-item"><a class="page-link"
-							th:href="@{/gwanlibiPaymentState?pageNum={page}(page = ${page.startPage - 1})}"
-							aria-label="Previous"> <span aria-hidden="false">&lt;</span>
-						</a></li>
+						th:href="@{/gwanlibiPaymentState?pageNum={page}(page = ${page.startPage - 1})}"
+						aria-label="Previous"> <span aria-hidden="false">&lt;</span>
+					</a></li>
 				</th:block>
 
 				<!-- 페이지 버튼 생성 -->
-				<th:block th:with="start=${page.startPage}, end=${page.endPage}">				
+				<th:block th:with="start=${page.startPage}, end=${page.endPage}">
 					<li class="page-item"
 						th:with="start=${page.startPage}, end=${page.endPage}"
-						
-						th:each="pageButton : ${#numbers.sequence(start, end)}">
-							<a class="page-link"
-							   th:classappend="${pageButton == page.pageNum ? 'bg' : ''}"
-							   th:href="@{/gwanlibiPaymentState?pageNum={page} (page=${pageButton})}"
-							   th:text=${pageButton}></a>
-					</li>
+						th:each="pageButton : ${#numbers.sequence(start, end)}"><a
+						class="page-link"
+						th:classappend="${pageButton == page.pageNum ? 'bg' : ''}"
+						th:href="@{/gwanlibiPaymentState?pageNum={page} (page=${pageButton})}"
+						th:text=${pageButton}></a></li>
 				</th:block>
 
 				<!-- 다음 페이지 버튼 (Next) -->
 				<li class="page-item" th:if="${page.next}"><a class="page-link"
-						th:href="@{/gwanlibiPaymentState?pageNum={page} (page = ${page.endPage +1})}" aria-label="Next">
-						<span aria-hidden="true">&gt;</span>
-					</a></li>
+					th:href="@{/gwanlibiPaymentState?pageNum={page} (page = ${page.endPage +1})}"
+					aria-label="Next"> <span aria-hidden="true">&gt;</span>
+				</a></li>
 
 				<!-- 끝 페이지(endPage)-->
 				<th:block th:if="${page.endPage < page.realEnd}">
 					<li class="page-item"><a class="page-link"
-							th:href="@{/gwanlibiPaymentState?pageNum={page}(page = ${page.realEnd})}"
-							aria-label="Previous"> <span aria-hidden="false">&raquo;</span>
-						</a></li>
+						th:href="@{/gwanlibiPaymentState?pageNum={page}(page = ${page.realEnd})}"
+						aria-label="Previous"> <span aria-hidden="false">&raquo;</span>
+					</a></li>
 				</th:block>
 			</ul>
 		</nav>
@@ -208,7 +201,24 @@
 		<script th:inline="javascript">
 		
 			
+			$('#when').on('change', function() {
+				let paymentMonth = $('#when').val();
+/* 				$.ajax({
+					url: `${ctxPath}/gwanlibiPaymentStateByDate?paymentMonth=${paymentMonth}`,
+					method: 'get'
+				}).done(function (result) {
+					//console.log(result)
+					
+					location.href = `${ctxPath}/gwanlibiPaymentStateByDate?paymentMonth=${paymentMonth}`;
+					console.log('성공');
+				}).fail(function (err) {
+					console.log(err);
+				}) */
+				//console.log($('#when').val())
+				
+			})
 
+			
 			// folde tables
 			$('.fold-table .view').on("click", function () {
 				if ($(this).hasClass("open")) {
@@ -238,6 +248,7 @@
 					$(ele).css('color', 'black');
 				}
 			})
+			
 
 			// 체크박스 전체 선택
 			function checkAllBtn(event) {
@@ -315,7 +326,6 @@
 				});
 			})
 
-			// 체크된 메세지 전송 버튼
 
 
 

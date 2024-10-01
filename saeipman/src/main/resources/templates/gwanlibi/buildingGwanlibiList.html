@@ -6,10 +6,6 @@
 <head>
 	<meta charset="UTF-8">
 	<style>
-		.title {
-			float: left;
-			margin:20px 0;
-		}
 
 		.buildingBox {
 			padding-bottom: 60px;
@@ -53,14 +49,15 @@
 </head>
 
 <body>
-	<div layout:fragment="Main" class="buildingBox justify-content-center">
-		<div class=" row roomWrap gx-0 justify-content-left">
+	<div layout:fragment="Main" class=" container">
+			<h4 class="mt-5 mb-4">건물별 관리비 내역 <img class="" th:src="@{/img/gwanlibi.png}" width="35px;"></h4>
+		<div class="row roomWrap gx-5 justify-content-center">
 
-			<h4 class="title">건물별 관리비 내역 <img class="" th:src="@{/img/gwanlibi.png}" width="35px;"></h4>
 			
 			<!-- Thymeleaf each -->
 			<th:block th:each="building : ${list}">
-				<div class="card border-secondary col mb-4 col-3.9 me-4">
+				<div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+				<div class="card border-secondary">
 					<div class="card-header" style="font-size: 17px; font-weight: bold;">
 						<i class="fa-sharp-duotone fa-solid fa-building"></i> [[${building.buildingName}]]
 					</div>
@@ -76,6 +73,7 @@
 									class="btn btn-outline-primary"
 									th:onclick="|location.href='@{/gwanlibiDetailsBillList(buildingId=${building.buildingId})}'|">관리비 상세 내역</button>
 						</div>
+				</div>
 					</div>
 				</div>
 			</th:block>

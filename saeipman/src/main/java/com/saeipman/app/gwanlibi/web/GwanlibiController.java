@@ -360,7 +360,7 @@ public class GwanlibiController {
 
 	
 	@GetMapping("gwanlibiPaymentState")
-	public String gwanlibiPaymentStateList(BuildingVO buildingVO, BuildingPageDTO pageDTO, Model model) {
+	public String gwanlibiPaymentStateList(GwanlibiPaymentVO gpVO, BuildingVO buildingVO, BuildingPageDTO pageDTO, Model model) {
 
 		LoginInfoVO login = SecurityUtil.getLoginInfo();
 
@@ -372,9 +372,47 @@ public class GwanlibiController {
 		pageDTO.setTotal(total);
 
 		List<BuildingVO> buildingList = buildingService.buildingList(pageDTO, login.getLoginId());
+		
+		
 		String paymentMonth = null;
 		
 		// add roomList
+		for (BuildingVO building : buildingList) {
+			List<GwanlibiPaymentVO> rooms = gwanlibiPaymentService.getGwanlibiPaymentStateList(building.getBuildingId(), gpVO.getPaymentMonth());
+			rooms.forEach(ele -> {
+				if (ele.getPaymentYn() == 1) {
+					ele.setStrPaymentState("완납");
+				} else if (ele.getPaymentYn() == 0) {
+					ele.setStrPaymentState("미납");
+				} else {
+					ele.setStrPaymentState("연체");
+				}
+				model.addAttribute("rooms", rooms);
+			});
+		}
+		
+		model.addAttribute("buildingList", buildingList);
+		model.addAttribute("page", pageDTO);
+
+		return "gwanlibi/gwanlibiPaymentState";
+	}
+	
+	//@GetMapping("gwanlibiPaymentStateByDate")
+	public void gwanlibiPaymentStateByDate(@RequestParam(name = "paymentMonth") String paymentMonth, BuildingVO buildingVO, BuildingPageDTO pageDTO, Model model) {
+
+		LoginInfoVO login = SecurityUtil.getLoginInfo();
+
+		// 한 페이지당 출력할 건물 개수 - 페이징
+		pageDTO.setAmount(5);
+
+		// 출력할 건물의 총 개수
+		int total = gwanlibiService.buildingTotalCount(login.getLoginId());
+		pageDTO.setTotal(total);
+		
+		// building list
+		List<BuildingVO> buildingList = buildingService.buildingList(pageDTO, login.getLoginId());
+		
+		// add room list
 		for (BuildingVO building : buildingList) {
 			List<GwanlibiPaymentVO> rooms = gwanlibiPaymentService.getGwanlibiPaymentStateList(building.getBuildingId(), paymentMonth);
 			rooms.forEach(ele -> {
@@ -392,7 +430,7 @@ public class GwanlibiController {
 		model.addAttribute("buildingList", buildingList);
 		model.addAttribute("page", pageDTO);
 
-		return "gwanlibi/gwanlibiPaymentState";
+		//return "redirect:gwanlibiPaymentState?paymentMonth=" + paymentMonth;
 	}
 
 }
