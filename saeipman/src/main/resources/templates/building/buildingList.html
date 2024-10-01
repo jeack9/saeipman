@@ -549,11 +549,11 @@ input {
 			          	let target=response.target;
 			        	alert("업데이트 성공");
 			        	let bList = document.getElementById(target.buildingId);
+			            $('#file').val('');
 			            
 			            $(bList).find('.buildingListName').html(target.buildingName);
 			            $(bList).find('.buildingListAddr').html(target.doroAddr+" "+target.detailsAddr);
 			            $(bList).find('.buildingListGagu').html(target.totalGagu+"세대");
-			            
 			            let buildingId = $('#bid').attr('value');
 			            getBuildingInfo(buildingId);
 			          
