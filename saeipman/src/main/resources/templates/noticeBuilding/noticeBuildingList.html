@@ -13,7 +13,7 @@
 				</select>
 
 				<!-- 검색 -->
-				<input class="form-control me-2" type="search" name="scKeyword" aria-label="Search" placeholder="Search" style="width: 180px;">
+				<input class="form-control me-2" type="search" th:value="${pagingSearchDTO.scKeyword}" name="scKeyword" aria-label="Search" placeholder="Search" style="width: 180px;">
 				<button class="btn btn-outline-success" id="keywordBtn">Search</button>
 			</form>
 
@@ -54,10 +54,10 @@
 					<ul class="pagination justify-content-center">
 						<li class="page-item" th:if="${Paging.startPage > 1}"><a class="page-link" th:href="|javascript:changePage(${Paging.startPage} - 1)|" aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 
-						</a></li>
 
+						</a></li>
 						<th:block th:with="start = ${Paging.startPage}, end = ${Paging.endPage}">
-							<li class="page-item" th:with="start = ${Paging.startPage}, end = ${Paging.endPage}" th:each="pageButton : ${#numbers.sequence(start, end)}"><a class="page-link" th:href="|javascript:changePage(${pageButton})|" th:text=${pageButton}></a></li>
+							<li class="page-item" th:with="start = ${Paging.startPage}, end = ${Paging.endPage}" th:each="pageButton : ${#numbers.sequence(start, end)}"><a class="page-link" th:href="|javascript:changePage(${pageButton}) , scKeyword(${Paging.scKeyword})|" th:text=${pageButton}></a></li>
 						</th:block>
 
 						<li class="page-item" th:if="${Paging.nextPage}"><a class="page-link" th:href="|javascript:changePage(${Paging.endPage} + 1)|" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
@@ -66,6 +66,7 @@
 				</nav>
 			</div>
 		</div>
+		</from>
 	</div>
 </div>
 <script>

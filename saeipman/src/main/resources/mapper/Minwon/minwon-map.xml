@@ -65,6 +65,7 @@
 	        END as ACCEPT_STATE,
 	        m.GROUP_ID,
 	        m.REG_DATE,
+	        m.MOD_DATE,
 	        r.ROOM_NO,
 	        r.BUILDING_ID,
 	        b.BUILDING_name
