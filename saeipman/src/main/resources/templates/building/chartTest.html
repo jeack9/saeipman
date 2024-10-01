@@ -118,7 +118,11 @@ body {
 						<td>[[${info.roomNo}]]호</td>
 						<!-- 작성자 -->
 						<td>[[${info.acceptState}]]</td>
-						<td>[[ ${#dates.format(info.regDate, 'yyyy/MM/dd')} ]]</td>
+						<td th:if="${info.modDate == null}">[[
+							${#dates.format(info.regDate, 'yyyy/MM/dd')} ]]</td>
+						<td th:if="${info.modDate != null}">[[
+							${#dates.format(info.modDate, 'yyyy/MM/dd')} ]]</td>
+
 					</tr>
 				</tbody>
 			</table>
