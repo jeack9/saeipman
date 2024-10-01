@@ -68,6 +68,7 @@ public class NoticeBuildingController {
 		// 전체 페이지 수 계산해서 setTotalPage에 전체 페이지 수 할당
 		int totalPage = noticeBuildingService.totalPage(pgsc);
 		pgsc.setTotal(totalPage);
+		System.out.println(pgsc + "ㅁㅁㅁㅁㅁㅁㅁㅁ");
 		model.addAttribute("Paging", pgsc);
 
 		return "noticeBuilding/noticeBuildingList";
