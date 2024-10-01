@@ -54,9 +54,10 @@ input::placeholder {
 	<!-- html -->
 	<div layout:fragment="Main" class="container">
 		<br />
+		<form>
 		<h3 class="title">관리비 납부 내역</h3>
 		<div style="float: right;">
-		
+		<input type= "hidden" name="buildingId" value="${}">
 	<label for = "when"> 납부년월 선택 : </label> <input id = "when" name = "when" type = "month" >
 		</div>
 		<br><br>
@@ -147,7 +148,7 @@ input::placeholder {
 
 			</tbody>
 		</table>
-
+</form>
 		<br />
 
 		<!-- pagination -->
@@ -200,7 +201,24 @@ input::placeholder {
 		<script th:inline="javascript">
 		
 			
+			$('#when').on('change', function() {
+				let paymentMonth = $('#when').val();
+/* 				$.ajax({
+					url: `${ctxPath}/gwanlibiPaymentStateByDate?paymentMonth=${paymentMonth}`,
+					method: 'get'
+				}).done(function (result) {
+					//console.log(result)
+					
+					location.href = `${ctxPath}/gwanlibiPaymentStateByDate?paymentMonth=${paymentMonth}`;
+					console.log('성공');
+				}).fail(function (err) {
+					console.log(err);
+				}) */
+				//console.log($('#when').val())
+				
+			})
 
+			
 			// folde tables
 			$('.fold-table .view').on("click", function () {
 				if ($(this).hasClass("open")) {
@@ -231,21 +249,6 @@ input::placeholder {
 				}
 			})
 			
-			$('#when').on('change', function() {
-				let paymentMonth = $('#when').val();
-				$.ajax({
-					url: `${ctxPath}/gwanlibiPaymentStateByDate?paymentMonth=${paymentMonth}`,
-					method: 'get'
-				}).done(function (result) {
-					//console.log(result)
-					location.href = `${ctxPath}/gwanlibiPaymentStateByDate?paymentMonth=${paymentMonth}`;
-					//console.log('성공');
-				}).fail(function (err) {
-					console.log(err);
-				})
-				console.log($('#when').val())
-				
-			})
 
 			// 체크박스 전체 선택
 			function checkAllBtn(event) {
