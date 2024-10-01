@@ -41,14 +41,14 @@ th, td {
 					<table class="table table-bordered">
 						<thead>
 							<tr>
-								<th colspan="2" id=>납부 내역 &nbsp; &nbsp;<select
+								<th colspan="2" class="bg-light">납부 내역 &nbsp; &nbsp;<select
 									aria-label="Default select example" id="option">
 										<option selected>기간선택</option>
 								</select></th>
 							</tr>
 							<tr>
-								<th>월세</th>
-								<th>관리비</th>
+								<th class="bg-light">월세</th>
+								<th class="bg-light">관리비</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -83,11 +83,11 @@ th, td {
 					<table class="table table-bordered">
 						<thead>
 							<tr>
-								<th colspan="2">납부 예정</th>
+								<th colspan="2" class="bg-light">납부 예정</th>
 							</tr>
 							<tr>
-								<th>월세</th>
-								<th>관리비</th>
+								<th class="bg-light">월세</th>
+								<th class="bg-light">관리비</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -108,7 +108,7 @@ th, td {
 														11)}]]&nbsp;</td>
 
 													<td>[[${#numbers.formatInteger(payInF.paymentMoney, 3,
-														'COMMA')}]]원</td>
+														'COMMA')}]]</td>
 													<td th:if="${payInF.paymentState == -1}"><font
 														color="red">&nbsp; 연체</font></td>
 													<td th:if="${payInF.paymentState != -1}"><font
@@ -134,7 +134,7 @@ th, td {
 													<td>[[${#strings.substring(payInF.paymentMonth, 0,
 														11)}]]&nbsp;</td>
 													<td>[[${#numbers.formatInteger(payInF.gaguGwanlibi, 3,
-														'COMMA')}]]원</td>
+														'COMMA')}]]</td>
 													<td th:if="${payInF.paymentYN == -1}"><font
 														color="red">&nbsp; 연체</font></td>
 													<td th:if="${payInF.paymentYN != -1}"><font
@@ -152,7 +152,7 @@ th, td {
 					</table>
 					<table class="table table-bordered col-6">
 						<tr>
-							<th class="col-4" style="vertical-align: middle">결제 금액</th>
+							<th class="col-4 bg-light" style="vertical-align: middle">결제 금액</th>
 							<td id="total" class="col-4" style="vertical-align: middle">0원</td>
 							<th class="col-4">
 								<button type="button" id="payBtn"
@@ -170,8 +170,10 @@ th, td {
 			type="application/javascript"></script>
 
 		<script>
+		
 			//		<<<<<<<<< 완납내역 >>>>>>>>>>>
-
+			
+			//공통함수-날짜포맷 변환을 이용해 조회날짜 기준 이전 3개월치의 날짜를 출력
 			let date = new Date();
 			let nowMonth = dateToM(date);
 			let startMonth = nowMonth - 4;
@@ -252,7 +254,7 @@ th, td {
 								$('#rentMonth').html(payM);
 								$('#Rentpay').html(mr[i].realPaymentMoney
 														.toString()
-														.replace(/\B(?=(\d{3})+(?!\d))/g,",")+ "원");
+														.replace(/\B(?=(\d{3})+(?!\d))/g,",") + "원");
 
 							}
 								
@@ -293,7 +295,7 @@ th, td {
 									}
 								}
 								$('#total').text(total.toString()
-								  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",") + "원");
+								  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","));
 							})
 							
 			//<<부트페이 결제>>		
