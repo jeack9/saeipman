@@ -20,7 +20,7 @@
 		WHERE  imdaein_id = #{imdaeinId}
 	</select>
 	
-	<!-- 연체자 조회 -->
+	<!-- 관리비 연체자 조회 -->
 	<select id="selectGwanlibiOverdueImchainList">
 		SELECT   bi.building_id
 		       , bi.building_name
