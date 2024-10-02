@@ -30,15 +30,17 @@ public class PaymentController {
 	// 납부 페이지
 	@GetMapping("paymentInfo")
 	public String paymentInfoPage(PaymentVO payVO, Model model) {
-
+		System.out.println(payVO +"뭐");
 		int payYN = payVO.getPaymentYN();
-
+		System.out.println(payYN + "이거뭔데");
+		int payState = payVO.getPaymentState();
+		System.out.println(payState + "이거는뭔데");
 		String loginId = SecurityUtil.getLoginId();
 
 		payVO.setImchainPhone(loginId);
 
-		payVO.setPaymentYN(-1);
-		payVO.setPaymentState(-1);
+		payVO.setPaymentYN(payYN);
+		payVO.setPaymentState(payState);
 		
 
 		Map<String, Object> payInfo = paymentService.selectPayInfo(payVO);

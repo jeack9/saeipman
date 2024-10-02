@@ -48,7 +48,7 @@
  				AND c.imchain_phone = #{imchainPhone}
 			</when>
 			<otherwise>
-				WHERE TO_CHAR(real_payment_date,'yyyy-MM') = #{realPaymentDate}
+				WHERE TO_CHAR(mph.real_payment_date,'yyyy-MM') = #{realPaymentDate}
 				AND mph.payment_state = 1
 				AND c.imchain_phone = #{imchainPhone}
 			</otherwise>

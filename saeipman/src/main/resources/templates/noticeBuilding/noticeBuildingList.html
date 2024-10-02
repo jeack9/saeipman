@@ -38,8 +38,8 @@
 							<th scope="row">[[${list.postNo}]]</th>
 							<td>[[${list.title}]]</td>
 							<td>[[${list.buildingName}]]</td>
-							<td th:if="${list.modDate == ''}">[[${#dates.format(list.regDate, 'yyyy/MM/dd')}]]</td>
-							<td th:if="${list.modDate != ''}">[[${#dates.format(list.modDate, 'yyyy/MM/dd')}]]</td>
+							<td th:if="${list.modDate == null}">[[${#dates.format(list.regDate, 'yyyy/MM/dd')}]]</td>
+							<td th:if="${list.modDate != null}">[[${#dates.format(list.modDate, 'yyyy/MM/dd')}]]</td>
 							<td>[[${list.views}]]</td>
 						</tr>
 					</th:block>

@@ -113,7 +113,6 @@ input {
 					<button type="button"
 						th:onclick="|location.href='@{buildingList}'|"
 						class="btn btn-outline-secondary m-2">취소</button>
-
 				</div>
 
 			</form>
@@ -166,7 +165,9 @@ input {
 		function insertBuilding(){
 			 let buildingName = $('input[name="buildingName"]');
 			if (buildingName.val() == '') {
-				alert('빌딩 이름을 입력해주세요.');
+				Swal.fire({
+					icon: "error",
+					title: "빌딩 이름을 입력해주세요."});
 				buildingName.focus();
 				return;
 			}
@@ -221,14 +222,30 @@ input {
 				data: formData,
 				contentType: false,
 			    processData: false,
-			}).done(result => {
+			}).done(ele => {
 				//console.log(result, "result");
-				 if (!confirm("건물이 추가되었습니다.\n자동 방생성을 하시겠습니까?")) {
+				Swal.fire({
+					icon: "question",
+					showCancelButton: true,
+					title: "건물이 추가되었습니다",
+					text: "자동 방생성을 하시겠습니까?",
+					confirmButtonText: "Yes",
+					cancelButtonText: "Cancel"
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$('#bid').val(ele);
+					    $('#staticBackdrop').modal('show');
+					} else {
+						location.href=ctxPath+"/buildingList";
+				    } 
+				})
+				
+/* 				 if (!confirm("건물이 추가되었습니다.\n자동 방생성을 하시겠습니까?")) {
 					location.href=ctxPath+"/buildingList";
 				 } else {
 					$('#bid').val(result);
 				    $('#staticBackdrop').modal('show');
-			    } 
+			    }  */
 				
 			});
 		}
