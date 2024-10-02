@@ -14,10 +14,6 @@ hr {
 	color: black;
 }
 
-/* .minwon{
-	margin-top:40px;
-} */
-
 </style>
 <style>
 </style>
@@ -44,13 +40,9 @@ hr {
 							[[${#numbers.formatInteger(list.paymentMoney,3,'COMMA')}]]원</p>
 					</div>
 				</div>
-				<!-- <h6>미납 현황</h6>
->>>>>>> refs/heads/main
-				<p>[[${list.paymentState}]]건</p>
-				<p>미납액 :
-					[[${#numbers.formatInteger(list.paymentMoney,3,'COMMA')}]]원</p> -->
+	
 			</th:block>
-			<!-- 	<hr> -->
+		
 		</div>
 		<div class="col-4">
 			<div class="card border-secondary mb-3 text-center">
@@ -61,10 +53,7 @@ hr {
 					<p class="card-text">123</p>
 				</div>
 			</div>
-			<!-- <hr>
-			<h6>현재 임대 현황</h6>
-			<p>[[${ipju}]]/[[${totalRoom}]]호</p>
-			<hr> -->
+	
 
 		</div>
 		<div class="col-4">
@@ -76,15 +65,8 @@ hr {
 					<p class="card-text">123</p>
 				</div>
 			</div>
-			<!-- <hr>
-			<h6>계약 만료</h6>
->>>>>>> refs/heads/main
-			<p>[[${expCnt}]]건</p>
-			<hr> -->
 		</div>
-		<!-- 	<button type="button" class="btn btn-primary" data-bs-toggle="modal"
-			data-bs-target="#nonPaymentModal">Launch demo modal</button>
-			 -->
+		
 		<div class="modal" id="nonPaymentModal" tabindex="-1">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -140,11 +122,6 @@ hr {
 			</table>
 			<p th:unless="${minwon.size() > 0}" class="text-center">데이터 없습니다.</p>
 		</div>
-		
-
-
-
-
 		<script type="text/javascript"
 			src="https://www.gstatic.com/charts/loader.js"></script>
 		<script type="text/javascript">

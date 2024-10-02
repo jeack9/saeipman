@@ -21,28 +21,79 @@
 		where rn > (#{pageDTO.pageNum} -1) * #{pageDTO.amount}
 		]]>
 	</select>
-	<select id="selectBuildingListInfo" resultType="BuildingVO">
-		SELECT  building_id,
-				group_id,
-				building_name,
-				doro_addr,
-				jibun_addr,
-				details_addr,
-				gunchook_area,
-				total_floor,
-				floor_gagu_count,
-				total_gagu,
-				parking,
-				lift_yn,
-				delay_alert_yn,
-				minwon_alert_yn,
-				group_id,
-				floor_area,
-				building_heigh,
-				floor_area_ratio,
-				memo
-		FROM building_info
+	<!-- <select id="selectBuildingListInfo" resultType="BuildingVO">
+		SELECT  b.building_id,
+				b.group_id,
+				b.building_name,
+				b.doro_addr,
+				b.jibun_addr,
+				b.details_addr,
+				b.gunchook_area,
+				b.total_floor,
+				b.floor_gagu_count,
+				b.total_gagu,
+				b.parking,
+				b.lift_yn,
+				b.delay_alert_yn,
+				b.minwon_alert_yn,
+				b.group_id,
+				b.floor_area,
+				b.building_heigh,
+				b.floor_area_ratio,
+				b.memo
+		FROM building_info b JOIN 
 		WHERE building_id = #{buildingId}
+	</select> -->
+	<select id="selectBuildingListInfo">
+		SELECT  b.building_id,
+		        b.group_id,
+		        b.building_name,
+		        b.doro_addr,
+		        b.jibun_addr,
+		        b.details_addr,
+		        b.gunchook_area,
+		        b.total_floor,
+		        b.floor_gagu_count,
+		        b.total_gagu,
+		        b.parking,
+		        b.lift_yn,
+		        b.delay_alert_yn,
+		        b.minwon_alert_yn,
+		        b.group_id,
+		        b.floor_area,
+		        b.building_heigh,
+		        b.floor_area_ratio,
+		        b.memo,
+		        count(c.constract_no) as constract_no,
+		        count(g.gwanlibi_details_no) as gwanlibi_details_no
+		FROM building_info b
+		LEFT JOIN room_info r
+		   ON b.building_id = r.building_id
+		LEFT JOIN constract_info c
+		   ON r.room_id = c.room_id
+		LEFT JOIN gwanlibi_details g
+		 ON b.building_id = g.building_id
+		WHERE b.building_id = #{buildingId}
+		 GROUP BY  b.building_id,
+                b.group_id,
+		        b.building_name,
+		        b.doro_addr,
+		        b.jibun_addr,
+		        b.details_addr,
+		        b.gunchook_area,
+		        b.total_floor,
+		        b.floor_gagu_count,
+		        b.total_gagu,
+		        b.parking,
+		        b.lift_yn,
+		        b.delay_alert_yn,
+		        b.minwon_alert_yn,
+		        b.group_id,
+		        b.floor_area,
+		        b.building_heigh,
+		        b.floor_area_ratio,
+		        b.memo
+		
 	</select>
 	<insert id="selectBuildingInsert" parameterType="BuildingVO">
 		<selectKey keyProperty="buildingId" order="BEFORE"

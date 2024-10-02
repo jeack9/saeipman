@@ -139,6 +139,8 @@ input {
 								class="btn btn-outline-danger m-2 deleteBtn bid">삭제</button>
 						</div>
 					</div>
+					<input type="hidden" id ="constractNo">
+					<input type="hidden" id ="gwanlibiDetailsNo">
 					<div>
 						<div class="form-check form-switch me-3"
 							style="display: inline-block;">
@@ -312,6 +314,9 @@ input {
 						$('input[name="groupId"]').val(data.groupId);
 						$('#bid').val(data.buildingId);
 						$('#memo').val(data.memo);
+						$('#gwanlibiDetailsNo').val(data.gwanlibiDetailsNo);
+						$('#constractNo').val(data.constractNo);
+						console.log(data ,"ㅁㄴㅇㄻㄴㅇㄹ");
 						if(data.delayAlertYn=='Y'){
 							$('#delayAlertYn').prop("checked",true);
 						}else{
@@ -392,18 +397,23 @@ input {
 						//checkFunc($("#liftYn"));
 						$(".bid").val(data.buildingId);
 
-						//삭제 버튼
-						$('.deleteBtn').on('click',function(e){
-							if(confirm('삭제 하시겠습니까?')==true){
-								location.href= ctxPath + "/buildingDelete?id=" + e.target.value;
-							}
-							else{
-								return;
-							}
-						})
-						
 					})
 				}
+				
+				//삭제 버튼
+				$('.deleteBtn').on('click',function(e){
+					if(confirm('삭제 하시겠습니까?')==true){
+						if($('#constractNo').val() != 0 || $('#gwanlibiDetailsNo').val() !=0){
+							alert('계약 정보, 관리비가 존재합니다.');
+						}else{
+							alert('삭제 처리 되었습니다.');
+							location.href= ctxPath + "/buildingDelete?id=" + e.target.value;
+						}
+					}
+					else{
+						return;
+					}
+				})
 
 			//전체선택 및 선택해제
 		 	$('#tb').delegate('.selectRoom','click',function(e){
