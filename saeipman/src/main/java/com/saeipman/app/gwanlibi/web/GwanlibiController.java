@@ -261,7 +261,7 @@ public class GwanlibiController {
 		System.err.println("실제 관리비 청구 월 = " + paymentMonth);
 		gridDatalist.get(0).setPaymentMonth(paymentMonth);
 
-		
+
 		// 납부 기한
 		Date now = new Date();
 		Calendar cal = Calendar.getInstance();
@@ -407,7 +407,7 @@ public class GwanlibiController {
 		return "gwanlibi/gwanlibiPaymentState";
 	}
 	
-	// 년월 선택 시, 실행되는 컨트롤러.
+	// 년월 선택 시, 실행되는 컨트롤러. - ajax
 	@GetMapping("gwanlibiPaymentStateByDate")
 	@ResponseBody
 	public String gwanlibiPaymentStateByDate(GwanlibiPaymentVO gpVO, BuildingVO buildingVO, BuildingPageDTO pageDTO, Model model) {
@@ -419,85 +419,5 @@ public class GwanlibiController {
 		String url = "gwanlibiPaymentState?paymentMonth=" + strNowDate;
 		return url;
 	}
-	
-//	@GetMapping("gwanlibiPaymentState")
-//	public String gwanlibiPaymentStateList(GwanlibiPaymentVO gpVO, BuildingVO buildingVO, BuildingPageDTO pageDTO, Model model) {
-//		
-//		LoginInfoVO login = SecurityUtil.getLoginInfo();
-//		
-//		// 한 페이지당 출력할 건물 개수 - 페이징
-//		pageDTO.setAmount(5);
-//		
-//		// 출력할 건물의 총 개수
-//		int total = gwanlibiService.buildingTotalCount(login.getLoginId());
-//		pageDTO.setTotal(total);
-//		
-//		List<BuildingVO> buildingList = buildingService.buildingList(pageDTO, login.getLoginId());
-//		
-//		List<GwanlibiPaymentVO> rooms = new ArrayList<GwanlibiPaymentVO>();
-//		// add roomList
-//		for (BuildingVO building : buildingList) {
-//			List<GwanlibiPaymentVO> roomlist = gwanlibiPaymentService.getGwanlibiPaymentStateList(building.getBuildingId(), gpVO.getPaymentMonth());
-//			roomlist.forEach(ele -> {
-//				if (ele.getPaymentYn() == 1) {
-//					ele.setStrPaymentState("완납");
-//				} else if (ele.getPaymentYn() == 0) {
-//					ele.setStrPaymentState("미납");
-//				} else {
-//					ele.setStrPaymentState("연체");
-//				}
-//				
-//				rooms.add(ele);
-//				System.err.println(rooms);
-//			});
-//		}
-//		model.addAttribute("rooms", rooms);
-//		model.addAttribute("gpVO", gpVO);
-//		model.addAttribute("buildingList", buildingList);
-//		model.addAttribute("page", pageDTO);
-//		
-//		return "gwanlibi/gwanlibiPaymentState";
-//	}
-//	
-//	// 년월 선택 시, 실행되는 컨트롤러.
-//	@GetMapping("gwanlibiPaymentStateByDate")
-//	@ResponseBody
-//	public String gwanlibiPaymentStateByDate(GwanlibiPaymentVO gpVO, BuildingVO buildingVO, BuildingPageDTO pageDTO, Model model) {
-//		
-//		LoginInfoVO login = SecurityUtil.getLoginInfo();
-//		
-//		// 한 페이지당 출력할 건물 개수 - 페이징
-//		pageDTO.setAmount(5);
-//		
-//		// 출력할 건물의 총 개수
-//		int total = gwanlibiService.buildingTotalCount(login.getLoginId());
-//		pageDTO.setTotal(total);
-//		
-//		// building list
-//		List<BuildingVO> buildingList = buildingService.buildingList(pageDTO, login.getLoginId());
-//		
-//		// add room list
-//		for (BuildingVO building : buildingList) {
-//			List<GwanlibiPaymentVO> rooms = gwanlibiPaymentService.getGwanlibiPaymentStateList(building.getBuildingId(), gpVO.getPaymentMonth());
-//			rooms.forEach(ele -> {
-//				if (ele.getPaymentYn() == 1) {
-//					ele.setStrPaymentState("완납");
-//				} else if (ele.getPaymentYn() == 0) {
-//					ele.setStrPaymentState("미납");
-//				} else {
-//					ele.setStrPaymentState("연체");
-//				}
-//				model.addAttribute("rooms", rooms);
-//			});
-//		}
-//		// 날짜포맷 변경
-//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
-//		String strNowDate = simpleDateFormat.format(gpVO.getPaymentMonth()); 
-//		
-//		model.addAttribute("buildingList", buildingList);
-//		model.addAttribute("page", pageDTO);
-//		String url = "gwanlibiPaymentState?paymentMonth=" + strNowDate;
-//		return url;
-//	}
 
 }

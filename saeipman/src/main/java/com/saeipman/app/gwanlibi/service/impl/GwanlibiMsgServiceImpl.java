@@ -21,10 +21,6 @@ public class GwanlibiMsgServiceImpl implements GwanlibiMsgService {
 		return gwanlibiMsgMapper.selectImcahinPhoneNumber(buildingId);
 	}
 
-	/*
-	 * @Override public GwanlibiMsgVO getImdaeinPhoneNumber(String imdaeinId) {
-	 * gwanlibiMsgMapper.selectImdaeinPhoneNumber(imdaeinId); }
-	 */
 	@Override
 	public String getImdaeinPhoneNumber(String imdaeinId) {
 		return gwanlibiMsgMapper.selectImdaeinPhoneNumber(imdaeinId);
