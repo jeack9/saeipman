@@ -30,11 +30,8 @@ public class PaymentController {
 	// 납부 페이지
 	@GetMapping("paymentInfo")
 	public String paymentInfoPage(PaymentVO payVO, Model model) {
-		System.out.println(payVO +"뭐");
 		int payYN = payVO.getPaymentYN();
-		System.out.println(payYN + "이거뭔데");
 		int payState = payVO.getPaymentState();
-		System.out.println(payState + "이거는뭔데");
 		String loginId = SecurityUtil.getLoginId();
 
 		payVO.setImchainPhone(loginId);
@@ -64,7 +61,7 @@ public class PaymentController {
 		payVO.setPaymentState(1);
 		payVO.setRealPaymentDate(payDate);
 		payVO.setImchainPhone(loginId);
-
+		System.out.println(payVO+"ddddddd");
 		Map<String, Object>  pay = paymentService.selectPayInfo(payVO);
 		if (pay == null) {
 			return null;
@@ -76,7 +73,10 @@ public class PaymentController {
 	@PostMapping("updateAjax")
 	@ResponseBody
 	public String updateAjax(@RequestBody List<PaymentVO> payments) {
+		System.out.println(payments.toString()+"wwwwwwwwwwwwwwwwwwwwwwwww");
 		for (PaymentVO payment : payments) {
+			payment.getRealPaymentDate();
+			payment.getRealPaymentMoney();
 //			System.out.println(payment.getGaguPaymentHistoryNo() + "가구히스토리");
 //			System.out.println(payment.getmRentHistoryNo() + "월세 히스토리!!!!");
 			paymentService.updatePaymentStatus(payment);
