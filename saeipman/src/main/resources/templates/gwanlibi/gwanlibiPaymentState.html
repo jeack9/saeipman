@@ -194,7 +194,7 @@
 		</nav>
 
 		<!-- java script -->
-		<script th:inline="javascript">
+		<script th:inline="javascript">			
 			
 			$('#when').on('change', function () {
 				let paymentMonth = $('#when').val();
@@ -227,24 +227,43 @@
 
 			// rooms
 			let rooms = /* [[${rooms}]] */'기본값';
-
+			
+/* 			changeColor()
+			function changeColor(){
+				console.log('ㅎㅎ');
+				// 조건에 따른 텍스트 강조 출력 - todo
+				$('.fold-content tr td').each((idx, ele) => {
+					console.log(ele);
+					if ($(ele).text() == '미납') {
+						$(ele).css('style', 'color: blue !important');
+					}
+	
+					if ($(ele).text() == '연체') {
+						$(ele).attr('style', 'color: tomato !important');
+					}
+	
+					if ($(ele).text() == '입주') {
+						$(ele).css('font-weight', 'bold');
+						$(ele).css('color', 'black');
+					}
+				})
+			} */
 			// 조건에 따른 텍스트 강조 출력 - todo
 			$('.fold-content tr td').each((idx, ele) => {
-				//console.log(ele);
+				//console.log($(ele).text());
 				if ($(ele).text() == '미납') {
-					$(ele).css('style', 'color: blue !important');
+					$(ele).css('color', 'blue');
 				}
 
 				if ($(ele).text() == '연체') {
-					$(ele).css('color', 'tomato');
+					$(ele).attr('style', 'color: tomato !important');
 				}
 
 				if ($(ele).text() == '입주') {
 					$(ele).css('font-weight', 'bold');
 					$(ele).css('color', 'black');
 				}
-			})
-
+			})		
 
 			// 체크박스 전체 선택
 			function checkAllBtn(event) {

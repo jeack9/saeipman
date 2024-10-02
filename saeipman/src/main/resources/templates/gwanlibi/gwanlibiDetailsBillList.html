@@ -115,6 +115,7 @@
 			//$('#bName').text(building.buildingName);
 
 			let detailsList = /*[[${ detailsList }]]*/'기본값';
+			console.log(detailsList.length);
 
 
 
@@ -280,6 +281,15 @@
 
 			// 관리비 청구 메세지 전송 버튼
 			$('.claimBtn').click(function () {
+				// 해당 월에 정산된 관립
+				if(detailsList.length <= 0) {
+					Swal.fire({
+						icon: "error",
+						text: "등록된 관리비가 없습니다."
+					});
+					return;
+				}
+				
 				//console.log($('#totalGwanlibiByGagu').text());
 				let totalMoney = $('#totalGwanlibiByGagu').text().split(' ', 1);
 				// 년월일만 추출
