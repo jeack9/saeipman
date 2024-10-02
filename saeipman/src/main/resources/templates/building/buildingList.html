@@ -1,408 +1,580 @@
-
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}">
-<head>
-<meta charset="UTF-8">
-<title>title</title>
-<style>
-.imgId {
-	width: 200px;
-	height: 200px;
-}
+<html
+  lang="ko"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{common/layouts/default_layout}"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <title>title</title>
+    <style>
+      .imgId {
+        width: 200px;
+        height: 200px;
+      }
 
-.imgDiv {
-	width: 1100px;
-	display: inline;
-}
+      .imgDiv {
+        width: 1100px;
+        display: inline;
+      }
 
-#roomUpdate {
-	display: none;
-}
+      #roomUpdate {
+        display: none;
+      }
 
-.deletedImg {
-	display: none;
-}
+      .deletedImg {
+        display: none;
+      }
 
-input {
-	border-width: 0 0 1px;
-}
+      input {
+        border-width: 0 0 1px;
+      }
 
-.hoSel, .fl, .newRoom {
-	width: 65px;
-}
+      .hoSel,
+      .fl,
+      .newRoom {
+        width: 65px;
+      }
 
-.roomUpdateClass .btn {
-	display: inline-block;
-	background: #73bbfa;
-	border-color: #73bbfa;
-	color: #fff;
-	text-decoration: none;
-	text-transform: uppercase;
-	border-radius: 0.5em;
-	border-bottom: 0.25em solid #42738f;
-	-moz-transition: 0.1s;
-	-webkit-transition: 0.1s;
-	transition: 0.1s;
-	box-shadow: 0 2px 3px #5789b5;
-	position: relative;
-	width: 150px;
-	margin-top: 20px;
-	margin-left: 10px;
-}
+      .roomUpdateClass .btn {
+        display: inline-block;
+        background: #73bbfa;
+        border-color: #73bbfa;
+        color: #fff;
+        text-decoration: none;
+        text-transform: uppercase;
+        border-radius: 0.5em;
+        border-bottom: 0.25em solid #42738f;
+        -moz-transition: 0.1s;
+        -webkit-transition: 0.1s;
+        transition: 0.1s;
+        box-shadow: 0 2px 3px #5789b5;
+        position: relative;
+        width: 150px;
+        margin-top: 20px;
+        margin-left: 10px;
+      }
 
-.roomUpdateClass .btn:hover {
-	background-color: #1e9feb;
-	border-color: #1e9feb;
-	border-bottom-width: 0;
-}
-</style>
-</head>
-<body>
-	<div layout:fragment="Main" class="container">
-		<h4>건물관리 &nbsp;<img class="" th:src="@{/img/building.png}" width="35px;"></h4>
-		<div class="row roomWrap gx-4">
-			<!-- start 건물리스트 -->
-			<div class="col-md-3" style="margin-top: 120px;" id="buildList">
-				<div class="row">
-					<div class="col-5" style="padding-right: 0;">
-						<p style="font-size: 20px;">건물목록</p>
-					</div>
-					<div class="col" style="padding-left: 0; text-align: right;">
-						<button type="button"
-							th:onclick="|location.href='@{/buildingInsert}'|"
-							class="btn btn-outline-secondary  m-2">건물추가</button>
-					</div>
-				</div>
+      .roomUpdateClass .btn:hover {
+        background-color: #1e9feb;
+        border-color: #1e9feb;
+        border-bottom-width: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div layout:fragment="Main" class="container">
+      <h4>
+        건물관리 &nbsp;<img
+          class=""
+          th:src="@{/img/building.png}"
+          width="35px;"
+        />
+      </h4>
+      <div class="row roomWrap gx-4">
+        <!-- start 건물리스트 -->
+        <div class="col-md-3" style="margin-top: 120px" id="buildList">
+          <div class="row">
+            <div class="col-5" style="padding-right: 0">
+              <p style="font-size: 20px">건물목록</p>
+            </div>
+            <div class="col" style="padding-left: 0; text-align: right">
+              <button
+                type="button"
+                th:onclick="|location.href='@{/buildingInsert}'|"
+                class="btn btn-outline-secondary m-2"
+              >
+                건물추가
+              </button>
+            </div>
+          </div>
 
-				<th:block th:each="building, index:${buildings}">
-					<div class="card border-secondary mb-3 buildlist"
-						th:id="${building.buildingId}" th:data-index="${index.count}">
-						<div class="card-header buildingListName"
-							style="font-size: 18px; font-weight: bold;">[[${building.buildingName}]]</div>
-						<div class="card-body text-secondary" style="font-size: 14px;">
-							<p class="card-text buildingListAddr">[[${building.doroAddr}]]
-								[[${building.detailsAddr}]]</p>
-							<p class="card-text buildingListGagu">[[${building.totalGagu}]]세대</p>
-						</div>
-					</div>
-				</th:block>
+          <th:block th:each="building, index:${buildings}">
+            <div
+              class="card border-secondary mb-3 buildlist"
+              th:id="${building.buildingId}"
+              th:data-index="${index.count}"
+            >
+              <div
+                class="card-header buildingListName"
+                style="font-size: 18px; font-weight: bold"
+              >
+                [[${building.buildingName}]]
+              </div>
+              <div class="card-body text-secondary" style="font-size: 14px">
+                <p class="card-text buildingListAddr">
+                  [[${building.doroAddr}]] [[${building.detailsAddr}]]
+                </p>
+                <p class="card-text buildingListGagu">
+                  [[${building.totalGagu}]]세대
+                </p>
+              </div>
+            </div>
+          </th:block>
 
-				<!-- 페이징 -->
-				<th:block th:if="${page.total!=0}">
-					<nav aria-label="Page navigation example">
-						<ul class="pagination justify-content-center">
-							<li class="page-item" th:if="${page.startPage > 1}"><a
-								class="page-link"
-								th:href="@{/buildingList?pageNum={page}(page = ${page.startPage -1})}"
-								aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-							</a></li>
+          <!-- 페이징 -->
+          <th:block th:if="${page.total!=0}">
+            <nav aria-label="Page navigation example">
+              <ul class="pagination justify-content-center">
+                <li class="page-item" th:if="${page.startPage > 1}">
+                  <a
+                    class="page-link"
+                    th:href="@{/buildingList?pageNum={page}(page = ${page.startPage -1})}"
+                    aria-label="Previous"
+                  >
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
 
-							<th:block
-								th:with="start = ${page.startPage}, end = ${page.endPage}">
-								<li class="page-item"
-									th:with="start = ${page.startPage}, end = ${page.endPage}"
-									th:each="pageButton : ${#numbers.sequence(start, end)}"><a
-									class="page-link"
-									th:href="@{/buildingList?pageNum={page} (page = ${pageButton})}"
-									th:text=${pageButton}></a></li>
-							</th:block>
+                <th:block
+                  th:with="start = ${page.startPage}, end = ${page.endPage}"
+                >
+                  <li
+                    class="page-item"
+                    th:with="start = ${page.startPage}, end = ${page.endPage}"
+                    th:each="pageButton : ${#numbers.sequence(start, end)}"
+                  >
+                    <a
+                      class="page-link"
+                      th:href="@{/buildingList?pageNum={page} (page = ${pageButton})}"
+                      th:text="${pageButton}"
+                    ></a>
+                  </li>
+                </th:block>
 
+                <li class="page-item" th:if="${page.next}">
+                  <a
+                    class="page-link"
+                    th:href="@{/buildingList?pageNum={page}(page = ${page.endPage +1})}"
+                    aria-label="Next"
+                  >
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </th:block>
+        </div>
+        <!-- end 페이징 -->
 
-							<li class="page-item" th:if="${page.next}"><a
-								class="page-link"
-								th:href="@{/buildingList?pageNum={page}(page = ${page.endPage +1})}"
-								aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-							</a></li>
-						</ul>
-					</nav>
-				</th:block>
-			</div>
-			<!-- end 페이징 -->
+        <!-- End 건물리스트 -->
+        <div class="col-md-7">
+          <form
+            name="updateForm"
+            class="row g-3 infoDetail"
+            enctype="multipart/form-data"
+          >
+            <input name="groupId" type="hidden" class="groupid" />
+            <!-- start 건물 정보 -->
+            <!-- <h3 id="bnameTitle" style="margin-bottom:0px;"></h3> -->
+            <div class="row" style="text-align: center; margin-top: 60px">
+              <div class="col-2">
+                <h4 style="text-align: left" id="bnameTitle"></h4>
+              </div>
+              <div class="col-6">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary m-2"
+                  id="updateBtn"
+                >
+                  수정완료
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger m-2 deleteBtn bid"
+                >
+                  삭제
+                </button>
+              </div>
+            </div>
+            <input type="hidden" id="constractNo" />
+            <input type="hidden" id="gwanlibiDetailsNo" />
+            <div>
+              <div
+                class="form-check form-switch me-3"
+                style="display: inline-block"
+              >
+                <label for="delayAlertYn">연체 알림 </label>
+                <input
+                  type="checkbox"
+                  id="delayAlertYn"
+                  name="delayAlertYn"
+                  class="form-check-input text-end"
+                  role="switch"
+                />
+              </div>
 
-			<!-- End 건물리스트 -->
-			<div class="col-md-7">
-				<form name="updateForm" class="row g-3 infoDetail"
-					enctype="multipart/form-data">
-					<input name="groupId" type="hidden" class="groupid" />
-					<!-- start 건물 정보 -->
-					<!-- <h3 id="bnameTitle" style="margin-bottom:0px;"></h3> -->
-					<div class="row" style="text-align: center; margin-top: 60px;">
-						<div class="col-2">
-							<h4 style="text-align: left;" id="bnameTitle"></h4>
-						</div>
-						<div class="col-6">
-							<button type="button" class="btn btn-outline-primary m-2"
-								id="updateBtn">수정완료</button>
-							<button type="button"
-								class="btn btn-outline-danger m-2 deleteBtn bid">삭제</button>
-						</div>
-					</div>
-					<input type="hidden" id ="constractNo">
-					<input type="hidden" id ="gwanlibiDetailsNo">
-					<div>
-						<div class="form-check form-switch me-3"
-							style="display: inline-block;">
-							<label for="delayAlertYn">연체 알림 </label> <input type="checkbox"
-								id="delayAlertYn" name="delayAlertYn"
-								class="form-check-input text-end" role="switch">
-						</div>
+              <div class="form-check form-switch" style="display: inline-block">
+                <label for="minwonAlertYn">민원 알림 </label>
+                <input
+                  type="checkbox"
+                  id="minwonAlertYn"
+                  name="minwonAlertYn"
+                  class="form-check-input text-end"
+                  role="switch"
+                />
+              </div>
+            </div>
 
-						<div class="form-check form-switch" style="display: inline-block;">
-							<label for="minwonAlertYn">민원 알림 </label> <input type="checkbox"
-								id="minwonAlertYn" name="minwonAlertYn"
-								class="form-check-input text-end" role="switch">
-						</div>
-					</div>
+            <div id="imgFile"></div>
 
-					<div id="imgFile"></div>
+            <div class="col-md-4">
+              <label for=" file" class="form-label">빌딩 이미지</label>
+              <input
+                type="file"
+                id="file"
+                multiple
+                name="newFiles"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group col-md-5">
+              <label for="bname" class="form-label">빌딩 이름 </label>
+              <input
+                type="text"
+                id="bname"
+                name="buildingName"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group col-md-7">
+              <label
+                for="sample6_address"
+                class="form-label"
+                th:style="${'padding-right:20px'}"
+                >주소</label
+              >
+              <input
+                type="button"
+                onclick="sample6_execDaumPostcode()"
+                value="주소 찾기"
+                class="btn btn-outline-secondary m-2"
+              />
+              <input
+                type="text"
+                id="sample6_address"
+                placeholder="주소"
+                name="doroAddr"
+                class="form-control addr"
+              />
+            </div>
+            <div class="form-group col-md-7">
+              <label for="sample6_detailAddress" class="form-label"
+                >상세 주소</label
+              >
+              <input
+                type="text"
+                id="sample6_detailAddress"
+                placeholder="상세주소"
+                name="detailsAddr"
+                class="form-control dAddr"
+              />
+            </div>
+            <div class="form-group col-md-5"></div>
+            <div class="form-group col-md-5">
+              <label for="floorArea" class="form-label">연면적(m²) </label>
+              <input
+                type="text"
+                id="floorArea"
+                name="floorArea"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group col-md-5">
+              <label for="floorAreaRatio" class="form-label"
+                >용적률 산정용 연면적(m²)
+              </label>
+              <input
+                type="text"
+                id="floorAreaRatio"
+                name="floorAreaRatio"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group col-md-5">
+              <label for="gunchookArea" class="form-label">건축면적(m²) </label>
+              <input
+                type="text"
+                id="gunchookArea"
+                name="gunchookArea"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group col-md-5">
+              <label for="buildingHeigh" class="form-label"
+                >건물 높이(m)
+              </label>
+              <input
+                type="text"
+                id="buildingHeigh"
+                name="buildingHeigh"
+                class="form-control"
+              />
+            </div>
+            <div class="form-check form-switch" style="margin-left: 10px">
+              <label for="liftYn">승강기 여부 </label>
+              <input
+                type="checkbox"
+                id="liftYn"
+                name="liftYn"
+                class="form-check-input text-end"
+                role="switch"
+              />
+            </div>
+            <div class="form-group col-md-5">
+              <label for="totalFloor" class="form-label">층 수 </label>
+              <input
+                type="text"
+                id="totalFloor"
+                name="totalFloor"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group col-md-5">
+              <label for="floorGaguCount" class="form-label"
+                >층 별 가구수
+              </label>
+              <input
+                type="text"
+                id="floorGaguCount"
+                name="floorGaguCount"
+                class="form-control"
+              />
+            </div>
+            <input type="hidden" name="buildingId" id="bid" />
+            <div class="form-group col-md-5">
+              <label for="totalGagu" class="form-label">총 세대수 </label>
+              <input
+                type="text"
+                id="totalGagu"
+                name="totalGagu"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group col-md-5">
+              <label for="parking" class="form-label">주차 가능 대수 </label>
+              <input
+                type="text"
+                id="parking"
+                name="parking"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group col-md-10">
+              <label for="memo" class="form-label">비고 </label>
+              <input type="text" id="memo" name="memo" class="form-control" />
+            </div>
 
-					<div class="col-md-4">
-						<label for=" file" class="form-label">빌딩 이미지</label> <input
-							type="file" id="file" multiple name="newFiles"
-							class="form-control">
-					</div>
-					<div class="form-group col-md-5">
-						<label for="bname" class="form-label">빌딩 이름 </label> <input
-							type="text" id="bname" name="buildingName" class="form-control">
-					</div>
-					<div class="form-group col-md-7">
-						<label for="sample6_address" class="form-label"
-							th:style="${'padding-right:20px'}">주소</label> <input
-							type="button" onclick="sample6_execDaumPostcode()" value="주소 찾기"
-							class="btn btn-outline-secondary m-2"> <input type="text"
-							id="sample6_address" placeholder="주소" name="doroAddr"
-							class="form-control addr">
-					</div>
-					<div class="form-group col-md-7">
-						<label for="sample6_detailAddress" class="form-label">상세
-							주소</label> <input type="text" id="sample6_detailAddress"
-							placeholder="상세주소" name="detailsAddr" class="form-control dAddr">
-					</div>
-					<div class="form-group col-md-5"></div>
-					<div class="form-group col-md-5">
-						<label for="floorArea" class="form-label">연면적(m²) </label> <input
-							type="text" id="floorArea" name="floorArea" class="form-control">
-					</div>
-					<div class="form-group col-md-5">
-						<label for="floorAreaRatio" class="form-label">용적률 산정용 연면적(m²)
-						</label> <input type="text" id="floorAreaRatio" name="floorAreaRatio"
-							class="form-control">
-					</div>
-					<div class="form-group col-md-5">
-						<label for="gunchookArea" class="form-label">건축면적(m²) </label> <input
-							type="text" id="gunchookArea" name="gunchookArea"
-							class="form-control">
-					</div>
-					<div class="form-group col-md-5">
-						<label for="buildingHeigh" class="form-label">건물 높이(m) </label> <input
-							type="text" id="buildingHeigh" name="buildingHeigh"
-							class="form-control">
-					</div>
-					<div class="form-check form-switch" style="margin-left: 10px;">
-						<label for="liftYn">승강기 여부 </label> <input type="checkbox"
-							id="liftYn" name="liftYn" class="form-check-input text-end"
-							role="switch">
-					</div>
-					<div class="form-group col-md-5">
-						<label for="totalFloor" class="form-label">층 수 </label> <input
-							type="text" id="totalFloor" name="totalFloor"
-							class="form-control">
-					</div>
-					<div class="form-group col-md-5">
-						<label for="floorGaguCount" class="form-label">층 별 가구수 </label> <input
-							type="text" id="floorGaguCount" name="floorGaguCount"
-							class="form-control">
-					</div>
-					<input type="hidden" name="buildingId" id="bid">
-					<div class="form-group col-md-5">
-						<label for="totalGagu" class="form-label">총 세대수 </label> <input
-							type="text" id="totalGagu" name="totalGagu" class="form-control">
-					</div>
-					<div class="form-group col-md-5">
-						<label for="parking" class="form-label">주차 가능 대수 </label> <input
-							type="text" id="parking" name="parking" class="form-control">
-					</div>
-					<div class="form-group col-md-10">
-						<label for="memo" class="form-label">비고 </label> <input
-							type="text" id="memo" name="memo" class="form-control">
-					</div>
+            <div class="row roomUpdateClass">
+              <button id="roomUpdateBtn" type="button" class="btn">
+                방정보
+              </button>
+            </div>
+            <div id="roomUpdate">
+              <div>
+                <h5 id="staticBackdropLabel">방 수정</h5>
+              </div>
+              <div>
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>층 수</th>
+                      <th colspan="4">호실</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tb"></tbody>
+                </table>
+                <button
+                  type="button"
+                  id="floorInsert"
+                  class="btn btn-outline-secondary ps-2 pe-2 pt-0 pb-0"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- End 건물 정보 -->
+      <script>
+        let floorList;
+        let updateRoomList = [];
+        let delRoomList = [];
+        let insertRoomList = [];
+        $(document).ready(function () {
+          //initBuilindId = "";
+          //getBuildingInfo(initBuilindId);
+          let isRoomUpdateVisible = $("#roomUpdate").css("display") !== "none";
+          $("#roomUpdateBtn").on("click", function () {
+            $("#roomUpdate").toggle();
+          });
 
-					<div class="row roomUpdateClass">
-						<button id="roomUpdateBtn" type="button" class="btn">방정보</button>
-					</div>
-					<div id="roomUpdate">
-						<div>
-						
-							<h5 id="staticBackdropLabel">방 수정</h5>
-						</div>
-						<div>
-							<table class="table table-bordered">
-								<thead>
-									<tr>
-										<th>층 수</th>
-										<th colspan="4">호실</th>
-									</tr>
-								</thead>
-								<tbody id="tb">
+          let firstBuilding = $('div[data-index="1"]').attr("id");
+          if ($("#bid").attr("value") == null) {
+            //document.getElementById(firstBuilding);
 
-								</tbody>
-							</table>
-							<button type="button" id="floorInsert" class="btn btn-outline-secondary ps-2 pe-2 pt-0 pb-0">+</button>
-						</div>
-					</div>
+            getBuildingInfo(firstBuilding);
+          }
+          $(".buildlist").on("click", function (e) {
+            //$('#imgFile').html('');
+            let buildingId = e.currentTarget.id;
+            getBuildingInfo(buildingId);
+            $(".buildlist").css("backgroundColor", "transparent");
 
-				</form>
-			</div>
-		</div>
-		<!-- End 건물 정보 -->
-		<script>
-	
-				let floorList;
-				let updateRoomList = [];
-				let delRoomList = [];
-				let insertRoomList = [];
-			$(document).ready(function() {
-				//initBuilindId = "";
-				//getBuildingInfo(initBuilindId);
-				let isRoomUpdateVisible = $('#roomUpdate').css('display') !== 'none';
-				$('#roomUpdateBtn').on('click', function() {
-				    $('#roomUpdate').toggle();
-				});
-				
-				let firstBuilding = $('div[data-index="1"]').attr('id');
-				if ($('#bid').attr('value')==null) {
-					//document.getElementById(firstBuilding);
+            $(e.currentTarget).css("backgroundColor", "#e8eaff");
+          });
+          function getBuildingInfo(buildingId) {
+            //상세 정보
+            $.ajax({
+              url: ctxPath + "/buildingDetails",
+              type: "GET",
+              data: {
+                id: buildingId,
+              },
+              dataType: "json",
+            }).done(function (data) {
+              $("#imgFile").html("");
+              $("#bnameTitle").html(data.buildingName);
+              $("#bname").val(data.buildingName);
+              $(".addr").val(data.doroAddr);
+              $(".dAddr").val(data.detailsAddr);
+              $("#gunchookArea").val(data.gunchookArea);
+              $("#delayAlertYn").val(data.delayAlertYn);
+              $("#minwonAlertYn").val(data.minwonAlertYn);
+              $("#liftYn").val(data.liftYn);
+              $("#totalFloor").val(data.totalFloor);
+              $("#floorGaguCount").val(data.floorGaguCount);
+              $("#totalGagu").val(data.totalGagu);
+              $("#parking").val(data.parking);
+              $("#floorArea").val(data.floorArea);
+              $("#buildingHeigh").val(data.buildingHeigh);
+              $("#floorAreaRatio").val(data.floorAreaRatio);
+              $('input[name="groupId"]').val(data.groupId);
+              $("#bid").val(data.buildingId);
+              $("#memo").val(data.memo);
+              $("#gwanlibiDetailsNo").val(data.gwanlibiDetailsNo);
+              $("#constractNo").val(data.constractNo);
+              console.log(data, "ㅁㄴㅇㄻㄴㅇㄹ");
+              if (data.delayAlertYn == "Y") {
+                $("#delayAlertYn").prop("checked", true);
+              } else {
+                $("#delayAlertYn").prop("checked", false);
+              }
+              if (data.minwonAlertYn == "Y") {
+                $("#minwonAlertYn").prop("checked", true);
+              } else {
+                $("#minwonAlertYn").prop("checked", false);
+              }
+              if (data.liftYn == "Y") {
+                $("#liftYn").prop("checked", true);
+              } else {
+                $("#liftYn").prop("checked", false);
+              }
+              //console.log([data.delayAlertYn],"방이다");
 
-					getBuildingInfo(firstBuilding);
-				}
-				$('.buildlist').on('click', function(e) {
-					//$('#imgFile').html('');
-					let buildingId = e.currentTarget.id;
-					getBuildingInfo(buildingId);
-					$(".buildlist").css("backgroundColor", "transparent");
-
-					$(e.currentTarget).css("backgroundColor", "#e8eaff");
-				});	
-				function getBuildingInfo(buildingId) {
-					//상세 정보
-					$.ajax({
-						url : ctxPath+ '/buildingDetails',
-						type : 'GET',
-						data : {
-							id : buildingId,
-						},
-						dataType : 'json',
-					}).done(function(data) {
-						$('#imgFile').html('');
-						$('#bnameTitle').html(data.buildingName);
-						$("#bname").val(data.buildingName);
-						$(".addr").val(data.doroAddr);
-						$(".dAddr").val(data.detailsAddr);
-						$("#gunchookArea").val(data.gunchookArea);
-						$('#delayAlertYn').val(data.delayAlertYn);
-						$('#minwonAlertYn').val(data.minwonAlertYn);
-						$("#liftYn").val(data.liftYn);
-						$("#totalFloor").val(data.totalFloor);
-						$("#floorGaguCount").val(data.floorGaguCount);
-						$("#totalGagu").val(data.totalGagu);
-						$("#parking").val(data.parking);
-						$("#floorArea").val(data.floorArea);
-						$("#buildingHeigh").val(data.buildingHeigh);
-						$("#floorAreaRatio").val(data.floorAreaRatio);
-						$('input[name="groupId"]').val(data.groupId);
-						$('#bid').val(data.buildingId);
-						$('#memo').val(data.memo);
-						$('#gwanlibiDetailsNo').val(data.gwanlibiDetailsNo);
-						$('#constractNo').val(data.constractNo);
-						console.log(data ,"ㅁㄴㅇㄻㄴㅇㄹ");
-						if(data.delayAlertYn=='Y'){
-							$('#delayAlertYn').prop("checked",true);
-						}else{
-							$('#delayAlertYn').prop("checked",false);
-						}
-						if(data.minwonAlertYn=='Y'){
-							$('#minwonAlertYn').prop("checked",true);
-						}else{
-							$('#minwonAlertYn').prop("checked",false);
-						}
-						if(data.liftYn=='Y'){
-							$('#liftYn').prop("checked",true);
-						}else{
-							$('#liftYn').prop("checked",false);
-						}
-						//console.log([data.delayAlertYn],"방이다");
-					
-						if(data.rooms != null){
-							$('#tb').html("");
-							let floors = [];
-							for(room of data.rooms){
-								if(floors.indexOf(room.floor) == -1){
-									floors.push(room.floor);
-								}
-							}
-							for(let i = floors[0]; i <= floors[floors.length- 1]; i++){
-								let tr = `<tr><td><input type='checkbox' style="margin-right:10px;" id="checkbox${i}" class='selectRoom'><input type='text' name='floor'  value=${i} class='fl'></td>`;
-								for(room of data.rooms){
-									if(room.floor == i){
-										tr += `<td><input type='checkbox' style="margin-right:10px;" name = 'chk' ><input type='text'  class='hoSel' name = 'roomNo' id=${room.roomId} value=${room.roomNo}>
+              if (data.rooms != null) {
+                $("#tb").html("");
+                let floors = [];
+                for (room of data.rooms) {
+                  if (floors.indexOf(room.floor) == -1) {
+                    floors.push(room.floor);
+                  }
+                }
+                for (let i = floors[0]; i <= floors[floors.length - 1]; i++) {
+                  let tr = `<tr><td><input type='checkbox' style="margin-right:10px;" id="checkbox${i}" class='selectRoom'><input type='text' name='floor'  value=${i} class='fl'></td>`;
+                  for (room of data.rooms) {
+                    if (room.floor == i) {
+                      tr += `<td><input type='checkbox' style="margin-right:10px;" name = 'chk' ><input type='text'  class='hoSel' name = 'roomNo' id=${room.roomId} value=${room.roomNo}>
 											`;
-									} 
-								}
-									tr+=`<td><button type='button' class='btn btn-outline-secondary ps-2 pe-2 pt-0 pb-0 addRoom'>추가</button>
+                    }
+                  }
+                  tr += `<td><button type='button' class='btn btn-outline-secondary ps-2 pe-2 pt-0 pb-0 addRoom'>추가</button>
 									<button type='button' class='btn btn-outline-secondary ps-2 pe-2 pt-0 pb-0 delRoom'>삭제</button></td>`;
-								tr+= `</tr>`;
-								$('#tb').append(tr);
-							}
-						}
-						  // 방 정보가 갱신된 후에도 roomUpdate의 상태를 유지
-				        if (isRoomUpdateVisible) {
-				            $('#roomUpdate').show();
-				        } else {
-				            $('#roomUpdate').hide();
-				        }
-						
-						//방번호 수정
-						$('.hoSel').on('change',function(e){
-							//호실 추가 리스트 
-							let roomNo = $(e.target).val();
-							let roomId = $(e.target).attr('id');
-						
-							updateRoomList[roomId]=roomNo;
-							console.log(updateRoomList ,'updateRoomList');
-						
-						})
-						
-						//이미지 파일
-						if(data.fileName != null) {
-							//$('#groupId').val(data.groupId);
-							let images = data.fileName;
-							
-							for(img of images){
-								let div = $('<div>').attr({'class':'imgDiv',  'data-fileid':img} );
-								let imgName = $("<img>").attr({'src':ctxPath+'/images/'+'건물/'+img});
-								let imgDel = $("<button>").attr('class','imageDel');
-								imgName.attr("class",'imgId');
-								imgDel.attr('type','button');
-								imgDel.html('X');
-								$("#imgFile").append(div);
-								$(div).append(imgName);
-								$(div).append(imgDel);
-							} 
-						} 
-						//이미지 삭제
-						$('.imageDel').on('click', imgaeDelFunc);
-						
-						//checkFunc($("#liftYn"));
-						$(".bid").val(data.buildingId);
+                  tr += `</tr>`;
+                  $("#tb").append(tr);
+                }
+              }
+              // 방 정보가 갱신된 후에도 roomUpdate의 상태를 유지
+              if (isRoomUpdateVisible) {
+                $("#roomUpdate").show();
+              } else {
+                $("#roomUpdate").hide();
+              }
 
-					})
-				}
-				
-				//삭제 버튼
-				$('.deleteBtn').on('click',function(e){
-					if(confirm('삭제 하시겠습니까?')==true){
+              //방번호 수정
+              $(".hoSel").on("change", function (e) {
+                //호실 추가 리스트
+                let roomNo = $(e.target).val();
+                let roomId = $(e.target).attr("id");
+
+                updateRoomList[roomId] = roomNo;
+                console.log(updateRoomList, "updateRoomList");
+              });
+
+              //이미지 파일
+              if (data.fileName != null) {
+                //$('#groupId').val(data.groupId);
+                let images = data.fileName;
+
+                for (img of images) {
+                  let div = $("<div>").attr({
+                    class: "imgDiv",
+                    "data-fileid": img,
+                  });
+                  let imgName = $("<img>").attr({
+                    src: ctxPath + "/images/" + "건물/" + img,
+                  });
+                  let imgDel = $("<button>").attr("class", "imageDel");
+                  imgName.attr("class", "imgId");
+                  imgDel.attr("type", "button");
+                  imgDel.html("X");
+                  $("#imgFile").append(div);
+                  $(div).append(imgName);
+                  $(div).append(imgDel);
+                }
+              }
+              //이미지 삭제
+              $(".imageDel").on("click", imgaeDelFunc);
+
+              //checkFunc($("#liftYn"));
+              $(".bid").val(data.buildingId);
+            });
+          }
+
+          //삭제 버튼
+          $(".deleteBtn").on("click", function (e) {
+            Swal.fire({
+              icon: "question",
+              showCancelButton: true,
+              title: "삭제 하시겠습니까?",
+              confirmButtonText: "Yes",
+              cancelButtonText: "Cancel",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                if (
+                  $("#constractNo").val() != 0 ||
+                  $("#gwanlibiDetailsNo").val() != 0
+                ) {
+                  Swal.fire({
+                    icon: "error",
+                    title: "계약 정보, 관리비가 존재합니다.",
+                  });
+                } else {
+                  Swal.fire({
+                    icon: "success",
+                    title: "삭제 처리되었습니다.",
+                  }).then((result) => {
+                    location.href =
+                      ctxPath + "/buildingDelete?id=" + e.target.value;
+                  });
+                }
+              } else {
+                return;
+              }
+            });
+            /* if(confirm('삭제 하시겠습니까?')==true){
 						if($('#constractNo').val() != 0 || $('#gwanlibiDetailsNo').val() !=0){
 							alert('계약 정보, 관리비가 존재합니다.');
 						}else{
@@ -412,225 +584,222 @@ input {
 					}
 					else{
 						return;
-					}
-				})
+					} */
+          });
 
-			//전체선택 및 선택해제
-		 	$('#tb').delegate('.selectRoom','click',function(e){
-				let parent = $(e.target).closest('tr');
-				if($(e.target).is(":checked")){
-					parent.find('input[name="chk"]').prop("checked",true);
-									
-				}else{
-					parent.find('input[name="chk"]').prop("checked",false);
-				
-				}
-			})
-							
-			$('#tb').delegate("input[name=chk]",'click',function(e) {
-				let tr = $(e.target).closest('tr');
-				let total = tr.find("input[name=chk]").length;
-				let checked = tr.find("input[name=chk]:checked").length;
-				
-				if(total != checked) {
-					tr.find(".selectRoom").prop("checked", false);
-				}
-				else {
-					tr.find(".selectRoom").prop("checked", true); 
-				}
-			});//end 행선택
-			//층 추가
-			$('#floorInsert').on('click', function(){
-				let newFloor;
-			
-				newFloor += `<tr>`;
-				newFloor += `<td><input type="checkbox" style="margin-right:10px;" class='selectRoom'><input type='text' name = 'floor' class="fl" placeholder='숫자입력'></td>`;
-				newFloor +=`<td><button type='button' class='btn btn-outline-secondary ps-2 pe-2 pt-0 pb-0 addRoom'>추가</button>
+          //전체선택 및 선택해제
+          $("#tb").delegate(".selectRoom", "click", function (e) {
+            let parent = $(e.target).closest("tr");
+            if ($(e.target).is(":checked")) {
+              parent.find('input[name="chk"]').prop("checked", true);
+            } else {
+              parent.find('input[name="chk"]').prop("checked", false);
+            }
+          });
+
+          $("#tb").delegate("input[name=chk]", "click", function (e) {
+            let tr = $(e.target).closest("tr");
+            let total = tr.find("input[name=chk]").length;
+            let checked = tr.find("input[name=chk]:checked").length;
+
+            if (total != checked) {
+              tr.find(".selectRoom").prop("checked", false);
+            } else {
+              tr.find(".selectRoom").prop("checked", true);
+            }
+          }); //end 행선택
+          //층 추가
+          $("#floorInsert").on("click", function () {
+            let newFloor;
+
+            newFloor += `<tr>`;
+            newFloor += `<td><input type="checkbox" style="margin-right:10px;" class='selectRoom'><input type='text' name = 'floor' class="fl" placeholder='숫자입력'></td>`;
+            newFloor += `<td><button type='button' class='btn btn-outline-secondary ps-2 pe-2 pt-0 pb-0 addRoom'>추가</button>
 					<button type='button' class='btn btn-outline-secondary ps-2 pe-2 pt-0 pb-0 delRoom'>삭제</button></td>`;
-				newFloor+=`</tr>`;
-				//$(newFloor).append(newButton);
-				$('#tb').append(newFloor);
-			});
-			//호실 추가
-			$('#tb').delegate('.addRoom','click',function(e){
-				let addSel = $(e.target).closest('tr');
-				//console.log(addSel);
-				addSel.find('.addRoom').parent().before(`<td><input type="checkbox" style="margin-right:10px;" name="chk"><input type="text" name='roomNo' class = "newRoom"></td>`);
-				
-			});
-			
-			//호실 번호 추가
-			$('#tb').delegate('.newRoom','change',function(e){
-				let roomNo = $(e.target).val();
-				let floor = $(e.target).closest('tr').find('input[name=floor]').val();
-				insertRoomList.push({floor,roomNo});
-				console.log(insertRoomList,"방추가");
-			})
-			
-			//호실 삭제
-		 	$('#tb').delegate('.delRoom','click',function(e){
-				let delSel = $(e.target).closest('tr');
-				// 체크된 모든 항목에 대해 반복
+            newFloor += `</tr>`;
+            //$(newFloor).append(newButton);
+            $("#tb").append(newFloor);
+          });
+          //호실 추가
+          $("#tb").delegate(".addRoom", "click", function (e) {
+            let addSel = $(e.target).closest("tr");
+            //console.log(addSel);
+            addSel
+              .find(".addRoom")
+              .parent()
+              .before(
+                `<td><input type="checkbox" style="margin-right:10px;" name="chk"><input type="text" name='roomNo' class = "newRoom"></td>`
+              );
+          });
 
-			 	delSel.find("input[name=chk]:checked").next().each((idx, ele) => {
-				
-					let roomId = $(ele).attr('id');
-					delRoomList.push({roomId});
-				}) 
-				console.log(delRoomList,"리스트");
-			 /* 	delSel.find("input[name=chk]:checked").each(function(e) { 
+          //호실 번호 추가
+          $("#tb").delegate(".newRoom", "change", function (e) {
+            let roomNo = $(e.target).val();
+            let floor = $(e.target)
+              .closest("tr")
+              .find("input[name=floor]")
+              .val();
+            insertRoomList.push({ floor, roomNo });
+            console.log(insertRoomList, "방추가");
+          });
+
+          //호실 삭제
+          $("#tb").delegate(".delRoom", "click", function (e) {
+            let delSel = $(e.target).closest("tr");
+            // 체크된 모든 항목에 대해 반복
+
+            delSel
+              .find("input[name=chk]:checked")
+              .next()
+              .each((idx, ele) => {
+                let roomId = $(ele).attr("id");
+                delRoomList.push({ roomId });
+              });
+            console.log(delRoomList, "리스트");
+            /* 	delSel.find("input[name=chk]:checked").each(function(e) { 
 					console.log();
 					let roomId =  delSel.find("input[name=chk]:checked").next().attr('id'); // 각 체크된 항목의 ID 가져오기 
 					delRoomList.push({
 						roomId
 					}); // 삭제 리스트에 추가 
 				}); */
-				
-				if(delSel.find('.selectRoom').is(':checked')){
-					delSel.find('input[name=chk]').closest('tr').remove();
 
-				}else{
-					delSel.find("input[name=chk]:checked").parent().remove();
-					
-				}
-			}); 
-			
-			//행 선택 checkbox
-			$('.selectRoom').click(function(e){
-			
-				let parent = $(e.target).closest('tr')
-				if($(e.target).is(":checked")){
-					parent.find('input[name="chk"]').prop("checked",true);
-									
-				}else{
-					parent.find('input[name="chk"]').prop("checked",false);
-				
-				}
-			})
-			$("input[name=chk]").click(function(e) {
-				let tr = $(e.target).closest('tr');
-				let total = tr.find("input[name=chk]").length;
-				let checked = tr.find("input[name=chk]:checked").length;
-				
-				if(total != checked) {
-					tr.find(".").prop("checked", false);
-				}
-				else {
-					tr.find(".").prop("checked", true); 
-				}
-			});
-			//end of $(document).ready
-			
-			let delList = [];
-			
-			function imgaeDelFunc(e){
-				console.log($(e.target).parent());
-			 	$(e.target).parent().addClass("deletedImg");
-				let dImg = $(e.target).parent().data('fileid');
-				delList.push({dImg}); 
-	
-			}
-			
-			
-			//end of checkFunc
-			//수정
-			
+            if (delSel.find(".selectRoom").is(":checked")) {
+              delSel.find("input[name=chk]").closest("tr").remove();
+            } else {
+              delSel.find("input[name=chk]:checked").parent().remove();
+            }
+          });
 
-			$('#updateBtn').on('click', submitUpdateForm);
-			function submitUpdateForm(e) {
-				let roomList = [];
-				//let updateList = {};
-			    let formData = new FormData(document.updateForm);
-			    // 삭제된 파일 목록 추가
-			    delList.forEach((fileName) => {
-			        formData.append("deleteFileNames", fileName.dImg);
-			    }); 
-			  
-			    //방 번호 수정
-		     	for(roomId in updateRoomList){
-		     		roomList.push({ roomId, roomNo: updateRoomList[roomId] });
-			   	}  
-			    formData.append("updateRoomList", JSON.stringify(roomList));
-			 
-		     	//방 삭제 리스트
-				formData.append("deleteRoomList", JSON.stringify(delRoomList));
-		     	
-		     	//방 추가 리스트
-				formData.append("insertRoomList", JSON.stringify(insertRoomList));
+          //행 선택 checkbox
+          $(".selectRoom").click(function (e) {
+            let parent = $(e.target).closest("tr");
+            if ($(e.target).is(":checked")) {
+              parent.find('input[name="chk"]').prop("checked", true);
+            } else {
+              parent.find('input[name="chk"]').prop("checked", false);
+            }
+          });
+          $("input[name=chk]").click(function (e) {
+            let tr = $(e.target).closest("tr");
+            let total = tr.find("input[name=chk]").length;
+            let checked = tr.find("input[name=chk]:checked").length;
 
-			    $.ajax({
-			        url: ctxPath+'/buildingUpdate',
-			        type: 'POST',
-			        data: formData,
-			        processData: false,
-			        contentType: false,
-			        success: function(response) {
-			          	
-			          	let target=response.target;
-			        	alert("업데이트 성공");
-			        	let bList = document.getElementById(target.buildingId);
-			            $('#file').val('');
-			            
-			            $(bList).find('.buildingListName').html(target.buildingName);
-			            $(bList).find('.buildingListAddr').html(target.doroAddr+" "+target.detailsAddr);
-			            $(bList).find('.buildingListGagu').html(target.totalGagu+"세대");
-			            let buildingId = $('#bid').attr('value');
-			            getBuildingInfo(buildingId);
-			            updateRoomList = [];
-						delRoomList = [];
-						insertRoomList = [];
-			          
-			        },
-			        error: function(error) {
-			            console.error("업데이트 실패:", error);
-			        }
-			    });
-			}
+            if (total != checked) {
+              tr.find(".").prop("checked", false);
+            } else {
+              tr.find(".").prop("checked", true);
+            }
+          });
+          //end of $(document).ready
 
-			
-			//체크박스
-			$('input:checkbox').change(function() {
-				if (this.checked) {
+          let delList = [];
 
-					$(this).attr('value', 'Y');
-				} else {
-					$(this).attr('value', 'N');
-				}
-			})
-			
-			
-			})
+          function imgaeDelFunc(e) {
+            console.log($(e.target).parent());
+            $(e.target).parent().addClass("deletedImg");
+            let dImg = $(e.target).parent().data("fileid");
+            delList.push({ dImg });
+          }
 
-		</script>
-		<script
-			src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-		<script>
-		function sample6_execDaumPostcode() {
-			new daum.Postcode({
-				oncomplete : function(data) {
-					// 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+          //end of checkFunc
+          //수정
 
-					// 각 주소의 노출 규칙에 따라 주소를 조합한다.
-					// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-					var addr = ''; // 주소 변수
-					var extraAddr = ''; // 참고항목 변수
+          $("#updateBtn").on("click", submitUpdateForm);
+          function submitUpdateForm(e) {
+            let roomList = [];
+            //let updateList = {};
+            let formData = new FormData(document.updateForm);
+            // 삭제된 파일 목록 추가
+            delList.forEach((fileName) => {
+              formData.append("deleteFileNames", fileName.dImg);
+            });
 
-					//사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-					if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-						addr = data.roadAddress;
-					} else { // 사용자가 지번 주소를 선택했을 경우(J)
-						addr = data.jibunAddress;
-					}
+            //방 번호 수정
+            for (roomId in updateRoomList) {
+              roomList.push({ roomId, roomNo: updateRoomList[roomId] });
+            }
+            formData.append("updateRoomList", JSON.stringify(roomList));
 
-					document.getElementById("sample6_address").value = addr;
-					// 커서를 상세주소 필드로 이동한다.
-					document.getElementById("sample6_detailAddress").focus();
-				}
-			}).open();
-		}
-	</script>
-	</div>
+            //방 삭제 리스트
+            formData.append("deleteRoomList", JSON.stringify(delRoomList));
 
+            //방 추가 리스트
+            formData.append("insertRoomList", JSON.stringify(insertRoomList));
 
-</body>
+            $.ajax({
+              url: ctxPath + "/buildingUpdate",
+              type: "POST",
+              data: formData,
+              processData: false,
+              contentType: false,
+              success: function (response) {
+                let target = response.target;
+                Swal.fire({
+                    icon: "success",
+                    title: "수정 성공하였습니다.",
+                  });
+              
+                let bList = document.getElementById(target.buildingId);
+                $("#file").val("");
+
+                $(bList).find(".buildingListName").html(target.buildingName);
+                $(bList)
+                  .find(".buildingListAddr")
+                  .html(target.doroAddr + " " + target.detailsAddr);
+                $(bList)
+                  .find(".buildingListGagu")
+                  .html(target.totalGagu + "세대");
+                let buildingId = $("#bid").attr("value");
+                getBuildingInfo(buildingId);
+                updateRoomList = [];
+                delRoomList = [];
+                insertRoomList = [];
+              },
+              error: function (error) {
+                console.error("업데이트 실패:", error);
+              },
+            });
+          }
+
+          //체크박스
+          $("input:checkbox").change(function () {
+            if (this.checked) {
+              $(this).attr("value", "Y");
+            } else {
+              $(this).attr("value", "N");
+            }
+          });
+        });
+      </script>
+      <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+      <script>
+        function sample6_execDaumPostcode() {
+          new daum.Postcode({
+            oncomplete: function (data) {
+              // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+              // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+              // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+              var addr = ""; // 주소 변수
+              var extraAddr = ""; // 참고항목 변수
+
+              //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+              if (data.userSelectedType === "R") {
+                // 사용자가 도로명 주소를 선택했을 경우
+                addr = data.roadAddress;
+              } else {
+                // 사용자가 지번 주소를 선택했을 경우(J)
+                addr = data.jibunAddress;
+              }
+
+              document.getElementById("sample6_address").value = addr;
+              // 커서를 상세주소 필드로 이동한다.
+              document.getElementById("sample6_detailAddress").focus();
+            },
+          }).open();
+        }
+      </script>
+    </div>
+  </body>
 </html>
