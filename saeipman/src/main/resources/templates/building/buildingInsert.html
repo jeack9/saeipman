@@ -66,21 +66,21 @@ input {
 				</div>
 				<div class="form-group col-md-5"></div>
 				<div class="form-group col-md-5">
-					<label for="floorArea" class="form-label">연면적 </label> <input
+					<label for="floorArea" class="form-label">연면적(m²) </label> <input
 						type="text" id="floorArea" name="floorArea" class="form-control">
 				</div>
 				<div class="form-group col-md-5">
-					<label for="floorAreaRatio" class="form-label">용적률 산정용 연면적
+					<label for="floorAreaRatio" class="form-label">용적률 산정용 연면적(m²)
 					</label> <input type="text" id="floorAreaRatio" name="floorAreaRatio"
 						class="form-control">
 				</div>
 				<div class="form-group col-md-5">
-					<label for="gunchookArea" class="form-label">건축면적 </label> <input
+					<label for="gunchookArea" class="form-label">건축면적(m²) </label> <input
 						type="text" id="gunchookArea" name="gunchookArea"
 						class="form-control">
 				</div>
 				<div class="form-group col-md-5">
-					<label for="buildingHeigh" class="form-label">건물 높이 </label> <input
+					<label for="buildingHeigh" class="form-label">건물 높이(m) </label> <input
 						type="text" id="buildingHeigh" name="buildingHeigh"
 						class="form-control">
 				</div>
@@ -164,14 +164,14 @@ input {
 		$('#buildingInsertBtn').on('click', insertBuilding);
 		
 		function insertBuilding(){
-			/* let buildingName = $('input[name="buildingName"]');
+			 let buildingName = $('input[name="buildingName"]');
 			if (buildingName.val() == '') {
 				alert('빌딩 이름을 입력해주세요.');
 				buildingName.focus();
 				return;
 			}
-			let doroAddr = $('input[name="doroAddr"]');
-			if (doroAddr.val() == '') {
+			/*let doroAddr = $('input[name="doroAddr"]');
+			if (doroAddr.val() == '') {	
 				alert('주소를 입력해주세요.');
 				doroAddr.focus();
 				return;

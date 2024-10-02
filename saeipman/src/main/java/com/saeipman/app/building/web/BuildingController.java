@@ -99,7 +99,8 @@ public class BuildingController {
 		// 파일 정보
 		List<String> fileName = fileService.getFileName(buildingVO.getBuildingId());
 		System.out.println("파일" + fileName);
-
+		System.out.println(result + "vvvvvvvvvv");
+		model.addAttribute("result",result);
 		result.setFileName(fileName);
 
 		return result;
