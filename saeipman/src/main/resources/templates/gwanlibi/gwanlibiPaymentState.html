@@ -120,9 +120,9 @@
 													<td th:text="${room.ipjuState == 1} ? '입주' : '공실'"></td>
 
 													<!-- 공실 여부에 따른 출력 -->
-													<td th:switch="${room.ipjuState}"><span
-															th:case="1">[[${room.strPaymentState}]]</span>
-														<span th:case="*">-</span>
+													<td th:switch="${room.ipjuState}">
+															<span th:case="1" th:style="${room.ipjuState == -1 ? 'color: tomato;' : ''}">[[${room.strPaymentState}]]</span>
+															<span th:case="*">-</span>
 													</td>
 
 													<!-- 공실이거나 완납했으면 체크박스 disabled -->
@@ -198,13 +198,13 @@
 			
 			$('#when').on('change', function () {
 				let paymentMonth = $('#when').val();
-				console.log($('#when').val());
+				//console.log($('#when').val());
 
 				$.ajax({
 					url: `${ctxPath}/gwanlibiPaymentStateByDate?paymentMonth=${paymentMonth}`,
 					method: 'get'
 				}).done(function (result) {
-					console.log('?' + result);
+					//console.log('?' + result);
 
 					//location.href = `${ctxPath}/gwanlibiPaymentState?buildingId=${buildingId}&paymentMonth=${paymentMonth}`;
 					location.href = `${ctxPath}/${result}`;
@@ -248,18 +248,22 @@
 					}
 				})
 			} */
-			// 조건에 따른 텍스트 강조 출력 - todo
+			// 조건에 따른 텍스트 강조 출력
 			$('.fold-content tr td').each((idx, ele) => {
 				//console.log($(ele).text());
+				//console.log(ele);
 				if ($(ele).text() == '미납') {
-					$(ele).css('color', 'blue');
-				}
-
-				if ($(ele).text() == '연체') {
+					let ele = $(ele).text();
 					$(ele).attr('style', 'color: tomato !important');
 				}
 
+				if ($(ele).text() == '연체') {
+					let ele = $(ele).text();
+					$(ele).css('color', 'blue');
+				}
+
 				if ($(ele).text() == '입주') {
+					let ele = $(ele).text();
 					$(ele).css('font-weight', 'bold');
 					$(ele).css('color', 'black');
 				}

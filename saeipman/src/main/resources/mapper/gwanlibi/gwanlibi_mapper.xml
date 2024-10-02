@@ -50,7 +50,6 @@
 		       , mg.month_gwanlibi_no
 		       , mg.gagu_gwanlibi
 		       , mg.total_money
-		       <!-- , (gd.gwanlibi_item_money/bi.total_gagu) gwanlibi_by_gagu -->
 		FROM     gwanlibi_details gd JOIN building_gwanlibi_item bgi
 		                             ON   (gd.building_id = bgi.building_id AND gd.gwanlibi_item_no = bgi.gwanlibi_item_no)
 		                             
@@ -66,7 +65,7 @@
 		
 	</select>
 
-	
+
 	<!-- 기본 관리비 목록 -->
 	<select id="selectBasicGwanlibiList">
 	
@@ -92,7 +91,6 @@
 		ORDER BY gwanlibi_item_no
 		
 	</select>
-	
 	
 	
 	<!-- 관리비 항목 버전 -->
@@ -125,11 +123,11 @@
 			   , #{fixedPrice} )
 
 	</insert>
+	<!-- INSERT 중에는 값을 읽을 수 없어서 MAX() 함수 사용 불가. -->
 	
 	
 	<!-- 정산한 관리비 등록 -->
-	<!-- INSERT 중에는 값을 읽을 수 없어서 MAX() 함수 사용 불가. -->
-	<!-- GET_MGWANLIBI_NO, GET_GWANDETAIL_NO 함수 생성 -->
+	<!-- GET_MGWANLIBI_NO, GET_GWANDETAIL_NO 함수 생성 및 사용 -->
 	<insert id="insertGwanlibi">		
 		<selectKey order="BEFORE" resultType="string" keyProperty="monthGwanlibiInfo.monthGwanlibiNo" >
 			SELECT GET_MGWANLIBI_NO() FROM DUAL
@@ -218,6 +216,7 @@
 			</where>
 		</foreach>
 	</update>
+	
 	<!-- 2. UPDATE month_gwanlibi -->
 	<update id="updateMonthGwanlibi">
 			UPDATE  month_gwanlibi
