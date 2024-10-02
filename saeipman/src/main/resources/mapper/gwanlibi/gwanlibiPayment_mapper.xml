@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.saeipman.app.gwanlibi.mapper.GwanlibiPaymentMapper">
-	
-	
-	<!-- 호실별 관리비 납부 상태 조회 -->
-<!-- 	<select id="selectGwanlibiPaymentStateList" resultType="com.saeipman.app.gwanlibi.service.GwanlibiPaymentVO" parameterType="String">
-		SELECT r.building_id,
-			   r.room_no,
-			   r.ipju_state,
-		       g.payment_yn
-		FROM   room_info r JOIN gagu_gwanlibi_history g
-		                   ON (r.room_id = g.room_id)
-		AND    r.building_id = #{buildingId}
-	</select> -->
-	
+
 	<!-- 호실별 관리비 납부 상태 조회 -->
 	<select id="selectGwanlibiPaymentStateList" resultType="com.saeipman.app.gwanlibi.service.GwanlibiPaymentVO" parameterType="String">
 		SELECT r.building_id,
@@ -26,7 +14,7 @@
 		                   ON (r.room_id = g.room_id)
 		                   JOIN month_gwanlibi m
 		                   ON (m.month_gwanlibi_no = g.month_gwanlibi_no)
-		WHERE  r.building_id = #{buildingId}
+		WHERE  r.building_id = #{buildingId}		
 		<choose>
 			<when test="paymentMonth == null">
 				AND    TO_CHAR(m.payment_month, 'yyyyMM') =  TO_CHAR(sysdate, 'yyyyMM')
@@ -35,10 +23,7 @@
 				AND    TO_CHAR(m.payment_month, 'yyyyMM') =  TO_CHAR(#{paymentMonth}, 'yyyyMM')
 			</otherwise>		
 		</choose>
-		ORDER BY r.room_no
-		
-	</select>
-	
-	
+		ORDER BY r.room_no		
+	</select>	
 
 </mapper>
