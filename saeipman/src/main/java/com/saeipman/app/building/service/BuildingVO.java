@@ -29,6 +29,9 @@ public class BuildingVO {
 	private String floorArea;
 	private String floorAreaRatio;
 	private String buildingHeigh;
+	private Integer constractNo;
+	
+	private Integer gwanlibiDetailsNo;
 	
 	private List<String> fileName;
 	
