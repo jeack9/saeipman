@@ -108,7 +108,7 @@ th, td {
 														11)}]]&nbsp;</td>
 
 													<td>[[${#numbers.formatInteger(payInF.paymentMoney, 3,
-														'COMMA')}]]</td>
+														'COMMA')}]]원</td>
 													<td th:if="${payInF.paymentState == -1}"><font
 														color="red">&nbsp; 연체</font></td>
 													<td th:if="${payInF.paymentState != -1}"><font
@@ -134,7 +134,7 @@ th, td {
 													<td>[[${#strings.substring(payInF.paymentMonth, 0,
 														11)}]]&nbsp;</td>
 													<td>[[${#numbers.formatInteger(payInF.gaguGwanlibi, 3,
-														'COMMA')}]]</td>
+														'COMMA')}]]원</td>
 													<td th:if="${payInF.paymentYN == -1}"><font
 														color="red">&nbsp; 연체</font></td>
 													<td th:if="${payInF.paymentYN != -1}"><font
@@ -278,9 +278,12 @@ th, td {
 									//find(배열 내에서 특정 요소(id가 checkbox)를 찾아냄), prop() : 체크여부에 따라 true, false 반환
 									if (GwanlibiCheck.eq(i).find('.check')
 											.prop("checked")) {
-										total += Number(GwanlibiCheck.eq(i)
+										let gwanlibi = (GwanlibiCheck.eq(i)
 												.children().eq(2).text()
-												.replaceAll(",", ""));
+												.replaceAll(",", "")).split('원');
+										console.log(Number(gwanlibi[0]));
+										
+										total += Number(gwanlibi[0]);
 									}
 								}
 
@@ -289,13 +292,14 @@ th, td {
 								for (let i = 0; i < mRentCheck.length; i++) {
 									if (mRentCheck.eq(i).find('.check').prop(
 											"checked")) {
-										total += Number(mRentCheck.eq(i)
+										let mRent = (mRentCheck.eq(i)
 												.children().eq(2).text()
-												.replaceAll(",", ""));
+												.replaceAll(",", "")).split('원');
+										total += Number(mRent[0]);;
 									}
 								}
 								$('#total').text(total.toString()
-								  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","));
+								  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")+'원');
 							})
 							
 			//<<부트페이 결제>>		
