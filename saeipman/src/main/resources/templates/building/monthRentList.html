@@ -112,8 +112,8 @@ th, td {
 						<td th:if="${list.paymentState==-1}">연체</td>
 						<td th:if="${list.paymentState==0}">예정</td>
 						<td th:if="${list.paymentState==1}">납부완료</td>
-						<td>[[${list.imchainName}]]</td>
 						<td>[[${list.depositorName}]]</td>
+						<td>[[${list.imchainName}]]</td>
 						<td>[[${#numbers.formatInteger(list.mRent, 3, 'COMMA')}]]원<br>[[${#dates.format(list.paymentDate,'yyyy-MM-dd')}]]
 						</td>
 						<th:block th:if="${list.realPaymentMoney} <= 0">

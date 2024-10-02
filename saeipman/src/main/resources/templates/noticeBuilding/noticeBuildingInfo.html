@@ -25,8 +25,8 @@
 							</tr>
 							<tr>
 								<th class="bg-light" style="text-align: center">작성일</th>
-								<td colspan="3" th:if="${BNotice.modDate == ''}">[[${#dates.format(BNotice.regDate,'yyyy/MM/dd')}]]</td>
-								<td colspan="3" th:if="${BNotice.modDate != ''}">[[${#dates.format(BNotice.modDate,'yyyy/MM/dd')}]]</td>
+								<td colspan="3" th:if="${BNotice.modDate == null}">[[${#dates.format(BNotice.regDate,'yyyy/MM/dd')}]]</td>
+								<td colspan="3" th:if="${BNotice.modDate != null}">[[${#dates.format(BNotice.modDate,'yyyy/MM/dd')}]]</td>
 							</tr>
 							<tr>
 								<td colspan="4" id="textarea" style="padding: 50px;">[[${BNotice.content}]]</td>
