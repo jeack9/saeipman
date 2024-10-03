@@ -205,10 +205,15 @@ public class GwanlibiController {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		// 예외 처리
+		// 예외 처리 - 건물에 등록된 방이 없을 때
 		List<GaguGwanlibiHistoryVO> roomList = gwanlibiService.roomIdList(buildingId);
 		int roomListSize = roomList.size();
 		map.put("roomListSize", roomListSize);
+		
+		// 예외 처리 - 건물에 입주한 사람이 없을 때
+		List<GwanlibiVO> totalIpjuGagu = gwanlibiMapper.selectTotalGagu(buildingId);
+		int totalIpjuGaguSize = totalIpjuGagu.size();
+		map.put("totalIpjuGaguSize", totalIpjuGaguSize);
 
 		// 설정된 관리비 항목 리스트의 데이터 개수
 		List<GwanlibiVO> gwanlibiItmeList = gwanlibiService.itemList(buildingId);
