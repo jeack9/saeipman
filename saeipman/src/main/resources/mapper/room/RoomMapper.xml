@@ -159,7 +159,7 @@
             (SELECT COUNT(*)
 		     FROM constract_info 
 		     WHERE room_id = r.room_id AND constract_state = 0) AS reserve_cnt,
-            ROW_NUMBER() OVER (ORDER BY bi.building_id, r.room_no ASC) AS row_num
+            ROW_NUMBER() OVER (ORDER BY bi.building_id DESC, r.room_no ASC) AS row_num
         FROM room_info r 
         	JOIN building_info bi 
         		ON r.building_id = bi.building_id
