@@ -29,7 +29,6 @@
 		</choose>
 	</select>
 	
-	
 	<!-- 월세 조회 -->
 	<select id="selectMonthlyRentPay" resultType="PaymentVO">
 		SELECT c.room_id
@@ -38,6 +37,7 @@
 			 , mph.real_payment_money
 			 , mph.payment_money
 			 , mph.payment_state
+			 , mph.payment_date
 		FROM IMCHAIN i join constract_info c
 						ON i.imchain_id = c.imchain_phone
 					   JOIN m_rent_payment_history mph
@@ -65,7 +65,9 @@
 	
 	<update id="updateMonthRentStatus">
 		UPDATE m_rent_payment_history
-		SET payment_state = 1
+		SET payment_state = 1,
+			real_payment_date = sysdate,
+			real_payment_money = (SELECT payment_money FROM m_rent_payment_history WHERE M_RENT_HISTORY_NO = #{mRentHistoryNo})
 		WHERE M_RENT_HISTORY_NO = #{mRentHistoryNo}
 	</update>
 </mapper>

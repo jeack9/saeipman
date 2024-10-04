@@ -35,7 +35,7 @@ input {
 				</div>
 
 				<div class="col-md-6 ">
-					<label for="file" class="form-label">빌딩 이미지</label> <input
+					<label for="file" class="form-label">건물 이미지</label> <input
 						type="file" id="file" multiple name="files" class="form-control">
 				</div>
 				<div id="preview" class="row mt-3"></div>
@@ -48,19 +48,19 @@ input {
 				</div>
 
 				<div class="form-group col-md-7">
-					<label for="bname" class="form-label">빌딩 이름 </label> <input
+					<label for="bname" class="form-label">*건물 이름 </label> <input
 						type="text" id="bname" name="buildingName" class="form-control">
 				</div>
 				<div class="form-group col-md-7">
 					<label for="sample6_address" class="form-label"
-						th:style="${'padding-right:30px'}">주소</label> <input type="button"
+						th:style="${'padding-right:30px'}">*주소</label> <input type="button"
 						onclick="sample6_execDaumPostcode()" value="주소 찾기"
 						class="btn btn-outline-primary m-2"> <input type="text"
 						id="sample6_address" placeholder="주소" name="doroAddr"
 						class="form-control">
 				</div>
 				<div class="form-group col-md-7">
-					<label for="sample6_detailAddress" class="form-label">상세 주소</label>
+					<label for="sample6_detailAddress" class="form-label">*상세 주소</label>
 					<input type="text" id="sample6_detailAddress" placeholder="상세주소"
 						name="detailsAddr" class="form-control">
 				</div>
@@ -86,16 +86,16 @@ input {
 				</div>
 
 				<div class="form-group col-md-5">
-					<label for="totalFloor" class="form-label">층 수 </label> <input
+					<label for="totalFloor" class="form-label">*층 수 </label> <input
 						type="text" id="totalFloor" name="totalFloor" class="form-control">
 				</div>
 				<div class="form-group col-md-5">
-					<label for="floorGaguCount" class="form-label">층 별 가구수 </label> <input
+					<label for="floorGaguCount" class="form-label">*층 별 가구수 </label> <input
 						type="text" id="floorGaguCount" name="floorGaguCount"
 						class="form-control">
 				</div>
 				<div class="form-group col-md-5">
-					<label for="totalGagu" class="form-label">총 세대수 </label> <input
+					<label for="totalGagu" class="form-label">*총 세대수 </label> <input
 						type="text" id="totalGagu" name="totalGagu" class="form-control">
 				</div>
 				<div class="form-group col-md-5">
@@ -167,7 +167,7 @@ input {
 			if (buildingName.val() == '') {
 				Swal.fire({
 					icon: "error",
-					title: "빌딩 이름을 입력해주세요."});
+					title: "건물 이름을 입력해주세요."});
 				buildingName.focus();
 				return;
 			}

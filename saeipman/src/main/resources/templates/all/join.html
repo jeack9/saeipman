@@ -25,8 +25,8 @@
 										<input type="text" class="form-control"
 											th:errorclass="field-error" th:field=*{name} placeholder="이름">
 										<label for="name">이름</label>
-										<div class="" id="nameMsg"></div>
-										<div class="field-error" th:errors="*{name}"></div>
+										<div id="nameMsg" class="field-error" th:errors="*{name}"></div>
+										<div></div>
 									</div>
 									<div class="mb-3">
 										<div class="form-floating d-flex">
@@ -35,31 +35,31 @@
 											<button type="button" class="btn btn-primary" id="ckIdBtn"
 												style="min-width: 90px;">중복확인</button>
 										</div>
-										<div class="" id="idMsg">아이디: 영문을 포함한 영문 + 숫자 조합 6~18
+										<div id="idMsg" class="field-error" th:errors="*{id}">아이디: 영문을 포함한 영문 + 숫자 조합 6~18
 											자리를 사용하세요.</div>
-										<div class="field-error" th:errors="*{id}"></div>
+										<div></div>
 									</div>
 									<div class="form-floating mb-3">
 										<input type="password" class="form-control" th:field=*{pw}
 											placeholder="비밀번호" autoComplete="off"> <label
 											for="pw">비밀번호</label>
-										<div class="" id="pwMsg">비밀번호: 6~16자 영문 대소문자, 숫자를 사용하세요.</div>
-										<div class="field-error" th:errors="*{pw}"></div>
+										<div id="pwMsg" class="field-error" th:errors="*{pw}">비밀번호: 6~16자 영문 대소문자, 숫자를 사용하세요.</div>
+										<div></div>
 									</div>
 									<div class="form-floating mb-3">
 										<input type="email" class="form-control"
 											th:errorclass="field-error" th:field=*{email}
 											placeholder="이메일"> <label for="email">이메일</label>
-										<div class="" id="emailMsg"></div>
-										<div class="field-error" th:errors="*{email}"></div>
+										<div id="emailMsg" class="field-error" th:errors="*{email}"></div>
+										<div></div>
 									</div>
 									<div class="form-floating mb-3">
 										<input type="text" class="form-control"
 											th:value="${#dates.format(birth, 'yyyy/MM/dd')}"
 											th:field=*{birth} placeholder="생년월일 8자리" maxlength="10">
 										<label for="birth">생년월일 8자리</label>
-										<div class="" id="birthMsg">생년월일: 8자리 숫자를 입력해주세요.</div>
-										<div class="field-error" th:errors="*{birth}"></div>
+										<div id="birthMsg" class="field-error" th:errors="*{birth}">생년월일: 8자리 숫자를 입력해주세요.</div>
+										<div></div>
 									</div>
 									<div class="mb-3">
 										<div class="d-flex form-floating">
@@ -68,8 +68,8 @@
 											<!-- <button type="button" class="btn btn-primary"
 												style="min-width: 90px;">인증요청</button> -->
 										</div>
-										<div class="" id="phoneMsg">연락처: 10~11자리의 숫자만 입력가능합니다</div>
-										<div class="field-error" th:errors="*{phone}"></div>
+										<div id="phoneMsg" class="field-error" th:errors="*{phone}">연락처: 10~11자리의 숫자만 입력가능합니다</div>
+										<div></div>
 									</div>
 									<!-- <div class="form-floating mb-3">
 										<input type="text" class="form-control" id="floatingValid"

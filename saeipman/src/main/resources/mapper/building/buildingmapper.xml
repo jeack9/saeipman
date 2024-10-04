@@ -13,7 +13,7 @@
 							total_gagu
 					FROM building_info
 					WHERE IMDAEIN_ID = #{imdaeinId}
-					ORDER BY 1
+					ORDER BY 1 DESC
 					)a
 		<![CDATA[     
 		where rownum <= #{pageDTO.pageNum} * #{pageDTO.amount} )b   
@@ -217,7 +217,7 @@
 		      ,building_name
 		      ,doro_addr
 		      ,memo
-		      ,ROW_NUMBER() OVER (ORDER BY building_id ASC) AS row_num
+		      ,ROW_NUMBER() OVER (ORDER BY building_id DESC) AS row_num
 		    FROM building_info 
 		    WHERE imdaein_id = #{imdaeinId})
 		WHERE row_num BETWEEN (#{paging.page} - 1) * #{paging.recordSize} + 1 AND #{paging.page} * #{paging.recordSize}

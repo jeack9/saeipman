@@ -104,7 +104,7 @@ th, td {
 																name="mRentHistoryNo"><label
 																class="form-check-label" for="flexCheckDefault"></label>
 														</div></td>
-													<td>[[${#strings.substring(payInF.realPaymentDate, 0,
+													<td>[[${#strings.substring(payInF.paymentDate, 0,
 														11)}]]&nbsp;</td>
 
 													<td>[[${#numbers.formatInteger(payInF.paymentMoney, 3,
@@ -211,19 +211,19 @@ th, td {
 					.done( function(data) {
 							let gw = data.gw;
 							let mr = data.mr;
-							console.log("ddddddddd : ", payDate);
+							console.log("ddddddddd : ", data);
 
 							//현재 다른 결제월의 test데이터는 없는데, 다른 결제월을 선택해도 기존의 결제일에 출력된 데이터가 계속 남아있어서 작성함.
 							$('.delete').html('');
 							
 							// 월세(납부예정금이) 없는 경우
 							if(mr.length==0){										
-								$('#rentMonth').html('납부하실 내역이 없습니다.');
+								$('#rentMonth').html('납부하신 내역이 없습니다.');
 							}
 							
 							//관리비(납부예정금) 없는 경우
 							if(gw.length==0){
-								$('#Gwanlibi').html('납부하실 내역이 없습니다.');
+								$('#Gwanlibi').html('납부하신 내역이 없습니다.');
 							}
 							
 							//관리비 납부내역 출력
@@ -243,7 +243,7 @@ th, td {
 							
 							//월세 납부내역 출력
 							for (let i = 0; i < mr.length; i++) {
-							 
+								console.log(i+"확인");
 								let realPaymentDate = mr[i].realPaymentDate;
 								console.log(realPaymentDate+"확인");
 								let yearM = realPaymentDate.substring(0, 4); //2024
