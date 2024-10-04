@@ -75,7 +75,7 @@
 			   2. Thymeleaf 변수 사용 */
 			// 관리비 항목 목록.
 			let gwanlibiItemList = /*[[${ gwanlibiItemList }]]*/'기본값';
-
+			console.log(gwanlibiItemList);
 			// 건물 정보.
 			let buildingInfo = /*[[${buildingInfo}]]*/'기본값';
 			let buildingId = buildingInfo.buildingId;
@@ -226,8 +226,24 @@
 							title: "등록 완료 😊"
 						}).then((result) => {
 							if (result.isConfirmed) {
+								
+								//location.href = ctxPath + '/gwanlibiDetailsBillList?buildingId=' + buildingId + '&paymentDate=' + paymentDate;
 								location.href = ctxPath + url;
+								//location.href = ctxPath + result;
 								//history.back();
+								
+								// 아작스 - todo
+/* 								$.ajax({
+									url: ctxPath + url,
+									method: 'get'
+								}).done(function (result) {
+									console.log('성공');
+									location.href = ctxPath + url;
+								}).fail(function (err) {
+									console.log(err);
+								}) */
+								
+								
 							}
 						})
 					}).fail(function (err) {
