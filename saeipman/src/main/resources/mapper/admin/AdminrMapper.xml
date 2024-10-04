@@ -66,10 +66,12 @@
 		    table_name,
 		    file_size,
 		    group_id
-		FROM
-		    file_info
-		WHERE
-		    group_id = #{groupId}
+			FROM
+			    file_info
+			WHERE
+			    group_id = #{groupId}
+	    ORDER BY 
+	    		file_id DESC
     </select>
     
     <!-- 공지사항 조회수 증가 -->
