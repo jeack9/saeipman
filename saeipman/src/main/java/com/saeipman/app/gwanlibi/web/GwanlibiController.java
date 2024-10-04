@@ -223,6 +223,9 @@ public class GwanlibiController {
 		// 이미 관리비 정산을 했으면 수정 화면으로, 아니면 등록 화면으로.
 		int dataCnt = gwanlibiService.getCountingMonthGwanlibiData(buildingId);
 		if (dataCnt <= 0) {
+			//String paymentMonth = preYM();
+			//map.put("paymentMonth", paymentMonth);
+			//String url = "/insertGwanlibi?buildingId=" + buildingId + "&paymentMonth=" + paymentMonth;
 			String url = "/insertGwanlibi?buildingId=" + buildingId;
 			map.put("url", url);
 		} else {
@@ -280,8 +283,11 @@ public class GwanlibiController {
 		System.err.println("납부 기한 = " + paymentDueDate);
 		
 		gwanlibiService.addGwanlibi(gridDatalist, roomIdList);
-
-		return "/gwanlibiDetailsBillList?buildingId=" + buildingId + "&paymentMonth=" + ym;
+		
+		String payMonth = preYM();
+		
+		String url = "/gwanlibiDetailsBillList?buildingId=" + buildingId + "&paymentMonth=" + payMonth;
+		return url;
 	}
 
 	// 관리비 업데이트 화면
