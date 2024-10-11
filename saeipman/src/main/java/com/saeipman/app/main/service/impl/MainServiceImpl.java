@@ -1,6 +1,7 @@
 package com.saeipman.app.main.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -39,5 +40,9 @@ public class MainServiceImpl implements MainService {
 	@Override
 	public List<MinwonVO> minwonListMain(String imdaeinId) {
 		return mainMapper.mainMinwonList(imdaeinId);
+	}
+	@Override
+	public List<PaymentVO> chartDate() {
+		return mainMapper.getChart();
 	}
 }

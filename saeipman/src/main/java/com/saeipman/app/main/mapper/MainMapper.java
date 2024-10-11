@@ -1,6 +1,7 @@
 package com.saeipman.app.main.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.saeipman.app.minwon.service.Criteria;
 import com.saeipman.app.minwon.service.MinwonVO;
@@ -20,4 +21,7 @@ public interface MainMapper {
 	
 	//민원
 	public List<MinwonVO> mainMinwonList(String imdaeinId);
+	
+	//차트
+	public List<PaymentVO> getChart();
 }

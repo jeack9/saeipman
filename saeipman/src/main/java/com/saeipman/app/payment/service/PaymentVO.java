@@ -28,6 +28,9 @@ public class PaymentVO {
 	private String imchainPhone; //임차인 아이디(연락처)
 	private Date expDate;//만료일
 	
+	private String month;            // 월 (YYYY-MM 형식)
+	private String buildingName;     // 건물 이름
+	private Double totalRevenue;      // 수익
 
 	public String getmRentHistoryNo() {
 		return mRentHistoryNo;

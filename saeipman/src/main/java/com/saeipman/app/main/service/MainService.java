@@ -3,6 +3,7 @@ package com.saeipman.app.main.service;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.saeipman.app.minwon.service.Criteria;
 import com.saeipman.app.minwon.service.MinwonVO;
@@ -20,4 +21,7 @@ public interface MainService {
 	public int getExpCnt();
 	
 	public List<MinwonVO> minwonListMain(String imdaeinId);
+	
+	//차트
+	public List<PaymentVO> chartDate();
 }

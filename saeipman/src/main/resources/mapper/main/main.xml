@@ -71,4 +71,40 @@
 		    WHERE ROWNUM<=10
 		    ]]>
 	</select>
+	<select id="getChart">
+		WITH MonthlyRevenue AS (
+		    SELECT 
+		        b.building_id,
+		        b.building_name,
+		        TO_CHAR(p.payment_date, 'YYYY-MM') AS MONTH,  
+		        SUM(NVL(p.real_payment_money, 0)) AS TOTAL_REVENUE,  
+		        DENSE_RANK() OVER (PARTITION BY TO_CHAR(p.payment_date, 'YYYY-MM') 
+		                           ORDER BY SUM(p.real_payment_money) DESC) AS RN
+		    FROM 
+		        building_info b
+		    JOIN 
+		        room_info r ON b.building_id = r.building_id
+		    JOIN constract_info c ON r.room_id = c.room_id
+		    JOIN 
+		        m_rent_payment_history p ON c.constract_no = p.constract_no  
+		    WHERE 
+		        p.payment_date >= ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -3) 
+		        AND TO_CHAR(p.payment_date, 'YYYY-MM') != TO_CHAR(SYSDATE, 'YYYY-MM')
+		    GROUP BY 
+		        b.building_id, b.building_name, TO_CHAR(p.payment_date, 'YYYY-MM')
+		)
+		SELECT 
+		    building_id,
+		    building_name,
+		    MONTH,
+		    TOTAL_REVENUE
+		FROM 
+		    MonthlyRevenue
+		     <![CDATA[ 
+		WHERE 
+		    RN <= 3  
+		        ]]>
+		ORDER BY 
+		    MONTH DESC, TOTAL_REVENUE DESC
+	</select>
 </mapper>

@@ -67,32 +67,32 @@
 		        count(c.constract_no) as constract_no,
 		        count(g.gwanlibi_details_no) as gwanlibi_details_no
 		FROM building_info b
-		LEFT JOIN room_info r
-		   ON b.building_id = r.building_id
-		LEFT JOIN constract_info c
-		   ON r.room_id = c.room_id
-		LEFT JOIN gwanlibi_details g
-		 ON b.building_id = g.building_id
+			LEFT JOIN room_info r
+		   		ON b.building_id = r.building_id
+			LEFT JOIN constract_info c
+		   		ON r.room_id = c.room_id
+			LEFT JOIN gwanlibi_details g
+		 		ON b.building_id = g.building_id
 		WHERE b.building_id = #{buildingId}
-		 GROUP BY  b.building_id,
-                b.group_id,
-		        b.building_name,
-		        b.doro_addr,
-		        b.jibun_addr,
-		        b.details_addr,
-		        b.gunchook_area,
-		        b.total_floor,
-		        b.floor_gagu_count,
-		        b.total_gagu,
-		        b.parking,
-		        b.lift_yn,
-		        b.delay_alert_yn,
-		        b.minwon_alert_yn,
-		        b.group_id,
-		        b.floor_area,
-		        b.building_heigh,
-		        b.floor_area_ratio,
-		        b.memo
+		GROUP BY  b.building_id,
+	                b.group_id,
+			        b.building_name,
+			        b.doro_addr,
+			        b.jibun_addr,
+			        b.details_addr,
+			        b.gunchook_area,
+			        b.total_floor,
+			        b.floor_gagu_count,
+			        b.total_gagu,
+			        b.parking,
+			        b.lift_yn,
+			        b.delay_alert_yn,
+			        b.minwon_alert_yn,
+			        b.group_id,
+			        b.floor_area,
+			        b.building_heigh,
+			        b.floor_area_ratio,
+			        b.memo
 		
 	</select>
 	<insert id="selectBuildingInsert" parameterType="BuildingVO">
